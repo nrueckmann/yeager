@@ -1,0 +1,88 @@
+<!-- PANEL TEMPLATES -->
+<div class="ipanel" yg_panel="true">
+	<div class="panelheadernocollaps headline1">
+		<a class="opened">{$itext.TXT_MAILINGS|default:'$TXT_MAILINGS'}</a>
+	</div>
+	<div class="panelcontent">
+		{if $adminAllowed}
+			<div class="mk_contentgroup">
+
+				<div id="wid_{$win_no}_{$page}_templates" class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+					<!-- actions //-->
+					<div class="actions">
+						<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+						<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+							<div class="actionborder"></div>
+							<a  class="edit" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'TEMPLATE_SELECT', loadparams: {literal}{{/literal} action: 'choose', opener_reference: 'wid_{$win_no}' {literal} } } {/literal});" onclick="$K.actionhover=true;" onmouseover="$K.yg_showHelp('{$itext.TXT_TEMPLATE_EDIT}');" title="{$itext.TXT_TEMPLATE_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+							<a  class="del" onclick="$K.yg_resetSiteDefaulttemplate(this);" onmouseover="$K.yg_showHelp('{$itext.TXT_TEMPLATE_DELETE}');" title="{$itext.TXT_TEMPLATE_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+							<div class="actionborder"></div>
+						</div>
+					</div>
+					<!-- end actions //-->
+
+					<div class="cntblockselection" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'TEMPLATE_SELECT', loadparams: {literal}{{/literal} action: 'choose', opener_reference: 'wid_{$win_no}' {literal} } } {/literal});" style="cursor:pointer;min-height:0px;" id="wid_{$win_no}_templatepanel" onmouseup="$K.yg_customSortableOnDrop(this.id);" yg_type="property" yg_property="template" yg_accepts="template">
+						<span class="label selection">{$itext.TXT_DEFAULT_TEMPLATE|default:'$TXT_DEFAULT_TEMPLATE'}</span>
+						<div class="mk_templatecontainer" style="{if !$templateInfo.NAME}display:none;{/if}margin-top:3px;">
+							{if !$templateInfo}{assign var='templateInfo' value=true}{/if}
+							{include file="$approot/ui/html/tabs/template_info/template_info.html"}
+						</div>
+						<div class="selectionmarker" style="display:{if !$templateInfo.NAME}inline-block{else}none{/if};margin-left:6px;margin-top:2px;">
+							<div class="icn noicon"></div>
+							<div class="title">
+								<span class="titlecnt">{$itext.TXT_SELECTOR_TEMPLATE}</span>
+
+							</div>
+						</div>
+					</div>
+					<input type="hidden" value="{$defaultTemplate}" yg_id="{$object}-mailing" yg_type="{$objecttype}" yg_property="wid_{$win_no}_defaulttemplate" name="wid_{$win_no}_mailing_defaulttemplate" />
+				</div>
+
+				<div id="wid_{$win_no}_{$page}_templateroot" class="cntblockcontainer" onmouseover="$K.yg_showActions(this);$K.yg_currentHover=this;">
+					<!-- actions //-->
+					<div class="actions">
+						<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+						<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+							<div class="actionborder"></div>
+							<a  class="edit" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'TEMPLATEFOLDER_SELECT', loadparams: {literal}{{/literal} action: 'choosefolder', opener_reference: 'wid_{$win_no}' {literal} } } {/literal});" onclick="$K.actionhover=true;" onmouseover="$K.yg_showHelp('{$itext.TXT_TEMPLATEFOLDER_EDIT}');" title="{$itext.TXT_TEMPLATEFOLDER_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+							<a  class="del" onclick="$K.yg_resetSiteTemplateroot(this);" onmouseover="$K.yg_showHelp('{$itext.TXT_TEMPLATEFOLDER_RESET}');" title="{$itext.TXT_TEMPLATEFOLDER_RESET}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+							<div class="actionborder"></div>
+						</div>
+					</div>
+					<!-- end actions //-->
+
+					<div class="cntblock" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'TEMPLATEFOLDER_SELECT', loadparams: {literal}{{/literal} action: 'choosefolder', opener_reference: 'wid_{$win_no}' {literal} } } {/literal});" style="cursor:pointer;" id="wid_{$win_no}_templaterootpanel" onmouseup="$K.yg_customSortableOnDrop(this.id);" yg_type="property" yg_property="templatefolder" yg_accepts="templatefolder">
+						<table class="gridfixed" cellspacing="0" cellpadding="0">
+							<tr>
+								<td colspan="8" class="col1">
+									<span class="label">{$itext.TXT_RESTRICT_TEMPLATE_SELECTION|default:'$TXT_RESTRICT_TEMPLATE_SELECTION'}</span>
+									<div class="selectionmarker">
+										<div class="icn {if $templaterootinfo.NAME}iconfolder{else}noicon{/if}"></div>
+										<div class="title">
+											<span class="titlecnt" id="sites_{$item_index}_txt">
+												{if $templaterootinfo.NAME}{$templaterootinfo.NAME}{else}{$itext.TXT_SELECTOR_FOLDER}{/if}
+											</span>
+
+										</div>
+									</div>
+								</td>
+							</tr>
+						</table>
+						<input type="hidden" value="{$templateRoot}" yg_id="{$object}-mailing" yg_type="{$objecttype}" yg_property="wid_{$win_no}_templateroot" name="wid_{$win_no}_mailings_templateroot" />
+					</div>
+				</div>
+
+			</div>
+		{/if}
+	</div>
+</div>
+<!-- END PANEL TEMPLATES -->
+
+<!-- BOTTOMLINE //-->
+<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_midbottom">{if $adminAllowed}<div class="button" tabindex="1"><a class="stdbutton"><div onclick="$K.yg_mailingSaveInfo('wid_{$win_no}');" class="wrapper"><nobr>{$itext.TXT_SAVE|default:'$TXT_SAVE'}</nobr></div></a></div>{/if}</td>
+		<td class="ywindow_rightbt"></td>
+	</tr>
+</table>
+<!-- END BOTTOMLINE //-->

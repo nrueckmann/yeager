@@ -1,0 +1,156 @@
+{if $view==''}
+	{assign var='view' value='listview'}
+{/if}
+
+{if $view == 'thumbview'}
+<div id="wid_{$win_no}_thumbcontainer" class="mk_contentgroup mk_thumbcontainer" yg_multiselect="true">
+	<ul yg_widget="type:sortable;accepts:tag;objecttype:file;callbacks:filesSortCallbacks;" id="wid_{$win_no}_{$fileId}_files_list" yg_type="file">
+
+		<!-- THUMBIES //-->
+		{section name="file" loop=$filelist}
+
+			{if ($filelist[file].WIDTH!=0) && ($filelist[file].HEIGHT!=0)}
+				{math assign='ratio_pic' equation='x / y' x=$filelist[file].WIDTH y=$filelist[file].HEIGHT}
+				{if ($ratio_pic > (4/3)) || ($filelist[file].THUMB != "1") }
+					{assign var='alignment' value='x-scale'}
+				{else}
+					{assign var='alignment' value='y-scale'}
+				{/if}
+			{/if}
+
+			{capture assign="item_full_filename"}
+				{if $filelist[file].WIDTH && $filelist[file].HEIGHT}{$filelist[file].WIDTH}x{$filelist[file].HEIGHT},{/if} {$filelist[file].FILESIZE|filesize}
+			{/capture}
+
+			{capture assign='item_thumbnail'}
+				<div class="thumbcnt {if $filelist[file].THUMB != '1'}thumbcnt_nothumb{/if}">
+					{if ($alignment == 'x-scale') || ($filelist[file].THUMB != '1') }<table cellspacing="0" cellpadding="0"><tr><td>{/if}
+					{if $filelist[file].THUMB == '1'}<img class="{$filelist[file].CLASSNAME}" src="{$imgpath}window/x.gif" real_src="{$base}image/{$filelist[file].OBJECTID}/yg-thumb/?rnd={math equation='rand()'}" onload="$K.yg_setThumbPreviewLoaded(this);">{else}<div class="noimg">?</div>{/if}
+					{if ($alignment == 'x-scale') || ($filelist[file].THUMB != '1') }</td></tr></table>{/if}
+				</div>
+			{/capture}
+
+			{assign var='item_nowrite' value=$filelist[file].NOWRITE}
+			{if $displaymode=='dialog'}{assign var='item_nowrite' value=false}{/if}
+
+			{include file="$approot/ui/html/tabs/files_foldercontent/file_thumb.inc.html" item_nowrite=$item_nowrite item_nodelete=$filelist[file].NODELETE item_objectid=$filelist[file].OBJECTID item_thumbnail=$item_thumbnail|strip item_color=$filelist[file].COLOR item_identifier=$filelist[file].CODE|strtoupper item_name=$filelist[file].NAME item_full_filename=$item_full_filename alignment=$alignment win_no=$win_no action=$action item_pname=$filelist[file].PNAME item_imageurl=$filelist[file].IMAGE_URL item_downloadurl=$filelist[file].DOWNLOAD_URL}
+
+		{/section}
+		<!-- END THUMBIES //-->
+
+	</ul>
+	<div><div id="wid_{$win_no}_{$fileId}_fakePanel"></div></div>
+</div>
+
+{elseif $view == 'listview'}
+
+<div id="wid_{$win_no}_listcontainer" class="mk_contentgroup" yg_multiselect="true">
+
+	<!-- TABLE //-->
+	<div class="tableborder mk_filelist">
+		<table id="wid_{$win_no}_tablecontent" class="gridflex ytable" cellspacing="0" cellpadding="0">
+			<thead>
+				<tr class="filefirstrow">
+					<td class="fcol_type" yg_colindex="filetype" id="wid_{$win_no}_type"></td>
+					<td class="fcol_name sortasc" yg_colindex="title" id="wid_{$win_no}_name"></td>
+					<td class="fcol_size sort_filesize" yg_colindex="filesize" id="wid_{$win_no}_size"></td>
+					<td class="fcol_lastchange" yg_colindex="lastchange" id="wid_{$win_no}_lastchange"></td>
+					<td class="fcol_filename" yg_colindex="filename" id="wid_{$win_no}_filename"></td>
+				</tr>
+			</thead>
+			<tbody yg_widget="type:sortable;accepts:tag;objecttype:file;callbacks:filesSortCallbacks;tag:tr;treeTag:tbody;" class="mk_file" id="wid_{$win_no}_{$fileId}_files_list" yg_type="file" onmouseover="if (!Prototype.Browser.IE) $K.yg_currentHover=this;">
+
+				{section name="file" loop=$filelist}
+
+					{if ($filelist[file].HEIGHT!=0) && ($filelist[file].WIDTH!=0)}
+						{math assign='ratio_pic' equation='x / y' x=$filelist[file].WIDTH y=$filelist[file].HEIGHT}
+						{if ($ratio_pic > (4/3)) || ($filelist[file].THUMB != "1")}
+							{assign var='alignment' value='vimg'}
+						{else}
+							{assign var='alignment' value=''}
+						{/if}
+					{/if}
+
+					{capture assign='item_thumbnail'}
+						<div class="{if $filelist[file].THUMB != '1'}nothumb{else}{$alignment}{/if}">
+							{if $filelist[file].THUMB == "1"}
+								<img class="{$filelist[file].CLASSNAME}" onload="$K.yg_setFileListPreviewLoaded(this);" src="{$imgpath}window/x.gif" real_src="{$base}image/{$filelist[file].OBJECTID}/yg-list/?rnd={math equation='rand()'}">
+							{else}
+								<div class="noimg">?</div>
+							{/if}
+						</div>
+					{/capture}
+
+					{capture assign='all_tags'}
+						{if $filelist[file].TAGS|@count > 0}
+							<div class="related_tags"><span>
+								{section name='tag' loop=$filelist[file].TAGS}
+									{capture assign='tag_path'}{section name='tp' loop=$filelist[file].TAGS[tag].PARENTS step=-1}{$filelist[file].TAGS[tag].PARENTS[tp].NAME|escape:'html':'UTF-8'}{if !$smarty.section.tp.last}||{/if}{/section}{/capture}
+									<span path="{$tag_path}" onmouseover="$K.yg_hoverTagHint(this,{$filelist[file].TAGS[tag].ID});">{$filelist[file].TAGS[tag].NAME}</span>{if !$smarty.section.tag.last}, {/if}
+								{/section}
+							</span></div>
+						{/if}
+					{/capture}
+
+					{assign var='item_nowrite' value=$filelist[file].NOWRITE}
+					{if $displaymode=='dialog'}{assign var='item_nowrite' value=false}{/if}
+
+					{capture assign='item_datum'}{$filelist[file].DATETIME|date_format_php:$itext.DATE_FORMAT}{/capture}
+					{capture assign='item_uhrzeit'}{$filelist[file].DATETIME|date_format_php:$itext.TIME_FORMAT}{/capture}
+
+					{include file="$approot/ui/html/tabs/files_foldercontent/file_list.inc.html" item_nowrite=$item_nowrite item_nodelete=$filelist[file].NODELETE item_timestamp=$filelist[file].DATETIME item_objectid=$filelist[file].OBJECTID item_thumbnail=$item_thumbnail|strip item_color=$filelist[file].COLOR item_identifier=$filelist[file].CODE|strtoupper item_name=$filelist[file].NAME item_tags=$all_tags|strip item_filesize=$filelist[file].FILESIZE|filesize item_ref_count=$filelist[file].REFS item_datum=$item_datum item_uhrzeit=$item_uhrzeit item_uid=$filelist[file].UID item_username=$filelist[file].USERNAME item_filename=$filelist[file].FILENAME|stripslashes item_width=$filelist[file].WIDTH item_height=$filelist[file].HEIGHT alignment=$alignment base=$base baseabsolut=$baseabsolut win_no=$win_no action=$action item_pname=$filelist[file].PNAME item_imageurl=$filelist[file].IMAGE_URL item_downloadurl=$filelist[file].DOWNLOAD_URL}
+
+				{/section}
+
+			</tbody>
+			<tfoot>
+				{if $perm_sub == 1}
+				<td colspan="5">
+					<div id="wid_{$win_no}_{$page}_addmarker" onmousedown="Event.stop(event);" class="cntblockadd mk_nodrag">
+						<div class="cntblockadd" onclick="Event.stop(event);$K.yg_loadDlgUpload($K.windows['wid_{$win_no}'].yg_id, true);">
+							<div class="selectionmarker">{$itext.TXT_FILE_ADD}</div>
+						</div>
+					</div>
+				</td>
+				{/if}
+			</tfoot>
+		</table>
+	</div>
+	<!-- TABLE END //-->
+
+	<div><div id="wid_{$win_no}_{$fileId}_fakePanel"></div></div>
+</div>
+
+{/if}
+
+{if $initload=='true' && $action!='choose'}
+	{include file="$approot/ui/html/tabs/files_foldercontent/files_foldercontent_filter.inc.html"}
+	{include file="$approot/ui/html/tabs/files_foldercontent/files_foldercontent_fixedheader.inc.html"}
+{/if}
+
+<!-- TAB AUTOSTART //-->
+<script language="javascript">
+	// Prepare Prototype/Smarty Templates
+	{include assign="js_template_list" file="$approot/ui/html/tabs/files_foldercontent/file_list.inc.html" item_objectid='#<<item_objectid>>' item_thumbnail='#<<item_thumbnail>>' item_color='#<<item_color>>' item_identifier='#<<item_identifier>>' item_name='#<<item_name>>' item_tags='#<<item_tags>>' item_filesize='#<<item_filesize>>' item_ref_count='#<<item_ref_count>>' item_timestamp='#<<item_timestamp>>' item_datum='#<<item_datum>>' item_uhrzeit='#<<item_uhrzeit>>' item_uid='#<<item_uid>>' item_username='#<<item_username>>' item_filename='#<<item_filename>>' item_width='#<<item_width>>' item_height='#<<item_height>>' item_pname='#<<item_pname>>' alignment='#<<alignment>>' base='#<<base>>' baseabsolut='#<<baseabsolut>>' win_no='#<<win_no>>' action=$action}
+	{include assign="js_template_thumb" file="$approot/ui/html/tabs/files_foldercontent/file_thumb.inc.html" item_objectid='#<<item_objectid>>' item_thumbnail='#<<item_thumbnail>>' item_color='#<<item_color>>' item_identifier='#<<item_identifier>>' item_name='#<<item_name>>' item_full_filename='#<<item_full_filename>>' item_pname='#<<item_pname>>' alignment='#<<alignment>>' win_no='#<<win_no>>' action=$action}
+	$K.windows['wid_{$win_no}'].jsTemplateList = '{$js_template_list|strip|addslashes}';
+	$K.windows['wid_{$win_no}'].jsTemplateThumb = '{$js_template_thumb|strip|addslashes}';
+
+	{if $displaymode=='dialog'}
+		{if $fileId == 1}
+			$('wid_{$win_no}').down('.ywindowfiltercolumn2').hide();
+			$('wid_{$win_no}').down('.ywindowheadcolumn2').hide();
+			if ($('wid_{$win_no}_tablecontent')) $('wid_{$win_no}_tablecontent').hide();
+			if ($('wid_{$win_no}_uploadbtn')) $('wid_{$win_no}_uploadbtn').hide();
+			$K.windows['wid_{$win_no}'].init();
+		{else}
+			$('wid_{$win_no}').down('.ywindowfiltercolumn2').show();
+			$('wid_{$win_no}').down('.ywindowheadcolumn2').show();
+			if ($('wid_{$win_no}_tablecontent')) $('wid_{$win_no}_tablecontent').show();
+			if ($('wid_{$win_no}_uploadbtn')) $('wid_{$win_no}_uploadbtn').show();
+			$K.windows['wid_{$win_no}'].init();
+		{/if}
+			$K.yg_refreshFileMgr('wid_{$win_no}');
+	{/if}
+</script>
+<!-- END TAB AUTOSTART //-->

@@ -1,0 +1,27 @@
+{if ($naviinfo.ID!='' && $naviinfo.ID!='0')}
+
+	<table id="navipanel_inner" class="gridflex" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="col1">
+				<div class="selectionmarker">
+					<div class="titlenoicon"><span class="titlecnt">{$naviinfo.NAME}</span></div>
+				</div>
+				<div class="desc"><!-- no desc avail --></div>
+				<div class="descid"><nobr><span class="bracketleft"></span>{$naviinfo.CODE}<span class="bracketright"></span></nobr></div>
+			</td>
+		</tr>
+	</table>
+	
+{else}
+
+	<table id="navipanel_inner" class="gridflex" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="col1">
+				<div class="selectionmarker">
+					<div class="titlenoicon"><span class="titlecnt">{$itext.TXT_NO_SELECTION_PAGE_INVISIBLE|default:'$TXT_NO_SELECTION_PAGE_INVISIBLE'}</span></div>
+				</div>
+			</td>
+		</tr>
+	</table>
+
+{/if}

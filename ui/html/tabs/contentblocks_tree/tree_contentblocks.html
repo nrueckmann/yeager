@@ -1,0 +1,106 @@
+<!-- CONTENT //-->
+{if ($action == "")}
+	<div id="wid_{$win_no}_treeview" class="tabcontenttree" style="display:block;">
+{else}
+	<div id="wid_{$win_no}_cblockstree" class="dialogtree" style="margin-top:{if ($action == "copy")}0px;{else}24px;{/if}">	
+{/if}
+
+  	<!-- ACTION BUTTON -->
+	<div id="cblocks_tree{$win_no}_actionbutton" class="actions" onmouseout="if($K.yg_currentHover) $K.yg_currentHover.removeClassName('row_hover');" style="display:none;">
+		<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);" style="display:block;"></div>
+		<div class="actionhover" onmouseover="$K.yg_revealActionButtons(this);" onmouseout="$K.yg_hideActionButtons(this);">
+			{if ($action == "")}
+				<div class="singleselect">
+					<div class="actionborder"></div>
+					<a onclick="$K.yg_fireAction($K.yg_actionDeleteCBlock,this);" class="del"  onmouseover="$K.yg_showHelp('{$itext.TXT_CBLOCK_DELETE}');" title="{$itext.TXT_CBLOCK_DELETE}" onmouseout="$K.yg_showHelp(false);"onfocus="this.blur();"></a>
+					<a onclick="$K.yg_fireAction($K.yg_actionMoveCBlock,this);" class="moveto"  onmouseover="$K.yg_showHelp('{$itext.TXT_CBLOCK_MOVE}');" title="{$itext.TXT_CBLOCK_MOVE}" onmouseout="$K.yg_showHelp(false);"onfocus="this.blur();"></a>
+					<a onclick="$K.yg_fireAction($K.yg_actionCopyCBlock,this);" class="copy"  onmouseover="$K.yg_showHelp('{$itext.TXT_CBLOCK_COPY}');" title="{$itext.TXT_CBLOCK_COPY}" onmouseout="$K.yg_showHelp(false);"onfocus="this.blur();"></a>
+					<a onclick="$K.yg_fireAction($K.yg_actionAddChildCBlock,this);" class="add"  onmouseover="$K.yg_showHelp('{$itext.TXT_CBLOCK_ADD}');" title="{$itext.TXT_CBLOCK_ADD}" onmouseout="$K.yg_showHelp(false);"onfocus="this.blur();"></a>
+					<a onclick="$K.yg_fireAction($K.yg_actionAddChildCBlockFolder,this);" class="addfolder" onmouseover="$K.yg_showHelp('{$itext.TXT_FOLDER_ADD}');" title="{$itext.TXT_FOLDER_ADD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<a onclick="$K.yg_fireAction($K.yg_actionEditCBlock,this);" class="edit"  onmouseover="$K.yg_showHelp('{$itext.TXT_CBLOCK_EDIT}');" title="{$itext.TXT_CBLOCK_EDIT}" onmouseout="$K.yg_showHelp(false);"onfocus="this.blur();"></a>
+					<!-- 
+						<a onclick="Event.stop(event);$K.yg_fireAction($K.yg_actionshowCBlockPreviewTree,this);" onmouseover="$K.yg_actionsSetCBlockPreviewHref(this);$K.yg_showHelp('{$itext.TXT_CBLOCK_PREVIEW_WORKING}');" onmouseout="$K.yg_showHelp(false);" class="preview" onfocus="this.blur();"></a>
+					-->
+					<div class="actionborder"></div>
+				</div>
+				<div class="multiselect">
+					<div class="actionborder"></div>
+					<a onclick="$K.yg_fireAction($K.yg_actionDeleteCBlock,this);" class="del"  onmouseover="$K.yg_showHelp('{$itext.TXT_CBLOCK_DELETE}');" title="{$itext.TXT_CBLOCK_DELETE}" onmouseout="$K.yg_showHelp(false);"onfocus="this.blur();"></a>
+					<div class="actionborder"></div>
+				</div>
+			{else}
+				<div class="actionborder"></div>
+				<a onclick="$K.yg_actionSubmit(this,'cblocks_tree');" class="exec" onfocus="this.blur();"></a>
+				<div class="actionborder"></div>
+			{/if}
+		</div>
+	</div>
+	<!-- ACTION BUTTON END -->
+	{if ($action == '')}
+		<div yg_widget="type:tree;treename:cblocks_tree{$win_no};accepts:cblock,tag,extcblock;sort:asc;nosamelevel:true;sortable:true;objtype:cblock;editable:true;" id="cblocks_tree{$win_no}" class="cblocks_tree" style="display:none;"></div>
+	{else}
+		<div yg_widget="type:tree;treename:cblocks_tree{$win_no};sort:asc;nosamelevel:true;action:{$action};sortable:false;objtype:cblock;{if ($action=='choose')||($action=='insertcontent')}noclick:true;{/if}" id="cblocks_tree{$win_no}" class="cblocks_tree mk_chooser {if (($action == "copy") || ($action == "move"))}mk_folderchooser{/if}" style="display:none;"></div>
+	{/if}
+</div>
+
+{if (($action != "") && ($action != "copy"))}
+	<!-- FIXED HEADER //-->
+	<div class="ywindowhead tabhead_tree">
+	<!--<div id="wid_{$win_no}_head_cblocks" class="tabhead_tree" style="display:none;background-color:#333B32;">-->
+		<div class="treedropdown">
+			<table class="gridflex" style="width:100%" cellspacing="0" cellpadding="0">
+				<tr>
+					<td width="100%">
+						<div id="wid_{$win_no}_dropdowntreesites_cblocks" yg_form="dropdown" class="dropdownbox">
+							
+							<div class="dropdown">
+								<div class="dropdowninner">
+									<input yg_seq="{$win_no}" yg_onchange="$K.yg_switchSiteContentBlocks" type="text" tabindex="1"  value="Struktur Inhaltsbausteine">
+								</div>
+							</div>
+							<div class="dropdownlistcontainer">
+								<div class="dropdownlist">
+									<div value="structure" class="selected">{$itext.TXT_CONTENTBLOCKS|default:'$TXT_CONTENTBLOCKS'}</div>
+									{section name="i" loop=$sites}
+										<div value="structure_site_{$sites[i].ID}">{$itext.TXT_SITE|default:'$TXT_SITE'} {$sites[i].NAME}</div>
+									{/section}
+								</div>
+								<div class="mk_scrollbars"></div>
+							</div>
+							<input type="hidden" value="{$itext.TXT_CONTENTBLOCKS_STRUCTURE|default:'$TXT_CONTENTBLOCKS_STRUCTURE'}" id="structure">
+							
+						</div>
+					</td>
+		
+				</tr>
+			</table>
+		</div>
+	</div>
+	<!-- ENDE FIXED HEADER //-->  
+{/if}
+{if ($action != "")}
+	<!-- bottom //-->
+	<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+		<tr>
+			<td class="ywindow_leftbt"></td>
+			<td class="ywindow_midbottom">
+				<table class="buttontable" cellspacing="0" cellpadding="0">
+					<tr>
+						<td class="rightbutton">
+							<div class="button" tabindex="1"><a id="wid_{$win_no}_okbutton" onclick="$K.windows['wid_{$win_no}'].submit();" class="stdbutton"><div class="wrapper"><nobr>{strip}
+								{if ($action == "restore")}
+									{$itext.TXT_RESTORE|default:'$TXT_RESTORE'}
+								{else}
+									{$itext.TXT_CHOOSE|default:'$TXT_CHOOSE'}
+								{/if}
+							{/strip}</nobr></div></a></div>
+							<div class="button cancel" tabindex="1"><a id="wid_{$win_no}_cancelbutton" onclick="$K.windows['wid_{$win_no}'].remove();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</nobr></div></a></div>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td class="ywindow_rightbt"></td>
+		</tr>
+	</table>
+	<!-- end bottom //-->
+{/if}

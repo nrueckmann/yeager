@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="description" content="{$pageinfo.DESCRIPTION}">
+	{if $siteinfo.FAVICON_URL}<link rel="Shortcut Icon" href="{$siteinfo.FAVICON_URL}" type="image/x-icon" />{/if}
+	<title>{if $pageinfo.TITLE}{$pageinfo.TITLE}{else}{$pageinfo.NAME}{/if}</title>
+	<style type="text/css" media=screen>
+		{literal}
+		html, body {
+			margin: 0;
+			padding: 0;
+			color: #58645F;
+			font-size: 12px;
+			font-family: "HelveticaNeue", "Helvetica Neue", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
+			font-weight:200;
+			-webkit-font-smoothing: antialiased;
+			line-height: 18px;
+			background-color: #f5f6f3;
+		}
+		#cnt {
+			padding-left: 50%;
+			width: 960px;
+			margin-left: -480px;
+			min-height: 100%;
+		}
+		h1 {
+			font-family: "HelveticaNeueMedium", "HelveticaNeue-Medium", "Helvetica Neue Medium", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
+			font-weight: 400;
+			font-stretch:normal;
+			padding: 0;
+			margin: 5px 0px 30px 0px;
+			font-size: 30px;
+			line-height: 32px;
+			display: inline-block;
+			width: 100%;
+			color: #102925;
+		}
+		a {
+			text-decoration: none;
+			display: inline-block;
+			color: #3598b5;
+			border-bottom: 1px solid rgb(204, 229, 236);
+			-webkit-background-clip: padding-box;
+			background-clip: padding-box;
+			margin-left: 1px;
+			margin-right: 1px;
+			padding-left: 0px;
+			padding-right: 0px;
+			padding-bottom: 0px;
+		}
+		a:hover,
+		a.selected,
+		a.selected:hover,
+		li.selected > a,
+		li.selected > a:hover {
+			margin-left: -2px;
+			margin-right: -2px;
+			padding-left: 3px;
+			padding-right: 3px;
+			padding-bottom: 1px;
+			margin-bottom: -1px;
+			background-color: #3598b5;
+			color: white;
+		}
+		#cnt .page {
+			width: 778px;
+			background-color: white;
+			padding-left: 86px;
+			padding-right: 86px;
+			margin-top: 46px;
+			min-height: 350px;
+			padding-bottom: 82px;
+			padding-top: 86px;
+		}
+		#cnt .footer {
+			width: 950px;
+			padding-top: 15px;
+			margin-bottom: 50px;
+		}
+		#cnt .page .nav {
+			width: 200px;
+			margin-left: -20px;
+			margin-top: -10px;
+			float: left;
+		}
+		#cnt .page .content {
+			width: 538px;
+			margin-left: 40px;
+			display: inline-block;
+		}
+		ul {
+			margin-left: 0px;
+			padding-left: 20px;
+			padding-bottom: 20px;
+		}
+		li {
+			list-style: none;
+		}
+		ul ul {
+			display: none;
+		}
+		ul ul.open {
+			display: block;
+		}
+		ul.open {
+			background-color: #FFFFF0;
+		}
+		li.open {
+			background-color: #FFFFF0;
+			display: block;
+		}
+		{/literal}
+	</style>
+</head>
+<body>
+	<div id="cnt">
+		<div class="page">
+			<div class="nav">
+			<!-- navi: menu_main -->
+			{assign var="ntree" value=$tree|@nest_tree}
+			{definefunc name="render_menu" list=$ntree}
+				<ul{if $element.SUBOPEN} class="open"{/if}>
+					{foreach from=$list item=element}
+						{if $element.NAVIGATIONCODE == "menu_main"}
+						<li class="{if $element.SELECTED}selected{/if}{if $element.SUBOPEN} open{/if}">
+							<a href="{$element.URL}">{$element.NAME}</a>
+							{if $element.CHILDREN}{execfunc name="render_menu" list=$element.CHILDREN}{/if}
+						</li>
+						{/if}
+					{/foreach}
+				</ul>
+			{/definefunc}
+			</div>
+			<div class="content">
+				<div class="sitename">{$siteinfo.NAME}</div>
+				<h1>{if $pageinfo.TITLE}{$pageinfo.TITLE}{else}{$pageinfo.NAME}{/if}</h1>
+				<!-- contentarea begin: CONTENTAREA_EXAMPLE -->
+				<!-- contentarea accepts: ENTRYMASK1_IDENTIFIER, ENTRYMASK2_IDENTIFIER -->
+				{foreach from=$contentareas.CONTENTAREA_EXAMPLE.CBLOCKS item=cbs}
+					{foreach from=$cbs.ENTRYMASKS item=entrymask}
+
+						{if $entrymask.CODE == "ENTRYMASK1_IDENTIFIER"}
+							{$entrymask.FORMFIELDS.FIELD_IDENTIFIER.VALUE}
+						{/if}
+
+						{if $entrymask.CODE == "ENTRYMASK2_IDENTIFIER"}
+							<br><br><a href="{$entrymask.FORMFIELDS.FIELD2_IDENTIFIER.URL}">{$entrymask.FORMFIELDS.FIELD1_IDENTIFIER.VALUE}</a>
+						{/if}
+
+					{/foreach}
+				{/foreach}
+				<!-- contentarea end: CONTENTAREA_EXAMPLE -->
+			</div>
+			<div style="clear:both"></div>
+		</div>
+		<div class="footer">
+		<!-- navi: menu_footer -->
+		Footer navigation: &nbsp;
+		{foreach from=$tree item=element}
+		{if ($element.NAVIGATIONCODE == "menu_footer")}
+			<a href="{$element.URL}"{if $element.SELECTED} class="selected"{/if}>{$element.NAME}</a> &nbsp;
+		{/if}
+		{/foreach}
+		</div>
+	</div>
+</body>
+</html>

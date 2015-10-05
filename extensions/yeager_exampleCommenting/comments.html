@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>Comments</title>
+	<style type="text/css" media="screen">
+		{literal}
+		body {
+			margin: 0;
+			padding: 0;
+			color: #58645F;
+			font-size: 12px;
+			font-family: "HelveticaNeue", "Helvetica Neue", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
+			font-weight:200;
+			-webkit-font-smoothing: antialiased;
+			line-height: 18px;
+			background-color: white;
+		}
+
+		#commentWrapper {
+			width: 400px;
+			margin: 0 auto;
+			margin-top: 50px;
+		}
+
+		#commentWrapper .header {
+			position: relative;
+			font-size: 16px;
+			font-weight: bold;
+			margin-bottom: 50px;
+		}
+
+		#commentWrapper span.amount {
+			position: absolute;
+			right: 0;
+		}
+
+		#commentText {
+			width: 100%;
+			resize: none;
+		}
+
+		.comment {
+			margin: 10px 0;
+			padding: 20px 10px;
+			border: 1px solid black;
+		}
+		{/literal}
+	</style>
+</head>
+<body>
+<!-- comments //-->
+	<div id="commentWrapper">
+		<div class="header">
+			<span class="title">Comments</span>
+			<span class="amount">{$commentCount}</span>
+		</div>
+		<div id="commentListWrapper">
+			{foreach from=$comments item=comment name=commentList}
+				<div class="comment">
+					{if $comment.COMMENT}
+						<span class="text">
+							{$comment.COMMENT}
+						</span>
+						<br />
+					{/if}
+					{if $comment.USERNAME}
+						<span class="user">
+							{$comment.USERNAME}
+						</span>
+						<br />
+					{/if}
+					{if $comment.USEREMAIL}
+						<a href="mailto: {$comment.USEREMAIL}">{$comment.USEREMAIL}</a>
+					{/if}
+				</div>
+			{/foreach}
+			<div id="commentForm">
+				{if !$isLoggedIn && $commentSettings.FORCE_AUTHENTICATION}
+					<span>You must be logged in to post a comment!</span>
+				{elseif !$commentPermission}
+					<span>No permissions to comment!</span>
+				{elseif !$commentStatus}
+					<span>Commenting is closed!</span>
+				{else}
+					<form name="commentForm" method="post" action="">
+						<input type="hidden" name="ACTION" value="ADD" />
+						<textarea rows="10" id="commentText" name="TEXT"></textarea>
+						{if !$isLoggedIn}
+							<input type="text" name="USER" value="Name" />
+							<input type="text" name="EMAIL" value="Email" />
+						{/if}
+						<input type="submit" value="Post comment!" />
+					</form>
+				{/if}
+				{if $commentError}
+					<div id="commentError">
+						<strong>
+							An error has occured:<br />
+							{$commentError}
+						</strong>
+					</div>
+				{/if}
+			</div>
+		</div>
+	</div>
+<!-- ende comments //-->
+</body>
+</html>

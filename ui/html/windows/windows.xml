@@ -1,0 +1,2184 @@
+<?xml version="1.0"?>
+<WINDOWS>
+	<DEFAULT>
+		<WIDTH>600</WIDTH>
+		<HEIGHT>600</HEIGHT>
+		<MINWIDTH>600</MINWIDTH>
+		<MINHEIGHT>300</MINHEIGHT>
+	</DEFAULT>
+
+	<DUMMY>
+		<CUSTOMID></CUSTOMID>
+		<TYPE></TYPE>
+		<OBJECTTYPE></OBJECTTYPE>
+		<CLASS></CLASS>
+		<STYLE></STYLE>
+		<STAY_IN_BACKGROUND></STAY_IN_BACKGROUND>
+		<ICON></ICON>
+		<TITLE></TITLE>
+		<TITLE_CLASS></TITLE_CLASS>
+		<WIDTH></WIDTH>
+		<MINWIDTH></MINWIDTH>
+		<HEIGHT></HEIGHT>
+		<LOCKING></LOCKING>
+		<MINHEIGHT></MINHEIGHT>
+		<LOADPARAMS></LOADPARAMS>
+		<VERTICALSPLIT></VERTICALSPLIT>
+		<CONTAINER></CONTAINER>
+		<TABS>
+			<CONTENT>
+				<TITLE></TITLE>
+				<CLASS></CLASS>
+				<CACHE></CACHE>
+				<FOLDER></FOLDER>
+				<TRASHCAN></TRASHCAN>
+				<WORKFLOW></WORKFLOW>
+				<SELECTED></SELECTED>
+				<SUBMIT></SUBMIT>
+				<INIT></INIT>
+				<REFRESH></REFRESH>
+				<CONTENTRIGHT>
+					<PAGENAME>
+						<INIT></INIT>
+					</PAGENAME>
+				</CONTENTRIGHT>
+			</CONTENT>
+		</TABS>
+		<BUTTONS>
+			<BUTTON1>
+				<ID></ID>
+				<TDCLASS></TDCLASS>
+				<PROPERTY></PROPERTY>
+				<ONCLICK></ONCLICK>
+				<ONMOUSEOVER></ONMOUSEOVER>
+				<YG_ONCLICK></YG_ONCLICK>
+				<HELP></HELP>
+				<FOLDER>1</FOLDER>
+			</BUTTON1>
+		</BUTTONS>
+	</DUMMY>
+
+	<!-- START //-->
+
+	<START_SECTIONS>
+		<TYPE>content</TYPE>
+		<ICON>noicon</ICON>
+		<TITLE>{$itext.TXT_SECTIONS}</TITLE>
+		<MINHEIGHT>120</MINHEIGHT>
+		<TABS>
+			<START_SECTIONS>
+				<INIT>$K.yg_initStartSections(this.wndobj.id);</INIT>
+			</START_SECTIONS>
+		</TABS>
+	</START_SECTIONS>
+
+	<START_VERSIONS>
+		<TYPE>content</TYPE>
+		<ICON>noicon</ICON>
+		<TITLE>{$itext.TXT_RECENT_CHANGES}</TITLE>
+		<MINHEIGHT>120</MINHEIGHT>
+		<TABS>
+			<VERSIONS>
+				<CLASS>header_smallstart</CLASS>
+				<INIT>$K.yg_initVersionFilter(this.wndobj.id);</INIT>
+			</VERSIONS>
+		</TABS>
+	</START_VERSIONS>
+
+	<!-- PAGES //-->
+
+	<PAGE_DETAILS>
+		<TYPE>content</TYPE>
+		<OBJECTTYPE>page</OBJECTTYPE>
+		<ICON>page</ICON>
+		<LOCKING>true</LOCKING>
+		<TABS>
+			<CONTENT>
+				<TITLE>{$itext.TXT_CONTENT}</TITLE>
+				<INIT>$K.yg_initContentTab( this.wndobj.yg_id, '', this.wndobj.id, 'page' );</INIT>
+			</CONTENT>
+			<PROPERTIES>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_PROPERTIES}</TITLE>
+			</PROPERTIES>
+			<TAGS>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_TAGS}</TITLE>
+				<INIT>$K.yg_initTagsTab( this.wndobj.yg_id.split('-')[0], this.wndobj.id.split('_')[1] );</INIT>
+			</TAGS>
+			<APPEARANCE>
+				<TITLE>{$itext.TXT_APPEARANCE}</TITLE>
+				<INIT>$K.yg_initAppearanceTab( this.wndobj.yg_id.split('-')[0], this.wndobj.id.split('_')[1] );</INIT>
+			</APPEARANCE>
+			<LINKS>
+				<TITLE>{$itext.TXT_LINKS}</TITLE>
+			</LINKS>
+			<EXTENSIONS>
+				<TITLE>{$itext.TXT_EXTENSIONS}</TITLE>
+				<INIT>$K.yg_initContentTab( this.wndobj.yg_id, '', this.wndobj.id, 'extpage' );</INIT>
+			</EXTENSIONS>
+			<VERSIONS>
+				<TITLE>{$itext.TXT_VERSIONS}</TITLE>
+				<CLASS>header_medium</CLASS>
+				<INIT>$K.yg_initVersionFilter(this.wndobj.id);</INIT>
+			</VERSIONS>
+			<PUBLISHING>
+				<TITLE>{$itext.TXT_PUBLISHING}</TITLE>
+			</PUBLISHING>
+			<TRASHCAN>
+				<TRASHCAN>1</TRASHCAN>
+				<CLASS>header_smallstart</CLASS>
+				<TITLE>{$itext.TXT_TRASHCAN|default:'$TXT_TRASHCAN'}</TITLE>
+			</TRASHCAN>
+			<COMMENTS>
+				<TITLE>{$itext.TXT_COMMENTS}</TITLE>
+				<CLASS>header_comments</CLASS>
+				<INIT>$K.yg_initCommentFilter(this.wndobj.id);</INIT>
+			</COMMENTS>
+		</TABS>
+		<BUTTONS>
+			<PREVIEWCURRENT>
+				<HELP>{$itext.TXT_PAGE_PREVIEW_WORKING}</HELP>
+			</PREVIEWCURRENT>
+			<PREVIEW>
+				<HELP>{$itext.TXT_PAGE_PREVIEW_LIVE}</HELP>
+			</PREVIEW>
+			<CLEAR>
+				<ID>stagebtn</ID>
+				<TDCLASS>ywindow_btl</TDCLASS>
+				<PROPERTY>approve</PROPERTY>
+				<ONCLICK>$K.yg_approvePage(this);</ONCLICK>
+				<HELP>{$itext.TXT_PAGE_CLEAR}</HELP>
+			</CLEAR>
+			{*<DELETE>
+				<TDCLASS>mk_onlytrashcan</TDCLASS>
+				<ONCLICK></ONCLICK>
+				<HELP>{$itext.TXT_TRASHCAN_CLEAR}</HELP>
+			</DELETE>*}
+		</BUTTONS>
+	</PAGE_DETAILS>
+
+	<PAGES_TREE>
+		<TYPE>tree</TYPE>
+		<MINWIDTH>300</MINWIDTH>
+		<ICON>navigator</ICON>
+		<OBJECTTYPE>page</OBJECTTYPE>
+		<TITLE>{$itext.TXT_PAGES}</TITLE>
+		<TABS>
+			<PAGES_TREE></PAGES_TREE>
+		</TABS>
+		<BUTTONS>
+			<ADD>
+				<ACLASS>tree_btn_page</ACLASS>
+				<TYPE>tree_btn_add</TYPE>
+				<ONCLICK>$K.yg_addChildPage(this);</ONCLICK>
+				<HELP>{$itext.TXT_PAGE_ADD}</HELP>
+			</ADD>
+			<COPY>
+				<ACLASS>tree_btn_page</ACLASS>
+				<TYPE>tree_btn_copy</TYPE>
+				<ONCLICK>new $K.yg_wndobj({literal}{{/literal} config: 'PAGE_COPY', loadparams: {literal}{{/literal} action: 'copy', opener_reference: this.wndobj.id, site: $(this.wndobj.id+'_dd_site').value{literal} } }{/literal});</ONCLICK>
+				<HELP>{$itext.TXT_PAGE_COPY}</HELP>
+			</COPY>
+			<MOVETO>
+				<ACLASS>tree_btn_page</ACLASS>
+				<TYPE>tree_btn_move</TYPE>
+				<ONCLICK>new $K.yg_wndobj({literal}{{/literal} config: 'PAGE_MOVE', loadparams: {literal}{{/literal} action: 'move', opener_reference: this.wndobj.id, site: $(this.wndobj.id+'_dd_site').value{literal} } }{/literal});</ONCLICK>
+				<HELP>{$itext.TXT_PAGE_MOVE}</HELP>
+			</MOVETO>
+			<MOVEDOWN>
+				<ACLASS>tree_btn_page</ACLASS>
+				<TYPE>tree_btn_down</TYPE>
+				<ONCLICK>$K.yg_moveDownPage(this);</ONCLICK>
+				<HELP>{$itext.TXT_PAGE_MOVEDOWN}</HELP>
+			</MOVEDOWN>
+			<MOVEUP>
+				<ACLASS>tree_btn_page</ACLASS>
+				<TYPE>tree_btn_up</TYPE>
+				<ONCLICK>$K.yg_moveUpPage(this);</ONCLICK>
+				<HELP>{$itext.TXT_PAGE_MOVEUP}</HELP>
+			</MOVEUP>
+			<DELETE>
+				<ACLASS>tree_btn_page multiselect</ACLASS>
+				<TYPE>tree_btn_delete</TYPE>
+				<ONCLICK>$K.yg_fireAction($K.yg_deleteElement, this);</ONCLICK>
+				<HELP>{$itext.TXT_PAGE_DELETE}</HELP>
+			</DELETE>
+		</BUTTONS>
+	</PAGES_TREE>
+
+	<PAGE_COPY>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>page</OBJECTTYPE>
+		<ICON>page</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<TITLE>{$itext.TXT_COPY_PAGE_CHOOSE_TARGET}</TITLE>
+		<TABS>
+			<PAGES_TREE>
+				<SUBMIT>$K.yg_submitPages(this.wndobj.num,'copy',this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</PAGES_TREE>
+		</TABS>
+	</PAGE_COPY>
+
+	<PAGE_MOVE>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>page</OBJECTTYPE>
+		<ICON>page</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<TITLE>{$itext.TXT_MOVE_PAGE_CHOOSE_TARGET}</TITLE>
+		<TABS>
+			<PAGES_TREE>
+				<SUBMIT>$K.yg_submitPages(this.wndobj.num,this.wndobj.loadparams['action'],this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</PAGES_TREE>
+		</TABS>
+	</PAGE_MOVE>
+
+	<PAGE_SELECT>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>page</OBJECTTYPE>
+		<ICON>page</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<TITLE>{$itext.TXT_CHOOSE_PAGE}</TITLE>
+		<TABS>
+			<PAGES_TREE>
+				<SUBMIT>$K.yg_submitPages(this.wndobj.num,'choose',this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</PAGES_TREE>
+		</TABS>
+	</PAGE_SELECT>
+
+	<TOOLS_PAGES>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>page</OBJECTTYPE>
+		<ICON>page</ICON>
+		<CLASS>mk_noexec</CLASS>
+		<LOADPARAMS>{literal}{{/literal}"action": "choose"{literal}}{/literal}</LOADPARAMS>
+		<WIDTH>330</WIDTH>
+		<HEIGHT>360</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<TITLE>{$itext.TXT_PAGES}</TITLE>
+		<TABS>
+			<PAGES_TREE></PAGES_TREE>
+		</TABS>
+	</TOOLS_PAGES>
+
+	<TEMPLATE_SELECT>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>template</OBJECTTYPE>
+		<ICON>template</ICON>
+		<WIDTH>733</WIDTH>
+		<HEIGHT>310</HEIGHT>
+		<TITLE>{$itext.TXT_CHOOSE_TEMPLATE}</TITLE>
+		<VERTICALSPLIT>50</VERTICALSPLIT>
+		<TABS>
+			<TEMPLATES_TREE>
+				<CONTENTRIGHT>
+					<TEMPLATE_INFO></TEMPLATE_INFO>
+				</CONTENTRIGHT>
+				<SUBMIT>$K.yg_submitTemplate(this.wndobj.num, this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</TEMPLATES_TREE>
+		</TABS>
+	</TEMPLATE_SELECT>
+
+	<TOOLS_TEMPLATES>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>template</OBJECTTYPE>
+		<ICON>template</ICON>
+		<CLASS>mk_noexec</CLASS>
+		<WIDTH>733</WIDTH>
+		<HEIGHT>310</HEIGHT>
+		<TITLE>{$itext.TXT_TEMPLATES}</TITLE>
+		<LOADPARAMS>{literal}{{/literal}"action": "choose"{literal}}{/literal}</LOADPARAMS>
+		<VERTICALSPLIT>50</VERTICALSPLIT>
+		<TABS>
+			<TEMPLATES_TREE>
+				<CONTENTRIGHT>
+					<TEMPLATE_INFO></TEMPLATE_INFO>
+				</CONTENTRIGHT>
+			</TEMPLATES_TREE>
+		</TABS>
+	</TOOLS_TEMPLATES>
+
+	<TEMPLATEFOLDER_SELECT>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>template</OBJECTTYPE>
+		<ICON>folder</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<TITLE>{$itext.TXT_CHOOSE_TEMPLATEFOLDER|default:'$TXT_CHOOSE_TEMPLATEFOLDER'}</TITLE>
+		<TABS>
+			<TEMPLATES_TREE>
+				<SUBMIT>$K.yg_submitTemplateFolder(this.wndobj.num, this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</TEMPLATES_TREE>
+		</TABS>
+	</TEMPLATEFOLDER_SELECT>
+
+	<NAVIGATION_SELECT>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>navigation</OBJECTTYPE>
+		<ICON>noicon</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<TITLE>{$itext.TXT_CHOOSE_NAVIGATION}</TITLE>
+		<TABS>
+			<NAVIGATIONS>
+				<SUBMIT>$K.yg_submitNavigation(this.wndobj.num,this.wndobj.loadparams['opener_reference']);</SUBMIT>
+				<INIT>$K.yg_initDlgNavigations(this.wndobj.num, this.wndobj.loadparams.preselected);</INIT>
+			</NAVIGATIONS>
+		</TABS>
+	</NAVIGATION_SELECT>
+
+	<VERSIONS_TIMEFRAME>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE></OBJECTTYPE>
+		<ICON>noicon</ICON>
+		<WIDTH>510</WIDTH>
+		<HEIGHT>200</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<MINHEIGHT>150</MINHEIGHT>
+		<TITLE>{$itext.TXT_DEFINE_CUSTOM_TIMEFRAME}</TITLE>
+		<TABS>
+			<TIMEFRAME>
+				<SUBMIT>$K.yg_submitVersionTimeframe(this.wndobj.num,this.wndobj.loadparams['opener_reference'],this.wndobj.loadparams['shorttitle']);</SUBMIT>
+			</TIMEFRAME>
+		</TABS>
+	</VERSIONS_TIMEFRAME>
+
+	<TRASHCAN_TIMEFRAME>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE></OBJECTTYPE>
+		<ICON>noicon</ICON>
+		<WIDTH>510</WIDTH>
+		<HEIGHT>200</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<MINHEIGHT>150</MINHEIGHT>
+		<TITLE>{$itext.TXT_DEFINE_CUSTOM_TIMEFRAME}</TITLE>
+		<TABS>
+			<TIMEFRAME>
+				<SUBMIT>$K.yg_submitTrashcanTimeframe(this.wndobj.num,this.wndobj.loadparams['opener_reference'],this.wndobj.loadparams['shorttitle']);</SUBMIT>
+			</TIMEFRAME>
+		</TABS>
+	</TRASHCAN_TIMEFRAME>
+
+	<COMMENTS_TIMEFRAME>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE></OBJECTTYPE>
+		<ICON>noicon</ICON>
+		<WIDTH>510</WIDTH>
+		<HEIGHT>200</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<MINHEIGHT>150</MINHEIGHT>
+		<TITLE>{$itext.TXT_DEFINE_CUSTOM_TIMEFRAME}</TITLE>
+		<TABS>
+			<TIMEFRAME>
+				<SUBMIT>$K.yg_submitCommentTimeframe(this.wndobj.num,this.wndobj.loadparams['opener_reference'],this.wndobj.loadparams['shorttitle']);</SUBMIT>
+			</TIMEFRAME>
+		</TABS>
+	</COMMENTS_TIMEFRAME>
+
+	<PAGE_EXTENSION_SELECT>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>extpage</OBJECTTYPE>
+		<ICON>extensions</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<LOADPARAMS>{literal}{{/literal}"wt": "dialog", "selectiondialog": "1", "extensiontype": "page", "objecttype": "extpage"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_CHOOSE_EXTENSION}</TITLE>
+		<TABS>
+			<EXTENSION_LIST>
+				<INIT>$K.yg_initDlgExtensions(this.wndobj.num, this.wndobj.loadparams.opener_reference);</INIT>
+				<SUBMIT>$K.yg_submitExtensions(this.wndobj.num,this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</EXTENSION_LIST>
+		</TABS>
+	</PAGE_EXTENSION_SELECT>
+
+	<CBLOCK_EXTENSION_SELECT>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>extcblock</OBJECTTYPE>
+		<ICON>extensions</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<LOADPARAMS>{literal}{{/literal}"wt": "dialog", "selectiondialog": "1", "extensiontype": "cblock", "objecttype": "extcblock"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_CHOOSE_EXTENSION}</TITLE>
+		<TABS>
+			<EXTENSION_LIST>
+				<INIT>$K.yg_initDlgExtensions(this.wndobj.num, this.wndobj.loadparams.opener_reference);</INIT>
+				<SUBMIT>$K.yg_submitExtensions(this.wndobj.num,this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</EXTENSION_LIST>
+		</TABS>
+	</CBLOCK_EXTENSION_SELECT>
+
+	<FILE_EXTENSION_SELECT>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>extfile</OBJECTTYPE>
+		<ICON>extensions</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<LOADPARAMS>{literal}{{/literal}"wt": "dialog", "selectiondialog": "1", "extensiontype": "file", "objecttype": "extfile"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_CHOOSE_EXTENSION}</TITLE>
+		<TABS>
+			<EXTENSION_LIST>
+				<INIT>$K.yg_initDlgExtensions(this.wndobj.num, this.wndobj.loadparams.opener_reference);</INIT>
+				<SUBMIT>$K.yg_submitExtensions(this.wndobj.num,this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</EXTENSION_LIST>
+		</TABS>
+	</FILE_EXTENSION_SELECT>
+
+	<MAILING_EXTENSION_SELECT>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>extmailing</OBJECTTYPE>
+		<ICON>extensions</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<LOADPARAMS>{literal}{{/literal}"wt": "dialog", "selectiondialog": "1", "extensiontype": "mailing", "objecttype": "extmailing"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_CHOOSE_EXTENSION}</TITLE>
+		<TABS>
+			<EXTENSION_LIST>
+				<INIT>$K.yg_initDlgExtensions(this.wndobj.num, this.wndobj.loadparams.opener_reference);</INIT>
+				<SUBMIT>$K.yg_submitExtensions(this.wndobj.num,this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</EXTENSION_LIST>
+		</TABS>
+	</MAILING_EXTENSION_SELECT>
+
+	<USER_SETTINGS>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>user</OBJECTTYPE>
+		<ICON>noicon</ICON>
+		<WIDTH>520</WIDTH>
+		<HEIGHT>500</HEIGHT>
+		<TABS>
+			<USER_SETTINGS>
+				<SUBMIT>$K.yg_submitUserSettings(this.wndobj.num);</SUBMIT>
+				<INIT>$K.yg_initDlgUserSettings( this.wndobj.num);</INIT>
+			</USER_SETTINGS>
+		</TABS>
+	</USER_SETTINGS>
+
+	<USER_INFO>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>user</OBJECTTYPE>
+		<ICON>noicon</ICON>
+		<WIDTH>520</WIDTH>
+		<HEIGHT>500</HEIGHT>
+		<TABS>
+			<USER_INFO></USER_INFO>
+		</TABS>
+	</USER_INFO>
+
+	<CONTENTEDITOR>
+		<TYPE>dialog</TYPE>
+		<MINWIDTH>804</MINWIDTH>
+		<MINHEIGHT>300</MINHEIGHT>
+		<WIDTH>810</WIDTH>
+		<HEIGHT>600</HEIGHT>
+		<ICON>noicon</ICON>
+		<TITLE>{$itext.TXT_EDIT_CONTENT}</TITLE>
+		<TABS>
+			<CONTENTEDITOR>
+				<INIT>$K.yg_initContenteditor(this.wndobj.num, this.wndobj.loadparams['formfield'], this.wndobj.loadparams['buttonconfig'], this.wndobj.loadparams['ce_css']);</INIT>
+				<SUBMIT>$K.yg_submitContentEditor(this.wndobj.num, this.wndobj.loadparams['formfield']);</SUBMIT>
+			</CONTENTEDITOR>
+		</TABS>
+		<BUTTONS>
+			<UNDO>
+				<ID>ce_btn_undo</ID>
+				<ONCLICK>yeagerCE_Undo(this);</ONCLICK>
+				<HELP>{$itext.TXT_UNDO}</HELP>
+			</UNDO>
+			<REDO>
+				<ID>ce_btn_redo</ID>
+				<ONCLICK>yeagerCE_Redo(this);</ONCLICK>
+				<HELP>{$itext.TXT_REDO}</HELP>
+			</REDO>
+		</BUTTONS>
+	</CONTENTEDITOR>
+
+	<CONTENTEDITOR_EMBEDDED>
+		<TYPE>dialog</TYPE>
+		<MINWIDTH>511</MINWIDTH>
+		<MINHEIGHT>300</MINHEIGHT>
+		<WIDTH>520</WIDTH>
+		<HEIGHT>490</HEIGHT>
+		<ICON>noicon</ICON>
+		<TITLE>{$itext.TXT_EDIT_INSERT_EMBEDDED_MEDIA}</TITLE>
+		<TABS>
+			<CONTENTEDITOR_EMBEDDED>
+				<INIT>$K.yg_initCEEmbedded(this.wndobj.num);</INIT>
+				<SUBMIT>$K.windows[this.wndobj.id].submitCE_embedded();</SUBMIT>
+			</CONTENTEDITOR_EMBEDDED>
+		</TABS>
+	</CONTENTEDITOR_EMBEDDED>
+
+	<CONTENTEDITOR_FINDREPLACE>
+		<TYPE>dialog</TYPE>
+		<MINWIDTH>511</MINWIDTH>
+		<MINHEIGHT>345</MINHEIGHT>
+		<WIDTH>511</WIDTH>
+		<HEIGHT>345</HEIGHT>
+		<ICON>noicon</ICON>
+		<TITLE>{$itext.TXT_FIND_REPLACE}</TITLE>
+		<TABS>
+			<CONTENTEDITOR_FIND>
+				<TITLE>{$itext.TXT_FIND}</TITLE>
+				<CACHE>1</CACHE>
+				<INIT>$K.yg_initCEFindReplace(this.wndobj.num);</INIT>
+			</CONTENTEDITOR_FIND>
+			<CONTENTEDITOR_REPLACE>
+				<TITLE>{$itext.TXT_REPLACE}</TITLE>
+				<CACHE>1</CACHE>
+				<INIT>$K.yg_initCEFindReplace(this.wndobj.num);</INIT>
+			</CONTENTEDITOR_REPLACE>
+		</TABS>
+	</CONTENTEDITOR_FINDREPLACE>
+
+	<CONTENTEDITOR_HTML>
+		<TYPE>dialog</TYPE>
+		<MINWIDTH>550</MINWIDTH>
+		<MINHEIGHT>523</MINHEIGHT>
+		<WIDTH>550</WIDTH>
+		<HEIGHT>523</HEIGHT>
+		<ICON>noicon</ICON>
+		<TITLE>{$itext.TXT_HTML}</TITLE>
+		<TABS>
+			<CONTENTEDITOR_HTML>
+				<INIT>$K.yg_initCEHTML(this.wndobj.num);</INIT>
+				<SUBMIT>$K.windows[this.wndobj.id].submitCE_html();</SUBMIT>
+			</CONTENTEDITOR_HTML>
+		</TABS>
+	</CONTENTEDITOR_HTML>
+
+	<CONTENTEDITOR_IMAGE>
+		<TYPE>dialog</TYPE>
+		<MINWIDTH>511</MINWIDTH>
+		<MINHEIGHT>300</MINHEIGHT>
+		<WIDTH>511</WIDTH>
+		<HEIGHT>490</HEIGHT>
+		<ICON>noicon</ICON>
+		<TITLE>{$itext.TXT_PICTURE_EDIT_INSERT}</TITLE>
+		<TABS>
+			<CONTENTEDITOR_IMAGE>
+				<INIT>$K.yg_initCEImage(this.wndobj.num);</INIT>
+				<SUBMIT>$K.windows[this.wndobj.id].submitCE_image();</SUBMIT>
+			</CONTENTEDITOR_IMAGE>
+		</TABS>
+	</CONTENTEDITOR_IMAGE>
+
+	<CONTENTEDITOR_ANCHOR>
+		<TYPE>dialog</TYPE>
+		<MINWIDTH>397</MINWIDTH>
+		<MINHEIGHT>200</MINHEIGHT>
+		<WIDTH>397</WIDTH>
+		<HEIGHT>200</HEIGHT>
+		<ICON>noicon</ICON>
+		<TITLE>{$itext.TXT_INSERT_ANCHOR}</TITLE>
+		<TABS>
+			<CONTENTEDITOR_ANCHOR>
+				<INIT>$K.yg_initCEAnchor(this.wndobj.num);</INIT>
+				<SUBMIT>$K.windows[this.wndobj.id].submitCE_anchor();</SUBMIT>
+			</CONTENTEDITOR_ANCHOR>
+		</TABS>
+	</CONTENTEDITOR_ANCHOR>
+
+	<CONTENTEDITOR_TABLE>
+		<TYPE>dialog</TYPE>
+		<MINWIDTH>395</MINWIDTH>
+		<MINHEIGHT>210</MINHEIGHT>
+		<WIDTH>395</WIDTH>
+		<HEIGHT>400</HEIGHT>
+		<ICON>noicon</ICON>
+		<TITLE>{$itext.TXT_INSERT_TABLE}</TITLE>
+		<TABS>
+			<CONTENTEDITOR_TABLE>
+				<INIT>$K.yg_initCETable(this.wndobj.num);</INIT>
+				<SUBMIT>$K.windows[this.wndobj.id].submitCE_table();</SUBMIT>
+			</CONTENTEDITOR_TABLE>
+		</TABS>
+	</CONTENTEDITOR_TABLE>
+
+	<CONTENTEDITOR_TABLECELL>
+		<TYPE>dialog</TYPE>
+		<MINWIDTH>395</MINWIDTH>
+		<MINHEIGHT>200</MINHEIGHT>
+		<WIDTH>395</WIDTH>
+		<HEIGHT>350</HEIGHT>
+		<ICON>noicon</ICON>
+		<TITLE>{$itext.TXT_EDIT_TABLE_CELL}</TITLE>
+		<TABS>
+			<CONTENTEDITOR_TABLECELL>
+				<INIT>$K.yg_initCETableCell(this.wndobj.num);</INIT>
+				<SUBMIT>$K.windows[this.wndobj.id].submitCE_tableCell();</SUBMIT>
+			</CONTENTEDITOR_TABLECELL>
+		</TABS>
+	</CONTENTEDITOR_TABLECELL>
+
+	<CONTENTEDITOR_TABLEROW>
+		<TYPE>dialog</TYPE>
+		<MINWIDTH>395</MINWIDTH>
+		<MINHEIGHT>200</MINHEIGHT>
+		<WIDTH>395</WIDTH>
+		<HEIGHT>250</HEIGHT>
+		<ICON>noicon</ICON>
+		<TITLE>{$itext.TXT_EDIT_TABLE_ROW}</TITLE>
+		<TABS>
+			<CONTENTEDITOR_TABLEROW>
+				<INIT>$K.yg_initCETableRow(this.wndobj.num);</INIT>
+				<SUBMIT>$K.windows[this.wndobj.id].submitCE_tableRow();</SUBMIT>
+			</CONTENTEDITOR_TABLEROW>
+		</TABS>
+	</CONTENTEDITOR_TABLEROW>
+
+	<CONTENTEDITOR_MERGECELLS>
+		<TYPE>dialog</TYPE>
+		<MINWIDTH>395</MINWIDTH>
+		<MINHEIGHT>210</MINHEIGHT>
+		<WIDTH>395</WIDTH>
+		<HEIGHT>210</HEIGHT>
+		<ICON>noicon</ICON>
+		<TITLE>{$itext.TXT_MERGE_CELLS}</TITLE>
+		<TABS>
+			<CONTENTEDITOR_MERGECELLS>
+				<INIT>$K.yg_initCEMergeCells(this.wndobj.num);</INIT>
+				<SUBMIT>$K.windows[this.wndobj.id].submitCE_mergecells();</SUBMIT>
+			</CONTENTEDITOR_MERGECELLS>
+		</TABS>
+	</CONTENTEDITOR_MERGECELLS>
+
+	<CONTENTEDITOR_PASTEWORD>
+		<TYPE>dialog</TYPE>
+		<MINWIDTH>550</MINWIDTH>
+		<MINHEIGHT>523</MINHEIGHT>
+		<WIDTH>550</WIDTH>
+		<HEIGHT>523</HEIGHT>
+		<ICON>noicon</ICON>
+		<TITLE>{$itext.TXT_PASTE_WORD}</TITLE>
+		<TABS>
+			<CONTENTEDITOR_PASTEWORD>
+				<INIT>$K.yg_initCEPasteWord(this.wndobj.num);</INIT>
+				<SUBMIT>$K.windows[this.wndobj.id].submitCE_pasteWord();</SUBMIT>
+			</CONTENTEDITOR_PASTEWORD>
+		</TABS>
+	</CONTENTEDITOR_PASTEWORD>
+
+	<CONTENTEDITOR_LINK_SELECT>
+		<TYPE>dialog</TYPE>
+		<MINWIDTH>511</MINWIDTH>
+		<MINHEIGHT>345</MINHEIGHT>
+		<WIDTH>520</WIDTH>
+		<HEIGHT>345</HEIGHT>
+		<ICON>noicon</ICON>
+		<TITLE>{$itext.TXT_LINK_INSERT_EDIT}</TITLE>
+		<TABS>
+			<LINK_SELECT_PAGE>
+				<TITLE>{$itext.TXT_PAGE}</TITLE>
+				<CACHE>1</CACHE>
+				<INIT>$K.yg_initCELink(this.wndobj.num, this.wndobj.loadparams['opener_reference']);</INIT>
+				<SUBMIT>$K.yg_submitCE_link(this.wndobj.num, this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</LINK_SELECT_PAGE>
+			<LINK_SELECT_EMAIL>
+				<TITLE>{$itext.TXT_EMAIL}</TITLE>
+				<CACHE>1</CACHE>
+				<INIT>$K.yg_initCELink(this.wndobj.num, this.wndobj.loadparams['opener_reference']);</INIT>
+				<SUBMIT>$K.yg_submitCE_link(this.wndobj.num, this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</LINK_SELECT_EMAIL>
+			<LINK_SELECT_ANCHOR>
+				<TITLE>{$itext.TXT_ANCHOR}</TITLE>
+				<CACHE>1</CACHE>
+				<INIT>$K.yg_initCELink(this.wndobj.num, this.wndobj.loadparams['opener_reference']);</INIT>
+				<SUBMIT>$K.yg_submitCE_link(this.wndobj.num, this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</LINK_SELECT_ANCHOR>
+			<LINK_SELECT_FILE>
+				<TITLE>{$itext.TXT_FILE}</TITLE>
+				<CACHE>1</CACHE>
+				<INIT>$K.yg_initCELink(this.wndobj.num, this.wndobj.loadparams['opener_reference']);</INIT>
+				<SUBMIT>$K.yg_submitCE_link(this.wndobj.num, this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</LINK_SELECT_FILE>
+		</TABS>
+	</CONTENTEDITOR_LINK_SELECT>
+
+	<LINK_SELECT>
+		<TYPE>dialog</TYPE>
+		<MINWIDTH>511</MINWIDTH>
+		<MINHEIGHT>345</MINHEIGHT>
+		<WIDTH>520</WIDTH>
+		<HEIGHT>345</HEIGHT>
+		<ICON>noicon</ICON>
+		<TITLE>{$itext.TXT_LINK_INSERT_EDIT}</TITLE>
+		<TABS>
+			<LINK_SELECT_PAGE>
+				<TITLE>{$itext.TXT_PAGE}</TITLE>
+				<CACHE>1</CACHE>
+				<INIT>$K.yg_initLink(this.wndobj.num, this.wndobj.loadparams['opener_reference']);</INIT>
+				<SUBMIT>$K.yg_submitLink(this.wndobj.num, this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</LINK_SELECT_PAGE>
+			<LINK_SELECT_EMAIL>
+				<TITLE>{$itext.TXT_EMAIL}</TITLE>
+				<CACHE>1</CACHE>
+				<INIT>$K.yg_initLink(this.wndobj.num, this.wndobj.loadparams['opener_reference']);</INIT>
+				<SUBMIT>$K.yg_submitLink(this.wndobj.num, this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</LINK_SELECT_EMAIL>
+			<LINK_SELECT_FILE>
+				<TITLE>{$itext.TXT_FILE}</TITLE>
+				<CACHE>1</CACHE>
+				<INIT>$K.yg_initLink(this.wndobj.num, this.wndobj.loadparams['opener_reference']);</INIT>
+				<SUBMIT>$K.yg_submitLink(this.wndobj.num, this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</LINK_SELECT_FILE>
+		</TABS>
+	</LINK_SELECT>
+
+	<!-- PREVIEW //-->
+
+	<PREVIEW_FULLSCREEN_PAGE>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>page</OBJECTTYPE>
+		<ICON>page</ICON>
+		<MINWIDTH>402</MINWIDTH>
+		<MINHEIGHT>160</MINHEIGHT>
+		<WIDTH>402</WIDTH>
+		<HEIGHT>160</HEIGHT>
+		<CONTAINER>previewcontainer</CONTAINER>
+		<TABS>
+			<PREVIEW></PREVIEW>
+		</TABS>
+	</PREVIEW_FULLSCREEN_PAGE>
+
+	<PREVIEW_FULLSCREEN_MAILING>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>mailing</OBJECTTYPE>
+		<ICON>mailing</ICON>
+		<MINWIDTH>402</MINWIDTH>
+		<MINHEIGHT>160</MINHEIGHT>
+		<WIDTH>402</WIDTH>
+		<HEIGHT>160</HEIGHT>
+		<CONTAINER>previewcontainer</CONTAINER>
+		<TABS>
+			<PREVIEW></PREVIEW>
+		</TABS>
+	</PREVIEW_FULLSCREEN_MAILING>
+
+	<PREVIEW_FULLSCREEN_FILE>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>file</OBJECTTYPE>
+		<ICON>file</ICON>
+		<MINWIDTH>402</MINWIDTH>
+		<MINHEIGHT>202</MINHEIGHT>
+		<CLASS>mk_filepreviewer</CLASS>
+		<WIDTH>402</WIDTH>
+		<HEIGHT>202</HEIGHT>
+		<CONTAINER>previewcontainer</CONTAINER>
+		<TABS>
+			<PREVIEW>
+				<SUBMIT>$K.yg_submitCrop(this.wndobj.num);</SUBMIT>
+			</PREVIEW>
+		</TABS>
+		<BUTTONS>
+			<EDIT>
+				<ID>croplink</ID>
+				<ONCLICK>$K.yg_cropPreview(this.wndobj.num);</ONCLICK>
+				<HELP>{$itext.TXT_FILE_CROP}</HELP>
+			</EDIT>
+			<DOWNLOAD>
+				<ID>downloadlink</ID>
+				<HELP>{$itext.TXT_FILE_DOWNLOAD}</HELP>
+			</DOWNLOAD>
+			<PREVIEWWIN>
+				<ID>previewlink</ID>
+				<ONCLICK>Event.stop(this.event);$K.yg_preview({literal}{{/literal}objecttype: 'file', id: this.wndobj.loadparams['objectid'], version: $('wid_'+this.wndobj.num+'_ddversion').down().next('input').value, view: $('wid_'+this.wndobj.num+'_ddview').down().next('input').value.split('#!#!#')[0], zoom:$('wid_'+this.wndobj.num+'_ddzoom').down().next('input').value, fullscreen: false{literal}}{/literal});$K.yg_closePreview();</ONCLICK>
+				<HELP>{$itext.TXT_FILE_PREVIEW}</HELP>
+				<ONMOUSEOVER>this.href='{$internalprefix}?preview=1&#x26;objecttype=file&#x26;id='+this.wndobj.loadparams['objectid']+'&#x26;version='+$('wid_'+this.wndobj.num+'_ddversion').down().next('input').value+'&#x26;view='+$('wid_'+this.wndobj.num+'_ddview').down().next('input').value.split('#!#!#')[0]+'&#x26;zoom='+$('wid_'+this.wndobj.num+'_ddzoom').down().next('input').value;</ONMOUSEOVER>
+			</PREVIEWWIN>
+		</BUTTONS>
+	</PREVIEW_FULLSCREEN_FILE>
+
+	<PREVIEW_WINDOW_FILE>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>file</OBJECTTYPE>
+		<ICON>file</ICON>
+		<MINWIDTH>735</MINWIDTH>
+		<MINHEIGHT>400</MINHEIGHT>
+		<WIDTH>735</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<TABS>
+			<PREVIEW_FILE></PREVIEW_FILE>
+		</TABS>
+		<BUTTONS>
+			<EDIT>
+				<ID>croplink</ID>
+				<ONCLICK>$K.yg_preview({literal}{{/literal}objecttype: 'file', id: this.wndobj.loadparams['objectid'], version: $('wid_'+this.wndobj.num+'_ddversion').down().next('input').value, view: $('wid_'+this.wndobj.num+'_ddview').down().next('input').value.split('#!#!#')[0], zoom:$('wid_'+this.wndobj.num+'_ddzoom').down().next('input').value, fullscreen: true, crop: true{literal}}{/literal});$K.windows[this.wndobj.id].remove();</ONCLICK>
+				<HELP>{$itext.TXT_FILE_CROP}</HELP>
+			</EDIT>
+			<DOWNLOAD>
+				<ID>downloadlink</ID>
+				<HELP>{$itext.TXT_FILE_DOWNLOAD}</HELP>
+			</DOWNLOAD>
+			<PREVIEW>
+				<ID>previewlink</ID>
+				<ONCLICK>Event.stop(this.event);$K.yg_preview({literal}{{/literal}objecttype: 'file', id: this.wndobj.loadparams['objectid'], version: $('wid_'+this.wndobj.num+'_ddversion').down().next('input').value, view: $('wid_'+this.wndobj.num+'_ddview').down().next('input').value.split('#!#!#')[0], zoom:$('wid_'+this.wndobj.num+'_ddzoom').down().next('input').value, fullscreen: true{literal}}{/literal});$K.windows[this.wndobj.id].remove();</ONCLICK>
+				<HELP>{$itext.TXT_FILE_PREVIEW_FULLSCREEN}</HELP>
+				<ONMOUSEOVER>this.href='{$internalprefix}?preview=1&#x26;objecttype=file&#x26;id='+this.wndobj.loadparams['objectid']+'&#x26;version='+$('wid_'+this.wndobj.num+'_ddversion').down().next('input').value+'&#x26;view='+$('wid_'+this.wndobj.num+'_ddview').down().next('input').value.split('#!#!#')[0]+'&#x26;zoom='+$('wid_'+this.wndobj.num+'_ddzoom').down().next('input').value;</ONMOUSEOVER>
+			</PREVIEW>
+		</BUTTONS>
+	</PREVIEW_WINDOW_FILE>
+
+	<!-- TAGS //-->
+
+	<TAG_DETAILS>
+		<TYPE>content</TYPE>
+		<OBJECTTYPE>tag</OBJECTTYPE>
+		<ICON>tag</ICON>
+		<TABS>
+			<PROPERTIES>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_PROPERTIES}</TITLE>
+				<SELECTED>1</SELECTED>
+			</PROPERTIES>
+			<TAGLINKS>
+				<TITLE>{$itext.TXT_LINKS}</TITLE>
+			</TAGLINKS>
+		</TABS>
+	</TAG_DETAILS>
+
+	<TAGS_TREE>
+		<TYPE>tree</TYPE>
+		<MINWIDTH>300</MINWIDTH>
+		<ICON>navigator</ICON>
+		<TITLE>{$itext.TXT_TAGS}</TITLE>
+		<TABS>
+			<TAGS_TREE></TAGS_TREE>
+		</TABS>
+		<BUTTONS>
+			<ADD>
+				<ACLASS>tree_btn_tag</ACLASS>
+				<TYPE>tree_btn_add</TYPE>
+				<ONCLICK>$K.yg_addChildTag(this);</ONCLICK>
+				<HELP>{$itext.TXT_TAG_ADD}</HELP>
+			</ADD>
+			<DELETE>
+				<ACLASS>tree_btn_tag multiselect</ACLASS>
+				<TYPE>tree_btn_delete</TYPE>
+				<ONCLICK>$K.yg_fireAction($K.yg_deleteElement, this);</ONCLICK>
+				<HELP>{$itext.TXT_TAG_DELETE}</HELP>
+			</DELETE>
+		</BUTTONS>
+	</TAGS_TREE>
+
+	<TAG_SELECT>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>tag</OBJECTTYPE>
+		<ICON>tag</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<TITLE>{$itext.TXT_TAGS}</TITLE>
+		<TABS>
+			<TAGS_TREE>
+				<SUBMIT>$K.yg_submitTags(this.wndobj.num,this.wndobj.loadparams['action'],this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</TAGS_TREE>
+		</TABS>
+		<BUTTONS>
+			<ADD>
+				<ACLASS>tree_btn_tag</ACLASS>
+				<TYPE>tree_btn_add</TYPE>
+				<ONCLICK>new $K.yg_wndobj( {literal}{ config: 'TAG_ADD', loadparams: { opener_reference: this.wndobj.id } }{/literal});</ONCLICK>
+				<HELP>{$itext.TXT_TAG_ADD}</HELP>
+			</ADD>
+		</BUTTONS>
+	</TAG_SELECT>
+
+	<TOOLS_TAGS>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>tag</OBJECTTYPE>
+		<ICON>tag</ICON>
+		<CLASS>mk_noexec</CLASS>
+		<WIDTH>330</WIDTH>
+		<HEIGHT>360</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<LOADPARAMS>{literal}{{/literal}"action": "choose"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_TAGS}</TITLE>
+		<TABS>
+			<TAGS_TREE></TAGS_TREE>
+		</TABS>
+		<BUTTONS>
+			<ADD>
+				<ACLASS>tree_btn_tag</ACLASS>
+				<TYPE>tree_btn_add</TYPE>
+				<ONCLICK>new $K.yg_wndobj( {literal}{ config: 'TAG_ADD', loadparams: { opener_reference: this.wndobj.id } }{/literal});</ONCLICK>
+				<HELP>{$itext.TXT_TAG_ADD}</HELP>
+			</ADD>
+		</BUTTONS>
+	</TOOLS_TAGS>
+
+	<TAG_ADD>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>tag</OBJECTTYPE>
+		<ICON>tag</ICON>
+		<WIDTH>397</WIDTH>
+		<HEIGHT>150</HEIGHT>
+		<TITLE>{$itext.TXT_TAG_ADD}</TITLE>
+		<TABS>
+			<TAG_ADD>
+				<SUBMIT>$K.yg_submitAddTag(this.wndobj.num, this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</TAG_ADD>
+		</TABS>
+	</TAG_ADD>
+
+	<PAGE_INSERT_CONTENT>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>insertcontent</OBJECTTYPE>
+		<ICON>noicon</ICON>
+		<WIDTH>900</WIDTH>
+		<HEIGHT>440</HEIGHT>
+		<LOADPARAMS>{literal}{{/literal}"action": "insertcontent"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_INSERT_CONTENTS}</TITLE>
+		<VERTICALSPLIT>30</VERTICALSPLIT>
+		<TABS>
+			<ENTRYMASKS_TREE>
+				<CACHE>1</CACHE>
+				<TITLE>{$itext.TXT_ENTRYMASKS}</TITLE>
+				<CONTENTRIGHT>
+					<CBLOCKS>
+					</CBLOCKS>
+				</CONTENTRIGHT>
+				<SUBMIT>$K.yg_submitEntrymasks(this.wndobj.num,this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</ENTRYMASKS_TREE>
+			<CONTENTBLOCKS_TREE>
+				<CACHE>1</CACHE>
+				<TITLE>{$itext.TXT_CONTENTBLOCKS}</TITLE>
+				<CONTENTRIGHT>
+					<CBLOCKS>
+						<INIT>$K.yg_initContentTab( this.wndobj.yg_id, '', this.wndobj.id, 'page' );</INIT>
+					</CBLOCKS>
+				</CONTENTRIGHT>
+				<SUBMIT>$K.yg_submitCBlocks(this.wndobj.num,this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</CONTENTBLOCKS_TREE>
+			{*<PAGES_TREE_EXTRAS>
+				<CACHE>1</CACHE>
+				<TITLE>{$itext.TXT_COPY_FROM}</TITLE>
+				<CONTENTRIGHT>
+					<CBLOCKS>
+						<INIT>$K.yg_initContentTab( this.wndobj.yg_id, '', this.wndobj.id, 'page' );</INIT>
+					</CBLOCKS>
+				</CONTENTRIGHT>
+				<SUBMIT>$K.yg_submitCopyContent(this.wndobj.num,this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</PAGES_TREE_EXTRAS>*}
+		</TABS>
+	</PAGE_INSERT_CONTENT>
+
+
+	<TOOLS_ENTRYMASKS>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>insertcontent</OBJECTTYPE>
+		<ICON>noicon</ICON>
+		<WIDTH>900</WIDTH>
+		<HEIGHT>440</HEIGHT>
+		<CLASS>mk_filechooser mk_noexec</CLASS>
+		<LOADPARAMS>{literal}{{/literal}"action": "insertcontent"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_ENTRYMASKS}</TITLE>
+		<VERTICALSPLIT>30</VERTICALSPLIT>
+		<TABS>
+			<ENTRYMASKS_TREE>
+				<CACHE>1</CACHE>
+				<TITLE>{$itext.TXT_ENTRYMASKS}</TITLE>
+				<CONTENTRIGHT>
+					<CBLOCKS>
+					</CBLOCKS>
+				</CONTENTRIGHT>
+				<SUBMIT>$K.yg_submitEntrymasks(this.wndobj.num,this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</ENTRYMASKS_TREE>
+		</TABS>
+	</TOOLS_ENTRYMASKS>
+
+
+	<!-- CBLOCKS //-->
+
+	<CBLOCK_INSERT_CONTENT>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>insertcontent</OBJECTTYPE>
+		<ICON>noicon</ICON>
+		<WIDTH>900</WIDTH>
+		<HEIGHT>440</HEIGHT>
+		<LOADPARAMS>{literal}{{/literal}"action": "insertcontent"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_INSERT_CONTENTS}</TITLE>
+		<VERTICALSPLIT>30</VERTICALSPLIT>
+		<TABS>
+			<ENTRYMASKS_TREE>
+				<TITLE>{$itext.TXT_ENTRYMASKS}</TITLE>
+				<CONTENTRIGHT>
+					<CBLOCKS></CBLOCKS>
+				</CONTENTRIGHT>
+				<SUBMIT>$K.yg_submitEntrymasks(this.wndobj.num,this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</ENTRYMASKS_TREE>
+		</TABS>
+	</CBLOCK_INSERT_CONTENT>
+
+	<!-- SITES //-->
+
+	<SITE_LIST>
+		<TYPE>tree</TYPE>
+		<TITLE>{$itext.TXT_SITES}</TITLE>
+		<OBJECTTYPE>site</OBJECTTYPE>
+		<ICON>navigator</ICON>
+		<TABS>
+			<SITELIST>
+				<INIT>$K.yg_initSiteList(this.wndobj.num);</INIT>
+				<CLASS>mk_navpanel</CLASS>
+			</SITELIST>
+		</TABS>
+		<BUTTONS>
+			<ADD>
+				<TYPE>tree_btn_add</TYPE>
+				<ONCLICK>$K.yg_addSite(this);</ONCLICK>
+				<HELP>{$itext.TXT_SITE_ADD}</HELP>
+			</ADD>
+			<DELETE>
+				<ACLASS>tree_btn_site mk_site</ACLASS>
+				<TYPE>tree_btn_delete</TYPE>
+				<ONCLICK>$K.yg_deleteElement(this);</ONCLICK>
+				<HELP>{$itext.TXT_SITE_DELETE}</HELP>
+			</DELETE>
+		</BUTTONS>
+	</SITE_LIST>
+
+	<SITE_DETAILS>
+		<TYPE>content</TYPE>
+		<OBJECTTYPE>site</OBJECTTYPE>
+		<ICON>site</ICON>
+		<TABS>
+			<SITECONFIG>
+				<INIT>$K.yg_initSiteConfig(this.wndobj.id.split('_')[1]);</INIT>
+			</SITECONFIG>
+		</TABS>
+	</SITE_DETAILS>
+
+
+	<!-- COMMENTS //-->
+
+	<COMMENTS>
+		<TYPE>content</TYPE>
+		<OBJECTTYPE>comments</OBJECTTYPE>
+		<ICON>comments</ICON>
+		<TITLE>{$itext.TXT_COMMENTS}</TITLE>
+		<TABS>
+			<COMMENTS>
+				<TITLE>{$itext.TXT_COMMENTS}</TITLE>
+				<CLASS>header_smallstart</CLASS>
+				<INIT>$K.yg_initCommentFilter(this.wndobj.id);</INIT>
+			</COMMENTS>
+		</TABS>
+	</COMMENTS>
+
+
+	<!-- MAILINGS //-->
+
+	<MAILINGS>
+		<TYPE>content</TYPE>
+		<OBJECTTYPE>mailing</OBJECTTYPE>
+		<ICON>mailing</ICON>
+		<TITLE>{$itext.TXT_MAILINGS}</TITLE>
+		<TABS>
+			<MAILINGS>
+				<TITLE>{$itext.TXT_MAILINGS}</TITLE>
+				<CLASS>header_smallstart</CLASS>
+				<INIT>$K.yg_initMailings(this.wndobj.id);</INIT>
+				<REFRESH>$K.yg_toggleTreeButtons(this.wndobj.id);</REFRESH>
+			</MAILINGS>
+		</TABS>
+		<BUTTONS>
+			<ADD>
+				<ACLASS>tree_btn_mailings globalfunc</ACLASS>
+				<TYPE>tree_btn_add</TYPE>
+				<ONCLICK>$K.yg_addMailing(this);</ONCLICK>
+				<HELP>{$itext.TXT_MAILING_ADD}</HELP>
+			</ADD>
+			<EDIT>
+				<ACLASS>tree_btn_mailings</ACLASS>
+				<TYPE>tree_btn_edit</TYPE>
+				<ONCLICK>$K.yg_editMailing(this);</ONCLICK>
+				<HELP>{$itext.TXT_MAILING_EDIT}</HELP>
+			</EDIT>
+			<DELETE>
+				<ACLASS>tree_btn_mailings multiselect</ACLASS>
+				<TYPE>tree_btn_delete</TYPE>
+				<ONCLICK>$K.yg_deleteElement(this);</ONCLICK>
+				<HELP>{$itext.TXT_MAILING_DELETE}</HELP>
+			</DELETE>
+			<COPY>
+				<ACLASS>tree_btn_mailings</ACLASS>
+				<TYPE>tree_btn_copy</TYPE>
+				<ONCLICK>$K.yg_duplicateMailing(this.wndobj.yg_id.split('-')[0]);</ONCLICK>
+				<HELP>{$itext.TXT_MAILING_COPY}</HELP>
+			</COPY>
+			<PREVIEW>
+				<ACLASS>tree_btn_mailings</ACLASS>
+				<TYPE>tree_btn_preview</TYPE>
+				<ONCLICK>Event.stop(this.event);$K.yg_preview({literal}{{/literal}objecttype: 'mailing', id: this.wndobj.yg_id.split('-')[0], fullscreen: true{literal}}{/literal});</ONCLICK>
+				<HELP>{$itext.TXT_MAILING_PREVIEW}</HELP>
+			</PREVIEW>
+		</BUTTONS>
+	</MAILINGS>
+
+	<MAILING_DETAILS>
+		<TYPE>content</TYPE>
+		<OBJECTTYPE>mailing</OBJECTTYPE>
+		<ICON>mailing</ICON>
+		<LOCKING>true</LOCKING>
+		<TABS>
+			<MAILING_PROPERTIES>
+				<TITLE>{$itext.TXT_PROPERTIES}</TITLE>
+				<INIT>$K.yg_initMailingPropertyTab( this.wndobj.yg_id.split('-')[0], this.wndobj.id.split('_')[1] );</INIT>
+			</MAILING_PROPERTIES>
+			<CONTENT>
+				<TITLE>{$itext.TXT_CONTENT}</TITLE>
+				<INIT>$K.yg_initContentTab( this.wndobj.yg_id, '', this.wndobj.id, 'mailing' );</INIT>
+			</CONTENT>
+			<USERGROUP_LIST>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_USERGROUPS}</TITLE>
+				<INIT>$K.yg_initUsergroupsTab( 'tab_USERGROUP_LIST', this.wndobj.num );</INIT>
+			</USERGROUP_LIST>
+			<TAGS>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_TAGS}</TITLE>
+				<INIT>$K.yg_initTagsTab( this.wndobj.yg_id.split('-')[0], this.wndobj.id.split('_')[1] );</INIT>
+			</TAGS>
+			<LINKS>
+				<TITLE>{$itext.TXT_LINKS}</TITLE>
+			</LINKS>
+			<EXTENSIONS>
+				<TITLE>{$itext.TXT_EXTENSIONS}</TITLE>
+				<INIT>$K.yg_initContentTab( this.wndobj.yg_id, '', this.wndobj.id, 'extmailing' );</INIT>
+			</EXTENSIONS>
+			<VERSIONS>
+				<TITLE>{$itext.TXT_VERSIONS}</TITLE>
+				<CLASS>header_medium</CLASS>
+				<INIT>$K.yg_initVersionFilter(this.wndobj.id);</INIT>
+			</VERSIONS>
+		</TABS>
+		<BUTTONS>
+			<PREVIEWCURRENT>
+				<HELP>{$itext.TXT_MAILING_PREVIEW_WORKING}</HELP>
+				<ONCLICK>Event.stop(this.event);$K.yg_preview({literal}{{/literal}objecttype: 'mailing', id: this.wndobj.yg_id.split('-')[0], fullscreen: true, version : 'working'{literal}}{/literal});</ONCLICK>
+			</PREVIEWCURRENT>
+			<PREVIEW>
+				<HELP>{$itext.TXT_MAILING_PREVIEW}</HELP>
+				<ONCLICK>Event.stop(this.event);$K.yg_preview({literal}{{/literal}objecttype: 'mailing', id: this.wndobj.yg_id.split('-')[0], fullscreen: true{literal}}{/literal});</ONCLICK>
+			</PREVIEW>
+			<CLEAR>
+				<ID>stagebtn</ID>
+				<TDCLASS>ywindow_btl</TDCLASS>
+				<PROPERTY>approve</PROPERTY>
+				<ONCLICK>$K.yg_approveMailing(this);</ONCLICK>
+				<HELP>{$itext.TXT_MAILING_CLEAR}</HELP>
+			</CLEAR>
+		</BUTTONS>
+	</MAILING_DETAILS>
+
+	<MAILING_TEST>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE></OBJECTTYPE>
+		<ICON>noicon</ICON>
+		<WIDTH>396</WIDTH>
+		<HEIGHT>165</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<MINHEIGHT>150</MINHEIGHT>
+		<TITLE>{$itext.TXT_SEND_TEST_EMAIL}</TITLE>
+		<TABS>
+			<MAILING_TEST>
+				<SUBMIT>$K.yg_submitMailingTest(this.wndobj.id,this.wndobj.loadparams['yg_id']);</SUBMIT>
+			</MAILING_TEST>
+		</TABS>
+	</MAILING_TEST>
+
+	<MAILING_INSERT_CONTENT>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>insertcontent</OBJECTTYPE>
+		<ICON>noicon</ICON>
+		<WIDTH>900</WIDTH>
+		<HEIGHT>440</HEIGHT>
+		<LOADPARAMS>{literal}{{/literal}"action": "insertcontent"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_INSERT_CONTENTS}</TITLE>
+		<VERTICALSPLIT>30</VERTICALSPLIT>
+		<TABS>
+			<ENTRYMASKS_TREE>
+				<CACHE>1</CACHE>
+				<TITLE>{$itext.TXT_ENTRYMASKS}</TITLE>
+				<CONTENTRIGHT>
+					<CBLOCKS>
+					</CBLOCKS>
+				</CONTENTRIGHT>
+				<SUBMIT>$K.yg_submitEntrymasks(this.wndobj.num,this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</ENTRYMASKS_TREE>
+			<CONTENTBLOCKS_TREE>
+				<CACHE>1</CACHE>
+				<TITLE>{$itext.TXT_CONTENTBLOCKS}</TITLE>
+				<CONTENTRIGHT>
+					<CBLOCKS>
+						<INIT>$K.yg_initContentTab( this.wndobj.yg_id, '', this.wndobj.id, 'mailing' );</INIT>
+					</CBLOCKS>
+				</CONTENTRIGHT>
+				<SUBMIT>$K.yg_submitCBlocks(this.wndobj.num,this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</CONTENTBLOCKS_TREE>
+			{*<PAGES_TREE_EXTRAS>
+				<CACHE>1</CACHE>
+				<TITLE>{$itext.TXT_COPY_FROM}</TITLE>
+				<CONTENTRIGHT>
+					<CBLOCKS>
+						<INIT>$K.yg_initContentTab( this.wndobj.yg_id, '', this.wndobj.id, 'mailing' );</INIT>
+					</CBLOCKS>
+				</CONTENTRIGHT>
+				<SUBMIT>$K.yg_submitCopyContent(this.wndobj.num,this.wndobj.loadparams['opener_reference']);</SUBMIT>
+			</PAGES_TREE_EXTRAS>*}
+		</TABS>
+	</MAILING_INSERT_CONTENT>
+
+
+	<!-- TEMPLATES //-->
+
+	<TEMPLATES_TREE>
+		<TYPE>tree</TYPE>
+		<MINWIDTH>300</MINWIDTH>
+		<ICON>navigator</ICON>
+		<TITLE>{$itext.TXT_TEMPLATES}</TITLE>
+		<TABS>
+			<TEMPLATES_TREE></TEMPLATES_TREE>
+		</TABS>
+		<BUTTONS>
+			<ADD>
+				<ACLASS>tree_btn_templates</ACLASS>
+				<TYPE>tree_btn_add</TYPE>
+				<ONCLICK>$K.yg_addTemplate(this);</ONCLICK>
+				<HELP>{$itext.TXT_TEMPLATE_ADD}</HELP>
+			</ADD>
+			<ADDFOLDER>
+				<ACLASS>tree_btn_templates</ACLASS>
+				<TYPE>tree_btn_addfolder</TYPE>
+				<ONCLICK>$K.yg_addTemplateChildFolder(this);</ONCLICK>
+				<HELP>{$itext.TXT_TEMPLATE_ADDFOLDER}</HELP>
+			</ADDFOLDER>
+			<DELETE>
+				<ACLASS>tree_btn_templates multiselect</ACLASS>
+				<TYPE>tree_btn_delete</TYPE>
+				<ONCLICK>$K.yg_fireAction($K.yg_deleteElement, this);</ONCLICK>
+				<HELP>{$itext.TXT_TEMPLATE_DELETE}</HELP>
+			</DELETE>
+		</BUTTONS>
+	</TEMPLATES_TREE>
+
+	<TEMPLATE_DETAILS>
+		<TYPE>content</TYPE>
+		<OBJECTTYPE>template</OBJECTTYPE>
+		<ICON>template</ICON>
+		<TABS>
+			<TEMPLATECONFIG>
+				<INIT>$K.yg_loadDlgUpload(); if (this.wndobj.yg_id) $K.yg_initTemplateUploadButtons(this.wndobj.num, this.wndobj.yg_id.split('-')[0]);</INIT>
+				<FOLDER>1</FOLDER>
+				<CACHE>0</CACHE>
+				<TITLE>{$itext.TXT_CONFIG|default:'$TXT_CONFIG'}</TITLE>
+			</TEMPLATECONFIG>
+			<TEMPLATEUSAGE>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_USAGE|default:'$TXT_USAGE'}</TITLE>
+			</TEMPLATEUSAGE>
+		</TABS>
+	</TEMPLATE_DETAILS>
+
+	<!-- USERS //-->
+
+	<USERS_LIST>
+		<TYPE>tree</TYPE>
+		<TITLE>{$itext.TXT_USERS}</TITLE>
+		<OBJECTTYPE>user</OBJECTTYPE>
+		<ICON>user</ICON>
+		<TABS>
+			<USERLIST>
+				<INIT>$K.yg_initUserMgr(this.wndobj.id);</INIT>
+				<REFRESH>$K.yg_refreshUserMgr(this.wndobj.id);</REFRESH>
+			</USERLIST>
+		</TABS>
+		<BUTTONS>
+			<ADD>
+				<TYPE>tree_btn_add</TYPE>
+				<ONCLICK>$K.yg_addUser(this);</ONCLICK>
+				<HELP>{$itext.TXT_USER_ADD}</HELP>
+			</ADD>
+			<DELETE>
+				<ACLASS>tree_btn mk_user multiselect</ACLASS>
+				<TYPE>tree_btn_delete</TYPE>
+				<ONCLICK>$K.yg_deleteElement(this);</ONCLICK>
+				<HELP>{$itext.TXT_USER_DELETE}</HELP>
+			</DELETE>
+		</BUTTONS>
+	</USERS_LIST>
+
+	<USER_DETAILS>
+		<TYPE>content</TYPE>
+		<OBJECTTYPE>user</OBJECTTYPE>
+		<ICON>user</ICON>
+		<TABS>
+			<PROPERTIES>
+				<TITLE>{$itext.TXT_PROPERTIES}</TITLE>
+			</PROPERTIES>
+			<USERGROUP_LIST>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_USERGROUPS}</TITLE>
+				<INIT>$K.yg_initUsergroupsTab( 'tab_USERGROUP_LIST', this.wndobj.num );</INIT>
+			</USERGROUP_LIST>
+		</TABS>
+	</USER_DETAILS>
+
+	<!-- USERGROUPS //-->
+
+	<USERGROUPS_LIST>
+		<TYPE>tree</TYPE>
+		<TITLE>{$itext.TXT_USERGROUPS}</TITLE>
+		<OBJECTTYPE>usergroup</OBJECTTYPE>
+		<ICON>navigator</ICON>
+		<TABS>
+			<USERGROUP_LIST>
+				<CLASS>mk_navpanel mk_usergroups_tree</CLASS>
+				<INIT>$K.yg_initUsergroupsTab( 'tab_USERGROUP_LIST', this.wndobj.num );</INIT>
+			</USERGROUP_LIST>
+		</TABS>
+		<BUTTONS>
+			<ADD>
+				<ACLASS></ACLASS>
+				<TYPE>tree_btn_add</TYPE>
+				<ONCLICK>$K.yg_addRole(this);</ONCLICK>
+				<HELP>{$itext.TXT_USERGROUP_ADD}</HELP>
+			</ADD>
+			<DELETE>
+				<ACLASS>tree_btn_role</ACLASS>
+				<TYPE>tree_btn_delete</TYPE>
+				<ONCLICK>$K.yg_deleteRole(this);</ONCLICK>
+				<HELP>{$itext.TXT_USERGROUP_DELETE}</HELP>
+			</DELETE>
+		</BUTTONS>
+	</USERGROUPS_LIST>
+
+	<USERGROUP_DETAILS>
+		<TYPE>content</TYPE>
+		<OBJECTTYPE>usergroup</OBJECTTYPE>
+		<ICON>usergroup</ICON>
+		<TABS>
+			<USERGROUP_GENERAL>
+				<TITLE>{$itext.TXT_GENERAL|default:'$TXT_GENERAL'}</TITLE>
+			</USERGROUP_GENERAL>
+			<USERGROUP_PAGES>
+				<TITLE>{$itext.TXT_PAGES|default:'$TXT_PAGES'}</TITLE>
+			</USERGROUP_PAGES>
+			<USERGROUP_CBLOCKS>
+				<TITLE>{$itext.TXT_CONTENTBLOCKS|default:'$TXT_CONTENTBLOCKS'}</TITLE>
+			</USERGROUP_CBLOCKS>
+			<USERGROUP_FILES>
+				<TITLE>{$itext.TXT_FILES|default:'$TXT_FILES'}</TITLE>
+			</USERGROUP_FILES>
+			<USERGROUP_TAGS>
+				<TITLE>{$itext.TXT_TAGS|default:'$TXT_TAGS'}</TITLE>
+			</USERGROUP_TAGS>
+			<USERGROUP_MAILINGS>
+				<TITLE>{$itext.TXT_MAILINGS|default:'$TXT_MAILINGS'}</TITLE>
+			</USERGROUP_MAILINGS>
+			<USERGROUP_USERGROUPS>
+				<TITLE>{$itext.TXT_USERGROUPS|default:'$TXT_USERGROUPS'}</TITLE>
+			</USERGROUP_USERGROUPS>
+		</TABS>
+	</USERGROUP_DETAILS>
+
+	<USERGROUP_SELECT>
+		<TYPE>dialog</TYPE>
+		<TITLE>{$itext.TXT_CHOOSE_USERGROUP|default:'$TXT_CHOOSE_USERGROUP'}</TITLE>
+		<OBJECTTYPE>usergroup</OBJECTTYPE>
+		<ICON>usergroup</ICON>
+		<LOADPARAMS>{literal}{{/literal}"action": "addrole"{literal}}{/literal}</LOADPARAMS>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<TABS>
+			<USERGROUP_LIST>
+				<SUBMIT>$K.yg_selectRole(this.wndobj.num,this.wndobj.loadparams['opener_reference']);</SUBMIT>
+				<INIT>$K.yg_initUsergroupsTab( 'tab_USERGROUP_LIST', this.wndobj.num );</INIT>
+			</USERGROUP_LIST>
+		</TABS>
+	</USERGROUP_SELECT>
+
+
+
+	<!-- EXTENSIONS //-->
+
+	<EXTENSION_LIST>
+		<TYPE>tree</TYPE>
+		<TITLE>{$itext.TXT_EXTENSIONS}</TITLE>
+		<OBJECTTYPE></OBJECTTYPE>
+		<ICON>extensions</ICON>
+		<BUTTONS>
+			<DELETE>
+				<ACLASS>tree_btn_extension</ACLASS>
+				<TYPE>tree_btn_delete</TYPE>
+				<ONCLICK>$K.yg_uninstallExtension(this);</ONCLICK>
+				<HELP>{$itext.TXT_UNINSTALL}</HELP>
+			</DELETE>
+		</BUTTONS>
+		<TABS>
+			<EXTENSION_LIST>
+				<CLASS>mk_navpanel</CLASS>
+			</EXTENSION_LIST>
+		</TABS>
+	</EXTENSION_LIST>
+
+	<DATA_LIST>
+		<TYPE>tree</TYPE>
+		<TITLE>{$itext.TXT_DATA}</TITLE>
+		<OBJECTTYPE>extension</OBJECTTYPE>
+		<ICON>data</ICON>
+		<TABS>
+			<EXTENSION_LIST>
+				<CLASS>mk_navpanel</CLASS>
+			</EXTENSION_LIST>
+		</TABS>
+	</DATA_LIST>
+
+	<EXTENSION_DETAILS>
+		<TYPE>content</TYPE>
+		<OBJECTTYPE>extension</OBJECTTYPE>
+		<ICON>extensions</ICON>
+		<TABS>
+			<PROPERTIES></PROPERTIES>
+		</TABS>
+	</EXTENSION_DETAILS>
+
+	<DATA_EXPORT>
+		<TYPE>dialog</TYPE>
+		<TITLE>{$itext.TXT_EXPORTING|default:'$TXT_EXPORTING'}</TITLE>
+		<ICON>noicon</ICON>
+		<WIDTH>500</WIDTH>
+		<HEIGHT>310</HEIGHT>
+		<LOADPARAMS>{literal}{{/literal}"display": "data", "mode": "export"{literal}}{/literal}</LOADPARAMS>
+		<TABS>
+			<DATA_EXPORTIMPORT>
+				<INIT>$K.yg_initDlgExport(this.wndobj.num);</INIT>
+			</DATA_EXPORTIMPORT>
+		</TABS>
+	</DATA_EXPORT>
+
+	<DATA_IMPORT>
+		<TYPE>dialog</TYPE>
+		<TITLE>{$itext.TXT_IMPORTING|default:'$TXT_IMPORTING'}</TITLE>
+		<ICON>noicon</ICON>
+		<WIDTH>500</WIDTH>
+		<HEIGHT>310</HEIGHT>
+		<LOADPARAMS>{literal}{{/literal}"display": "data", "mode": "import"{literal}}{/literal}</LOADPARAMS>
+		<TABS>
+			<DATA_EXPORTIMPORT>
+				<INIT>$K.yg_initDlgExport(this.wndobj.num);</INIT>
+			</DATA_EXPORTIMPORT>
+		</TABS>
+	</DATA_IMPORT>
+
+	<!-- SYSTEMCONFIG //-->
+
+	<SYSTEMCONFIG>
+		<TYPE>content</TYPE>
+		<TITLE>{$itext.TXT_SYSTEMCONFIG|default:'$TXT_SYSTEMCONFIG'}</TITLE>
+		<ICON>system</ICON>
+		<LOADPARAMS>{literal}{{/literal}"yg_id": -1{literal}}{/literal}</LOADPARAMS>
+		<TABS>
+			<CONFIG_PAGE-PROPERTIES>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_PAGES|default:'$TXT_PAGES'}</TITLE>
+			</CONFIG_PAGE-PROPERTIES>
+			<CONFIG_CBLOCK-PROPERTIES>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_CONTENTBLOCKS|default:'$TXT_CONTENTBLOCKS'}</TITLE>
+			</CONFIG_CBLOCK-PROPERTIES>
+			<CONFIG_FILE-PROPERTIES>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_FILES|default:'$TXT_FILES'}</TITLE>
+			</CONFIG_FILE-PROPERTIES>
+			<CONFIG_USER-PROPERTIES>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_USER|default:'$TXT_USER'}</TITLE>
+			</CONFIG_USER-PROPERTIES>
+			<CONFIG_FILE-TYPES>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_FILE_TYPES|default:'$TXT_FILE_TYPES'}</TITLE>
+			</CONFIG_FILE-TYPES>
+			<CONFIG_VIEWS>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_VIEWS|default:'$TXT_VIEWS'}</TITLE>
+			</CONFIG_VIEWS>
+		</TABS>
+	</SYSTEMCONFIG>
+
+	<FORMFIELD_ADD>
+		<TYPE>dialog</TYPE>
+		<TITLE>{$itext.TXT_FORMFIELD_ADD|default:'$TXT_FORMFIELD_ADD'}</TITLE>
+		<ICON>noicon</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>440</HEIGHT>
+		<TABS>
+			<FORMFIELDS>
+				<SUBMIT>$K.yg_submitFormfields(this.wndobj.num, this.wndobj.loadparams['opener_reference'], this.wndobj.loadparams['display']);</SUBMIT>
+			</FORMFIELDS>
+		</TABS>
+	</FORMFIELD_ADD>
+
+	<PROPERTYFIELD_ADD>
+		<TYPE>dialog</TYPE>
+		<TITLE>{$itext.TXT_PROPERTYFIELD_ADD|default:'$TXT_PROPERTYFIELD_ADD'}</TITLE>
+		<ICON>noicon</ICON>
+		<LOADPARAMS>{literal}{{/literal}"display": "properties"{literal}}{/literal}</LOADPARAMS>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>440</HEIGHT>
+		<TABS>
+			<FORMFIELDS>
+				<SUBMIT>$K.yg_submitFormfields(this.wndobj.num, this.wndobj.loadparams['opener_reference'], this.wndobj.loadparams['display']);</SUBMIT>
+			</FORMFIELDS>
+		</TABS>
+	</PROPERTYFIELD_ADD>
+
+	<VIEW_SELECT>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>view</OBJECTTYPE>
+		<ICON>noicon</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<TITLE>{$itext.TXT_CHOOSE_VIEW|default:'$TXT_CHOOSE_VIEW'}</TITLE>
+		<TABS>
+			<VIEW_SELECT>
+				<SUBMIT>$K.yg_submitViews(this.wndobj.loadparams.opener_reference, this.wndobj.num);</SUBMIT>
+			</VIEW_SELECT>
+		</TABS>
+	</VIEW_SELECT>
+
+
+	<!-- UPDATES -->
+
+	<UPDATES>
+		<CUSTOMID>updates</CUSTOMID>
+		<TYPE>content</TYPE>
+		<OBJECTTYPE>updates</OBJECTTYPE>
+		<ICON>updates</ICON>
+		<TITLE>{$itext.TXT_UPDATES}</TITLE>
+		<TABS>
+			<UPDATES>
+				<TITLE>{$itext.TXT_UPDATES}</TITLE>
+			</UPDATES>
+		</TABS>
+	</UPDATES>
+
+
+	<!-- ENTRYMASKS -->
+
+	<ENTRYMASKS_TREE>
+		<TYPE>tree</TYPE>
+		<TITLE>{$itext.TXT_ENTRYMASKS}</TITLE>
+		<OBJECTTYPE>entrymask</OBJECTTYPE>
+		<ICON>navigator</ICON>
+		<MINWIDTH>300</MINWIDTH>
+		<TABS>
+			<ENTRYMASKS_TREE>
+				<CLASS>mk_navpanel mk_usergroups_tree</CLASS>
+			</ENTRYMASKS_TREE>
+		</TABS>
+		<BUTTONS>
+			<ADD>
+				<ACLASS>tree_btn_entrymask</ACLASS>
+				<TYPE>tree_btn_add</TYPE>
+				<ONCLICK>$K.yg_addChildEntrymask(this);</ONCLICK>
+				<HELP>{$itext.TXT_ENTRYMASK_ADD}</HELP>
+			</ADD>
+			<ADDFOLDER>
+				<ACLASS>tree_btn_entrymask</ACLASS>
+				<TYPE>tree_btn_addfolder</TYPE>
+				<ONCLICK>$K.yg_addChildEntrymaskFolder(this);</ONCLICK>
+				<HELP>{$itext.TXT_FOLDER_ADD}</HELP>
+			</ADDFOLDER>
+			<DELETE>
+				<ACLASS>tree_btn_entrymask mk_entrymask multiselect</ACLASS>
+				<TYPE>tree_btn_delete</TYPE>
+				<ONCLICK>$K.yg_fireAction($K.yg_deleteElement, this);</ONCLICK>
+				<HELP>{$itext.TXT_ENTRYMASK_DELETE}</HELP>
+			</DELETE>
+		</BUTTONS>
+	</ENTRYMASKS_TREE>
+
+	<ENTRYMASK_DETAILS>
+		<TYPE>content</TYPE>
+		<OBJECTTYPE>entrymask</OBJECTTYPE>
+		<ICON>entrymask</ICON>
+		<TABS>
+			<ENTRYMASKCONFIG>
+				<FOLDER>1</FOLDER>
+				<CACHE>1</CACHE>
+				<TITLE>{$itext.TXT_CONFIG|default:'$TXT_CONFIG'}</TITLE>
+				<INIT>$K.yg_initEntrymaskConfigTab(this.wndobj.num);</INIT>
+			</ENTRYMASKCONFIG>
+			<ENTRYMASKUSAGE>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_USAGE|default:'$TXT_USAGE'}</TITLE>
+			</ENTRYMASKUSAGE>
+			<ENTRYMASKLIVE>
+				<TITLE>{$itext.TXT_ENTRYMASKLIVE|default:'$TXT_ENTRYMASKLIVE'}</TITLE>
+			</ENTRYMASKLIVE>
+		</TABS>
+	</ENTRYMASK_DETAILS>
+
+	<!-- FILES -->
+
+	<FILES_TREE>
+		<TYPE>tree</TYPE>
+		<TITLE>{$itext.TXT_FILES}</TITLE>
+		<OBJECTTYPE>file</OBJECTTYPE>
+		<MINWIDTH>300</MINWIDTH>
+		<ICON>navigator</ICON>
+		<TABS>
+			<FILES_TREE>
+			</FILES_TREE>
+		</TABS>
+		<BUTTONS>
+			<ADDFOLDER>
+				<ACLASS>tree_btn_file</ACLASS>
+				<TYPE>tree_btn_add</TYPE>
+				<ONCLICK>$K.yg_addChildFolder(this);</ONCLICK>
+				<HELP>{$itext.TXT_FOLDER_ADD}</HELP>
+			</ADDFOLDER>
+			<COPY>
+				<ACLASS>tree_btn_file</ACLASS>
+				<TYPE>tree_btn_copy</TYPE>
+				<ONCLICK>new $K.yg_wndobj({literal}{{/literal} config: 'FOLDER_COPY', loadparams: {literal}{{/literal} opener_reference: this.wndobj.id, type: 'folder' {literal}} }{/literal});</ONCLICK>
+				<HELP>{$itext.TXT_FOLDER_COPY}</HELP>
+			</COPY>
+			<MOVETO>
+				<ACLASS>tree_btn_file</ACLASS>
+				<TYPE>tree_btn_move</TYPE>
+				<ONCLICK>new $K.yg_wndobj({literal}{{/literal} config: 'FOLDER_MOVE', loadparams: {literal}{{/literal} opener_reference: this.wndobj.id, type: 'folder' {literal}} }{/literal});</ONCLICK>
+				<HELP>{$itext.TXT_FOLDER_MOVE}</HELP>
+			</MOVETO>
+			<DELETE>
+				<ACLASS>tree_btn_file multiselect</ACLASS>
+				<TYPE>tree_btn_delete</TYPE>
+				<ONCLICK>$K.yg_fireAction($K.yg_deleteElement, this);</ONCLICK>
+				<HELP>{$itext.TXT_FOLDER_DELETE}</HELP>
+			</DELETE>
+		</BUTTONS>
+	</FILES_TREE>
+
+	<FILE_DETAILS>
+		<TYPE>content</TYPE>
+		<OBJECTTYPE>filefolder</OBJECTTYPE>
+		<ICON>folder</ICON>
+		<LOCKING>true</LOCKING>
+		<TABS>
+			<FOLDERCONTENT>
+				<FOLDER>1</FOLDER>
+				<TITLE>{$itext.TXT_FILES|default:'$TXT_FILES'}</TITLE>
+				<INIT>$K.yg_initFileMgr(this.wndobj.id);</INIT>
+				<REFRESH>$K.yg_refreshFileMgr(this.wndobj.id);</REFRESH>
+			</FOLDERCONTENT>
+			<PROPERTIES>
+				<CLASS>header_small</CLASS>
+				<FOLDER>1</FOLDER>
+				<TITLE>{$itext.TXT_PROPERTIES|default:'$TXT_PROPERTIES'}</TITLE>
+			</PROPERTIES>
+			<TAGS>
+				<CLASS>header_small</CLASS>
+				<FOLDER>1</FOLDER>
+				<TITLE>{$itext.TXT_TAGS|default:'$TXT_TAGS'}</TITLE>
+				<INIT>$K.yg_initTagsTab( this.wndobj.yg_id.split('-')[0], this.wndobj.num );</INIT>
+			</TAGS>
+			<VIEWS>
+				<CLASS>header_small</CLASS>
+				<FOLDER>1</FOLDER>
+				<TITLE>{$itext.TXT_VIEWS|default:'$TXT_VIEWS'}</TITLE>
+				<INIT>$K.yg_initViewsTab( 'tab_VIEWS', this.wndobj.num );</INIT>
+			</VIEWS>
+			<TRASHCAN>
+				<TRASHCAN>1</TRASHCAN>
+				<CLASS>header_smallstart</CLASS>
+				<TITLE>{$itext.TXT_TRASHCAN|default:'$TXT_TRASHCAN'}</TITLE>
+			</TRASHCAN>
+		</TABS>
+		<BUTTONS>
+			<UPLOAD>
+				<ID>uploadbtn</ID>
+				<ACLASS>add folder</ACLASS>
+				<ONCLICK>if(!this.hasClassName('disabled')) $K.yg_loadDlgUpload($K.windows[this.wndobj.id].yg_id, true);</ONCLICK>
+				<HELP>{$itext.TXT_FILE_ADD}</HELP>
+			</UPLOAD>
+			{*<DELETE>
+				<TDCLASS>mk_onlytrashcan</TDCLASS>
+				<ONCLICK></ONCLICK>
+				<HELP>{$itext.TXT_TRASHCAN_CLEAR}</HELP>
+			</DELETE>*}
+		</BUTTONS>
+	</FILE_DETAILS>
+
+	<FILEINFO>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>file</OBJECTTYPE>
+		<ICON>file</ICON>
+		<LOCKING>true</LOCKING>
+		<WIDTH>560</WIDTH>
+		<HEIGHT>600</HEIGHT>
+		<MINWIDTH>560</MINWIDTH>
+		<MINHEIGHT>300</MINHEIGHT>
+		<TABS>
+			<FILEINFO>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_FILEINFO|default:'$TXT_FILEINFO'}</TITLE>
+			</FILEINFO>
+			<PROPERTIES>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_PROPERTIES|default:'$TXT_PROPERTIES'}</TITLE>
+			</PROPERTIES>
+			<TAGS>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_TAGS|default:'$TXT_TAGS'}</TITLE>
+				<INIT>$K.yg_initTagsTab( this.wndobj.yg_id.split('-')[0], this.wndobj.num );</INIT>
+			</TAGS>
+			<VIEWS>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_VIEWS|default:'$TXT_VIEWS'}</TITLE>
+				<INIT>$K.yg_initViewsTab( 'tab_VIEWS', this.wndobj.num );</INIT>
+			</VIEWS>
+			<LINKS>
+				<TITLE>{$itext.TXT_LINKS|default:'$TXT_LINKS'}</TITLE>
+			</LINKS>
+			<EXTENSIONS>
+				<TITLE>{$itext.TXT_EXTENSIONS}</TITLE>
+				<INIT>$K.yg_initContentTab( this.wndobj.yg_id, '', this.wndobj.id, 'extfile' );</INIT>
+			</EXTENSIONS>
+			<VERSIONS>
+				<CLASS>header_medium</CLASS>
+				<TITLE>{$itext.TXT_VERSIONS|default:'$TXT_VERSIONS'}</TITLE>
+				<INIT>$K.yg_initVersionFilter(this.wndobj.id);</INIT>
+			</VERSIONS>
+			<COMMENTS>
+				<TITLE>{$itext.TXT_COMMENTS}</TITLE>
+				<CLASS>header_comments</CLASS>
+				<INIT>$K.yg_initCommentFilter(this.wndobj.id);</INIT>
+			</COMMENTS>
+		</TABS>
+		<BUTTONS>
+			<DOWNLOADLINK>
+				<ID>downloadlink</ID>
+				<ACLASS>download</ACLASS>
+				<HELP>{$itext.TXT_FILE_DOWNLOAD}</HELP>
+			</DOWNLOADLINK>
+			<PREVIEWLINKWIN>
+				<ID>previewlinkwin</ID>
+				<ACLASS>previewwin</ACLASS>
+				<ONCLICK>Event.stop(this.event);$K.yg_preview({literal}{{/literal}objecttype: 'file', id: this.wndobj.yg_id.split('-')[0] {literal}}{/literal});</ONCLICK>
+				<HELP>{$itext.TXT_FILE_PREVIEW}</HELP>
+			</PREVIEWLINKWIN>
+			<PREVIEWLINK>
+				<ID>previewlink</ID>
+				<ACLASS>preview</ACLASS>
+				<ONCLICK>Event.stop(this.event);$K.yg_preview({literal}{{/literal}objecttype: 'file', id: this.wndobj.yg_id.split('-')[0], fullscreen: true{literal}}{/literal});</ONCLICK>
+				<HELP>{$itext.TXT_FILE_PREVIEW_FULLSCREEN}</HELP>
+			</PREVIEWLINK>
+		</BUTTONS>
+	</FILEINFO>
+
+	<FOLDER_COPY>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>file</OBJECTTYPE>
+		<ICON>noicon</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<LOADPARAMS>{literal}{{/literal}"action": "copy", "type": "folder"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_COPY_FOLDER_CHOOSE_TARGET|default:'$TXT_COPY_FOLDER_CHOOSE_TARGET'}</TITLE>
+		<TABS>
+			<FILES_TREE>
+				<SUBMIT>$K.yg_submitFileWindow(this.wndobj.num, this.wndobj.loadparams.action, this.wndobj.loadparams.opener_reference);</SUBMIT>
+			</FILES_TREE>
+		</TABS>
+	</FOLDER_COPY>
+
+	<FILE_COPY>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>file</OBJECTTYPE>
+		<ICON>noicon</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<LOADPARAMS>{literal}{{/literal}"action": "copy", "type": "file"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_COPY_FILE_CHOOSE_TARGET|default:'$TXT_COPY_FILE_CHOOSE_TARGET'}</TITLE>
+		<TABS>
+			<FILES_TREE>
+				<SUBMIT>$K.yg_submitFileWindow(this.wndobj.num, this.wndobj.loadparams.action, this.wndobj.loadparams.opener_reference);</SUBMIT>
+			</FILES_TREE>
+		</TABS>
+	</FILE_COPY>
+
+	<FOLDER_MOVE>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>file</OBJECTTYPE>
+		<ICON>noicon</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<LOADPARAMS>{literal}{{/literal}"action": "move", "type": "folder"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_MOVE_FOLDER_CHOOSE_TARGET|default:'$TXT_MOVE_FOLDER_CHOOSE_TARGET'}</TITLE>
+		<TABS>
+			<FILES_TREE>
+				<SUBMIT>$K.yg_submitFileWindow(this.wndobj.num, this.wndobj.loadparams.action, this.wndobj.loadparams.opener_reference);</SUBMIT>
+			</FILES_TREE>
+		</TABS>
+	</FOLDER_MOVE>
+
+	<FILEFOLDER_SELECT>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>file</OBJECTTYPE>
+		<ICON>folder</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<LOADPARAMS>{literal}{{/literal}"action": "choosefolder", "type": "folder"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_CHOOSE_FOLDER|default:'$TXT_CHOOSE_FOLDER'}</TITLE>
+		<TABS>
+			<FILES_TREE>
+				<SUBMIT>$K.yg_submitFileWindow(this.wndobj.num, this.wndobj.loadparams.action, this.wndobj.loadparams.opener_reference);</SUBMIT>
+			</FILES_TREE>
+		</TABS>
+	</FILEFOLDER_SELECT>
+
+	<FILE_MOVE>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>file</OBJECTTYPE>
+		<ICON>noicon</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<LOADPARAMS>{literal}{{/literal}"action": "move", "type": "file"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_MOVE_FILE_CHOOSE_TARGET|default:'$TXT_MOVE_FILE_CHOOSE_TARGET'}</TITLE>
+		<TABS>
+			<FILES_TREE>
+				<SUBMIT>$K.yg_submitFileWindow(this.wndobj.num, this.wndobj.loadparams.action, this.wndobj.loadparams.opener_reference);</SUBMIT>
+			</FILES_TREE>
+		</TABS>
+	</FILE_MOVE>
+
+	<FILE_SELECT>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>file</OBJECTTYPE>
+		<ICON>file</ICON>
+		<WIDTH>900</WIDTH>
+		<HEIGHT>440</HEIGHT>
+		<CLASS>mk_filechooser</CLASS>
+		<LOADPARAMS>{literal}{{/literal}"action": "choose"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_CHOOSE_FILE|default:'$TXT_CHOOSE_FILE'}</TITLE>
+		<VERTICALSPLIT>38</VERTICALSPLIT>
+		<TABS>
+			<FILES_TREE>
+				<CONTENTRIGHT>
+					<FOLDERCONTENT></FOLDERCONTENT>
+				</CONTENTRIGHT>
+				<INIT>$K.yg_initDlgFilechooser( this.wndobj.loadparams.opener_reference, this.wndobj.num, (this.wndobj.yg_id || '') );</INIT>
+			</FILES_TREE>
+		</TABS>
+		<BUTTONS>
+			<UPLOAD>
+				<ID>uploadbtn</ID>
+				<ACLASS>add folder</ACLASS>
+				<ONCLICK>if(!this.hasClassName('disabled')) $K.yg_loadDlgUpload($K.windows[this.wndobj.id].yg_id, true);</ONCLICK>
+				<HELP>{$itext.TXT_FILE_ADD}</HELP>
+			</UPLOAD>
+		</BUTTONS>
+	</FILE_SELECT>
+
+	<TOOLS_FILES>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>file</OBJECTTYPE>
+		<ICON>file</ICON>
+		<WIDTH>830</WIDTH>
+		<HEIGHT>370</HEIGHT>
+		<CLASS>mk_filechooser mk_noexec</CLASS>
+		<LOADPARAMS>{literal}{{/literal}"action": "choose", "tools": "true"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_FILES|default:'$TXT_FILES'}</TITLE>
+		<VERTICALSPLIT>30</VERTICALSPLIT>
+		<TABS>
+			<FILES_TREE>
+				<CONTENTRIGHT>
+					<FOLDERCONTENT></FOLDERCONTENT>
+				</CONTENTRIGHT>
+				<INIT>$K.yg_initDlgFilechooser( this.wndobj.loadparams.opener_reference, this.wndobj.num, (this.wndobj.yg_id || '') );</INIT>
+			</FILES_TREE>
+		</TABS>
+		<BUTTONS>
+			<UPLOAD>
+				<ID>uploadbtn</ID>
+				<ACLASS>add folder</ACLASS>
+				<ONCLICK>if(!this.hasClassName('disabled')) $K.yg_loadDlgUpload($K.windows[this.wndobj.id].yg_id, true);</ONCLICK>
+				<HELP>{$itext.TXT_FILE_ADD}</HELP>
+			</UPLOAD>
+		</BUTTONS>
+	</TOOLS_FILES>
+	<!-- UPLOAD -->
+
+	<UPLOAD>
+		<CUSTOMID>upload</CUSTOMID>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>file</OBJECTTYPE>
+		<STAY_IN_BACKGROUND>1</STAY_IN_BACKGROUND>
+		<STYLE>display:none;</STYLE>
+		<ICON>noicon</ICON>
+		<WIDTH>450</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<TITLE>{$itext.TXT_UPLOAD_FILES|default:'$TXT_UPLOAD_FILES'}</TITLE>
+		<TABS>
+			<UPLOAD>
+				<INIT>$K.yg_initDlgUpload(this.wndobj.num, this.wndobj.loadparams.yg_id);if (!this.wndobj.initShow) $(this.wndobj.id).hide();</INIT>
+				<SUBMIT>$K.yg_startUpload(this.wndobj.num);</SUBMIT>
+			</UPLOAD>
+		</TABS>
+		<BUTTONS>
+			<ADD>
+				<ID>addfilebutton_top_container</ID>
+				<ACLASS>add</ACLASS>
+				<HELP>{$itext.TXT_FILE_ADD}</HELP>
+			</ADD>
+		</BUTTONS>
+	</UPLOAD>
+
+	<UPLOAD_PROGRESS>
+		<CUSTOMID>uploadprogress</CUSTOMID>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>file</OBJECTTYPE>
+		<STAY_IN_BACKGROUND>1</STAY_IN_BACKGROUND>
+		<STYLE>display:none;</STYLE>
+		<ICON>noicon</ICON>
+		<WIDTH>500</WIDTH>
+		<HEIGHT>310</HEIGHT>
+		<TITLE>{$itext.TXT_UPLOAD_STATUS|default:'$TXT_UPLOAD_STATUS'} <strong>0%</strong></TITLE>
+		<TABS>
+			<UPLOAD_PROGRESS>
+				<INIT>$K.yg_initDlgUploadProgress(this.wndobj.loadparams.show);</INIT>
+				<SUBMIT>$K.yg_clearUploadProgress(this.wndobj.num);</SUBMIT>
+			</UPLOAD_PROGRESS>
+		</TABS>
+	</UPLOAD_PROGRESS>
+
+	<!-- CONTENTBLOCKS -->
+
+	<CBLOCK_DETAILS>
+		<TYPE>content</TYPE>
+		<OBJECTTYPE>cblock</OBJECTTYPE>
+		<ICON>cblock</ICON>
+		<LOCKING>true</LOCKING>
+		<TABS>
+			<CONTENT>
+				<TITLE>{$itext.TXT_CONTENT|default:'$TXT_CONTENT'}</TITLE>
+				<INIT>$K.yg_initContentTab( this.wndobj.yg_id, '', this.wndobj.id, 'cblock' );</INIT>
+			</CONTENT>
+			<CONTENTBLOCK_LIST>
+				<FOLDER>2</FOLDER>
+				<TITLE>{$itext.TXT_CONTENTBLOCKS|default:'$TXT_CONTENTBLOCKS'}</TITLE>
+				<INIT>$K.yg_initCblockList(this.wndobj.id, this.wndobj.cblockList);</INIT>
+				<REFRESH>$K.yg_refreshCblockList(this.wndobj.id);</REFRESH>
+			</CONTENTBLOCK_LIST>
+			<PROPERTIES>
+				<FOLDER>1</FOLDER>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_PROPERTIES|default:'$TXT_PROPERTIES'}</TITLE>
+			</PROPERTIES>
+			<TAGS>
+				<FOLDER>1</FOLDER>
+				<CLASS>header_small</CLASS>
+				<TITLE>{$itext.TXT_TAGS|default:'$TXT_TAGS'}</TITLE>
+				<INIT>$K.yg_initTagsTab( this.wndobj.yg_id.split('-')[0], this.wndobj.num);</INIT>
+			</TAGS>
+			<LINKS>
+				<TITLE>{$itext.TXT_LINKS|default:'$TXT_LINKS'}</TITLE>
+			</LINKS>
+			<EXTENSIONS>
+				<TITLE>{$itext.TXT_EXTENSIONS}</TITLE>
+				<INIT>$K.yg_initContentTab( this.wndobj.yg_id, '', this.wndobj.id, 'extcblock' );</INIT>
+			</EXTENSIONS>
+			<VERSIONS>
+				<CLASS>header_medium</CLASS>
+				<TITLE>{$itext.TXT_VERSIONS|default:'$TXT_VERSIONS'}</TITLE>
+				<INIT>$K.yg_initVersionFilter(this.wndobj.id);</INIT>
+			</VERSIONS>
+			<PUBLISHING>
+				<TITLE>{$itext.TXT_PUBLISHING|default:'$TXT_PUBLISHING'}</TITLE>
+			</PUBLISHING>
+			<TRASHCAN>
+				<TRASHCAN>1</TRASHCAN>
+				<CLASS>header_smallstart</CLASS>
+				<TITLE>{$itext.TXT_TRASHCAN|default:'$TXT_TRASHCAN'}</TITLE>
+			</TRASHCAN>
+			<COMMENTS>
+				<TITLE>{$itext.TXT_COMMENTS}</TITLE>
+				<CLASS>header_comments</CLASS>
+				<INIT>$K.yg_initCommentFilter(this.wndobj.id);</INIT>
+			</COMMENTS>
+		</TABS>
+		<BUTTONS>
+			{*
+			<PREVIEWCURRENT>
+				<HELP>{$itext.TXT_CBLOCK_PREVIEW_WORKING}</HELP>
+			</PREVIEWCURRENT>
+			<PREVIEW>
+				<HELP>{$itext.TXT_CBLOCK_PREVIEW_LIVE}</HELP>
+			</PREVIEW>
+			*}
+			<CLEAR>
+				<ID>stagebtn</ID>
+				<TDCLASS>ywindow_btl</TDCLASS>
+				<PROPERTY>null</PROPERTY>
+				<ONCLICK>$K.yg_approveCBlock(this);</ONCLICK>
+				<HELP>{$itext.TXT_CBLOCK_CLEAR}</HELP>
+			</CLEAR>
+			<ADD>
+				<ACLASS>tree_btn_cblock</ACLASS>
+				<TDCLASS>mk_onlyfolder</TDCLASS>
+				<TYPE>tree_btn_add</TYPE>
+				<ONCLICK>$K.yg_addListCBlock(this);</ONCLICK>
+				<HELP>{$itext.TXT_CBLOCK_ADD}</HELP>
+			</ADD>
+			{*<DELETE>
+				<TDCLASS>mk_onlytrashcan</TDCLASS>
+				<ONCLICK></ONCLICK>
+				<HELP>{$itext.TXT_TRASHCAN_CLEAR}</HELP>
+			</DELETE>*}
+		</BUTTONS>
+	</CBLOCK_DETAILS>
+
+	<CBLOCKS_TREE>
+		<TYPE>tree</TYPE>
+		<MINWIDTH>300</MINWIDTH>
+		<MINHEIGHT>300</MINHEIGHT>
+		<ICON>navigator</ICON>
+		<TITLE>{$itext.TXT_CONTENTBLOCKS}</TITLE>
+		<TABS>
+			<CONTENTBLOCKS_TREE></CONTENTBLOCKS_TREE>
+		</TABS>
+		<BUTTONS>
+			<ADD>
+				<ACLASS>tree_btn_cblock</ACLASS>
+				<TYPE>tree_btn_add</TYPE>
+				<ONCLICK>$K.yg_addChildCBlock(this);</ONCLICK>
+				<HELP>{$itext.TXT_CBLOCK_ADD}</HELP>
+			</ADD>
+			<ADDFOLDER>
+				<ACLASS>tree_btn_cblock</ACLASS>
+				<TYPE>tree_btn_addfolder</TYPE>
+				<ONCLICK>$K.yg_addChildCBlockFolder(this);</ONCLICK>
+				<HELP>{$itext.TXT_FOLDER_ADD}</HELP>
+			</ADDFOLDER>
+			<COPY>
+				<ACLASS>tree_btn_cblock</ACLASS>
+				<TYPE>tree_btn_copy</TYPE>
+				<ONCLICK>new $K.yg_wndobj({literal}{{/literal} config: 'CBLOCK_COPY', loadparams: {literal}{{/literal} opener_reference: this.wndobj.id {literal}} }{/literal});</ONCLICK>
+				<HELP>{$itext.TXT_CBLOCK_COPY}</HELP>
+			</COPY>
+			<MOVETO>
+				<ACLASS>tree_btn_cblock</ACLASS>
+				<TYPE>tree_btn_move</TYPE>
+				<ONCLICK>new $K.yg_wndobj({literal}{{/literal} config: 'CBLOCK_MOVE', loadparams: {literal}{{/literal} opener_reference: this.wndobj.id {literal}} }{/literal});</ONCLICK>
+				<HELP>{$itext.TXT_CBLOCK_MOVE}</HELP>
+			</MOVETO>
+			<DELETE>
+				<ACLASS>tree_btn_cblock multiselect</ACLASS>
+				<TYPE>tree_btn_delete</TYPE>
+				<ONCLICK>$K.yg_fireAction($K.yg_deleteElement, this);</ONCLICK>
+				<HELP>{$itext.TXT_CBLOCK_DELETE}</HELP>
+			</DELETE>
+		</BUTTONS>
+	</CBLOCKS_TREE>
+
+	<CBLOCK_COPY>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>cblock</OBJECTTYPE>
+		<ICON>cblock</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<LOADPARAMS>{literal}{{/literal}"action": "copy"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_COPY_CBLOCK_CHOOSE_TARGET|default:'$TXT_COPY_CBLOCK_CHOOSE_TARGET'}</TITLE>
+		<TABS>
+			<CONTENTBLOCKS_TREE>
+				<SUBMIT>$K.yg_submitCBlockWindow(this.wndobj.num, this.wndobj.loadparams.action, this.wndobj.loadparams.opener_reference);</SUBMIT>
+			</CONTENTBLOCKS_TREE>
+		</TABS>
+	</CBLOCK_COPY>
+
+	<CBLOCK_MOVE>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>cblock</OBJECTTYPE>
+		<ICON>cblock</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<LOADPARAMS>{literal}{{/literal}"action": "move"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_MOVE_CBLOCK_CHOOSE_TARGET|default:'$TXT_MOVE_CBLOCK_CHOOSE_TARGET'}</TITLE>
+		<TABS>
+			<CONTENTBLOCKS_TREE>
+				<SUBMIT>$K.yg_submitCBlockWindow(this.wndobj.num, this.wndobj.loadparams.action, this.wndobj.loadparams.opener_reference);</SUBMIT>
+			</CONTENTBLOCKS_TREE>
+		</TABS>
+	</CBLOCK_MOVE>
+
+	<CBLOCK_SELECT>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>cblock</OBJECTTYPE>
+		<ICON>cblock</ICON>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>450</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<LOADPARAMS>{literal}{{/literal}"action": "choose"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_CHOOSE_CBLOCK}</TITLE>
+		<TABS>
+			<CONTENTBLOCKS_TREE>
+				<SUBMIT>$K.yg_submitCBlockWindow(this.wndobj.num, this.wndobj.loadparams.action, this.wndobj.loadparams.opener_reference);</SUBMIT>
+			</CONTENTBLOCKS_TREE>
+		</TABS>
+	</CBLOCK_SELECT>
+
+	<TOOLS_CBLOCKS>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE>cblock</OBJECTTYPE>
+		<ICON>cblock</ICON>
+		<CLASS>mk_noexec</CLASS>
+		<WIDTH>330</WIDTH>
+		<HEIGHT>360</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<LOADPARAMS>{literal}{{/literal}"action": "choose"{literal}}{/literal}</LOADPARAMS>
+		<TITLE>{$itext.TXT_CONTENTBLOCKS}</TITLE>
+		<TABS>
+			<CONTENTBLOCKS_TREE></CONTENTBLOCKS_TREE>
+		</TABS>
+	</TOOLS_CBLOCKS>
+
+	<!-- DROPSTACK //-->
+
+	<DROPSTACK>
+		<TYPE>dialog</TYPE>
+		<OBJECTTYPE></OBJECTTYPE>
+		<ICON>noicon</ICON>
+		<STAY_IN_BACKGROUND>1</STAY_IN_BACKGROUND>
+		<WIDTH>350</WIDTH>
+		<HEIGHT>320</HEIGHT>
+		<MINWIDTH>250</MINWIDTH>
+		<TITLE>{$itext.TXT_DROPSTACK}</TITLE>
+		<TABS>
+			<DROPSTACK>
+				<CLASS>header_smallstart</CLASS>
+				<INIT>$K.yg_initDropStack(this.wndobj.num);</INIT>
+			</DROPSTACK>
+		</TABS>
+	</DROPSTACK>
+
+
+</WINDOWS>

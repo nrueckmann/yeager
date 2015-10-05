@@ -1,0 +1,142 @@
+<div class="panelcontent">
+
+	<div class="mk_contentgroup mk_trashcan" yg_multiselect="true">
+
+		{section name='del' loop=$trashedObjects}
+				<div class="cntblockcontainer mk_trashitem" yg_selectable="true" onmouseover="$K.yg_showActions(this);" yg_id="{strip}
+					{if $type == 'page'}{$trashedObjects[del].ID}-{$trashedObjects[del].SITE}{/if}
+					{if $type == 'cblock'}{$trashedObjects[del].ID}-cblock{/if}
+					{if $type == 'filefolder'}{$trashedObjects[del].ID}-file{/if}
+				{/strip}" yg_property="trashitem" yg_type="{if $type == 'filefolder'}file{else}{$type}{/if}">
+
+						<!-- actions //-->
+						<div class="actions">
+							<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+							<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+								<div class="singleselect">
+									<div class="actionborder"></div>
+									<a class="del" onclick="Event.stop(event);$K.yg_shredderObject(this.up('.mk_trashitem'));" onmouseover="{if $type == 'page'}$K.yg_showHelp('{$itext.TXT_PAGE_DELETE|default:'$TXT_PAGE_DELETE'}');{elseif $type =='cblock'}$K.yg_showHelp('{$itext.TXT_CBLOCK_DELETE|default:'$TXT_CBLOCK_DELETE'}');{elseif $type=='filefolder'}$K.yg_showHelp('{$itext.TXT_FILE_DELETE|default:'$TXT_FILE_DELETE'}');{/if}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+									<a class="moveto" onclick="Event.stop(event);$K.yg_restoreObject(this);" onmouseover="$K.yg_showHelp('{$itext.TXT_VERSION_RESTORE}');" title="{$itext.TXT_VERSION_RESTORE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+									<div class="actionborder"></div>
+								</div>
+								<div class="multiselect">
+									<div class="actionborder"></div>
+									<a class="del" onclick="Event.stop(event);$K.yg_shredderObject(this.up('.mk_trashitem'));" onmouseover="{if $type == 'page'}$K.yg_showHelp('{$itext.TXT_PAGE_DELETE|default:'$TXT_PAGE_DELETE'}');{elseif $type =='cblock'}$K.yg_showHelp('{$itext.TXT_CBLOCK_DELETE|default:'$TXT_CBLOCK_DELETE'}');{elseif $type=='filefolder'}$K.yg_showHelp('{$itext.TXT_FILE_DELETE|default:'$TXT_FILE_DELETE'}');{/if}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+									<div class="actionborder"></div>
+								</div>
+								<!--
+									<a href="{$internalprefix}?preview=1&objecttype=file&id={$objectid}&version={$history[counter].NEWVALUE}" class="preview" onclick="Event.stop(event);$K.yg_preview({literal}{{/literal}objecttype: 'file', id: {$objectid}, version: {$history[counter].NEWVALUE}{literal}}{/literal});" onmouseover="$K.yg_showHelp('{$itext.TXT_VERSION_PREVIEW}');" title="{$itext.TXT_VERSION_PREVIEW}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+								-->
+							</div>
+						</div>
+						<!-- end actions //-->
+
+						<div class="cntblock cntblockversions" {if $type == 'filefolder'}onmouseover="$K.yg_hoverFileHint({$trashedObjects[del].ID}, event);"{/if}>
+							<table class="gridflex" cellspacing="0" cellpadding="0">
+								<tr>
+									<td>
+										<div class="trace">
+											{section name='t' loop=$trashedObjects[del].PARENTS step=-1}
+												{$trashedObjects[del].PARENTS[t][0].NAME}
+												{if !$smarty.section.t.last}<span class="traceicon"></span>{/if}
+											{/section}
+										</div>
+										<div class="txt modified" style="clear:both;">
+											<a onclick="{strip}
+													{if $type == 'filefolder'}$K.yg_openObjectDetails('{$trashedObjects[del].ID}', 'file', '{$trashedObjects[del].NAME}', {literal}{{/literal}color:'{$trashedObjects[del].FILEINFO.COLOR}',typecode:'{$trashedObjects[del].FILEINFO.CODE|strtoupper}'{literal}}{/literal}){/if}
+													{if $type == 'page'}$K.yg_openObjectDetails('{$trashedObjects[del].ID}-{$trashedObjects[del].SITE}', 'page', '{$trashedObjects[del].NAME}', '{$trashedObjects[del].ICON}'){/if}
+													{if $type == 'cblock'}$K.yg_openObjectDetails('{$trashedObjects[del].ID}', 'cblock', '{$trashedObjects[del].NAME}', 'cblock'){/if}
+												{/strip}">
+												{if $type == 'filefolder'}
+													<span yg_property="type" yg_type="file" yg_id="{$trashedObjects[del].ID}-file" class="filetype {$trashedObjects[del].FILEINFO.COLOR}" style="display:inline-block;">{$trashedObjects[del].FILEINFO.CODE|strtoupper}</span> <span yg_property="name" yg_type="file" yg_id="{$trashedObjects[del].ID}-file">{$trashedObjects[del].NAME}</span>
+												{else}
+													{assign var='icon' value='icontag'}
+													{if $type == 'cblock'}{assign var='icon' value='iconcblock'}{/if}
+													{if $type == 'page'}{assign var='icon' value='icon'}{/if}
+													<div class="{$icon}{if $type == 'page'}{$trashedObjects[del].ICON}{/if} icn"></div><span yg_property="name" yg_type="{strip}
+														{if $type == 'page'}page{/if}
+														{if $type == 'cblock'}cblock{/if}
+													{/strip}" yg_id="{strip}
+														{if $type == 'page'}{$trashedObjects[del].ID}-{$trashedObjects[del].SITE}{/if}
+														{if $type == 'cblock'}{$trashedObjects[del].ID}-cblock{/if}
+													{/strip}">{$trashedObjects[del].NAME}</span>
+												{/if}
+											</a>
+										</div>
+									</td>
+									<td width="150" class="author">
+										{$trashedObjects[del].CREATEDTS|date_format_php:$itext.DATE_FORMAT}, {$trashedObjects[del].CREATEDTS|date_format_php:$itext.TIME_FORMAT}<br />
+										<a class="user {if !$trashedObjects[del].CREATEDBYUSERNAME}unknown{/if}" onclick="$K.yg_openUserInfo('{$trashedObjects[del].CREATEDBY}', this);" yg_type="user" yg_id="{$trashedObjects[del].CREATEDBY}-user" yg_property="name" onmouseover="$K.yg_hoverUserHint(this);" onmouseout="$K.yg_hideUserHint();">{$trashedObjects[del].CREATEDBYUSERNAME|default:$itext.TXT_UNKNOWN}</a>
+									</td>
+									<td width="150" class="author">
+										{$trashedObjects[del].LASTCHANGE.DATETIME|date_format_php:$itext.DATE_FORMAT}, {$trashedObjects[del].LASTCHANGE.DATETIME|date_format_php:$itext.TIME_FORMAT}<br />
+										<a class="user {if !$trashedObjects[del].TRASHERUSERNAME}unknown{/if}" onclick="$K.yg_openUserInfo('{$trashedObjects[del].LASTCHANGE.USERID}', this);" yg_type="user" yg_id="{$trashedObjects[del].LASTCHANGE.USERID}-user" yg_property="name" onmouseover="$K.yg_hoverUserHint(this);" onmouseout="$K.yg_hideUserHint();">{$trashedObjects[del].TRASHERUSERNAME|default:$itext.TXT_UNKNOWN}</a>
+									</td>
+								</tr>
+							</table>
+						</div>
+
+				</div>
+		{sectionelse}
+			<div class="nocontentareas mk_verticalcenter"><span class="bracketleft"></span>{$itext.TXT_NO_OBJECTS_TRASHED|default:'$TXT_NO_OBJECTS_TRASHED'}<span class="bracketright"></span></div>
+		{/section}
+
+	</div>
+
+</div>
+
+
+{if $refresh != 1}
+	<!-- FIXED HEADER VERSIONEN //-->
+	<div class="tabhead_mid ywindowhead start" style="display:none">
+		<div class="headercolumns">
+			<table class="gridflex" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+						<div class="filtercol">{$itext.TXT_NAME|default:'$TXT_NAME'}</div>
+					</td>
+					<td width="150">
+						<div class="filtercol">{$itext.TXT_CREATED|default:'$TXT_CREATED'} <span class="colfilter" onclick="$K.yg_showFilterContext(this, event);">{$itext.TXT_ALL_CHANGES_SHORT|default:'$TXT_ALL_CHANGES_SHORT'}</span></div>
+						<div class="filtercontext" id="wid_{$win_no}_trashcanfilter_created" onmouseup="this.hide();">
+							<a shortname="{$itext.TXT_LAST_WEEK_SHORT|default:'$TXT_LAST_WEEK_SHORT'}" value="LAST_WEEK" onclick="$K.yg_filterTrashcan('created', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}', 'wid_{$win_no}_trashcanfilter_created');">{$itext.TXT_LAST_WEEK|default:'$TXT_LAST_WEEK'}</a>
+							<a shortname="{$itext.TXT_LAST_2_WEEKS_SHORT|default:'$TXT_LAST_2_WEEKS_SHORT'}" value="LAST_2_WEEKS" onclick="$K.yg_filterTrashcan('created', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}', 'wid_{$win_no}_trashcanfilter_created');">{$itext.TXT_LAST_2_WEEKS|default:'$TXT_2_LAST_WEEKS'}</a>
+							<a shortname="{$itext.TXT_LAST_4_WEEKS_SHORT|default:'$TXT_LAST_4_WEEKS_SHORT'}" value="LAST_4_WEEKS" onclick="$K.yg_filterTrashcan('created', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}', 'wid_{$win_no}_trashcanfilter_created');">{$itext.TXT_LAST_4_WEEKS|default:'$TXT_4_LAST_WEEKS'}</a>
+							<a shortname="{$itext.TXT_LAST_8_WEEKS_SHORT|default:'$TXT_LAST_8_WEEKS_SHORT'}" value="LAST_8_WEEKS" onclick="$K.yg_filterTrashcan('created', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}', 'wid_{$win_no}_trashcanfilter_created');">{$itext.TXT_LAST_8_WEEKS|default:'$TXT_8_LAST_WEEKS'}</a>
+							<div class="filtercut"></div>
+							<a shortname="{$itext.TXT_ALL_CHANGES_SHORT|default:'$TXT_ALL_CHANGES_SHORT'}" value="ALL" onclick="$K.yg_filterTrashcan('created', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}', 'wid_{$win_no}_trashcanfilter_created');">{$itext.TXT_ALL|default:'$TXT_ALL'}</a>
+							<a shortname="{$itext.TXT_CUSTOM_TIMEFRAME_SHORT|default:'$TXT_CUSTOM_TIMEFRAME_SHORT'}" value="CUSTOM" onclick="$K.yg_filterTrashcan('created', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}', 'wid_{$win_no}_trashcanfilter_created');">{$itext.TXT_CUSTOM_TIMEFRAME|default:'$TXT_CUSTOM_TIMEFRAME'}</a>
+						</div>
+					</td>
+					<td width="150">
+						<div class="filtercol">{$itext.TXT_REMOVED|default:'$TXT_REMOVED'} <span class="colfilter" onclick="$K.yg_showFilterContext(this, event);">{$itext.TXT_ALL_CHANGES_SHORT|default:'$TXT_ALL_CHANGES_SHORT'}</span></div>
+						<div class="filtercontext" id="wid_{$win_no}_trashcanfilter_removed" onmouseup="this.hide();">
+							<a shortname="{$itext.TXT_LAST_WEEK_SHORT|default:'$TXT_LAST_WEEK_SHORT'}" value="LAST_WEEK" onclick="$K.yg_filterTrashcan('removed', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}', 'wid_{$win_no}_trashcanfilter_removed');">{$itext.TXT_LAST_WEEK|default:'$TXT_LAST_WEEK'}</a>
+							<a shortname="{$itext.TXT_LAST_2_WEEKS_SHORT|default:'$TXT_LAST_2_WEEKS_SHORT'}" value="LAST_2_WEEKS" onclick="$K.yg_filterTrashcan('removed', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}', 'wid_{$win_no}_trashcanfilter_removed');">{$itext.TXT_LAST_2_WEEKS|default:'$TXT_2_LAST_WEEKS'}</a>
+							<a shortname="{$itext.TXT_LAST_4_WEEKS_SHORT|default:'$TXT_LAST_4_WEEKS_SHORT'}" value="LAST_4_WEEKS" onclick="$K.yg_filterTrashcan('removed', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}', 'wid_{$win_no}_trashcanfilter_removed');">{$itext.TXT_LAST_4_WEEKS|default:'$TXT_4_LAST_WEEKS'}</a>
+							<a shortname="{$itext.TXT_LAST_8_WEEKS_SHORT|default:'$TXT_LAST_8_WEEKS_SHORT'}" value="LAST_8_WEEKS" onclick="$K.yg_filterTrashcan('removed', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}', 'wid_{$win_no}_trashcanfilter_removed');">{$itext.TXT_LAST_8_WEEKS|default:'$TXT_8_LAST_WEEKS'}</a>
+							<div class="filtercut"></div>
+							<a shortname="{$itext.TXT_ALL_CHANGES_SHORT|default:'$TXT_ALL_CHANGES_SHORT'}" value="ALL" onclick="$K.yg_filterTrashcan('removed', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}', 'wid_{$win_no}_trashcanfilter_removed');">{$itext.TXT_ALL|default:'$TXT_ALL'}</a>
+							<a shortname="{$itext.TXT_CUSTOM_TIMEFRAME_SHORT|default:'$TXT_CUSTOM_TIMEFRAME_SHORT'}" value="CUSTOM" onclick="$K.yg_filterTrashcan('removed', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}', 'wid_{$win_no}_trashcanfilter_removed');">{$itext.TXT_CUSTOM_TIMEFRAME|default:'$TXT_CUSTOM_TIMEFRAME'}</a>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<!-- END FIXED HEADER VERSIONEN //-->
+
+	<!-- PAGEDIR //-->
+	{include file="$approot/ui/html/tabs/common/pagedir.inc.html"}
+
+{/if}
+
+<!-- TAB AUTOSTART //-->
+<script language="javascript">
+	{if $refresh != 1}
+		$K.yg_initVersionFilter('wid_{$win_no}');
+	{/if}
+	{if ($type=='cblock') || ($type=='page')}
+		$K.windows['wid_{$win_no}'].setStageButton( '{$objectInfo.RSTAGE}' );
+	{/if}
+</script>
+<!-- END TAB AUTOSTART //-->

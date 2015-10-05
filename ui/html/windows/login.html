@@ -1,0 +1,205 @@
+{assign var="win_no" value="login"}
+<div id="wid_{$win_no}" class="ywindow pbox" yg_draggable="true" style="width:395px;position:absolute;-moz-user-focus:normal;" onclick="this.focus();">
+	<div id="loginerror" class="errorhint" style="display:none;">
+		<div class="top"></div>
+		<div class="cnt">
+			<span class="headline">{$itext.TXT_LOGIN_ERROR|default:'$TXT_LOGIN_ERROR'}</span>
+			{$itext.TXT_LOGIN_ERROR_TXT|default:'$TXT_LOGIN_ERROR_TXT'}
+		</div>
+	</div>
+	<div id="passwordreseterror" class="errorhint" style="display:none;">
+		<div class="top"></div>
+		<div class="cnt">
+			<span class="headline">{$itext.TXT_LOGIN_ERROR|default:'$TXT_LOGIN_ERROR'}</span>
+			{$itext.TXT_PASSWORD_ERROR_WEAK|default:'$TXT_PASSWORD_ERROR_WEAK'}
+		</div>
+	</div>
+	<div id="recoverloginerror" class="errorhint" style="display:none;">
+		<div class="top"></div>
+		<div class="cnt">
+			<span class="headline">{$itext.TXT_RECOVERLOGIN_ERROR|default:'$TXT_RECOVERLOGIN_ERROR'}</span>
+			{$itext.TXT_RECOVERLOGIN_ERROR_TXT|default:'$TXT_RECOVERLOGIN_ERROR_TXT'}
+		</div>
+	</div>
+
+	<table cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="pbox_tl"></td>
+			<td class="pbox_tm"></td>
+			<td class="pbox_tr"></td>
+		</tr>
+		<tr>
+			<td class="pbox_l"></td>
+			<td class="pbox_m">
+
+				<div id="loginload" style=""></div>
+
+				<div class="logincontainer" id="loginform" style="display:{if $passwordreset}none{else}block{/if};">
+					<form id="loginform-form" method="post" action="{$base}login_empty" target="loginiframe" onsubmit="$K.yg_userLogin(this);">
+					<div class="logo"></div>
+					<div class="recoverylink"><a href="javascript:void(0);" onclick="$('loginerror').hide();$K.yg_loginToggleForms();">{$itext.TXT_FORGOT_PASSWORD|default:'$TXT_FORGOT_PASSWORD'}</a></div>
+					<span class="headline1"></span>
+					<div class="loginspacer"></div>
+					<span class="label">{$itext.TXT_EMAIL|default:'$TXT_EMAIL'}</span>
+					<div class="textbox" yg_form="textbox">
+						<input type="text" name="username" id="username" tabindex="1" />
+					</div>
+
+					<span class="label">{$itext.TXT_PASSWORD|default:'$TXT_PASSWORD'}</span>
+					<div class="textbox" yg_form="textbox">
+						<input type="password" name="password" id="password" tabindex="1" />
+					</div>
+
+					<table cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="pbox_leftbutton">
+								<div class="checkarray">
+									<div id="wid_{$win_no}_checkbox" class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="wid_{$win_no}_keeploggedin" id="wid_{$win_no}_keeploggedin" value="0"><span class="label">{$itext.TXT_KEEP_LOGGED_IN|default:'$TXT_KEEP_LOGGED_IN'}</span></div></div>
+								</div>
+							</td>
+							<td class="pbox_rightbutton">
+								<div id="wid_{$win_no}_okbutton" class="button" tabindex="1"><a onclick="document.forms['loginform-form'].submit();$K.yg_userLogin(this);" class="stdbutton"><div onclick="" class="wrapper"><nobr>{$itext.TXT_ENTER|default:'$TXT_ENTER'}</nobr></div></a></div>
+							</td>
+						</tr>
+					</table>
+					<input value="Log in" tabindex="4" id="u145863_3" type="submit" style="width:1px;height:1px;border:0px;padding:0px;background-color:transparent;">
+					<iframe name="loginiframe" width="1" height="1" style="visibility:hidden;"></iframe>
+					</form>
+				</div>
+				<div class="logincontainer" id="recoveryform" style="display:none;">
+					<form id="recoveryform-form" method="post" action="{$base}login_empty" target="recoveryiframe" onsubmit="$K.yg_userForgotPassword(this);">
+					<div class="logo"></div>
+					<span class="headline1">{$itext.TXT_PASSWORD_RECOVERY|default:'$TXT_PASSWORD_RECOVERY'}</span>
+					<br /><br />{$itext.TXT_PASSWORD_RECOVERY_CNT|default:'$TXT_PASSWORD_RECOVERY_CNT'}
+					<div class="loginspacer"></div>
+					<span class="label">{$itext.TXT_EMAIL|default:'$TXT_EMAIL'}</span>
+					<div class="textbox" yg_form="textbox">
+						<input tabindex="1" id="wid_{$win_no}_forgotemail" type="text" name="forgotemail" />
+					</div>
+
+					<table cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="pbox_leftbutton">
+								<a href="javascript:void(0);" onclick="$('recoverloginerror').hide();$K.yg_loginToggleForms();">{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</a>
+							</td>
+							<td class="pbox_rightbutton">
+								<div id="wid_{$win_no}_okbutton" class="button"><a onclick="$K.yg_userForgotPassword(this);" class="stdbutton"><div onclick="" class="wrapper"><nobr>{$itext.TXT_SUBMIT|default:'$TXT_SUBMIT'}</nobr></div></a></div>
+							</td>
+						</tr>
+					</table>
+					<input value="recover me" tabindex="4" id="u145863_4" type="submit" style="width:1px;height:1px;border:0px none;background-color: transparent;">
+					<iframe name="recoveryiframe" width="1" height="1" style="visibility:hidden;"></iframe>
+					</form>
+				</div>
+
+				<div class="logincontainer" id="recoveryformsuccess" style="display:none;">
+
+					<div class="logo"></div>
+					<span class="headline1">{$itext.TXT_PASSWORD_RECOVERY|default:'$TXT_PASSWORD_RECOVERY'}</span>
+					<br /><br /><span id="recoveryformsuccessmessage"></span>
+					<span id="recoveryformsuccessmessage_default" style="display:none;">{$itext.TXT_PASSWORD_RECOVERY_SUCCESS|default:'$TXT_PASSWORD_RECOVERY_SUCCESS'}</span>
+					<div class="loginspacer"></div>
+					<table cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="pbox_leftbutton">
+								<a href="javascript:$K.yg_loginToggleForms();">{$itext.TXT_LOGIN_RETURN|default:'$TXT_LOGIN_RETURN'}</a>
+							</td>
+							<td class="pbox_rightbutton"></td>
+						</tr>
+					</table>
+
+				</div>
+
+				{if !$newuser && $passwordreset}
+					<div class="logincontainer" id="recoverpassword" style="display:{if $passwordreset}block{else}none{/if};">
+						<form id="resetpassform-form" method="post" action="{$base}login_empty" target="resetpassiframe" onsubmit="$K.yg_userSetNewPassword(this);">
+						<div class="logo"></div>
+						<span class="headline1">{$itext.TXT_PASSWORD_RECOVERY|default:'$TXT_PASSWORD_RECOVERY'}</span>
+						<br /><br />{$itext.TXT_PASSWORD_RESET_CNT|default:'$TXT_PASSWORD_RESET_CNT'}
+						<div class="loginspacer"></div>
+						<span class="label">{$itext.TXT_PASSWORD|default:'$TXT_PASSWORD'}</span>
+						<div class="textbox" yg_form="textbox">
+							<input tabindex="1" id="wid_{$win_no}_reset_password" type="password" name="resetpassword" />
+						</div>
+						<span class="label">{$itext.TXT_PASSWORD_CONFIRM|default:'$TXT_PASSWORD_CONFIRM'}</span>
+						<div class="textbox" yg_form="textbox">
+							<input tabindex="1" id="wid_{$win_no}_reset_password_confirm" type="password" name="resetpasswordconfirm" />
+						</div>
+
+						<input type="hidden" id="wid_{$win_no}_reset_password_token" name="resetpasswordtoken" value="{$passwordreset_token}" />
+
+						<table cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="pbox_leftbutton">
+									<a href="javascript:void(0);" onclick="$('recoverloginerror').hide();$K.yg_loginToggleForms();">{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</a>
+								</td>
+								<td class="pbox_rightbutton">
+									<div id="wid_{$win_no}_recoverbutton" class="button"><a onclick="$K.yg_userSetNewPassword(this);" class="stdbutton"><div onclick="" class="wrapper"><nobr>{$itext.TXT_SUBMIT|default:'$TXT_SUBMIT'}</nobr></div></a></div>
+								</td>
+							</tr>
+						</table>
+						<input value="reset me" tabindex="4" id="u145863_4" type="submit" style="width:1px;height:1px;border:0px none;background-color: transparent;">
+						<iframe name="resetpassiframe" width="1" height="1" style="visibility:hidden;"></iframe>
+						</form>
+					</div>
+				{/if}
+
+				<div class="logincontainer" id="recoverypasswordsuccess" style="display:none;">
+
+					<div class="logo"></div>
+					<span class="headline1">{$itext.TXT_PASSWORD_RECOVERY|default:'$TXT_PASSWORD_RECOVERY'}</span>
+					<br /><br /><span id="recoveryformsuccessmessage"></span>
+					<span id="recoveryformsuccessmessage_default">{$itext.TXT_PASSWORD_RESET_SUCCESS|default:'$TXT_PASSWORD_RESET_SUCCESS'}</span>
+					<div class="loginspacer"></div>
+					<table cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="pbox_leftbutton">
+								<a href="javascript:$K.yg_loginToggleForms();">{$itext.TXT_LOGIN_RETURN|default:'$TXT_LOGIN_RETURN'}</a>
+							</td>
+							<td class="pbox_rightbutton"></td>
+						</tr>
+					</table>
+
+				</div>
+
+				{if $newuser && $passwordreset}
+					<div class="logincontainer" id="newusersetpassword" style="display:{if $passwordreset}block{else}none{/if};">
+						<div class="logo"></div>
+						<span class="headline1">{$itext.TXT_USER_WELCOME|default:'$TXT_USER_WELCOME'}</span>
+						<br /><br />{$itext.TXT_USER_WELCOME_CNT|default:'$TXT_USER_WELCOME_CNT'}
+						<div class="loginspacer"></div>
+						<span class="label">{$itext.TXT_PASSWORD|default:'$TXT_PASSWORD'}</span>
+						<div class="textbox" yg_form="textbox">
+							<input tabindex="1" id="wid_{$win_no}_reset_password" type="password" name="resetpassword" />
+						</div>
+						<span class="label">{$itext.TXT_PASSWORD_CONFIRM|default:'$TXT_PASSWORD_CONFIRM'}</span>
+						<div class="textbox" yg_form="textbox">
+							<input tabindex="1" id="wid_{$win_no}_reset_password_confirm" type="password" name="resetpasswordconfirm" />
+						</div>
+
+						<input type="hidden" id="wid_{$win_no}_reset_password_token" name="resetpasswordtoken" value="{$passwordreset_token}" />
+
+						<table cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="pbox_leftbutton"></td>
+								<td class="pbox_rightbutton">
+									<div id="wid_{$win_no}_okbutton" class="button"><a onclick="$K.yg_userSetNewPassword(this);" class="stdbutton"><div onclick="" class="wrapper"><nobr>{$itext.TXT_SUBMIT|default:'$TXT_SUBMIT'}</nobr></div></a></div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				{/if}
+
+			</td>
+			<td class="pbox_r"></td>
+		</tr>
+		<tr>
+			<td class="pbox_bl"></td>
+			<td class="pbox_bm"></td>
+			<td class="pbox_br"></td>
+		</tr>
+	</table>
+	<input tabindex="1" id="wid_{$win_no}_focus" type="text" name="focus" class="magicfocus" />
+	{include file="$approot/ui/html/windows/footer.inc.html"}
+
+</div>

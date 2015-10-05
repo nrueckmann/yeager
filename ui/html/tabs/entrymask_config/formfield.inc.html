@@ -1,0 +1,685 @@
+{if $item_index==''}{assign var='item_index' value='0'}{/if}
+
+<li id="wid_{$win_no}_formfield_{$item_index}" class="mk_formfield {if $item_info_FORMFIELD==14}nocollaps{/if} {if $noscript}opened{else}closed{/if}" yg_id="{$item_index}-formfield" yg_type="formfield">
+	<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+		<!-- actions //-->
+		<div class="actions">
+			<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+			<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+
+				<div class="singleselect">
+					<div class="actionborder"></div>
+					<a class="del" onclick="Event.stop(event);$K.yg_removeEntry(this.up(4));" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_DELETE}');" title="{$itext.TXT_FORMFIELD_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<a class="up" onclick="Event.stop(event);$K.yg_sortEntry(this.up(4),-1);" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_UP}');" title="{$itext.TXT_FORMFIELD_UP}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<a class="down" onclick="Event.stop(event);$K.yg_sortEntry(this.up(4),1);" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_DOWN}');" title="{$itext.TXT_FORMFIELD_DOWN}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<div class="actionborder"></div>
+				</div>
+				<div class="multiselect">
+					<div class="actionborder"></div>
+					<a class="del" onclick="$K.yg_fireAction($K.yg_removeEntry,this.up(4),event);" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_DELETE}');" title="{$itext.TXT_FORMFIELD_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<div class="actionborder"></div>
+				</div>
+			</div>
+		</div>
+		<!-- end actions //-->
+		<div class="cntblock listcollaps" yg_selectable="true">
+			<a class="handler" onclick="$K.yg_listCollapsSwap(this.up(2),event);{if $item_info_FORMFIELD==9}$K.yg_updateInnerContent($('wid_{$win_no}_element{$item_index}_entries_inner'));$K.scrollbars['sortlist_{$win_no}_{$item_index}'].setBarSize(this.firstrun);{/if}{if ($item_info_FORMFIELD==2)||($item_info_FORMFIELD==3)}$K.yg_setTextareaAutogrow('wid_{$win_no}_element{$item_index}_presettingtextarea');$K.yg_setTextareaAutogrow('wid_{$win_no}_element{$item_index}_buttonconfig');{/if}">
+				{if $item_info_FORMFIELD==1}
+					{assign var='item_title' value=$itext.TXT_FORMFIELD_SINGLELINE|default:'$TXT_FORMFIELD_SINGLELINE'}
+				{/if}
+				{if $item_info_FORMFIELD==2}
+					{assign var='item_title' value=$itext.TXT_FORMFIELD_MULTILINE|default:'$TXT_FORMFIELD_MULTILINE'}
+				{/if}
+				{if $item_info_FORMFIELD==3}
+					{assign var='item_title' value=$itext.TXT_FORMFIELD_RICHTEXT|default:'$TXT_FORMFIELD_RICHTEXT'}
+				{/if}
+				{if $item_info_FORMFIELD==4}
+					{assign var='item_title' value=$itext.TXT_FORMFIELD_CHECKBOX|default:'$TXT_FORMFIELD_CHECKBOX'}
+				{/if}
+				{if $item_info_FORMFIELD==5}
+					{assign var='item_title' value=$itext.TXT_FORMFIELD_LINK|default:'$TXT_FORMFIELD_LINK'}
+				{/if}
+				{if $item_info_FORMFIELD==6}
+					{assign var='item_title' value=$itext.TXT_FILE|default:'$TXT_FILE'}
+					{assign var='item_icon' value='iconfile'}
+				{/if}
+				{if $item_info_FORMFIELD==7}
+					{assign var='item_title' value=$itext.TXT_CONTENTBLOCK|default:'$TXT_CONTENTBLOCK'}
+					{assign var='item_icon' value='iconcblock'}
+				{/if}
+				{if $item_info_FORMFIELD==8}
+					{assign var='item_title' value=$itext.TXT_TAG|default:'$TXT_TAG'}
+					{assign var='item_icon' value='icontag'}
+				{/if}
+				{if $item_info_FORMFIELD==9}
+					{assign var='item_title' value=$itext.TXT_FORMFIELD_LIST|default:'$TXT_FORMFIELD_LIST'}
+				{/if}
+				{if $item_info_FORMFIELD==10}
+					{assign var='item_title' value=$itext.TXT_FORMFIELD_PASSWORD|default:'$TXT_FORMFIELD_PASSWORD'}
+				{/if}
+				{if $item_info_FORMFIELD==11}
+					{assign var='item_title' value=$itext.TXT_FORMFIELD_DATE|default:'$TXT_FORMFIELD_DATE'}
+				{/if}
+				{if $item_info_FORMFIELD==12}
+					{assign var='item_title' value=$itext.TXT_FORMFIELD_DATETIME|default:'$TXT_FORMFIELD_DATETIME'}
+				{/if}
+				{if $item_info_FORMFIELD==13}
+					{assign var='item_title' value=$itext.TXT_FORMFIELD_HEADLINE|default:'$TXT_FORMFIELD_HEADLINE'}
+				{/if}
+				{if $item_info_FORMFIELD==14}
+					{assign var='item_title' value=$itext.TXT_FORMFIELD_CUTLINE|default:'$TXT_FORMFIELD_CUTLINE'}
+				{/if}
+				{if $item_info_FORMFIELD==15}
+					{assign var='item_title' value=$itext.TXT_PAGE|default:'$TXT_PAGE'}
+					{assign var='item_icon' value='iconpage'}
+				{/if}
+				{if $item_info_FORMFIELD==16}
+					{assign var='item_title' value=$itext.TXT_FOLDER|default:'$TXT_FOLDER'}
+					{assign var='item_icon' value='iconfolder'}
+				{/if}
+				{if $item_icon!=''}<div class="{$item_icon} icn"></div>{/if}
+				{$item_title}
+			</a>
+			<div class="desc" id="wid_{$win_no}_formfield_{$item_index}_txt">{if $item_info_FORMFIELD==14}{$itext.TXT_FORMFIELD_CUTLINE}{else}{$item_info.NAME}{/if}</div>
+			<div class="collapscontent">
+				{if $item_info_FORMFIELD==1}
+					<!-- Single line //-->
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-NAME" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_updateTitle(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-IDENTIFIER" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="col1">
+								<span class="label">{$itext.TXT_PRESETTING|default:'$TXT_PRESETTING'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-PRESET" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.PRESET}" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_MAXCHARS|default:'$TXT_MAXCHARS'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-MAXLENGTH" onchange="if($K.yg_checkField(this,{literal}{type:'integer',min:'1',max:'99999999'}{/literal})){literal}{{/literal}this.removeClassName('error');$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);{literal}}else{{/literal}if(this.value.strip()=='')this.removeClassName('error');{literal}}{/literal}" tabindex="1" type="text" value="{$item_info.MAXLENGTH}" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_WIDTH|default:'$TXT_WIDTH'}</span>
+								<div id="wid_{$win_no}_fld_{$item_info_ID}-WIDTH" yg_form="dropdown" class="dropdownbox">
+									<div class="dropdown">
+										<div class="dropdowninner">
+											<input onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" tabindex="1" type="text"  value="{$item_info.WIDTH}" />
+										</div>
+									</div>
+									<div class="dropdownlistcontainer">
+										<div class="dropdownlist">
+											<div value="100" {if (!$item_info.WIDTH) || ($item_info.WIDTH==100)}class="selected"{/if}>{$itext.TXT_WIDTH_100}</div>
+											<div value="50" {if $item_info.WIDTH==50}class="selected"{/if}>{$itext.TXT_WIDTH_50}</div>
+											<div value="25" {if $item_info.WIDTH==25}class="selected"{/if}>{$itext.TXT_WIDTH_25}</div>
+											<div value="12" {if $item_info.WIDTH==12}class="selected"{/if}>{$itext.TXT_WIDTH_12}</div>
+										</div>
+										<div class="mk_scrollbars"></div>
+									</div>
+									<input type="hidden" value="{$item_info.WIDTH}" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info_FORMFIELD==2}
+					<!-- Multiline //-->
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-NAME" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-IDENTIFIER" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="col1">
+								<span class="label">{$itext.TXT_PRESETTING|default:'$TXT_PRESETTING'}</span>
+								<div class="textbox" yg_form="textbox">
+									<textarea name="wid_{$win_no}_fld_{$item_info_ID}-PRESET" tabindex="1" id="wid_{$win_no}_element{$item_index}_presettingtextarea" yg_onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text">{$item_info.PRESET}</textarea>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_MAXCHARS|default:'$TXT_MAXCHARS'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input tabindex="1" name="wid_{$win_no}_fld_{$item_info_ID}-MAXLENGTH" onchange="if($K.yg_checkField(this,{literal}{type:'integer',min:'1',max:'99999999'}{/literal})){literal}{{/literal}$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);{literal}}else{{/literal}if(this.value.strip()=='')this.removeClassName('error');{literal}}{/literal}" type="text" value="{$item_info.MAXLENGTH}" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_WIDTH|default:'$TXT_WIDTH'}</span>
+								<div id="wid_{$win_no}_fld_{$item_info_ID}-WIDTH" yg_form="dropdown" class="dropdownbox" >
+									<div class="dropdown">
+										<div class="dropdowninner">
+											<input onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" tabindex="1" yg_seq="wid_{$win_no}" type="text"  value="{$item_info.WIDTH}" />
+										</div>
+									</div>
+									<div class="dropdownlistcontainer">
+										<div class="dropdownlist">
+											<div value="100" {if (!$item_info.WIDTH) || ($item_info.WIDTH==100)}class="selected"{/if}>{$itext.TXT_WIDTH_100}</div>
+											<div value="50" {if $item_info.WIDTH==50}class="selected"{/if}>{$itext.TXT_WIDTH_50}</div>
+											<div value="25" {if $item_info.WIDTH==25}class="selected"{/if}>{$itext.TXT_WIDTH_25}</div>
+											<div value="12" {if $item_info.WIDTH==12}class="selected"{/if}>{$itext.TXT_WIDTH_12}</div>
+										</div>
+										<div class="mk_scrollbars"></div>
+									</div>
+									<input type="hidden" value="{$item_info.WIDTH}" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info_FORMFIELD==3}
+					<!-- Richtext //-->
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-NAME" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-IDENTIFIER" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="col1">
+								<span class="label">{$itext.TXT_PRESETTING|default:'$TXT_PRESETTING'}</span>
+								<div class="textbox" yg_form="textbox">
+									<textarea name="wid_{$win_no}_fld_{$item_info_ID}-PRESET" tabindex="1" id="wid_{$win_no}_element{$item_index}_presettingtextarea" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text">{$item_info.PRESET}</textarea>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="col1">
+								<span class="label">{$itext.TXT_BUTTONCONFIG|default:'$TXT_BUTTONCONFIG'}</span>
+								<div class="textbox" yg_form="textbox">
+									<textarea name="wid_{$win_no}_fld_{$item_info_ID}-CONFIG" tabindex="1" id="wid_{$win_no}_element{$item_index}_buttonconfig" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" mandatory="mandatory">{if $item_info.CONFIG}{$item_info.CONFIG}{else}bold,italic,underline,strikethrough,sub,sup,removeformat,image,media,tables,code,pasteword,alignment,bullist,numlist,outdent,indent,hr,tables,links,anchor,cleanup,replace,p,address,pre,h1,h2,h3,h4,h5,h6,formatselect,styleselect{/if}</textarea>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="col1">
+								<span class="label">{$itext.TXT_CE_CUSTOM_CSS|default:'$TXT_CE_CUSTOM_CSS'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-CUSTOM" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{if $item_info.CUSTOM}{$item_info.CUSTOM}{else}{$templatedoc}{/if}" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info_FORMFIELD==4}
+					<!-- Checkbox //-->
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-NAME" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-IDENTIFIER" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="col1">
+								<div class="checkarray">
+									<span class="label">{$itext.TXT_PRESETTING|default:'$TXT_PRESETTING'}</span>
+									<div class="checkbox" yg_form="checkbox" tabindex="1" yg_onclick="" yg_id="" yg_type="" yg_property=""><div class="checkboxicon{if $item_info.PRESET==1}sel{/if}"><input type="hidden" name="wid_{$win_no}_fld_{$item_info_ID}-PRESET" value="{$item_info.PRESET}" /><span class="label">{$itext.TXT_PRESETTING|default:'$TXT_PRESETTING'}</span></div></div>
+								</div>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info_FORMFIELD==5}
+					<!-- Link //-->
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-NAME" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-IDENTIFIER" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info_FORMFIELD==6}
+					<!-- File //-->
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-NAME" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-IDENTIFIER" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info_FORMFIELD==16}
+					<!-- File //-->
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-NAME" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-IDENTIFIER" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info_FORMFIELD==7}
+					<!-- Contentblock //-->
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-NAME" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-IDENTIFIER" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info_FORMFIELD==8}
+					<!-- Tag //-->
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-NAME" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-IDENTIFIER" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info_FORMFIELD==9}
+					<!-- List //-->
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-NAME" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-IDENTIFIER" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="col1" colspan="2">
+								<span class="label">{$itext.TXT_ENTRIES|default:'$TXT_ENTRIES'}</span>
+								<div class="textbox">
+									<div class="sortlistouter" style="height:110px;">
+										<div id="sortlist_{$win_no}_{$item_index}" class="sortlist" style="width:448px;height:110px;">
+
+											<div class="sortablelistcontainer" id="wid_{$win_no}_element{$item_index}_entries">
+												<div class="sortablelist" id="wid_{$win_no}_element{$item_index}_entries_inner" onmouseup="$K.yg_customSortableOnDrop(this.parentNode.id);">
+
+													<ul yg_widget="type:sortable;accepts:entry;objecttype:entry;callbacks:formFieldListSortCallbacks;" id="wid_{$win_no}_element{$item_index}_entries_list" class="entries_list" yg_accepts="entry">
+
+														{section name='l' loop=$item_info.LVALUES}
+															<!-- LISTELEMENT START -->
+															<li id="wid_{$win_no}_listelement_{$smarty.section.l.iteration}" class="entries_list_item" yg_id="{$smarty.section.l.iteration}-entry">
+																<div class="cntblockcontainersortable entries" onmouseover="$K.yg_showActions(this);">
+																	<!-- actions //-->
+																	<div class="actions">
+																		<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+																		<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+																			<div class="actionborder"></div>
+																			<a class="up" onclick="Event.stop(event);$K.yg_sortEntry(this.up(3),-1);" onmouseover="$K.yg_showHelp('{$itext.TXT_ENTRY_MOVEUP}');" title="{$itext.TXT_ENTRY_MOVEUP}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																			<a class="down" onclick="Event.stop(event);$K.yg_sortEntry(this.up(3),1);" onmouseover="$K.yg_showHelp('{$itext.TXT_ENTRY_MOVEDOWN}');" title="{$itext.TXT_ENTRY_MOVEDOWN}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																			<a class="del" onclick="Event.stop(event);$K.yg_removeListEntry(this.up(3));" onmouseover="$K.yg_showHelp('{$itext.TXT_ENTRY_DEL}');" title="{$itext.TXT_ENTRY_DEL}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																			<div class="actionborder"></div>
+																		</div>
+																	</div>
+																	<!-- end actions //-->
+																	<div class="listitempage" yg_selectable="true" onclick="$K.yg_blockSelect(this,event);if(event)Event.stop(event);">
+																		<div class="title"><div id="wid_{$win_no}_listelement_{$smarty.section.l.iteration}_txt" class="mk_txt">{$item_info.LVALUES[l].VALUE}</div></div>
+																		<div style="clear:both;"></div>
+																		<input type="hidden" name="wid_{$win_no}_fld_{$item_info_ID}-ENTRIES[]" value="{$item_info.LVALUES[l].VALUE}" />
+																		<input type="hidden" name="wid_{$win_no}_fld_{$item_info_ID}-ENTRY_IDS[]" value="{$item_info.LVALUES[l].ID}" />
+																	</div>
+																</div>
+															</li>
+															<!-- LISTELEMENT END -->
+														{/section}
+
+													</ul>
+
+													<ul id="wid_{$win_no}_element{$item_index}_entries_list_template" style="display:none;" class="entry_template">
+														<!-- LISTTEMPLATE START -->
+														<li id="wid_{$win_no}_listelement___ID__" class="entries_list_item" yg_id="__ID__-entry">
+															<div class="cntblockcontainersortable entries" onmouseover="$K.yg_showActions(this);">
+																<!-- actions //-->
+																<div class="actions">
+																	<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+																	<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+																		<div class="actionborder"></div>
+																		<a class="up" onclick="Event.stop(event);$K.yg_sortEntry(this.up(3),-1);" onmouseover="$K.yg_showHelp('{$itext.TXT_ENTRY_MOVEUP}');" title="{$itext.TXT_ENTRY_MOVEUP}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																		<a class="down" onclick="Event.stop(event);$K.yg_sortEntry(this.up(3),1);" onmouseover="$K.yg_showHelp('{$itext.TXT_ENTRY_MOVEDOWN}');" title="{$itext.TXT_ENTRY_MOVEDOWN}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																		<a class="del" onclick="Event.stop(event);$K.yg_removeListEntry(this.up(3));" onmouseover="$K.yg_showHelp('{$itext.TXT_ENTRY_DEL}');" title="{$itext.TXT_ENTRY_DEL}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																		<div class="actionborder"></div>
+																	</div>
+																</div>
+																<!-- end actions //-->
+																<div class="listitempage" yg_selectable="true" onclick="$K.yg_blockSelect(this,event);if(event)Event.stop(event);">
+																	<div class="title"><div id="wid_{$win_no}_listelement___ID___txt">__TITLE__</div></div>
+																	<div style="clear:both;"></div>
+																	<input type="hidden" name="wid_{$win_no}_fld_{$item_info_ID}-ENTRIES[]" value="__TITLE__" />
+																	<input type="hidden" name="wid_{$win_no}_fld_{$item_info_ID}-ENTRY_IDS[]" value="__ENTRY_ID__" />
+																</div>
+															</div>
+														</li>
+														<!-- LISTTEMPLATE END -->
+													</ul>
+
+												</div>
+											</div>
+											<div class="mk_scrollbars"></div>
+										</div>
+
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="col1" colspan="2">
+								<div class="textbox" yg_form="textbox">
+									<input tabindex="1" type="text" value="{$itext.TXT_NEW_ENTRY|default:'$TXT_NEW_ENTRY'}" />
+								</div>
+								<div align="right" class="selectionadd">
+									<div class="selectionmarker" onclick="Event.stop(event);$K.yg_addEntryToEntryList(this);">{$itext.TXT_ADD_TO_LIST|default:'$TXT_ADD_TO_LIST'}</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_PRESETTING|default:'$TXT_PRESETTING'}</span>
+								<div id="wid_{$win_no}_fld_{$item_info_ID}-PRESET" yg_form="dropdown" class="dropdownbox" >
+									<div class="dropdown">
+										<div class="dropdowninner">
+											<input onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" tabindex="1" yg_seq="wid_{$win_no}" type="text"  value="{$item_info.PRESET}" />
+										</div>
+									</div>
+									<div class="dropdownlistcontainer">
+										<div class="dropdownlist">
+											{section name='l' loop=$item_info.LVALUES}
+												<div value="{$item_info.LVALUES[l].VALUE}" {if $item_info.LVALUES[l].VALUE == $item_info.PRESET}class="selected"{/if}>{$item_info.LVALUES[l].VALUE}</div>
+											{/section}
+										</div>
+										<div class="mk_scrollbars"></div>
+									</div>
+									<input type="hidden" value="{$item_info.PRESET}" />
+								</div>
+							</td>
+
+							<td class="col2">
+								<span class="label">{$itext.TXT_WIDTH|default:'$TXT_WIDTH'}</span>
+								<div id="wid_{$win_no}_fld_{$item_info_ID}-WIDTH" yg_form="dropdown" class="dropdownbox" >
+									<div class="dropdown">
+										<div class="dropdowninner">
+											<input onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" tabindex="1" yg_seq="wid_{$win_no}" type="text"  value="{$item_info.WIDTH}" />
+										</div>
+									</div>
+									<div class="dropdownlistcontainer">
+										<div class="dropdownlist">
+											<div value="100" {if (!$item_info.WIDTH) || ($item_info.WIDTH==100)}class="selected"{/if}>{$itext.TXT_WIDTH_100}</div>
+											<div value="50" {if $item_info.WIDTH==50}class="selected"{/if}>{$itext.TXT_WIDTH_50}</div>
+											<div value="25" {if $item_info.WIDTH==25}class="selected"{/if}>{$itext.TXT_WIDTH_25}</div>
+											<div value="12" {if $item_info.WIDTH==12}class="selected"{/if}>{$itext.TXT_WIDTH_12}</div>
+										</div>
+										<div class="mk_scrollbars"></div>
+									</div>
+									<input type="hidden" value="{$item_info.WIDTH}" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info_FORMFIELD==10}
+					<!-- Password //-->
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-NAME" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_updateTitle(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-IDENTIFIER" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="col1">
+								<span class="label">{$itext.TXT_PRESETTING|default:'$TXT_PRESETTING'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-PRESET" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.PRESET}" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_MAXCHARS|default:'$TXT_MAXCHARS'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-MAXLENGTH" onchange="if($K.yg_checkField(this,{literal}{type:'integer',min:'1',max:'99999999'}{/literal})){literal}{{/literal}this.removeClassName('error');$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);{literal}}else{{/literal}if(this.value.strip()=='')this.removeClassName('error');{literal}}{/literal}" tabindex="1" type="text" value="{$item_info.MAXLENGTH}" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_WIDTH|default:'$TXT_WIDTH'}</span>
+								<div id="wid_{$win_no}_fld_{$item_info_ID}-WIDTH" yg_form="dropdown" class="dropdownbox" >
+									<div class="dropdown">
+										<div class="dropdowninner">
+											<input onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" tabindex="1" type="text"  value="{$item_info.WIDTH}" />
+										</div>
+									</div>
+									<div class="dropdownlistcontainer">
+										<div class="dropdownlist">
+											<div value="100" {if (!$item_info.WIDTH) || ($item_info.WIDTH==100)}class="selected"{/if}>{$itext.TXT_WIDTH_100}</div>
+											<div value="50" {if $item_info.WIDTH==50}class="selected"{/if}>{$itext.TXT_WIDTH_50}</div>
+											<div value="25" {if $item_info.WIDTH==25}class="selected"{/if}>{$itext.TXT_WIDTH_25}</div>
+											<div value="12" {if $item_info.WIDTH==12}class="selected"{/if}>{$itext.TXT_WIDTH_12}</div>
+										</div>
+										<div class="mk_scrollbars"></div>
+									</div>
+									<input type="hidden" value="{$item_info.WIDTH}" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info_FORMFIELD==11}
+					<!-- Date //-->
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-NAME" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_updateTitle(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-IDENTIFIER" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="col1">
+								<span class="label">{$itext.TXT_PRESETTING|default:'$TXT_PRESETTING'}</span>
+								<table cellspacing="0" cellpadding="0" class="datetable">
+									<tr>
+										<td width="100">
+											<div class="textbox" yg_form="textbox">
+												<input name="wid_{$win_no}_fld_{$item_info_ID}-PRESET1" tabindex="1" {if $objectInfo.NOSTAGE}disabled{/if} tabindex="1" onchange="{literal}if($K.yg_checkField(this,{type:'date',format:'{/literal}{$userinfo.PROPS.DATEFORMAT}{literal}',nodatesinpast:false})){$K.yg_setEdited(this);}{/literal}" type="text" value="{if $item_info.PRESET}{$item_info.PRESET|date_format_php:$itext.DATE_FORMAT}{/if}" maxlength="10" id="wid_{$win_no}_autopublish_date_{$item_index}" />
+											</div>
+										</td>
+										<td>
+											<a yg_form="calendar" id="yg_calendar_{$item_info_ID}" targetfield="wid_{$win_no}_autopublish_date_{$item_index}" format="{$itext.JS_DATE_FORMAT}" onmouseover="$K.yg_showHelp('{$itext.TXT_PICKDATE}');" title="{$itext.TXT_PICKDATE}" onmouseout="$K.yg_showHelp(false);" class="btcalendarpicker"></a>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info_FORMFIELD==12}
+					<!-- Date & Time //-->
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-NAME" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_updateTitle(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-IDENTIFIER" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="col1">
+								<span class="label">{$itext.TXT_PRESETTING|default:'$TXT_PRESETTING'}</span>
+								<table cellspacing="0" cellpadding="0" class="datetable">
+									<tr>
+										<td width="100">
+											<div class="textbox" yg_form="textbox">
+												<input name="wid_{$win_no}_fld_{$item_info_ID}-PRESET1" tabindex="1" {if $objectInfo.NOSTAGE}disabled{/if} tabindex="1" onchange="{literal}if($K.yg_checkField(this,{type:'date',format:'{/literal}{$userinfo.PROPS.DATEFORMAT}{literal}',nodatesinpast:false})){$K.yg_setEdited(this);}{/literal}" type="text" value="{if $item_info.PRESET}{$item_info.PRESET|date_format_php:$itext.DATE_FORMAT}{/if}" maxlength="10" id="wid_{$win_no}_autopublish_date_{$item_index}" />
+											</div>
+										</td>
+										<td>
+											<a yg_form="calendar" id="yg_calendar_{$item_info_ID}" targetfield="wid_{$win_no}_autopublish_date_{$item_index}" format="{$itext.JS_DATE_FORMAT}" onmouseover="$K.yg_showHelp('{$itext.TXT_PICKDATE}');" title="{$itext.TXT_PICKDATE}" onmouseout="$K.yg_showHelp(false);" class="btcalendarpicker"></a>
+										</td>
+										<td width="100">
+											<div class="textbox" yg_form="textbox">
+												<input name="wid_{$win_no}_fld_{$item_info_ID}-PRESET2" id="wid_{$win_no}_fld_{$item_info_ID}-PRESET2" tabindex="1" tabindex="1" onchange="{literal}if($K.yg_checkField(this,{type:'time',format:'{/literal}{$userinfo.PROPS.TIMEFORMAT}{literal}'})){$K.yg_setEdited(this);}{/literal}" type="text" value="{if $item_info.PRESET}{$item_info.PRESET|date_format_php:$itext.TIME_FORMAT}{/if}" maxlength="10" onclick="this.focus();Event.stop(event);" />
+											</div>
+										</td>
+										<td>
+											<a onmouseover="$K.yg_showHelp('{$itext.TXT_PICKTIME}');" title="{$itext.TXT_PICKTIME}" onmouseout="$K.yg_showHelp(false);" onclick="$K.yg_pickTime($('wid_{$win_no}_fld_{$item_info_ID}-PRESET2'),'{$userinfo.PROPS.TIMEFORMAT}');Event.stop(event);return false;" class="btcalendarpicker"></a>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info_FORMFIELD==13}
+					<!-- Headline //-->
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-NAME" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_updateTitle(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info_FORMFIELD==14}
+					<!-- Cutline //-->
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-NAME" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_updateTitle(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="DUMMY_{math equation='rand(1,10000)'}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info_FORMFIELD==15}
+					<!-- Page //-->
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-NAME" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_fld_{$item_info_ID}-IDENTIFIER" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('entrymask', '{$entrymaskInfo.OBJECTID}-entrymask', 'name', true);" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				{/if}
+			</div>
+		</div>
+	</div>
+	<input type="hidden" name="formfields[]" value="{$item_info_ID}" />
+	<input type="hidden" name="formfield_types[]" value="{$item_info_FORMFIELD}" />
+	<input type="hidden" name="formfield_indexes[]" value="{$item_index}" />
+</li>

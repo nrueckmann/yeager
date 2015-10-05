@@ -1,0 +1,283 @@
+{if $outgoing != ''}
+	<div class="ipanel" yg_panel="true">
+		<div class="panelheader headline1">
+			<a class="opened">{$itext.TXT_OUTGOING_LINKS|default:'$TXT_OUTGOING_LINKS'}</a>
+		</div>
+		<div class="panelcontent">
+			{if $outgoing|@count > 0}
+				<div class="mk_contentgroup contentgroup_minheight" yg_multiselect="false">
+					{section name=i loop=$outgoing}
+						{if $outgoing[i].VIATYPE == $smarty.const.REFTYPE_FORMFIELD}
+							{if $outgoing[i].EMBEDDED == 1}
+								{section name=t loop=$outgoing[i].VIATARGETS}
+									<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+										<div class="actions"></div>
+										<div class="listitempage">
+											<table class="listable">
+												<tr>
+													<td class="object">
+														<table class="objectable{if $outgoing[i].VIATARGETS[t].BAD == 0} clickable{/if}">
+															<tr>
+																{if (($outgoing[i].VIATARGETS[t].TARGETTYPE != $smarty.const.REFTYPE_FILE) && ($outgoing[i].VIATARGETS[t].TARGETTYPE != $smarty.const.REFTYPE_IMAGE))}<td class="iconcol"><div class="{if $outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_PAGE}icon{$outgoing[i].VIATARGETS[t].ICON}{elseif $outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_EXTERNAL}iconlink{elseif $outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_EMAIL}iconlink{/if}"></div></td>{/if}
+																<td class="title">
+																	{if (($outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_FILE) || ($outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_IMAGE) ) && ($outgoing[i].VIATARGETS[t].BAD != 1)}
+																		<span onmouseover="$K.yg_hoverFileHint('{$outgoing[i].VIATARGETS[t].ID}', event);" class="filetype {if $outgoing[i].VIATARGETS[t].BAD == 1}black{else}{$outgoing[i].VIATARGETS[t].COLOR}{/if}">{if $outgoing[i].VIATARGETS[t].BAD == 1}FILE{else}{$outgoing[i].VIATARGETS[t].IDENTIFIER}{/if}</span>
+																	{/if}
+																	{if $outgoing[i].VIATARGETS[t].BAD == 1}<span class="deadlink" {if ($outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_FILE)}style="margin-left:5px;"{/if}>{/if}
+																	{if $outgoing[i].VIATARGETS[t].BAD == 0}
+																		{assign var='targettype' value=''}
+																		{assign var='icon' value=$outgoing[i].VIATARGETS[t].ICON}
+																		{if ($outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_FILE) || ($outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_IMAGE)}{assign var='targettype' value='file'}{/if}
+																		{if $outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_PAGE}{assign var='targettype' value='page'}{/if}
+																		{if $outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_CO}{assign var='targettype' value='cblock'}{assign var='icon' value='cblock'}{/if}
+																		{if $targettype}
+																			{if $targettype=='file'}
+																				<span onmouseover="$K.yg_hoverFileHint('{$outgoing[i].VIATARGETS[t].ID}', event);" onclick="$K.yg_openObjectDetails('{$outgoing[i].VIATARGETS[t].ID}-file', '{$targettype}', '{$outgoing[i].VIATARGETS[t].NAME}', {literal}{{/literal}color:'{if $outgoing[i].VIATARGETS[t].BAD == 1}black{else}{$outgoing[i].VIATARGETS[t].COLOR}{/if}',typecode:'{if $outgoing[i].VIATARGETS[t].BAD == 1}FILE{else}{$outgoing[i].VIATARGETS[t].CODE}{/if}'{literal}}{/literal}, '');">
+																			{else}
+																				<span onclick="$K.yg_openObjectDetails('{$outgoing[i].VIATARGETS[t].ID}-{$outgoing[i].VIATARGETS[t].SITEID}', '{$targettype}', '{$outgoing[i].VIATARGETS[t].NAME}', '{$icon}', '{$outgoing[i].VIATARGETS[t].STYLE}');" class="{$outgoing[i].VIATARGETS[t].STYLE}">
+																			{/if}
+																				{$outgoing[i].VIATARGETS[t].NAME}
+																			</span>
+																		{else}
+																			{if $outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_EXTERNAL}
+																				<span onclick="window.open('{$outgoing[i].VIATARGETS[t].NAME}');">{$outgoing[i].VIATARGETS[t].NAME}</span>
+																			{else}
+																				{$outgoing[i].VIATARGETS[t].NAME}
+																			{/if}
+																		{/if}
+																	{else}
+																		{$itext.TXT_DEAD_LINK|default:'$TXT_DEAD_LINK'}
+																	{/if}
+																	{if $outgoing[i].VIATARGETS[t].BAD == 1}</span>{/if}
+																</td>
+															</tr>
+														</table>
+													</td>
+													<td class="trace">{section name="pi" loop=$outgoing[i].VIATARGETS[t].PARENTS step=-1}<nobr>{$outgoing[i].VIATARGETS[t].PARENTS[pi][0].NAME}{if $smarty.section.pi.index != 0}{if ($outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_PAGE) && ($smarty.section.pi.first)}: &nbsp;{else} <span class="traceicon"></span>{/if}{else}{/if}</nobr>{/section}</td>
+												</tr>
+											</table>
+										</div>
+									</div>
+								{/section}
+							{else}
+								<div class="cntblockcontainergroup" onmouseover="$K.yg_showActions(this);">
+									<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+										<div class="actions">
+										</div>
+										<div class="listitempage">
+											<table class="listable">
+												<tr>
+													<td class="object">
+														<table class="objectable{if $outgoing[i].BAD == 0} clickable{/if}">
+															<tr>
+																<td class="iconcol"><div class="iconcblock"></div></td>
+																<td class="title">
+																	{if $outgoing[i].BAD == 1}<span class="deadlink">{/if}
+																	{if $outgoing[i].BAD == 0}
+																		<span onclick="$K.yg_openObjectDetails('{$outgoing[i].ID}-cblock', 'cblock', '{$outgoing[i].VIANAME}', 'cblock', '{$outgoing[i].STYLE}');" class="{$outgoing[i].STYLE}">{$outgoing[i].VIANAME}</span>
+																	{else}{$itext.TXT_DEAD_LINK|default:'$TXT_DEAD_LINK'}{/if}
+																	{if $outgoing[i].BAD == 1}</span>{/if}
+																</td>
+															</tr>
+														</table>
+													</td>
+													<td class="trace">{section name="pi" loop=$outgoing[i].PARENTS step=-1}<nobr>{$outgoing[i].PARENTS[pi][0].NAME}{if $smarty.section.pi.index != 0} <span class="traceicon"></span> {/if}</nobr>{/section}</td>
+												</tr>
+											</table>
+										</div>
+									</div>
+			                    	{section name=t loop=$outgoing[i].VIATARGETS}
+										<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+											<div class="actions"></div>
+											<div class="listitempagesub{if $smarty.section.t.last} last{/if}">
+												<table class="listable">
+													<tr>
+														<td class="object">
+															<table class="objectable{if $outgoing[i].VIATARGETS[t].BAD == 0} clickable{/if}">
+																<tr>
+																	{if (($outgoing[i].VIATARGETS[t].TARGETTYPE != $smarty.const.REFTYPE_FILE) && ($outgoing[i].VIATARGETS[t].TARGETTYPE != $smarty.const.REFTYPE_IMAGE))}
+																	<td class="iconcol"><div class="{if $outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_PAGE}iconpage{elseif $outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_EXTERNAL}iconlink{elseif $outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_CO}iconcblock{/if}"></div></td>
+																	{/if}
+																	<td class="title">
+																		{if (($outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_FILE) || ($outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_IMAGE))}
+																			<span onmouseover="$K.yg_hoverFileHint('{$outgoing[i].VIATARGETS[t].ID}', event);" class="filetype {$outgoing[i].VIATARGETS[t].COLOR}">{$outgoing[i].VIATARGETS[t].CODE}</span>
+																		{/if}
+																		{if $outgoing[i].VIATARGETS[t].BAD == 1}<span class="deadlink">{/if}
+																		{if $outgoing[i].VIATARGETS[t].BAD == 0}
+																			{assign var='targettype' value=''}
+																			{if $outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_FILE}{assign var='targettype' value='file'}{/if}
+																			{if $outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_PAGE}{assign var='targettype' value='page'}{/if}
+																			{if $outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_CO}{assign var='targettype' value='cblock'}{/if}
+																			{if $targettype}
+																				{if $targettype=='file'}
+																					<span onmouseover="$K.yg_hoverFileHint('{$outgoing[i].VIATARGETS[t].ID}', event);" onclick="$K.yg_openObjectDetails('{$outgoing[i].VIATARGETS[t].ID}-file', '{$targettype}', '{$outgoing[i].VIATARGETS[t].NAME}', {literal}{{/literal}color:'{$outgoing[i].VIATARGETS[t].COLOR}',typecode:'{$outgoing[i].VIATARGETS[t].CODE}'{literal}}{/literal}, '{$outgoing[i].VIATARGETS[t].STYLE}');">
+																				{else}
+																					<span onclick="$K.yg_openObjectDetails('{$outgoing[i].VIATARGETS[t].ID}-{$outgoing[i].VIATARGETS[t].SITEID}', '{$targettype}', '{$outgoing[i].VIATARGETS[t].NAME}', '{$outgoing[i].VIATARGETS[t].ICON}', '{$outgoing[i].VIATARGETS[t].STYLE}');" yg_property="name" yg_type="{$targettype}" class="{$outgoing[i].VIATARGETS[t].STYLE}">
+																				{/if}
+																					{$outgoing[i].VIATARGETS[t].NAME}
+																				</span>
+																			{else}
+																				{$outgoing[i].VIATARGETS[t].NAME}
+																			{/if}
+																		{else}{$itext.TXT_DEAD_LINK|default:'$TXT_DEAD_LINK'}{/if}
+																		{if $outgoing[i].VIATARGETS[t].BAD == 1}</span>{/if}
+																	</td>
+																</tr>
+															</table>
+														</td>
+														<td class="trace">{section name="pi" loop=$outgoing[i].VIATARGETS[t].PARENTS step=-1}<nobr>{$outgoing[i].VIATARGETS[t].PARENTS[pi][0].NAME}{if $smarty.section.pi.index != 0}{if ($outgoing[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_PAGE) && ($smarty.section.pi.first)}: &nbsp;{else} <span class="traceicon"></span> {/if}{else}{/if}</nobr>{/section}</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+			                   		{/section}
+                           		</div>
+							{/if}
+						{/if}
+					{/section}
+				</div>
+			{else}
+				<div class="cntblockcontainernohover">
+					<div class="cntblock" onmouseup="$K.yg_customSortableOnDrop(this.up(3).id);">
+						<span class="noselection"><span class="bracketleft"></span>{$itext.TXT_NO_OUTGOING_LINKS|default:'$TXT_NO_OUTGOING_LINKS'}<span class="bracketright"></span></span>
+					</div>
+				</div>
+			{/if}
+		</div>
+	</div>
+{/if}
+
+{if $objecttype != 'mailing'}
+	<div class="ipanel" yg_panel="true">
+		<div class="panelheader headline1">
+			<a class="opened">{$itext.TXT_INCOMING_LINKS|default:'$TXT_INCOMING_LINKS'}</a>
+		</div>
+		<div class="panelcontent">
+			<div class="mk_contentgroup contentgroup_minheight" yg_multiselect="false">
+				{if $incoming|@count > 0}
+					{section name=i loop=$incoming}
+						{if $incoming[i].VIATARGETS|@count > 0}
+							{if $incoming[i].EMBEDDED == 0}
+								<div class="cntblockcontainergroup" onmouseover="$K.yg_showActions(this);">
+									<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+										<div class="actions"></div>
+										<div class="listitempage">
+											<table class="listable">
+												<tr>
+													<td class="object">
+														<table class="objectable clickable">
+															<tr>
+																<td class="iconcol"><div class="{if $incoming[i].VIATYPE == $smarty.const.REFTYPE_FILE}iconfile{elseif $incoming[i].VIATYPE == $smarty.const.REFTYPE_IMAGE}iconfile{elseif $incoming[i].VIATYPE == $smarty.const.REFTYPE_PAGE}iconpage{elseif $incoming[i].VIATYPE == $smarty.const.REFTYPE_EXTERNAL}iconlink{elseif $incoming[i].VIATYPE == $smarty.const.REFTYPE_FORMFIELD}iconcblock{elseif $incoming[i].VIATYPE == $smarty.const.REFTYPE_TAG}icontag{/if}"></div></td>
+																<td class="title">
+																	{if $incoming[i].VIATYPE == $smarty.const.REFTYPE_FORMFIELD}
+																		<span onclick="$K.yg_openObjectDetails('{$incoming[i].ID}-cblock', 'cblock', '{$incoming[i].VIANAME}', 'cblock', '{$incoming[i].STYLE}');" class="{$incoming[i].STYLE}">{$incoming[i].VIANAME}</span>
+																	{else}
+																		{$incoming[i].VIANAME}
+																	{/if}
+																</td>
+															</tr>
+														</table>
+													</td>
+													<td class="trace">{section name="pi" loop=$incoming[i].PARENTS step=-1}<nobr>{$incoming[i].PARENTS[pi][0].NAME}{if $smarty.section.pi.index != 0} <span class="traceicon"></span> {else}{/if}</nobr>{/section}</td>
+												</tr>
+											</table>
+										</div>
+									</div>
+				                    {section name=t loop=$incoming[i].VIATARGETS}
+									  	<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+											<div class="actions">
+											</div>
+											<div class="listitempagesub{if $smarty.section.t.last} last{/if}">
+												<table class="listable">
+													<tr>
+														<td class="object">
+															<table class="objectable{if $incoming[i].VIATARGETS[t].BAD == 0} clickable{/if}">
+																<tr>
+																	<td class="iconcol"><div class="{if $incoming[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_FILE}iconfile{elseif $incoming[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_IMAGE}iconfile{elseif $incoming[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_PAGE}iconpage{elseif $incoming[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_EXTERNAL}iconlink{elseif $incoming[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_EMAIL}iconlink{/if}"></div></td>
+																	<td class="title">
+																		{if $incoming[i].VIATARGETS[t].BAD == 1}<span class="deadlink">{/if}
+																		{if $incoming[i].VIATARGETS[t].BAD == 0}
+																			{if $incoming[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_PAGE}
+																				<span onclick="$K.yg_openObjectDetails('{$incoming[i].VIATARGETS[t].ID}-{$incoming[i].VIATARGETS[t].SITE}', 'page', '{$incoming[i].VIATARGETS[t].NAME}', '{$incoming[i].VIATARGETS[t].ICON}', '{$incoming[i].VIATARGETS[t].STYLE}');" class="{$incoming[i].VIATARGETS[t].STYLE}">{$incoming[i].VIATARGETS[t].NAME}</span>
+																			{else}
+																				{$incoming[i].VIATARGETS[t].NAME}
+																			{/if}
+																		{else}{$itext.TXT_DEAD_LINK|default:'$TXT_DEAD_LINK'}{/if}
+																		{if $incoming[i].VIATARGETS[t].BAD == 1}</span>{/if}
+																	</td>
+																</tr>
+															</table>
+														</td>
+														<td class="trace">{section name="pi" loop=$incoming[i].VIATARGETS[t].PARENTS step=-1}<nobr>{$incoming[i].VIATARGETS[t].PARENTS[pi][0].NAME}{if $smarty.section.pi.index != 0}{if ($incoming[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_PAGE) && ($smarty.section.pi.first)}: &nbsp;{else} <span class="traceicon"></span> {/if}{else}{/if}</nobr>{/section}</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+									{/section}
+								</div>
+							{else}
+								{section name=t loop=$incoming[i].VIATARGETS}
+									<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+										<div class="actions">
+										</div>
+										<div class="listitempage">
+											<table class="listable">
+												<tr>
+													<td class="object">
+														<table class="objectable{if $incoming[i].VIATARGETS[t].BAD == 0} clickable{/if}">
+															<tr>
+																<td class="iconcol"><div class="{strip}
+																	{if $incoming[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_FILE}
+																		iconfile
+																	{elseif $incoming[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_PAGE}
+																		icon{$incoming[i].VIATARGETS[t].ICON}
+																	{elseif $incoming[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_MAILING}
+																		iconmailing
+																	{elseif $incoming[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_EXTERNAL}
+																		iconlink
+																	{elseif $incoming[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_EMAIL}
+																		iconlink
+																	{/if}
+																{/strip}"></div></td>
+																<td class="title">
+																	{assign var='targettype' value=''}
+																	{if $incoming[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_PAGE}{assign var='targettype' value='page'}{/if}
+																	{if $incoming[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_CO}{assign var='targettype' value='page'}{/if}
+																	{if $incoming[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_MAILING}{assign var='targettype' value='mailing'}{/if}
+																	{if $incoming[i].VIATARGETS[t].BAD == 1}<span class="deadlink">{/if}
+																	{if $incoming[i].VIATARGETS[t].BAD == 0}
+																		{if $targettype == 'page'}
+																			<span onclick="$K.yg_openObjectDetails('{$incoming[i].VIATARGETS[t].ID}-{$incoming[i].VIATARGETS[t].SITE}', '{$targettype}', '{$incoming[i].VIATARGETS[t].NAME}', '{$incoming[i].VIATARGETS[t].ICON}', '{$incoming[i].VIATARGETS[t].STYLE}');" class="{$incoming[i].VIATARGETS[t].STYLE}">{$incoming[i].VIATARGETS[t].NAME}</span>
+																		{elseif $targettype == 'mailing'}
+																			<span onclick="$K.yg_openObjectDetails('{$incoming[i].VIATARGETS[t].ID}-mailing', '{$targettype}', '{$incoming[i].VIATARGETS[t].NAME}', '{$incoming[i].VIATARGETS[t].ICON}', '{$incoming[i].VIATARGETS[t].STYLE}');" class="{$incoming[i].VIATARGETS[t].STYLE}">{$incoming[i].VIATARGETS[t].NAME}</span>
+																		{else}
+																			{$incoming[i].VIATARGETS[t].NAME}
+																		{/if}
+																	{else}
+																		{$itext.TXT_DEAD_LINK|default:'$TXT_DEAD_LINK'}
+																	{/if}
+																	{if $incoming[i].VIATARGETS[t].BAD == 1}</span>{/if}
+																</td>
+															</tr>
+														</table>
+													</td>
+													<td class="trace">{section name="pi" loop=$incoming[i].VIATARGETS[t].PARENTS step=-1}<nobr>{$incoming[i].VIATARGETS[t].PARENTS[pi][0].NAME}{if $smarty.section.pi.index != 0}{if ($incoming[i].VIATARGETS[t].TARGETTYPE == $smarty.const.REFTYPE_PAGE) && ($smarty.section.pi.first)}: &nbsp;{else}<span class="traceicon"></span>{/if}{else}{/if}</nobr>{/section}</td>
+												</tr>
+											</table>
+										</div>
+									</div>
+								{/section}
+							{/if}
+						{/if}
+					{/section}
+				{else}
+					<div class="cntblockcontainernohover">
+						<div class="cntblock" onmouseup="$K.yg_customSortableOnDrop(this.up(3).id);">
+							<span class="noselection"><span class="bracketleft"></span>{$itext.TXT_NO_INCOMING_LINKS|default:'$TXT_NO_INCOMING_LINKS'}<span class="bracketright"></span></span>
+						</div>
+					</div>
+				{/if}
+			</div>
+		</div>
+	</div>
+{/if}

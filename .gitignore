@@ -1,0 +1,12 @@
+/.buildpath
+/.externalToolBuilders
+/.idea
+/.project
+/.settings
+bridge/fixes
+/cloc.*
+config/config-*
+config/cache-*
+ui/minify*
+/media
+/templates

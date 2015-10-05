@@ -1,0 +1,384 @@
+{if $templateInfo.FOLDER}
+	<!-- PANEL GENERAL -->
+	<div class="ipanel" yg_panel="true">
+		<div class="panelheadernocollaps headline1">
+			<a class="opened">{$itext.TXT_GENERAL|default:'$TXT_GENERAL'}</a>
+		</div>
+
+		<div class="panelcontent">
+			<div class="mk_contentgroup">
+
+				<!-- TRACELINE //-->
+				<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+					<div class="cntblock">
+						<table class="gridfixed" cellspacing="0" cellpadding="0">
+							<tr>
+								<td colspan="8" class="col1 traceline">
+									{assign var='padding' value=0}
+									{section name='parents' loop=$objectparents step=-1}
+										<div class="modified" style="padding-left: {$padding}px;">{if $smarty.section.parents.iteration > 1}<div class="treedots"></div>{/if}<div class="icon{if $objectparents[parents][0].FOLDER}folderopen{else}{$objecttype}{/if}"></div>{$objectparents[parents][0].NAME}</div>
+										{if $smarty.section.parents.iteration==1}
+											{assign var='padding' value=9}
+										{else}
+											{assign var='padding' value=$padding+15}
+										{/if}
+									{/section}
+									<div class="modified" style="padding-left: {$padding}px;">
+										{if $smarty.section.parents.loop+1 > 1}<div class="treedots"></div>{/if}
+										<div class="iconfolder"></div>
+										<span yg_property="name" yg_type="template" yg_id="{$templateInfo.OBJECTID}-template">{$templateInfo.NAME}</span>
+									{if ($objecttype != "template")}</div>{/if}
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<!-- TRACELINE END //-->
+
+				<!-- TEXT //-->
+				<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+					<div class="cntblock">
+						<table class="gridfixed" cellspacing="0" cellpadding="0">
+							<tr>
+								<td colspan="8" class="col1">
+									<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+									<div class="textbox" yg_form="textbox">
+										<input tabindex="1" onchange="$K.yg_hilite('template', '{$templateInfo.OBJECTID}-template', 'name', true);" yg_onchange="setObjectProperty" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="name"  type="text" name="wid_{$win_no}_template_name" value="{$templateInfo.NAME}" maxlength="64" />
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+{else}
+	<!-- PANEL GENERAL -->
+	<div class="ipanel" yg_panel="true">
+		<div class="panelheadernocollaps headline1">
+			<a class="opened">{$itext.TXT_GENERAL|default:'$TXT_GENERAL'}</a>
+		</div>
+
+		<!-- TRACELINE //-->
+		<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+			<div class="cntblock">
+				<table class="gridfixed" cellspacing="0" cellpadding="0">
+					<tr>
+						<td colspan="8" class="col1 traceline">
+							{assign var='padding' value=0}
+							{section name='parents' loop=$objectparents step=-1}
+								<div class="modified" style="padding-left: {$padding}px;">{if $smarty.section.parents.iteration > 1}<div class="treedots"></div>{/if}<div class="icon{if $objectparents[parents][0].FOLDER}folderopen{else}{$objecttype}{/if}"></div>{$objectparents[parents][0].NAME}</div>
+								{if $smarty.section.parents.iteration==1}
+									{assign var='padding' value=9}
+								{else}
+									{assign var='padding' value=$padding+15}
+								{/if}
+							{/section}
+							<div class="modified" style="padding-left: {$padding}px;">
+								{if $smarty.section.parents.loop+1 > 1}<div class="treedots"></div>{/if}
+								<div class="icon{if $objectparents[parents][0].FOLDER}folder{else}{$objecttype}{/if}"></div>
+								<span yg_property="name" yg_type="{$objecttype}" yg_id="{$object}-{$site}">{$templateInfo.NAME}</span>
+							{if ($objecttype != "template")}</div>{/if}
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<!-- TRACELINE END //-->
+
+		<div class="panelcontent">
+			<div class="mk_contentgroup">
+				<div class="cntblockcontainernohover">
+					<div class="cntblock">
+						<table class="gridfixed" cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="col1">
+									<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+									<div class="textbox" yg_form="textbox">
+										<input tabindex="1" yg_onchange="templateCalcPname" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="name" onchange="$K.yg_setEdited(this);$K.yg_hilite('template', '{$templateInfo.OBJECTID}-template', 'name', true);" onblur="$K.yg_updateTemplateIdentifier(this);" type="text" name="wid_{$win_no}_template_name" value="{$templateInfo.NAME}" />
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="col1">
+									<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+									<div class="textbox" yg_form="textbox">
+										<input tabindex="1" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="identifier" onchange="if ($K.yg_checkTemplatePName(this)) {literal}{{/literal} $K.yg_setEdited(this);$K.yg_hilite('template', '{$templateInfo.OBJECTID}-template', 'identifier', true);{literal}}{/literal}" type="text" id="wid_{$win_no}_template_identifier" name="wid_{$win_no}_template_identifier" value="{$templateInfo.IDENTIFIER}" />
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="col1">
+									<span class="label">{$itext.TXT_DESCRIPTION|default:'$TXT_DESCRIPTION'}</span>
+									<div class="textbox" yg_form="textbox">
+										<textarea tabindex="1" id="prop_{$objectdynprops[p].IDENTIFIER|strtolower}_textarea" onchange="$K.yg_setEdited(this);$K.yg_hilite('template', '{$templateInfo.OBJECTID}-template', 'name', true);" type="text" name="description">{$templateInfo.DESCRIPTION}</textarea>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+				<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+					<div class="mk_uploadpanel" style="position:absolute;height:48px;width:100%;">
+						<div id="wid_{$win_no}_addtemplatebutton"></div>
+					</div>
+					<div class="cntblock" style="cursor:pointer;">
+						<table class="gridfixed" cellspacing="0" cellpadding="0">
+							<tr>
+								<td colspan="8" class="col1">
+									<span class="label">{$itext.TXT_SOURCEFILE|default:'$TXT_SOURCEFILE'}</span>
+									<div class="selectionmarker">
+										<div class="title">
+											<span class="titlecnt" id="wid_{$win_no}_templatename">
+											{if $templateInfo.FILENAME}
+												{$templateInfo.PATH}{$templateInfo.FILENAME}
+											{else}
+												{$itext.TXT_SELECTOR_TEMPLATE_UPLOAD}
+											{/if}
+											</span>
+
+										</div>
+									</div>
+									<input type="hidden" name="wid_{$win_no}_templatechanged" id="wid_{$win_no}_templatechanged" value="" />
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+				<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+					<!-- actions //-->
+					<div class="actions">
+						<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+						<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+							<div class="singleselect">
+								<div class="actionborder"></div>
+								<a onclick="$K.yg_fireAction($K.yg_removeTemplatePreview,this.up(3),event);" class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_REMOVE_TEMPLATEPREVIEW}');" title="{$itext.TXT_REMOVE_TEMPLATEPREVIEW}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+								<div class="actionborder"></div>
+							</div>
+							<div class="multiselect">
+								<div class="actionborder"></div>
+								<a onclick="$K.yg_fireAction($K.yg_removeTemplatePreview,this.up(3),event);" class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_REMOVE_TEMPLATEPREVIEW}');" title="{$itext.TXT_REMOVE_TEMPLATEPREVIEW}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+								<div class="actionborder"></div>
+							</div>
+						</div>
+					</div>
+					<!-- end actions //-->
+
+					<div class="mk_uploadpanel" style="position:absolute;height:48px;width:100%;">
+						<div id="wid_{$win_no}_addtemplatepreviewbutton"></div>
+					</div>
+					<div class="cntblock" style="cursor:pointer;">
+						<table class="gridfixed" cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="col2">
+									<span class="label">{$itext.TXT_PREVIEWTHUMBNAIL|default:'$TXT_PREVIEWTHUMBNAIL'}</span>
+									<div class="selectionmarker">
+										<div class="title">
+											<span class="titlecnt" id="wid_{$win_no}_templatepreviewname">
+											{if $templateInfo.PREVIEW}
+												{$templateInfo.PREVIEW}
+											{else}
+												{$itext.TXT_SELECTOR_PREVIEW_UPLOAD}
+											{/if}
+											</span>
+
+										</div>
+									</div>
+								</td>
+								<td class="col2" align="right">
+									<img onload="$K.yg_refreshTemplateconfig(this);" id="wid_{$win_no}_templatepreview" src="{$templateInfo.PREVIEWPATH}" class="thumb" border="0" style="{if !$templateInfo.PREVIEWPATH}display:none;{/if}" />
+									<input type="hidden" name="wid_{$win_no}_removepreview" value="" />
+									<input type="hidden" name="wid_{$win_no}_previewchanged" id="wid_{$win_no}_previewchanged" value="" />
+									<input type="hidden" name="wid_{$win_no}_timestamp" value="{$timestamp}" id="wid_{$win_no}_timestamp" />
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- END PANEL GENERAL -->
+
+
+	<!-- PANEL CONTENT AREAS -->
+	<div class="ipanel" yg_panel="true">
+		<div class="panelheadernocollaps headline1">
+			<a class="opened">{$itext.TXT_CONTENTAREAS|default:'$TXT_CONTENTAREAS'}</a>
+		</div>
+		<div class="panelcontent">
+			<div class="mk_contentgroup">
+
+				<div id="wid_{$win_no}_contentareas">
+					<div id="wid_{$win_no}_contentareas_inner">
+
+						<div class="cntblock" {if $contentareas[0].CODE != '__FIELDTITLE__'}style="display:none;"{/if}>
+							<span class="noselection">
+								<span class="bracketleft"></span>{$itext.TXT_NO_CONTENTAREAS|default:'$TXT_NO_CONTENTAREAS'}<span class="bracketright"></span>
+							</span>
+						</div>
+
+						<ul yg_widget="type:sortable;accepts:contentarea;objecttype:contentarea;" id="wid_{$win_no}_contentareas_list" class="contentarea_list objectlist" yg_id="{$templateInfo.OBJECTID}-contentarea" yg_type="contentarea" yg_accepts="contentarea" {if $contentareas[0].CODE == '__FIELDTITLE__'}style="display:none;"{/if}>
+							{section name=scopi loop=$contentareas}
+								<li class="mk_contentarea {if $contentareas[scopi].CODE == '__FIELDTITLE__'}mk_template{/if}" style="{if $contentareas[scopi].CODE == '__FIELDTITLE__'}display:none;{/if}">
+									<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+										<!-- actions //-->
+										<div class="actions">
+											<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+											<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+
+												<div class="singleselect">
+													<div class="actionborder"></div>
+													<a class="up" onclick="Event.stop(event);$K.yg_sortEntry(this.up(4),-1);" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_UP}');" title="{$itext.TXT_FORMFIELD_UP}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+													<a class="down" onclick="Event.stop(event);$K.yg_sortEntry(this.up(4),1);" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_DOWN}');" title="{$itext.TXT_FORMFIELD_DOWN}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+													<div class="actionborder"></div>
+												</div>
+												<div class="multiselect">
+													<div class="actionborder"></div>
+													<div class="actionborder"></div>
+												</div>
+
+											</div>
+										</div>
+										<!-- end actions //-->
+										<div class="cntblock" yg_selectable="true">
+											<div class="collapscontent">
+												<!-- Contentblock //-->
+												<table class="gridfixed" cellspacing="0" cellpadding="0">
+													<tr>
+														<td class="col2">
+															<div class="textbox" yg_form="textbox">
+																<input tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('template', '{$templateInfo.OBJECTID}-template', 'name', true);" type="text" name="wid_{$win_no}_contentarea_{$contentareas[scopi].CODE|strtolower}_name" value="{if $contentareas[scopi].NAME neq ""}{$contentareas[scopi].NAME|html_entity_decode}{else}{$contentareas[scopi].CODE|html_entity_decode}{/if}" />
+															</div>
+														</td>
+														<td class="col2 rightdesc">
+															<div class="last_approved_version">
+																&nbsp;=&nbsp;&nbsp;<span class="descid"><nobr><span class="bracketleft"></span><span class="mk_txt">{$contentareas[scopi].CODE}</span><span class="bracketright"></span></nobr></span>
+															</div>
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+									</div>
+								</li>
+							{/section}
+						</ul>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- END PANEL CONTENT AREAS -->
+
+
+	<!-- PANEL NAVIGATIONS -->
+	<div class="ipanel" yg_panel="true">
+		<div class="panelheadernocollaps headline1">
+			<a class="opened">{$itext.TXT_NAVIGATIONS|default:'$TXT_NAVIGATIONS'}</a>
+		</div>
+		<div class="panelcontent">
+			<div class="mk_contentgroup">
+
+				<div id="wid_{$win_no}_navidropdown" class="cntblockcontainernohover" {if $navigations[0].CODE == ''}style="display:none;"{/if}>
+					<div class="cntblock">
+						<table class="gridfixed textboxgroup" cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="col2">
+									<span class="label">{$itext.TXT_DEFAULT_NAVIGATION|default:'$TXT_DEFAULT_NAVIGATION'}</span>
+									<div id="wid_{$win_no}_default_navigation" yg_form="dropdown" class="dropdownbox">
+										<div class="dropdown">
+											<div class="dropdowninner">
+												<input tabindex="1" {if $navigations[0].CODE != ''}onchange="$K.yg_setEdited(this);$K.yg_hilite('template', '{$templateInfo.OBJECTID}-template', 'name', true);"{/if} yg_seq="{$win_no}" yg_previous="{$dd_selected_value}" type="text"  value="{$dd_selected}">
+											</div>
+										</div>
+										<div class="dropdownlistcontainer">
+											<div class="dropdownlist" >
+												{if $navigations[0].CODE != ''}
+													{section name=navi loop=$navigations}
+														{if $navigations[navi].NAME != '__FIELDNAME__'}
+															<div value="{$navigations[navi].CODE}" {if $navigations[navi].DEFAULT == 1}class="selected"{/if}>{if $navigations[navi].NAME neq ""}{$navigations[navi].NAME|html_entity_decode}{else}{$navigations[navi].CODE|html_entity_decode}{/if}</div>
+														{/if}
+													{/section}
+												{/if}
+											</div>
+											<div class="mk_scrollbars"></div>
+										</div>
+										<input type="hidden" value="{$defaultnavi}" />
+									</div>
+								</td>
+								<td class="col2 rightdesc">
+
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+				<div id="wid_{$win_no}_contentareas">
+					<div id="wid_{$win_no}_contentareas_inner">
+
+						<div class="cntblock" {if $navigations[0].CODE != ''}style="display:none;"{/if}>
+							<span class="noselection">
+								<span class="bracketleft"></span>{$itext.TXT_NO_NAVIGATIONS|default:'$TXT_NO_NAVIGATIONS'}<span class="bracketright"></span>
+							</span>
+						</div>
+
+						<ul id="wid_{$win_no}_navigations" class="contentarea_list objectlist" {if $navigations[0].CODE == '__FIELDTITLE__'}style="display:none;"{/if}>
+							{section name=navi loop=$navigations}
+								{if $navigations[navi].CODE != ''}
+									<li class="mk_navigation {if $navigations[navi].CODE == '__FIELDTITLE__'}mk_template{/if}" style="{if $navigations[navi].CODE == '__FIELDTITLE__'}display:none;{/if}">
+										<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+
+											<div class="cntblock">
+												<div class="collapscontent">
+													<!-- Contentblock //-->
+													<table class="gridfixed" cellspacing="0" cellpadding="0">
+														<tr>
+															<td class="col2">
+																<div class="textbox" yg_form="textbox">
+																	<input tabindex="1" onchange="$K.yg_changeNavigationName(this);$K.yg_setEdited(this);$K.yg_hilite('template', '{$templateInfo.OBJECTID}-template', 'name', true);" type="text" name="wid_{$win_no}_navigation_{$navigations[navi].CODE|strtolower}_name" value="{if $navigations[navi].NAME neq ""}{$navigations[navi].NAME|html_entity_decode}{else}{$navigations[navi].CODE|html_entity_decode}{/if}" />
+																</div>
+															</td>
+															<td class="col2 rightdesc">
+																<div class="last_approved_version">
+																	&nbsp;=&nbsp;&nbsp;<span class="descid"><nobr><span class="bracketleft"></span>{$navigations[navi].CODE}<span class="bracketright"></span></nobr></span>
+																</div>
+															</td>
+														</tr>
+													</table>
+												</div>
+											</div>
+
+										</div>
+									</li>
+								{/if}
+							{/section}
+						</ul>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- END PANEL NAVIGATIONS -->
+
+	<!-- BOTTOMLINE //-->
+	<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+		<tr>
+			<td class="ywindow_leftbt"></td>
+			<td class="ywindow_midbottom"><div class="button" tabindex="1"><a  class="stdbutton"><div onclick="$K.yg_templateSaveInfo('wid_{$win_no}');" class="wrapper"><nobr>{$itext.TXT_SAVE|default:'$TXT_SAVE'}</nobr></div></a></div></td>
+			<td class="ywindow_rightbt"></td>
+		</tr>
+	</table>
+	<!-- END BOTTOMLINE //-->
+
+{/if}

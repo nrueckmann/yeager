@@ -1,0 +1,30 @@
+<li id="sites_{$win_no}_{$item_id}" yg_id="{$item_id}-site" yg_type="site" class="mk_site listitem">
+	<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+		<!-- actions //-->
+		<div class="actions">
+			<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+			<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+				<div class="singleselect">
+					<div class="actionborder"></div>
+					<a onmouseover="$K.yg_showHelp('{$itext.TXT_SITE_DELETE}');" title="{$itext.TXT_SITE_DELETE}" onclick="$K.yg_fireAction($K.yg_deleteElement,this.up(4),event);" class="del" onmouseout="$K.yg_showHelp(false);"></a>
+					<div class="actionborder"></div>
+				</div>
+			</div>
+		</div>
+		<!-- end actions //-->	   	
+		<div id="sites_{$item_id}_selector" class="listitempage" yg_selectable="true" onclick="$K.yg_selectNode(this,event);">
+			<table class="listable">
+				<tr>
+					<td class="object 1col">
+						<table class="objectable">
+							<tr>
+								<td class="iconcol"><div id="sites_{$item_id}_icn" class="iconsite icn"></div></td>
+								<td id="sites_{$item_id}_txt" class="title txt" yg_type="site" yg_id="{$item_id}-site" yg_property="name">{$item_name}</td>																								
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>	
+		</div>						   		   	
+	</div>		
+</li>

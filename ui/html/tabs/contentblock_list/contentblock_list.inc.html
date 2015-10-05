@@ -1,0 +1,151 @@
+{assign var='item_thumbnail' value=''}
+{if $coId}
+	{assign var='currLine' value=$coList[0].FIELDS}
+	{assign var='item_nowrite' value=$coList[0].NOWRITE}
+	{if $displaymode=='dialog'}{assign var='item_nowrite' value=false}{/if}
+	{capture assign='item_datum'}{$coList[0].DATETIME|date_format_php:$itext.DATE_FORMAT}{/capture}
+	{capture assign='item_uhrzeit'}{$coList[0].DATETIME|date_format_php:$itext.TIME_FORMAT}{/capture}
+{else}
+	{assign var='currLine' value=$coList[cl].FIELDS}
+	{assign var='item_nowrite' value=$coList[cl].NOWRITE}
+	{if $displaymode=='dialog'}{assign var='item_nowrite' value=false}{/if}
+	{capture assign='item_datum'}{$coList[cl].DATETIME|date_format_php:$itext.DATE_FORMAT}{/capture}
+	{capture assign='item_uhrzeit'}{$coList[cl].DATETIME|date_format_php:$itext.TIME_FORMAT}{/capture}
+{/if}
+{section name='c' loop=$currLine}
+	{section name='fld' loop=$currLine[c]}
+		{if $currLine[c][fld].FORMFIELD == 6}
+			{if ($currLine[c][fld].HEIGHT!=0) && ($currLine[c][fld].WIDTH!=0)}
+				{math assign='ratio_pic' equation='x / y' x=$currLine[c][fld].WIDTH y=$currLine[c][fld].HEIGHT}
+				{if ($ratio_pic > (4/3)) || ($currLine[c][fld].THUMB != "1")}
+					{assign var='alignment' value='vimg'}
+				{else}
+					{assign var='alignment' value=''}
+				{/if}
+			{/if}
+			{capture assign='item_thumbnail'}{strip}
+				{$item_thumbnail}
+				<div class="{if $currLine[c][fld].THUMB != '1'}nothumb{else}{$alignment}{/if}">
+					{if $currLine[c][fld].THUMB == "1"}
+						<img onload="$K.yg_setFileListPreviewLoaded(this);" src="{$imgpath}window/x.gif" real_src="{$webroot}image/{$currLine[c][fld].VALUE01}/yg-list/?rnd={math equation='rand()'}">
+					{else}
+						<div class="noimg">?</div>
+					{/if}
+				</div>
+			{/strip}{/capture}
+		{/if}
+	{/section}
+{/section}
+{if $coId}
+	{section name='c' loop=$coList}
+		{if $coList[c].CBID == $coId}
+			{assign var='currLine' value=$coList[c]}
+		{/if}
+	{/section}
+{else}
+	{assign var='currLine' value=$coList[cl]}
+{/if}
+<tr onmouseover="$K.yg_showActions(this,false,'tableview');" id="cblock_{$win_no}_{$currLine.CBID}" name="{$currLine.NAME}" class="cntblock ccols mk_cblock {if $item_nowrite}mk_nowrite{/if}" ondblclick="$K.yg_openObjectDetails('{$currLine.CBID}', 'cblock', '{$currLine.NAME}','iconcblock', '{if $currLine.HASCHANGED}changed{/if}');" yg_selectable="true" yg_type="cblock" yg_id="{$currLine.CBID}-cblock" yg_property="listitem">
+	{section name='c' loop=$currLine.FIELDS}
+		<td class="ccol_{$smarty.section.c.index}">
+			{if $smarty.section.c.first}
+				<!-- first td gets also the actions //-->
+				<div class="actions">
+					<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+					<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+						<div class="singleselect">
+							<div class="actionborder"></div>
+								<a onclick="$K.yg_fireAction($K.yg_deleteElement,this.up(4),event);" class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_CBLOCK_DELETE}');" title="{$itext.TXT_CBLOCK_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" style="{if !$currLine.RDELETE}display:none;{/if}"></a>
+								<a onclick="Event.stop(event);$K.yg_openObjectDetails('{$currLine.CBID}', 'cblock', '{$currLine.NAME}','iconcblock', '{if $currLine.HASCHANGED}changed{/if}');" class="edit" onmouseover="$K.yg_showHelp('{$itext.TXT_CBLOCK_EDIT}');" title="{$itext.TXT_CBLOCK_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+								<a onclick="$K.yg_fireAction($K.yg_actionCopyCBlock,this.up(4),event);" class="copy" onmouseover="$K.yg_showHelp('{$itext.TXT_CBLOCK_COPY}');" title="{$itext.TXT_CBLOCK_COPY}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+								<a onclick="$K.yg_fireAction($K.yg_actionMoveCBlock,this.up(4),event);" class="moveto" onmouseover="$K.yg_showHelp('{$itext.TXT_CBLOCK_MOVE}');" title="{$itext.TXT_CBLOCK_MOVE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" {if !$currLine.RWRITE}style="display:none;"{/if}></a>
+							<div class="actionborder"></div>
+						</div>
+						<div class="multiselect">
+							<div class="actionborder"></div>
+								<a onclick="$K.yg_fireAction($K.yg_deleteElement,this.up(4));" class="del" onmouseover="$K.yg_showHelp('{$itext.FILES_DELETE}');" title="{$itext.FILES_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+							<div class="actionborder"></div>
+						</div>
+					</div>
+				</div>
+				<div class="mk_txt" style="display:none;">{$currLine.NAME}</div> 
+				<!-- end actions //-->
+			{/if}
+			{section name='fld' loop=$currLine.FIELDS[c]}
+				{if $currLine.FIELDS[c][fld].FORMFIELD == 1}
+					<!-- Element Textzeile //-->
+					<div {if $currLine.FIELDS[c][fld].OBJECTIDENTIFIER}class="objectidentifier {if $currLine.HASCHANGED}changed{/if}"{/if}><span>{$currLine.FIELDS[c][fld].VALUE01}</span></div>
+				{elseif $currLine.FIELDS[c][fld].FORMFIELD == 2}
+					<!-- Element Textarea //-->
+					<div {if $currLine.FIELDS[c][fld].OBJECTIDENTIFIER}class="objectidentifier {if $currLine.HASCHANGED}changed{/if}"{/if}><span>{$currLine.FIELDS[c][fld].VALUE01}</span></div>
+				{elseif $currLine.FIELDS[c][fld].FORMFIELD == 3}
+					<!-- Element WYSIWYG //-->
+					<div {if $currLine.FIELDS[c][fld].OBJECTIDENTIFIER}class="objectidentifier {if $currLine.HASCHANGED}changed{/if}"{/if}><span>{$currLine.FIELDS[c][fld].VALUE01}</span></div>
+				{elseif $currLine.FIELDS[c][fld].FORMFIELD == 4}
+					<!-- Element Checkbox //-->
+					<div {if $currLine.FIELDS[c][fld].OBJECTIDENTIFIER}class="objectidentifier {if $currLine.HASCHANGED}changed{/if}"{/if}>{if $currLine.FIELDS[c][fld].VALUE01 == 1}{$itext.TXT_CHECKBOX_ON}{else}{$itext.TXT_CHECKBOX_OFF}{/if}</div>
+				{elseif $currLine.FIELDS[c][fld].FORMFIELD == 5}
+					<!-- Element Link //-->
+					<div {if $currLine.FIELDS[c][fld].OBJECTIDENTIFIER}class="objectidentifier {if $currLine.HASCHANGED}changed{/if}"{/if}>
+					{if $currLine.FIELDS[c][fld].IS_EMAIL}
+						<div class="icn iconemail"></div><span class="title">{$currLine.FIELDS[c][fld].VALUE01}</span>
+					{elseif $currLine.FIELDS[c][fld].IS_FILE}
+						<span class="filetitle mk_list" yg_type="file" yg_id="{$currLine.FIELDS[c][fld].FILE_ID}-file" yg_property="name"><span class="filetype {$currLine.FIELDS[c][fld].COLOR}" yg_type="file" yg_id="{$currLine.FIELDS[c][fld].FILE_ID}-file" yg_property="type">{$currLine.FIELDS[c][fld].IDENTIFIER}</span> <span class="title">{$currLine.FIELDS[c][fld].DISPLAYNAME}</span></span>
+					{elseif $currLine.FIELDS[c][fld].IS_INTERNAL}
+						<div class="icn iconpage"></div><span class="title">{$currLine.FIELDS[c][fld].DISPLAYNAME}</span>
+					{else}
+						<div class="icn iconlink"></div><span class="title">{$currLine.FIELDS[c][fld].DISPLAYNAME}</span>
+					{/if}
+					</div>
+				{elseif $currLine.FIELDS[c][fld].FORMFIELD == 6}
+					<!-- Element Medium //-->
+					{if $currLine.FIELDS[c][fld].THUMBVIEW}
+						<div class="listthumb">{$item_thumbnail}</div>
+					{else}
+						<div {if $currLine.FIELDS[c][fld].OBJECTIDENTIFIER}class="objectidentifier {if $currLine.HASCHANGED}changed{/if}"{/if}><span class="filetitle mk_list" yg_type="file" yg_id="{$currLine.FIELDS[c][fld].FILE_ID}-file" yg_property="name"><span class="filetype {$currLine.FIELDS[c][fld].COLOR}" yg_type="file" yg_id="{$currLine.FIELDS[c][fld].FILE_ID}-file" yg_property="type">{$currLine.FIELDS[c][fld].IDENTIFIER}</span> <span class="title">{$currLine.FIELDS[c][fld].DISPLAYNAME}</span></span></div>
+					{/if}
+				{elseif $currLine.FIELDS[c][fld].FORMFIELD == 7}
+					<!-- Element Co //-->
+					<div {if $currLine.FIELDS[c][fld].OBJECTIDENTIFIER}class="objectidentifier {if $currLine.HASCHANGED}changed{/if}"{/if}><div class="icn iconcblock"></div><span class="title">{$currLine.FIELDS[c][fld].DISPLAYNAME}</span></div>
+				{elseif $currLine.FIELDS[c][fld].FORMFIELD == 8}
+					{if $currLine.FIELDS[c][fld].DISPLAYNAME}
+						<!-- Element Tag //-->
+						<div class="mk_tags {if $currLine.FIELDS[c][fld].OBJECTIDENTIFIER}objectidentifier {if $currLine.HASCHANGED}changed{/if}{/if}"><div class="icn icontag"></div><span class="title">{$currLine.FIELDS[c][fld].DISPLAYNAME}</span></div>
+					{/if}
+				{elseif $currLine.FIELDS[c][fld].FORMFIELD == 9}
+					<!-- Element Liste //-->
+					<div {if $currLine.FIELDS[c][fld].OBJECTIDENTIFIER}class="objectidentifier {if $currLine.HASCHANGED}changed{/if}"{/if}><span>{$currLine.FIELDS[c][fld].VALUE01}</span></div>
+				{elseif $currLine.FIELDS[c][fld].FORMFIELD == 10}
+					<!-- Element Passwort //-->
+					<div {if $currLine.FIELDS[c][fld].OBJECTIDENTIFIER}class="objectidentifier {if $currLine.HASCHANGED}changed{/if}"{/if}><span>********</span></div>
+				{elseif $currLine.FIELDS[c][fld].FORMFIELD == 11}
+					<!-- Element Datum //-->
+					<div {if $currLine.FIELDS[c][fld].OBJECTIDENTIFIER}class="objectidentifier {if $currLine.HASCHANGED}changed{/if}"{/if}><span>{$currLine.FIELDS[c][fld].VALUE01|date_format_php:$itext.DATE_FORMAT}</span></div>
+				{elseif $currLine.FIELDS[c][fld].FORMFIELD == 12}
+					<!-- Element Datum & Uhrzeit //-->
+					<div {if $currLine.FIELDS[c][fld].OBJECTIDENTIFIER}class="objectidentifier {if $currLine.HASCHANGED}changed{/if}"{/if}><span>{$currLine.FIELDS[c][fld].VALUE01|date_format_php:$itext.DATE_FORMAT} {$currLine.FIELDS[c][fld].VALUE01|date_format_php:$itext.TIME_FORMAT}</span></div>
+				{elseif $currLine.FIELDS[c][fld].FORMFIELD == 15}
+					<!-- Element Page //-->
+					<div {if $currLine.FIELDS[c][fld].OBJECTIDENTIFIER}class="objectidentifier {if $currLine.HASCHANGED}changed{/if}"{/if}><div class="icn icon{$currLine.FIELDS[c][fld].ICON}"></div><span class="title">{$currLine.FIELDS[c][fld].DISPLAYNAME}</span></div>
+				{elseif $currLine.FIELDS[c][fld].FORMFIELD == 100}
+					<!-- Element User //-->
+					<div class="user {if $currLine.FIELDS[c][fld].OBJECTIDENTIFIER}objectidentifier {if $currLine.HASCHANGED}changed{/if}{/if}"><span><a class="user {if !$currLine.FIELDS[c][fld].USER_NAME}unknown{/if}" onclick="$K.yg_openUserInfo('{$currLine.FIELDS[c][fld].USER_ID}', this);" yg_type="user" yg_id="{$currLine.FIELDS[c][fld].USER_ID}-user" yg_property="name" onmouseover="$K.yg_hoverUserHint(this);" onmouseout="$K.yg_hideUserHint();">{$currLine.FIELDS[c][fld].USER_NAME|default:$itext.TXT_UNKNOWN}</a></span></div>
+				{elseif $currLine.FIELDS[c][fld].FORMFIELD == 101}
+					<!-- Element Contentblockname //-->
+					<div {if $currLine.FIELDS[c][fld].OBJECTIDENTIFIER}class="objectidentifier {if $currLine.HASCHANGED}changed{/if}"{/if}><div class="icn iconcblock"></div><span class="title">{$currLine.FIELDS[c][fld].CO_NAME}</span></div>
+				{elseif $currLine.FIELDS[c][fld].FORMFIELD == 102}
+					<!-- Element Contentblock User (changed by + changed date) //-->
+					<div {if $currLine.FIELDS[c][fld].OBJECTIDENTIFIER}class="objectidentifier {if $currLine.HASCHANGED}changed{/if}"{/if}>
+						<div class="user"><span><a class="user {if !$currLine.FIELDS[c][fld].USER_NAME}unknown{/if}" onclick="$K.yg_openUserInfo('{$currLine.FIELDS[c][fld].USER_NAME}', this);" yg_type="user" yg_id="{$currLine.FIELDS[c][fld].USER_ID}-user" yg_property="name" onmouseover="$K.yg_hoverUserHint(this);" onmouseout="$K.yg_hideUserHint();">{$currLine.FIELDS[c][fld].USER_NAME|default:$itext.TXT_UNKNOWN}</a></span>, 
+						<span>{$currLine.FIELDS[c][fld].CHANGEDTS|date_format_php:$itext.DATE_FORMAT} {$currLine.FIELDS[c][fld].CHANGEDTS|date_format_php:$itext.TIME_FORMAT}</span>
+					</div>					
+				{elseif $currLine.FIELDS[c][fld].FORMFIELD == 103}
+					<!-- Element Changed Date //-->
+					<div {if $currLine.FIELDS[c][fld].OBJECTIDENTIFIER}class="objectidentifier {if $currLine.HASCHANGED}changed{/if}"{/if}>
+						<span>{$currLine.FIELDS[c][fld].CHANGEDTS|date_format_php:$itext.DATE_FORMAT} {$currLine.FIELDS[c][fld].CHANGEDTS|date_format_php:$itext.TIME_FORMAT}</span>
+					</div>					
+				{/if}
+			{/section}
+		</td>
+	{/section}
+</tr>

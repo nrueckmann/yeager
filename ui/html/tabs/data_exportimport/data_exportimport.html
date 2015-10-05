@@ -1,0 +1,13 @@
+<div class="mk_contentgroup">
+	<ul class="mk_uploadpanel" id="wid_{$win_no}_{$page}_{if $mode == 'import'}imported{/if}{if $mode == 'export'}exported{/if}files" style="position:relative;">
+		{if $mode == 'export'}
+			{capture assign='exporttext'}{$itext.TXT_EXPORTING}...{/capture}
+			{assign var='showProgress' value=true}
+			{include file="$approot/ui/html/tabs/data_exportimport/data.inc.html" item_id=0 item_index=0 item_name=$exporttext presel_id=0}
+		{/if}
+	</ul>
+	<ul class="mk_upload_templates" id="wid_{$win_no}_{$page}_filestoupload_template" style="display:none;">
+		{assign var='showProgress' value=false}
+		{include file="$approot/ui/html/tabs/data_exportimport/data.inc.html" item_id='__TEMPLATEID__' item_index='__TEMPLATEINDEX__' item_name='__TEMPLATENAME__' presel_id=0}
+	</ul>
+</div>

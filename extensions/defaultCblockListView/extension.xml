@@ -1,0 +1,5 @@
+<extension>
+	<namespace>com\nt</namespace>
+	<class>defaultCblockListView</class>
+	<api>1.0</api>
+</extension>

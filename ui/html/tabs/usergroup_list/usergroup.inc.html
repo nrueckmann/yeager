@@ -1,0 +1,49 @@
+<li id="wid_{$win_no}_usergroups_{$item.ID}" yg_property="item" yg_type="usergroup" yg_id="{$item.ID}-usergroup" class="mk_usergroup listitem {if $object_permissions.READONLY}mk_nowrite{/if}  {if (($rootGroupId == $item.ID) || ($anonGroupId == $item.ID) || !$item.RDELETE) && !$item.SHOW_DELETE }mk_nodel{/if}">
+	<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+		
+			{if $object_permissions.RWRITE}
+			<!-- actions //-->
+			<div class="actions">
+				<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+				<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+					<div class="singleselect">
+						<div class="actionborder"></div>
+						{if ($selectiondialog)}
+							<a onclick="$K.yg_actionSubmit(this,'list',event);" class="exec" onfocus="this.blur();"></a>
+						{else}
+							{if (($rootGroupId != $item.ID) && ($anonGroupId != $item.ID) && ($item.RDELETE) && ($mode != 'details')) || ($item.SHOW_DELETE)}
+								<a onmouseover="$K.yg_showHelp('{$itext.TXT_USERGROUP_DELETE}');" title="{$itext.TXT_USERGROUP_DELETE}" onclick="$K.yg_fireAction($K.yg_deleteElement,this.up(4),event);" class="del" onmouseout="$K.yg_showHelp(false);"></a>
+							{/if}
+							{if $mode != 'details'}
+								<a onmouseover="$K.yg_showHelp('{$itext.TXT_USERGROUP_EDIT}');" title="{$itext.TXT_USERGROUP_EDIT}" onclick="$K.yg_selectNode($('wid_{$win_no}_usergroups_{$item.ID}_selector'),event);" class="edit" onmouseout="$K.yg_showHelp(false);"></a>
+							{/if}
+						{/if}
+						<div class="actionborder"></div>
+					</div>
+					<div class="multiselect">
+						{if ( ($rootGroupId != $item.ID) && ($anonGroupId != $item.ID) && $item.RDELETE) || ($mode == 'details') || ($item.SHOW_DELETE)}
+							<div class="actionborder"></div>
+							<a onmouseover="$K.yg_showHelp('{$itext.TXT_USERGROUPS_DELETE}');" title="{$itext.TXT_USERGROUPS_DELETE}" onclick="$K.yg_fireAction($K.yg_deleteElement,this.up(4),event);" class="del" onmouseout="$K.yg_showHelp(false);"></a>
+							<div class="actionborder"></div>
+						{/if}
+					</div>
+				</div>
+			</div>
+			<!-- end actions //-->
+			{/if}
+		<div id="wid_{$win_no}_usergroups_{$item.ID}_selector" class="listitempage" yg_selectable="true" {if $mode != 'details'}onclick="$K.yg_selectNode(this,event);"{/if} {if $selectiondialog}ondblclick="$K.yg_actionSubmit(this,'list');"{/if}>
+			<table class="listable">
+				<tr>
+					<td class="object">
+						<table class="objectable">
+							<tr>
+								<td class="iconcol"><div id="item_{$item.ID}_icn" class="iconusergroup icn"></div></td>
+								<td id="wid_{$win_no}_usergroups_{$item.ID}_txt" class="title txt" yg_property="name" yg_type="usergroup" yg_id="{$item.ID}-usergroup">{$item.NAME}</td>																								
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>	
+		</div>						   		   	
+	</div>		
+</li>

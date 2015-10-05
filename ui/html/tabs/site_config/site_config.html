@@ -1,0 +1,165 @@
+
+	<!-- PANEL GENERAL -->
+	<div class="ipanel" yg_panel="true">
+		<div class="panelheadernocollaps headline1">
+			<a class="opened">{$itext.TXT_GENERAL|default:'$TXT_GENERAL'}</a>
+		</div>
+
+		<div class="panelcontent">
+			<div class="mk_contentgroup">
+				<div class="cntblockcontainernohover">
+					<div class="cntblock">
+						<table class="gridfixed" cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="col1">
+									<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+									<div class="textbox" yg_form="textbox">
+										<input tabindex="1" yg_onchange="siteCalcPname" yg_id="{$object}-site" yg_type="site" yg_property="name" onchange="$K.yg_setEdited(this);$K.yg_hilite('site', '{$templateInfo.OBJECTID}-site', 'name');" type="text" name="wid_{$win_no}_site_name" value="{$siteinfo.NAME}" maxlength="64" />
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="cntblockcontainernohover">
+					<div class="cntblock">
+						<table class="gridfixed" cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="col1">
+									<span class="label">{$itext.TXT_URL_NAME|default:'$TXT_URL_NAME'}</span>
+									<div class="textbox" yg_form="textbox">
+										<input tabindex="1" yg_id="{$object}-site" yg_type="site" yg_property="pname" onchange="if ($K.yg_checkSitePName(this)) {literal}{{/literal} $K.yg_setEdited(this);$K.yg_hilite('site', '{$templateInfo.OBJECTID}-site', 'pname');{literal}}{/literal}" type="text" name="wid_{$win_no}_site_pname" id="wid_{$win_no}_site_pname" value="{$siteinfo.PNAME}" oldvalue="{$siteinfo.PNAME}" />
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+					<div class="cntblock mk_property">
+						<div class="hoverable mk_file mk_noautosave" yg_accepts="file" id="wid_{$win_no}_fileproperty" yg_type="site" yg_property="favicon" onmouseup="$K.yg_customSortableOnDrop( 'wid_{$win_no}_fileproperty', event );" onmouseover="$K.yg_currentHover=this;">
+							<!-- actions //-->
+							<div class="actions">
+								<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+								<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+									<div class="actionborder"></div>
+									<a class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_RESET}');" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);$K.yg_clearControl(this,'wid_{$win_no}_favicon','');" title="{$itext.TXT_FORMFIELD_RESET}');" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);$K.yg_clearControl(this,'wid_{$win_no}_favicon','"></a>
+									<a class="edit mk_file" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_EDIT}');" title="{$itext.TXT_FORMFIELD_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: 'FILE_SELECT', loadparams: {literal}{{/literal} type: 'property', opener_reference: 'wid_{$win_no}_fileproperty' {literal} } } {/literal});"></a>
+									<div class="actionborder"></div>
+								</div>
+							</div>
+							<!-- end actions //-->
+							<table class="gridflex editlink mk_property mk_file" cellspacing="0" cellpadding="0" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'FILE_SELECT', loadparams: {literal}{{/literal} type: 'property', opener_reference: 'wid_{$win_no}_fileproperty' {literal} } } {/literal});">
+								<tr>
+									<td colspan="8" class="col1">
+										<span class="label">{$itext.TXT_FAVICON}</span>
+										<div style="display:none;"></div>
+										<div class="selectionmarker">
+											<div class="title" onmouseover="if(this.up('td').down('input[type=hidden]').value > 0) $K.yg_hoverFileHint(this.up('td').down('input[type=hidden]').value, event);">
+												<span class="titlecnt">
+													<span class="title_txt">
+														{if $favicon.NAME}<span class="filetype {$favicon.COLOR|default:'black'}">{$favicon.CODE|default:'FILE'}</span>{$favicon.NAME}{else}{$itext.TXT_SELECTOR_FILE}{/if}
+													</span>
+												</span>
+											</div>
+										</div>
+										<input type="hidden" value="{$siteinfo.FAVICON}" yg_id="{$object}-site" yg_type="site" yg_property="favicon" name="wid_{$win_no}_site_favicon" />
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+
+	<!-- PANEL GENERAL -->
+	<div class="ipanel" yg_panel="true">
+		<div class="panelheadernocollaps headline1">
+			<a class="opened">{$itext.TXT_TEMPLATES|default:'$TXT_TEMPLATES'}</a>
+		</div>
+
+		<div class="panelcontent">
+			<div class="mk_contentgroup">
+
+				<div id="wid_{$win_no}_{$page}_templates" class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+					<!-- actions //-->
+					<div class="actions">
+						<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+						<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+							<div class="actionborder"></div>
+							<a  class="edit" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'TEMPLATE_SELECT', loadparams: {literal}{{/literal} action: 'choose', opener_reference: 'wid_{$win_no}' {literal} } } {/literal});" onclick="$K.actionhover=true;" onmouseover="$K.yg_showHelp('{$itext.TXT_TEMPLATE_EDIT}');" title="{$itext.TXT_TEMPLATE_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+							<a  class="del" onclick="$K.yg_resetSiteDefaulttemplate(this);" onmouseover="$K.yg_showHelp('{$itext.TXT_TEMPLATE_DELETE}');" title="{$itext.TXT_TEMPLATE_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+							<div class="actionborder"></div>
+						</div>
+					</div>
+					<!-- end actions //-->
+
+					<div class="cntblockselection" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'TEMPLATE_SELECT', loadparams: {literal}{{/literal} action: 'choose', opener_reference: 'wid_{$win_no}' {literal} } } {/literal});" style="cursor:pointer;min-height:0px;" id="wid_{$win_no}_templatepanel" onmouseup="$K.yg_customSortableOnDrop(this.id);" yg_type="site" yg_property="template" yg_accepts="template">
+						<span class="label selection">{$itext.TXT_DEFAULT_TEMPLATE|default:'$TXT_DEFAULT_TEMPLATE'}</span>
+						<div class="mk_templatecontainer" style="{if !$templateInfo.NAME}display:none;{/if}margin-top:3px;">
+							{if !$templateInfo}{assign var='templateInfo' value=true}{/if}
+							{include file="$approot/ui/html/tabs/template_info/template_info.html"}
+						</div>
+						<div class="selectionmarker" style="display:{if !$templateInfo.NAME}inline-block{else}none{/if};margin-left:6px;margin-top:2px;">
+							<div class="icn noicon"></div>
+							<div class="title">
+								<span class="titlecnt">{$itext.TXT_SELECTOR_TEMPLATE}</span>
+
+							</div>
+						</div>
+					</div>
+					<input type="hidden" value="{$siteinfo.DEFAULTTEMPLATE}" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="wid_{$win_no}_defaulttemplate" name="wid_{$win_no}_site_defaulttemplate" />
+				</div>
+
+				<div id="wid_{$win_no}_{$page}_templateroot" class="cntblockcontainer" onmouseover="$K.yg_showActions(this);$K.yg_currentHover=this;">
+					<!-- actions //-->
+					<div class="actions">
+						<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+						<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+							<div class="actionborder"></div>
+							<a  class="edit" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'TEMPLATEFOLDER_SELECT', loadparams: {literal}{{/literal} action: 'choosefolder', opener_reference: 'wid_{$win_no}' {literal} } } {/literal});" onclick="$K.actionhover=true;" onmouseover="$K.yg_showHelp('{$itext.TXT_TEMPLATEFOLDER_EDIT}');" title="{$itext.TXT_TEMPLATEFOLDER_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+							<a  class="del" onclick="$K.yg_resetSiteTemplateroot(this);" onmouseover="$K.yg_showHelp('{$itext.TXT_TEMPLATEFOLDER_RESET}');" title="{$itext.TXT_TEMPLATEFOLDER_RESET}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+							<div class="actionborder"></div>
+						</div>
+					</div>
+					<!-- end actions //-->
+
+					<div class="cntblock" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'TEMPLATEFOLDER_SELECT', loadparams: {literal}{{/literal} action: 'choosefolder', opener_reference: 'wid_{$win_no}' {literal} } } {/literal});" style="cursor:pointer;" id="wid_{$win_no}_templaterootpanel" onmouseup="$K.yg_customSortableOnDrop(this.id);" yg_type="site" yg_property="templatefolder" yg_accepts="templatefolder">
+						<table class="gridfixed" cellspacing="0" cellpadding="0">
+							<tr>
+								<td colspan="8" class="col1">
+									<span class="label">{$itext.TXT_RESTRICT_TEMPLATE_SELECTION|default:'$TXT_RESTRICT_TEMPLATE_SELECTION'}</span>
+									<div class="selectionmarker">
+										<div class="icn {if $templaterootinfo.NAME}iconfolder{else}noicon{/if}"></div>
+										<div class="title">
+											<span class="titlecnt" id="sites_{$item_index}_txt">
+												{if $templaterootinfo.NAME}{$templaterootinfo.NAME}{else}{$itext.TXT_SELECTOR_FOLDER}{/if}
+											</span>
+
+										</div>
+									</div>
+								</td>
+							</tr>
+						</table>
+						<input type="hidden" value="{$siteinfo.TEMPLATEROOT}" yg_id="{$object}-site" yg_type="{$objecttype}" yg_property="wid_{$win_no}_templateroot" name="wid_{$win_no}_site_templateroot" />
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- END PANEL GENERAL -->
+
+	<!-- BOTTOMLINE //-->
+	<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+		<tr>
+			<td class="ywindow_leftbt"></td>
+			<td class="ywindow_midbottom"><div class="button" tabindex="1"><a class="stdbutton"><div onclick="$K.yg_siteSaveInfo('wid_{$win_no}');" class="wrapper"><nobr>{$itext.TXT_SAVE|default:'$TXT_SAVE'}</nobr></div></a></div></td>
+			<td class="ywindow_rightbt"></td>
+		</tr>
+	</table>
+	<!-- END BOTTOMLINE //-->

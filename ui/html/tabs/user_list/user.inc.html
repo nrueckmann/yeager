@@ -1,0 +1,33 @@
+{capture assign='username'}{$item_firstname} {$item_lastname}{/capture}
+{if $username == ' '}{assign var='username' value=$itext.TXT_UNKNOWN|default:'$TXT_UNKNOWN'}{/if}
+{capture assign='sorthelper'}{$item_lastname|trim}{/capture}
+{if $sorthelper == ''}{assign var='sorthelper' value=' '}{/if}
+<tr id="users_{$win_no}_{$item_objectid}" class="cntblock mk_user {if (!$rusers) || ($rootUserId == $item_objectid) || ($anonUserId == $item_objectid)}mk_nodel{/if}" onmouseup="{if $rusers}$K.yg_customSortableOnDrop(this.id);{/if}" onclick="$K.yg_selectNode(this,event);" user_name="{$username}" user_company="{$item_company}" user_picture="{$item_userpicture}" yg_selectable="true" onmouseover="$K.yg_showActions(this,false,'tableview');" yg_type="user" yg_id="{$item_objectid}-user" yg_property="usergroups" {if $rusers}yg_accepts="usergroup"{/if}>
+	<td class="fcol_name">
+		<div class="actions">
+			<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+			<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+				<div class="singleselect">
+					<div class="actionborder"></div>
+						{if $rusers && ($rootUserId != $item_objectid) && ($anonUserId != $item_objectid)}
+							<a onclick="$K.yg_fireAction($K.yg_deleteElement,this.up(4),event);" class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_USER_DELETE}');" title="{$itext.TXT_USER_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+						{/if}
+						<a onclick="$K.yg_editUser(this,event);" class="edit" onmouseover="$K.yg_showHelp('{$itext.TXT_USER_EDIT}');" title="{$itext.TXT_USER_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<div class="actionborder"></div>
+				</div>
+				<div class="multiselect">
+					<div class="actionborder"></div>
+					{if $rusers && ($rootUserId != $item_objectid) && ($anonUserId != $item_objectid)}
+						<a onmouseup="Event.stop(event);" onclick="$K.yg_fireAction($K.yg_deleteElement,this.up(4), event);" class="del" onmouseover="$K.yg_showHelp('{$itext.USERS_DELETE}');" title="{$itext.USERS_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					{/if}
+					<div class="actionborder"></div>
+				</div>
+			</div>
+		</div>
+		<div>
+			<span><a class="user" yg_type="user" yg_id="{$item_objectid}-user" yg_property="name" onmouseover="$K.yg_hoverUserHint(this);" onmouseout="$K.yg_hideUserHint();"><span style="display:none;">{$sorthelper}</span>{$username}</a></span>
+		</div>
+	</td>
+	<td class="fcol_company"><div><span yg_type="user" yg_id="{$item_objectid}-user" yg_property="company">{$item_company|default:'-'}</span></div></td>
+	<td class="fcol_email"><div><span yg_type="user" yg_id="{$item_objectid}-user" yg_property="email">{if $item_email}<a href="mailto:{$item_email}">{$item_email}</a>{else}-{/if}</span></div></td>
+</tr>

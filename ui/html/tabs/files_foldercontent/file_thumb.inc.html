@@ -1,0 +1,43 @@
+<li id="file_{$win_no}_{$item_objectid}_thumb" yg_id="{$item_objectid}-file" yg_type="file" class="cntblockcontainer mk_filepreview mk_file {if $item_nowrite}mk_nowrite{/if}" onclick="$K.yg_selectFile(this);" onmouseover="$K.yg_currentHover=this;" pname="{$item_pname}" yg_imageurl="{$item_imageurl}" yg_downloadurl="{$item_downloadurl}">
+
+	<div class="actions">
+		<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+		<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+			<div class="singleselect">
+				<div class="actionborder"></div>
+					<a onmousedown="Event.stop(event);" onmouseup="Event.stop(event);" onclick="Event.stop(event);$K.yg_currentfocusobj.push($('file_{$win_no}_{$item_objectid}'));$K.windows['wid_{$win_no}'].submit();" class="exec" onmouseover="$K.yg_showHelp('{$itext.TXT_FILE_ACTION}');" title="{$itext.TXT_FILE_ACTION}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<a href="{$internalprefix}?preview=1&objecttype=file&id={$item_objectid}" onmousedown="Event.stop(event);" onmouseup="Event.stop(event);" onclick="Event.stop(event);$K.yg_preview({literal}{{/literal}objecttype: 'file', id: {$item_objectid}, fullscreen: true{literal}}{/literal});" class="preview" onmouseover="$K.yg_showHelp('{$itext.TXT_FILE_PREVIEW_FULLSCREEN}');" title="{$itext.TXT_FILE_PREVIEW_FULLSCREEN}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<a onmousedown="Event.stop(event);" onmouseup="Event.stop(event);" onclick="Event.stop(event);$K.yg_preview({literal}{{/literal}objecttype: 'file', id: {$item_objectid}{literal}}{/literal});" class="previewwin" onmouseover="$K.yg_showHelp('{$itext.TXT_FILE_PREVIEW}');" title="{$itext.TXT_FILE_PREVIEW}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<a onmousedown="Event.stop(event);" onmouseup="Event.stop(event);" href="{$item_downloadurl}" class="download" onmouseover="$K.yg_showHelp('{$itext.TXT_FILE_DOWNLOAD}');" title="{$itext.TXT_FILE_DOWNLOAD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					{if !$item_nodelete}
+						<a onmousedown="Event.stop(event);" onmouseup="Event.stop(event);" onclick="$K.yg_fireAction($K.yg_deleteElement,this.up(3),event);" class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_FILE_DELETE}');" title="{$itext.TXT_FILE_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					{/if}
+					<a onmousedown="Event.stop(event);" onmouseup="Event.stop(event);" onclick="Event.stop(event);$K.yg_openObjectDetails('{$item_objectid}', 'file', '{$item_name}', {literal}{{/literal}color:'{$item_color}',typecode:'{$item_identifier}'{literal}}{/literal});" class="edit" onmouseover="$K.yg_showHelp('{$itext.TXT_FILE_EDIT}');" title="{$itext.TXT_FILE_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<a onmousedown="Event.stop(event);" onmouseup="Event.stop(event);" onclick="$K.yg_fireAction($K.yg_actionCopyFile,this.up(3),event);" class="copy" onmouseover="$K.yg_showHelp('{$itext.TXT_FILE_COPY}');" title="{$itext.TXT_FILE_COPY}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					{if !$item_nowrite}
+						<a onmousedown="Event.stop(event);" onmouseup="Event.stop(event);" onclick="$K.yg_fireAction($K.yg_actionMoveFile,this.up(3),event);" class="moveto" onmouseover="$K.yg_showHelp('{$itext.TXT_FILE_MOVE}');" title="{$itext.TXT_FILE_MOVE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					{/if}
+				<div class="actionborder"></div>
+			</div>
+			<div class="multiselect">
+				<div class="actionborder"></div>
+				<a onclick="$K.yg_fireAction($K.yg_deleteElement,this.up(3));" class="del" onmouseover="$K.yg_showHelp('{$itext.FILES_DELETE}');" title="{$itext.FILES_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+				<div class="actionborder"></div>
+			</div>
+		</div>
+	</div>
+	<div onmouseover="$K.yg_showActions(this,false,'thumbview');" id="file_{$win_no}_{$item_objectid}" yg_id="{$item_objectid}-file" yg_type="file" class="cntblock" onmouseup="{if !$item_nowrite}$K.yg_customSortableOnDrop('file_{$win_no}_{$item_objectid}_thumb');{/if}" {if ($action == 'choose') && ($tools != "true")}ondblclick="$K.yg_currentfocusobj.push($('file_{$win_no}_{$item_objectid}'));$K.windows['wid_{$win_no}'].submit();"{else}ondblclick="$K.yg_openObjectDetails('{$item_objectid}', 'file', '{$item_name}', {literal}{{/literal}color:'{$item_color}',typecode:'{$item_identifier}'{literal}}{/literal});"{/if} yg_selectable="true" {if !$item_nowrite}yg_accepts="tag,view,extfile" yg_reordering="false"{/if} pname="{$item_pname}">
+		<div class="mk_thumbnail {$alignment}" ratio="{$ratio_pic}">
+			{$item_thumbnail}
+			<div class="thumbdesc">
+				<div class="typewrapper">
+					<span class="filetype {$item_color}" yg_type="file" yg_id="{$item_objectid}-file" yg_property="type" id="file_{$win_no}_{$item_objectid}_type">{$item_identifier}</span>
+				</div>
+				<div>
+					<span class="filetitle mk_thumb mk_txt" yg_id="{$item_objectid}-file" yg_type="file" yg_property="name" id="file_{$win_no}_{$item_objectid}_txt">{$item_name}</span><br />
+					<span class="filename">{$item_full_filename}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</li>

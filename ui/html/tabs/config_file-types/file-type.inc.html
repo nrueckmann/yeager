@@ -1,0 +1,111 @@
+{if $item_index==''}{assign var='item_index' value='0'}{/if}
+	
+<li id="wid_{$win_no}_formfield_{$item_index}" class="mk_filetype {if $noscript}opened{else}closed{/if}">
+	<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+		<!-- actions //-->
+		<div class="actions">
+			<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+			<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+				<div class="actionborder"></div>
+				<a class="del" onclick="Event.stop(event);$K.yg_deleteElement(this.up(2));" onmouseover="$K.yg_showHelp('{$itext.TXT_FILETYPE_DELETE}');" title="{$itext.TXT_FILETYPE_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+				<div class="actionborder"></div>
+			</div>
+		</div>	
+		<!-- end actions //-->
+		<div class="cntblock listcollaps" yg_selectable="true">
+			<a class="handler single" onclick="$K.yg_listCollapsSwap(this.up(2),event);">
+				<div class="icn">{$item_info.NAME|default:$itext.TXT_NEW_OBJECT}</div>
+			</a>
+			<div class="collapscontent">
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_filetype_{$item_info.OBJECTID}_title" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_filetype_{$item_info.OBJECTID}_code" tabindex="1" onchange="$K.yg_setEdited(this);" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_FILE_EXTENSIONS_COMMA_SEPERATED|default:'$TXT_FILE_EXTENSIONS_COMMA_SEPERATED'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_filetype_{$item_info.OBJECTID}_extensions" tabindex="1" onchange="$K.yg_setEdited(this);" type="text" value="{$item_info.EXTENSIONS}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_PROCESSOR|default:'$TXT_PROCESSOR'}</span>
+								<div id="wid_{$win_no}_filetype_{$item_info.OBJECTID}_processor" yg_form="dropdown" class="dropdownbox" >
+									<div class="dropdown">
+										<div class="dropdowninner">
+											<input onchange="$K.yg_setEdited(this);" tabindex="1" type="text"  value="{$item_info.PROCESSOR}" />
+										</div>
+									</div>
+									<div class="dropdownlistcontainer">
+										<div class="dropdownlist">
+											<div value="NONE" {if $item_info.PROCESSOR=='NONE'}class="selected"{/if}>{$itext.TXT_NO_SELECTION}</div>
+											{section name='procs' loop=$processors}
+												{if ($processors[procs].name != "YGSOURCE")}<div value="{$processors[procs].name}" {if $item_info.PROCESSOR==$processors[procs].name}class="selected"{/if}>{$processors[procs].name}</div>{/if}
+											{/section}
+										</div>
+										<div class="mk_scrollbars"></div>
+									</div>
+									<input type="hidden" value="{$item_info.PROCESSOR}" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_FILE_ABBREVIATION|default:'$TXT_FILE_ABBREVIATION'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_filetype_{$item_info.OBJECTID}_abbreviation" tabindex="1" onchange="$K.yg_setEdited(this);" type="text" value="{$item_info.CODE}" maxlength="4" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_COLOR|default:'$TXT_COLOR'}</span>
+								
+								<div id="wid_{$win_no}_filetype_{$item_info.OBJECTID}_color" yg_form="dropdown" class="dropdownbox" >
+									<div class="filetypeflag" onmousedown="$K.yg_clickindropdown[this.up(0).id]=true;$K.yg_dropdownClick(this.up());$K.yg_formHover(this.next().down(1),'dropdownclick','dropdownbox');"><div class="typewrapper"><span class="filetype {$item_info.COLOR}" yg_property="type">FILE</span></div></div>
+									<div class="dropdown">
+										<div class="dropdowninner">
+											<input onchange="$K.yg_setEdited(this);" tabindex="1" type="text"  value="{$item_info.COLOR}" />
+										</div>
+									</div>
+									<div class="dropdownlistcontainer">
+										<div class="dropdownlist">
+											<div value="purple" {if $item_info.COLOR=='purple'}class="selected"{/if}><div class="filetypeflag"><div class="typewrapper"><span class="filetype purple">FILE</span></div></div>{$itext.TXT_COLOR_PURPLE}</div>
+											<div value="color1" {if $item_info.COLOR=='color1'}class="selected"{/if}><div class="filetypeflag"><div class="typewrapper"><span class="filetype color1">FILE</span></div></div>{$itext.TXT_COLOR_PINK} 1</div>
+											<div value="color2" {if $item_info.COLOR=='color2'}class="selected"{/if}><div class="filetypeflag"><div class="typewrapper"><span class="filetype color2">FILE</span></div></div>{$itext.TXT_COLOR_PINK} 2</div>
+											<div value="red" {if $item_info.COLOR=='red'}class="selected"{/if}><div class="filetypeflag"><div class="typewrapper"><span class="filetype red">FILE</span></div></div>{$itext.TXT_COLOR_RED} 1</div>
+											<div value="color6" {if $item_info.COLOR=='color6'}class="selected"{/if}><div class="filetypeflag"><div class="typewrapper"><span class="filetype color6">FILE</span></div></div>{$itext.TXT_COLOR_RED} 2</div>
+											<div value="color4" {if $item_info.COLOR=='color4'}class="selected"{/if}><div class="filetypeflag"><div class="typewrapper"><span class="filetype color4">FILE</span></div></div>{$itext.TXT_COLOR_ORANGE}</div>
+											<div value="color7" {if $item_info.COLOR=='color7'}class="selected"{/if}><div class="filetypeflag"><div class="typewrapper"><span class="filetype color7">FILE</span></div></div>{$itext.TXT_COLOR_GREEN} 1</div>
+											<div value="color8" {if $item_info.COLOR=='color8'}class="selected"{/if}><div class="filetypeflag"><div class="typewrapper"><span class="filetype color8">FILE</span></div></div>{$itext.TXT_COLOR_GREEN} 2</div>
+											<div value="green" {if $item_info.COLOR=='green'}class="selected"{/if}><div class="filetypeflag"><div class="typewrapper"><span class="filetype green">FILE</span></div></div>{$itext.TXT_COLOR_GREEN} 3</div>
+											<div value="color10" {if $item_info.COLOR=='color10'}class="selected"{/if}><div class="filetypeflag"><div class="typewrapper"><span class="filetype color10">FILE</span></div></div>{$itext.TXT_COLOR_TURQUOISE} 1</div>
+											<div value="color11" {if $item_info.COLOR=='color11'}class="selected"{/if}><div class="filetypeflag"><div class="typewrapper"><span class="filetype color11">FILE</span></div></div>{$itext.TXT_COLOR_TURQUOISE} 2</div>
+											<div value="color12" {if $item_info.COLOR=='color12'}class="selected"{/if}><div class="filetypeflag"><div class="typewrapper"><span class="filetype color12">FILE</span></div></div>{$itext.TXT_COLOR_TURQUOISE} 3</div>
+											<div value="color13" {if $item_info.COLOR=='color13'}class="selected"{/if}><div class="filetypeflag"><div class="typewrapper"><span class="filetype color13">FILE</span></div></div>{$itext.TXT_COLOR_BLUE} 1</div>
+											<div value="blue" {if $item_info.COLOR=='blue'}class="selected"{/if}><div class="filetypeflag"><div class="typewrapper"><span class="filetype blue">FILE</span></div></div>{$itext.TXT_COLOR_BLUE} 2</div>
+											<div value="color15" {if $item_info.COLOR=='color15'}class="selected"{/if}><div class="filetypeflag"><div class="typewrapper"><span class="filetype color15">FILE</span></div></div>{$itext.TXT_COLOR_BLUE} 3</div>
+											<div value="color16" {if $item_info.COLOR=='color16'}class="selected"{/if}><div class="filetypeflag"><div class="typewrapper"><span class="filetype color16">FILE</span></div></div>{$itext.TXT_COLOR_GRAY}</div>
+											<div value="black" {if $item_info.COLOR=='black'}class="selected"{/if}><div class="filetypeflag"><div class="typewrapper"><span class="filetype black">FILE</span></div></div>{$itext.TXT_COLOR_BLACK}</div>
+										</div>
+										<div class="mk_scrollbars"></div>
+									</div>
+									<input type="hidden" value="{$item_info.COLOR}" />
+								</div>
+							</td>
+						</tr>
+					</table>
+			</div>
+		</div>
+	</div>
+	<input name="wid_{$win_no}_filetype_ids[]" type="hidden" value="{$item_info.OBJECTID}" />
+</li>

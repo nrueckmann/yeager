@@ -1,0 +1,115 @@
+{if $view==''}
+	{assign var='view' value='listview'}
+{/if}
+
+<div id="wid_{$win_no}_listcontainer" class="mk_contentgroup" yg_multiselect="true">
+
+	<!-- TABLE //-->
+	<div class="tableborder smallheader mk_cblocklist">
+		<table id="wid_{$win_no}_tablecontent" class="gridflex ytable" cellspacing="0" cellpadding="0">
+			<thead>
+				<tr class="filefirstrow">
+					{section name='x' loop=$listColumns}
+						<td class="ccol_{$smarty.section.x.index} {$listColumns[x].SORTFUNC|strtolower}" id="wid_{$win_no}_ccol_{$smarty.section.x.index}"></td>
+					{/section}
+				</tr>
+			</thead>
+			<tbody yg_widget="type:sortable;accepts:tag,extcblock;objecttype:co;callbacks:cosSortCallbacks;tag:tr;treeTag:tbody;" class="mk_cblock" id="wid_{$win_no}_{$folder}_cblock_list" yg_type="co" yg_property="listitem" onmouseover="$K.yg_currentHover=this;">
+				{section name="cl" loop=$coList}
+					{include file="$approot/ui/html/tabs/contentblock_list/contentblock_list.inc.html"}
+				{/section}
+			</tbody>
+		</table>	
+	</div>
+	<!-- TABLE END //-->
+
+</div>
+
+{if $refresh!=1}
+<!-- FIXED HEADER CONTENTBLOCKS //-->
+<div class="ywindowhead tabhead_table">	  
+	<div class="headercolumnsflow">											
+		<div id="wid_{$win_no}_tablecols" class="headercolumnsfm" style="display:none;">
+			<table unselectable="on" id="wid_{$win_no}_tablehead" cellspacing="0" cellpadding="0">
+				<thead unselectable="on">
+					<tr>
+						{section name='c' loop=$listColumns}
+							<td unselectable="on" class="ccol_{$smarty.section.c.index}{if $listColumns[c].RESIZEABLE == false} mk_notresizable{/if}" yg_colindex="{$smarty.section.c.index}" onclick="$K.yg_pageDirOrderBy(this);"><div class="colsort" unselectable="on">{$listColumns[c].TITLE}</div></td>
+						{/section}
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						{section name='c' loop=$listColumns}
+							<td class="ccol_{$smarty.section.c.index} notd"></td>
+						{/section}
+					</tr>
+				</tbody>
+			</table>					
+		</div>	
+	</div>						
+</div>
+<!-- END FIXED HEADER CONTENTBLOCKS //-->
+
+<!-- VIEWENTRYMASK //-->
+<table cellspacing="0" cellpadding="0" class="ywindowfilter">
+	<tr>
+		<td class="ywindow_left"></td>
+		<td class="ywindow_midborder"><div class="whitecorner"></div></td>
+		<td class="ywindow_right"></td>
+	</tr>
+	<tr>
+		<td class="ywindow_left"></td>
+		<td class="ywindow_mid">
+			<table cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<td width="160">
+						<div class="filestatus"><strong id="wid_{$win_no}_objcnt">{$coListCount}</strong> {$itext.TXT_CONTENTBLOCKS|default:'$TXT_CONTENTBLOCKS'}</div>
+					</td>
+					<td></td>
+					<td width="160">
+						<div id="wid_{$win_no}_listview" yg_form="dropdown" class="dropdownbox">
+							<div class="dropdown">
+								<div class="dropdowninner">
+									<input yg_seq="{$win_no}" yg_onchange="$K.yg_switchDynamicListView('wid_{$win_no}',$('wid_{$win_no}_listview_ddlist').down('.selected').readAttribute('value'));" type="text" tabindex="1" value="" />
+								</div>
+							</div>
+							<div class="dropdownlistcontainer">
+								<div class="dropdownlist">
+									<div value="0" {if $listViewExtensionId==0}class="selected"{/if}>{$itext.TXT_DEFAULT|default:'$TXT_DEFAULT'}</div>
+									{section name='lv' loop=$listviewExtensions}
+										<div value="{$listviewExtensions[lv].ID}" {if $listViewExtensionId==$listviewExtensions[lv].ID}class="selected"{/if}>{$listviewExtensions[lv].NAME}</div>
+									{/section}
+								</div>
+								<div class="mk_scrollbars"></div>
+							</div>
+							<input type="hidden" value="{$listViewExtensionId}" />
+						</div>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td class="ywindow_right"></td>			
+	</tr>
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_midborder"><div class="whitecorner"></div></td>
+		<td class="ywindow_rightbt"></td>
+	</tr>
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_spacemid"></td>
+		<td class="ywindow_rightbt"></td>			
+	</tr>
+</table>
+<!-- END VIEWENTRYMASK //-->
+
+<!-- PAGEDIR //-->
+{include file="$approot/ui/html/tabs/common/pagedir.inc.html"}
+
+{/if}
+<!-- TAB AUTOSTART //-->
+<script language="javascript">
+	$K.windows['wid_{$win_no}'].cblockList = {$listColumnsEncoded};
+</script>
+<!-- END TAB AUTOSTART //-->

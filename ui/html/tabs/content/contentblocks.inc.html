@@ -1,0 +1,638 @@
+<!-- Inhaltsbereich //-->
+{capture assign='emptystyle'}[ ... ]{/capture}
+
+{if $cos[0].CONTENTAREA=='dummy'}
+	{assign var='dummymode' value=true}
+	{assign var='nofunctions' value=true}
+	{assign var='spcmargin' value=true}
+{/if}
+
+{if $cos[0].CONTENTAREA=='cblock'}
+	{assign var='nofunctions' value=true}
+	{assign var='spcmargin' value=true}
+{/if}
+
+{if $cos[0].CONTENTAREA=='cblock_copy'}
+	{assign var='copymode' value=true}
+	{assign var='nofunctions' value=true}
+	{assign var='spcmargin' value=true}
+{/if}
+
+{if $displaymode=='dialog'}
+	{assign var='editmode' value=false}
+	{assign var='hideactionbuttons' value=true}
+{else}
+	{assign var='editmode' value=true}
+{/if}
+
+{if !$pageInfo.RWRITE}
+	{assign var='editmode' value=false}
+	{assign var='hideactionbuttons' value=true}
+{/if}
+
+{if $cos[0].CONTENTAREA=='dummy'}
+	{assign var='hideactionbuttons' value=true}
+	{assign var='noeditmode' value=false}
+	{assign var='dummymode' value=true}
+{/if}
+
+{if $spcmargin==true}
+	<div style="height:10px;" id="dummy_contentblock">
+	</div>
+{/if}
+{section name=ci loop=$cos}
+<ul id="wid_{$win_no}_co_contentarea_{$cos[ci].CO_CONTENTAREA}" yg_id="{$cos[ci].CO_CONTENTAREA}-contentarea" yg_type="contentarea">
+
+	{if $copymode != true}
+		{if $dummymode}
+			<li id="wid_{$win_no}_cblock_{$cos[ci].CO_CONTENTAREA}_{$cos[ci].LINKID}" class="{if ($objecttype|substr:0:3 == "ext")}mk_extension{else}mk_cblock{/if}{if !$editmode} mk_nodel{/if}" yg_id="{$cos[ci].OBJECTID}-{if ($objecttype|substr:0:3 == "ext")}{$objecttype}{else}{if $cos[ci].EMBEDDED != 1}cblock{else}entrymask{/if}{/if}" yg_type="{if ($objecttype|substr:0:3 == "ext")}{$objecttype}{else}{if $cos[ci].EMBEDDED != 1}cblock{else}entrymask{/if}{/if}">
+		{else}
+			<li id="wid_{$win_no}_cblock_{$cos[ci].CO_CONTENTAREA}_{$cos[ci].LINKID}" class="{if ($objecttype|substr:0:3 == "ext")}mk_extension{else}mk_cblock{/if}{if !$editmode || $cos[ci].NODELETE} mk_nodel{/if}" yg_id="{$cos[ci].OBJECTID}-{if ($objecttype|substr:0:3 == "ext")}{$objecttype}{else}cblock{/if}" yg_type="{if ($objecttype|substr:0:3 == "ext")}{$objecttype}{else}cblock{/if}">
+		{/if}
+	{/if}
+
+		<!-- Inhaltsobjekt //-->
+		{if ($cos[ci].EMBEDDED != 1) && ($copymode != true)}
+		<div id="wid_{$win_no}_cblock_{$cos[ci].CO_CONTENTAREA}_{$cos[ci].LINKID}_selector{if $cos[0].CONTENTAREA=='cblock'}_dummy{/if}" {if !$dummymode}yg_selectable="true" ondblclick="$K.yg_openObjectDetails('{$cos[ci].OBJECTID}', 'cblock', '{$cos[ci].NAME}', 'cblock', '{if $cos[ci].HASCHANGED}changed {/if}');"{/if} class="cbcontainer mk_cblock{if $cblock_editmode}_edit{/if} mk_readonly"  onmouseover="$K.yg_showActions(this.down('.cbheader'));" onmouseenter="this.down('.actionbutton').style.display='block';" onmouseleave="this.down('.actionbutton').style.display='';">
+
+			<div class="emborder">
+				<div class="embordertb"><div class="embordertbc"><!-- --></div></div>
+				<div class="cbcontent {if !$cos[ci].ALLOWED && !$dummymode && ($cos[0].CONTENTAREA!='cblock')}cberror{/if}">
+					<div class="cbheader closed">
+						<a id="wid_{$win_no}_cblock_{$cos[ci].CO_CONTENTAREA}_{$cos[ci].LINKID}_cbheader{if $cos[0].CONTENTAREA=='cblock'}_dummy{/if}"  onfocus="this.blur();" class="{if $nofunctions==true}opened{else}closed{/if}" onclick="Event.stop(event);$K.yg_cblockSwap(this.up(3));" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;"><div id="wid_{$win_no}_cblock_{$cos[ci].CO_CONTENTAREA}_{$cos[ci].LINKID}_icn" class="icn iconcblock"></div><span id="wid_{$win_no}_cblock_{$cos[ci].CO_CONTENTAREA}_{$cos[ci].LINKID}_txt" class="mk_txt">{$cos[ci].NAME}{* (OBJECTID: {$cos[ci].OBJECTID} [LINKID: {$cos[ci].LINKID}])*}</span></a>
+
+						<!-- actions //-->
+						<div class="actions">
+							{if ($cos[0].CONTENTAREA == 'cblock') || ($cos[0].CONTENTAREA == 'cblock_copy') || ($displaymode=='dialog')}
+								<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+								<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+									<div class="singleselect">
+										<div class="actionborder"></div>
+										<a onclick="$K.yg_actionSubmit(this,null,event);" class="exec" onfocus="this.blur();"></a>
+										<div class="actionborder"></div>
+									</div>
+									<div class="multiselect">
+										<div class="actionborder"></div>
+										<a onclick="$K.yg_actionSubmit(this,null,event);" class="exec" onfocus="this.blur();"></a>
+										<div class="actionborder"></div>
+									</div>
+								</div>
+							{else}
+								{if (!$hideactionbuttons) && $pageInfo.RWRITE}
+									<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+									<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+										<div class="singleselect">
+											<div class="actionborder"></div>
+											<a onclick="$K.yg_fireAction($K.yg_deleteElement, this.up('li'), event);" class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_CONTENTBLOCK_DELETE}');" title="{$itext.TXT_CONTENTBLOCK_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+											{if !$cos[ci].ENTRYMASKS[wi].EXTENSIONINFO}
+												<a onclick="$K.yg_fireAction($K.yg_actionMoveUpCBlock,this, event);" class="up" onmouseover="$K.yg_showHelp('{$itext.TXT_CONTENTBLOCK_MOVEUP}');" title="{$itext.TXT_CONTENTBLOCK_MOVEUP}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+												<a onclick="$K.yg_fireAction($K.yg_actionMoveDownCBlock,this, event);" class="down" onmouseover="$K.yg_showHelp('{$itext.TXT_CONTENTBLOCK_MOVEDOWN}');" title="{$itext.TXT_CONTENTBLOCK_MOVEDOWN}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+											{/if}
+											<a onclick="$K.yg_openObjectDetails('{$cos[ci].OBJECTID}', 'cblock', '{$cos[ci].NAME}', 'cblock', '{if $cos[ci].HASCHANGED}changed {/if}');" class="edit" onmouseover="$K.yg_showHelp('{$itext.TXT_CONTENTBLOCK_EDIT}');" title="{$itext.TXT_CONTENTBLOCK_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+											<div class="actionborder"></div>
+										</div>
+										<div class="multiselect">
+											<div class="actionborder"></div>
+											<a onclick="$K.yg_fireAction($K.yg_deleteElement, this.up('li'), event);" class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_CONTENTBLOCK_DELETE}');" title="{$itext.TXT_CONTENTBLOCK_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+											<div class="actionborder"></div>
+										</div>
+									</div>
+								{/if}
+							{/if}
+						</div>
+						<!-- end actions //-->
+
+						<div style="clear:both;"></div>
+						<div class="cberrortext"><span>{$itext.TXT_CANNOT_SHOW_ENTRYMASK|default:'$TXT_CANNOT_SHOW_ENTRYMASK'}</span></div>
+					</div>
+					<div id="wid_{$win_no}_cblock_{$cos[ci].CO_CONTENTAREA}_{$cos[ci].LINKID}_cbcontentinner{if $cos[0].CONTENTAREA=='cblock'}_dummy{/if}" class="cbcontentinner" {if $nofunctions!=true}style="display:none;"{/if}>
+		{/if}
+
+					{section name=wi loop=$cos[ci].ENTRYMASKS}
+
+						{if $copymode == true}
+							<li id="wid_{$win_no}_emblock_{$cos[ci].CO_CONTENTAREA}_{$cos[ci].ENTRYMASKS[wi].LINKID}" class="{if $cos[ci].ENTRYMASKS[wi].EXTENSIONINFO}mk_extension{else}mk_cblock{/if}" yg_id="{$cos[ci].ENTRYMASKS[wi].LINKID}-emblock" yg_type="entrymask">
+						{/if}
+
+						<!-- start eingabemaske //-->
+						<div {if $cos[ci].ENTRYMASKS[wi].EXTENSIONINFO}yg_id="{$cos[ci].ENTRYMASKS[wi].EXTENSIONINFO.ID}-{$objecttype}" yg_type="{$objecttype}"{else}yg_id="{$cos[ci].LINKID}-cblock" yg_type="cblock"{/if} {if $cos[ci].EMBEDDED == 1}yg_entrymask="{$cos[ci].ENTRYMASKS[wi].ENTRYMASKID}-entrymask"{/if} yg_property="block" id="wid_{$win_no}_entrymask_{$cos[ci].ENTRYMASKS[wi].LINKID}_cblock_{$cos[ci].CO_CONTENTAREA}_{$cos[ci].LINKID}" {if !$dummymode}yg_selectable="true"{/if} class="emcontainer {if $cblock_editmode}mk_cblock_edit{else}mk_entrymask{/if} {if $cos[ci].ENTRYMASKS[wi].EXTENSIONINFO}mk_extension{else}mk_cblock{/if} emeditmode{if ($cos[ci].EMBEDDED != 1) || ($copymode == true) || ($dummymode == true) || ($editmode == false)} mk_readonly{/if}" {if ($cos[ci].EMBEDDED == 1) || ($copymode == true)}style="margin-top:0px;"{/if} onmouseover="$K.yg_showActions(this.down('.emheader'));" onmouseenter="if(this.down('.actionbutton')) this.down('.actionbutton').style.display='block';" onmouseleave="if(this.down('.actionbutton')) this.down('.actionbutton').style.display='';">
+							{if !($cos[ci].ENTRYMASKS[wi].EXTENSIONINFO)}<div id="wid_{$win_no}_cblock_{$cos[ci].CO_CONTENTAREA}_{$cos[ci].LINKID}_icn" class="iconentrymask icn" style="display:none;"></div>{/if}
+							{if $cos[ci].EMBEDDED == 1}
+								<div id="wid_{$win_no}_cblock_{$cos[ci].CO_CONTENTAREA}_{$cos[ci].LINKID}_txt" style="display:none;">{$cos[ci].ENTRYMASKS[wi].ENTRYMASKNAME} {if $copymode == true}(CTRL_LINKID: {$cos[ci].ENTRYMASKS[wi].LINKID}){/if}</div>
+							{/if}
+							{if $copymode == true}
+								<div id="wid_{$win_no}_emblock_{$cos[ci].CO_CONTENTAREA}_{$cos[ci].ENTRYMASKS[wi].LINKID}_txt" style="display:none;">{$cos[ci].ENTRYMASKS[wi].ENTRYMASKNAME}</div>
+							{/if}
+							<div class="emborder">
+								<div class="embordertb"><div class="embordertbc"><!-- --></div></div>
+								<div class="emcontent {if !$cos[ci].ENTRYMASKS[wi].ALLOWED && !$cos[ci].ENTRYMASKS[wi].EXTENSIONINFO && !$cblock_editmode && !$dummymode && ($cos[0].CONTENTAREA!='cblock_copy')}emerror{/if}">
+									<div class="emheader {if $cos[ci].ENTRYMASKS[wi].EXTENSIONINFO}closed{/if}">
+										{if $cos[ci].ENTRYMASKS[wi].EXTENSIONINFO}
+											<div class="icn iconextension" style="background-image: url('{$docabsolut}{$extensiondir}{$cos[ci].ENTRYMASKS[wi].EXTENSIONINFO.PATH}/img/icon.png');"></div>
+										{/if}
+										<a onfocus="this.blur();" class="{if $cos[ci].ENTRYMASKS[wi].EXTENSIONINFO}closed{else}opened{/if}{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS|@count == 0} notextendable{/if}" {if $cos[ci].ENTRYMASKS[wi].FORMFIELDS|@count > 0}onclick="Event.stop(event);$K.yg_maskSwap(this.up(3));"{/if} onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;"><span class="mk_txt">{$cos[ci].ENTRYMASKS[wi].ENTRYMASKNAME}</span></a>
+										{if $cos[ci].ENTRYMASKS[wi].EXTENSIONINFO}
+											<br /><div class="versioninfo">{$itext.TXT_VERSION}: {$cos[ci].ENTRYMASKS[wi].EXTENSIONINFO.VERSION}</div>
+										{/if}
+										{*
+										<div class="emviewcontrol">
+											<div class="funcshowtitles" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;" onclick="Event.stop(event);$K.yg_toggleElemTitles(this.up(2));">{$itext.TXT_FORMFIELD_TITLES_SHOW|default:'$TXT_FORMFIELD_TITLES_SHOW'}</div>
+											<div class="funchidetitles" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;" onclick="Event.stop(event);$K.yg_toggleElemTitles(this.up(2));">{$itext.TXT_FORMFIELD_TITLES_HIDE|default:'$TXT_FORMFIELD_TITLES_HIDE'}</div>
+											<div class="funcendeditmode" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;" onclick="Event.stop(event);$K.yg_closeEditMode(this.up('.emeditmode'));">{$itext.TXT_EDITMODE_CLOSE|default:'$TXT_EDITMODE_CLOSE'}</div>
+										</div>
+										*}
+										<!-- actions //-->
+										<div class="actions">
+											{if $dummymode || ($cos[0].CONTENTAREA == 'cblock_copy')}
+												<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+												<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+													<div class="singleselect">
+														<div class="actionborder"></div>
+														<a onclick="$K.yg_actionSubmit(this,null,event);" class="exec" onfocus="this.blur();"></a>
+														<div class="actionborder"></div>
+													</div>
+													<div class="multiselect">
+														<div class="actionborder"></div>
+														<a onclick="$K.yg_actionSubmit(this,null,event);" class="exec" onfocus="this.blur();"></a>
+														<div class="actionborder"></div>
+													</div>
+												</div>
+											{else}
+												{if $cos[ci].ENTRYMASKS[wi].EXTENSIONINFO && $editmode && $cos[ci].NODELETE}
+													{assign var='old_hideactionbuttons' value=$hideactionbuttons}
+													{assign var='hideactionbuttons' value=true}
+												{/if}
+												{if (!$hideactionbuttons) && $pageInfo.RWRITE}
+													<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+													<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+														<div class="singleselect">
+															<div class="actionborder"></div>
+															{if $copymode}
+																<a onclick="$K.yg_actionSubmit(this,'block');" class="exec" onfocus="this.blur();"></a>
+															{else}
+																{if $editmode && !$cos[ci].NODELETE}
+																	<a onmouseover="$K.yg_showHelp('{$itext.TXT_ENTRYMASK_DELETE}');" title="{$itext.TXT_ENTRYMASK_DELETE}" onmouseout="$K.yg_showHelp(false);" onclick="$K.yg_fireAction($K.yg_deleteElement, this.up('li'), event);" class="del" onfocus="this.blur();"></a>
+																{/if}
+																{if !$cos[ci].ENTRYMASKS[wi].EXTENSIONINFO}
+																	<a onmouseover="$K.yg_showHelp('{$itext.TXT_ENTRYMASK_MOVEUP}');" title="{$itext.TXT_ENTRYMASK_MOVEUP}" onmouseout="$K.yg_showHelp(false);" onclick="$K.yg_fireAction($K.yg_actionMoveUpCBlock,this, event);" class="up" onfocus="this.blur();"></a>
+																	<a onmouseover="$K.yg_showHelp('{$itext.TXT_ENTRYMASK_MOVEDOWN}');" title="{$itext.TXT_ENTRYMASK_MOVEDOWN}" onmouseout="$K.yg_showHelp(false);" onclick="$K.yg_fireAction($K.yg_actionMoveDownCBlock,this, event);" class="down" onfocus="this.blur();"></a>
+																{/if}
+															{/if}
+															<div class="actionborder"></div>
+														</div>
+														<div class="multiselect">
+															<div class="actionborder"></div>
+															<a onmouseover="$K.yg_showHelp('{$itext.TXT_ENTRYMASK_DELETE}');" title="{$itext.TXT_ENTRYMASK_DELETE}" onmouseout="$K.yg_showHelp(false);" onclick="$K.yg_fireAction($K.yg_deleteElement, this.up('li'), event);" class="del" onfocus="this.blur();"></a>
+															<div class="actionborder"></div>
+														</div>
+													</div>
+												{/if}
+												{if $cos[ci].ENTRYMASKS[wi].EXTENSIONINFO && $editmode && $cos[ci].NODELETE}
+													{assign var='hideactionbuttons' value=$old_hideactionbuttons}
+												{/if}
+											{/if}
+										</div>
+										<!-- end actions //-->
+
+										<div class="errortext"><span>{$itext.TXT_CANNOT_BE_SHOWN_IN_THIS_TEMPLATE|default:'$TXT_CANNOT_BE_SHOWN_IN_THIS_TEMPLATE'}</span></div>
+									</div>
+									<div class="emcontentouter" {if $cos[ci].ENTRYMASKS[wi].EXTENSIONINFO}style="display:none"{/if}>
+										<div id="wid_{$win_no}_cblock_{$cos[ci].CO_CONTENTAREA}_{$cos[ci].LINKID}_emcontentinner{if $cos[0].CONTENTAREA=='cblock'}_dummy{/if}" class="emcontentinner" >
+											<div class="maskelements">
+												{section name=wic loop=$cos[ci].ENTRYMASKS[wi].FORMFIELDS}
+
+													{if ($dummymode == true) || ($cos[ci].EMBEDDED != 1) || ($copymode == true) || (!$pageInfo.RWRITE) }
+														{assign var="readonly" value=true}
+													{else}
+														{assign var="readonly" value=false}
+													{/if}
+
+													{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD == 1}
+													<!-- Element Textzeile //-->
+													<div class="maskedit" yg_id="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield" yg_type="formfield" yg_property="value">
+														<span class="elemtitle label">{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].NAME}</span>
+														<table class="gridfixed" cellspacing="0" cellpadding="0">
+															<tr>
+																<td class="col{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].WIDTH}">
+																	<div class="textbox" yg_form="textbox">
+																		<input tabindex="1" onfocus="$K.yg_formFocus(this,'textbox');" onblur="$K.yg_formBlur(this,'textbox');" onchange="$K.yg_editControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}');$K.yg_setEdited(this);" type="text" value="{if $dummymode}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].PRESET|escape:'html':'UTF-8'}{else}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE|escape:'html':'UTF-8'}{/if}" {if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].MAXLENGTH!=''}maxlength="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].MAXLENGTH}"{/if} {if ($readonly)}readonly="readonly"{/if} />
+																	</div>
+																</td>
+																{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].WIDTH == 50}<td>&nbsp;</td>	{/if}
+																{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].WIDTH == 25}<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>{/if}
+																{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].WIDTH == 12}<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>{/if}
+															</tr>
+														</table>
+													</div>
+													<!-- Ende Textzeile //-->
+													{/if}
+
+													{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD == 13}
+													<!-- Überschrift & Trennlinie //-->
+													<div class="maskspacer subhead" style="{if $smarty.section.wic.first}margin-top:-10px;{/if}{if $smarty.section.wic.last}border-bottom:0px;{/if}">
+														<span class="label">{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].NAME}</span>
+													</div>
+													<!-- Ende Überschrift & Trennlinie //-->
+													{/if}
+
+													{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD == 14}
+													<!-- Trennlinie //-->
+													<div class="maskspacer"></div>
+													<!-- Trennlinie //-->
+													{/if}
+
+													{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD == 15}
+													<!-- Element Page //-->
+													<div class="maskedit hoverable mk_page"{if !$readonly} yg_accepts="page"{/if} id="wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}_dropcontainer" yg_id="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield" yg_type="formfield" yg_property="value" onmouseup="$K.yg_customSortableOnDrop( this.id );" onmouseover="$K.yg_currentHover=this;">
+														{if !$readonly}
+															<!-- actions //-->
+															<div class="actions">
+																<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+																<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+																	<div class="actionborder"></div>
+																	<a onclick="$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}');" class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_RESET}');" title="{$itext.TXT_FORMFIELD_RESET}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																	<a class="edit" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'PAGE_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} action: 'choose', opener_reference: this.up('.maskedit').identify(), yg_id: '{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield' {literal}}}{/literal});" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_EDIT}');" title="{$itext.TXT_FORMFIELD_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																	<div class="actionborder"></div>
+																</div>
+															</div>
+															<!-- end actions //-->
+														{/if}
+														<table class="gridflex editlink" cellspacing="0" cellpadding="0" {if !$readonly}onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: 'PAGE_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} action: 'choose', opener_reference: this.up('.maskedit').identify(), yg_id: '{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield' {literal}}}{/literal});"{/if}>
+															<tr>
+																<td class="col1">
+																	<span class="elemtitle label">{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].NAME}</span>
+																	<div class="selectionmarker">
+																		<div class="icn {if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].DISPLAYNAME==''}noicon{elseif $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ICON!=''}icon{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ICON}{else}iconpage{/if}"></div>
+																		<div class="title"><span class="titlecnt"><span class="title_txt" id="wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield">{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].DISPLAYNAME!=''}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].DISPLAYNAME}{else}{$itext.TXT_SELECTOR_PAGE}{/if}</span></span></div>
+																	</div>
+																</td>
+															</tr>
+														</table>
+													</div>
+							 						<!-- Ende Element Page //-->
+													{/if}
+
+													{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD == 10}
+													<!-- Element Passwort //-->
+													<div class="maskedit" yg_id="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield" yg_type="formfield" yg_property="value">
+														<span class="elemtitle label">{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].NAME}</span>
+														<table class="gridfixed" cellspacing="0" cellpadding="0">
+															<tr>
+																<td class="col{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].WIDTH}">
+																	<div class="textbox" yg_form="textbox">
+																		<input tabindex="1" onfocus="$K.yg_formFocus(this,'textbox');" onblur="$K.yg_formBlur(this,'textbox');" onchange="$K.yg_editControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}');$K.yg_setEdited(this);" type="{if $dummymode}text{else}password{/if}" value="{if $dummymode}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].PRESET}{else}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE}{/if}" {if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].MAXLENGTH!=''}maxlength="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].MAXLENGTH}"{/if} {if $readonly}readonly="readonly"{/if} />
+																	</div>
+																</td>
+																{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].WIDTH == 50}<td>&nbsp;</td>	{/if}
+																{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].WIDTH == 25}<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>{/if}
+																{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].WIDTH == 12}<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>{/if}
+															</tr>
+														</table>
+													</div>
+													<!-- Ende Passwort //-->
+													{/if}
+
+													{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD == 11}
+													<!-- Element Datum //-->
+													<div class="maskedit" yg_id="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield" yg_type="formfield" yg_property="value">
+														<span class="elemtitle label">{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].NAME}</span>
+														<table cellspacing="0" cellpadding="0" class="datetable">
+															<tr>
+																<td width="100">
+																	<div class="textbox" yg_form="textbox">
+																		<input tabindex="1" onchange="{literal}if($K.yg_checkField(this,{type:'date',format:'{/literal}{$userinfo.PROPS.DATEFORMAT}{literal}',nodatesinpast:false})){$K.yg_editControl(this,'{/literal}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}{literal}');$K.yg_setEdited(this);}{/literal}" type="text" value="{if $dummymode}{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].PRESET > 0}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].PRESET|TStoLocalTS|date_format_php:$itext.DATE_FORMAT}{/if}{else}{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE > 0}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE|date_format_php:$itext.DATE_FORMAT}{/if}{/if}" maxlength="10" id="wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-datefield" {if $readonly}readonly="readonly"{/if} />
+																	</div>
+																</td>
+																<td>
+																	<a{if !$readonly} yg_form="calendar"{/if} pastavailable="true" targetfield="wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-datefield" format="{$itext.JS_DATE_FORMAT}" onmouseover="$K.yg_showHelp('{$itext.TXT_PICKDATE}');" title="{$itext.TXT_PICKDATE}" onmouseout="$K.yg_showHelp(false);" class="btcalendarpicker"></a>
+																</td>
+															</tr>
+														</table>
+													</div>
+													<!-- Element Datum //-->
+													{/if}
+
+													{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD == 12}
+													<!-- Element Datum & Uhrzeit //-->
+													<div class="maskedit" yg_id="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield" yg_type="formfield" yg_property="value">
+														<span class="elemtitle label">{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].NAME}</span>
+
+														<table cellspacing="0" cellpadding="0" class="datetable">
+															<tr>
+																<td width="100">
+																	<div class="textbox" yg_form="textbox">
+																		<input tabindex="1" onchange="{literal}if($K.yg_checkField(this,{type:'date',format:'{/literal}{$userinfo.PROPS.DATEFORMAT}{literal}',nodatesinpast:false})){$K.yg_editControl(this,'{/literal}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}{literal}');$K.yg_setEdited(this);}{/literal}" type="text" value="{if $dummymode}{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].PRESET > 0}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].PRESET|TStoLocalTS|date_format_php:$itext.DATE_FORMAT}{/if}{else}{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE > 0}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE|date_format_php:$itext.DATE_FORMAT}{/if}{/if}" maxlength="10" id="wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-datetimefield" {if $readonly}readonly="readonly"{/if} />
+																	</div>
+																</td>
+																<td width="18">
+																	<a{if !$readonly} yg_form="calendar"{/if} pastavailable="true" targetfield="wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-datetimefield" format="{$itext.JS_DATE_FORMAT}" onmouseover="$K.yg_showHelp('{$itext.TXT_PICKDATE}');" title="{$itext.TXT_PICKDATE}" onmouseout="$K.yg_showHelp(false);" class="btcalendarpicker"></a>
+																</td>
+																<td width="100">
+																	<div class="textbox" yg_form="textbox">
+																		<input tabindex="1" onchange="{literal}if($K.yg_checkField(this,{type:'time',format:'{/literal}{$userinfo.PROPS.TIMEFORMAT}{literal}'})){$K.yg_editControl(this,'{/literal}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}{literal}');$K.yg_setEdited(this);}{/literal}" type="text" value="{if $dummymode}{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].PRESET > 0}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].PRESET|TStoLocalTS|date_format_php:$itext.TIME_FORMAT}{/if}{else}{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE > 0}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE|date_format_php:$itext.TIME_FORMAT}{/if}{/if}" maxlength="10" id="wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-datetimefield2" onclick="this.focus();Event.stop(event);" {if $readonly}readonly="readonly"{/if} />
+																	</div>
+																</td>
+																<td width=>
+																	<a onmouseover="$K.yg_showHelp('{$itext.TXT_PICKTIME}');" title="{$itext.TXT_PICKTIME}" onmouseout="$K.yg_showHelp(false);"{if !$readonly} onclick="$K.yg_pickTime($('wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-datetimefield2'),{$userinfo.PROPS.TIMEFORMAT});Event.stop(event);return false;"{/if} class="btcalendarpicker"></a>
+																</td>
+															</tr>
+														</table>
+
+													</div>
+													<!-- Element Datum & Uhrzeit //-->
+													{/if}
+
+													{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD == 2}
+													<!-- Element Textarea //-->
+													<div class="maskedit" yg_id="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield" yg_type="formfield" yg_property="value">
+														<span class="elemtitle label">{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].NAME}</span>
+														<table class="gridfixed" cellspacing="0" cellpadding="0">
+															<tr>
+																<td class="col{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].WIDTH}">
+																	<div class="textbox" yg_form="textbox">
+																		<textarea id="wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-textarea" tabindex="1" type="text" onchange="$K.yg_editControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}');$K.yg_setEdited(this);" maxlength="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].MAXLENGTH}" {if $readonly}readonly="readonly"{/if}>{if $dummymode}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].PRESET}{else}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE}{/if}</textarea>
+																	</div>
+																</td>
+																{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].WIDTH == 50}<td>&nbsp;</td>	{/if}
+																{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].WIDTH == 25}<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>{/if}
+																{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].WIDTH == 12}<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>{/if}
+															</tr>
+														</table>
+													</div>
+													<!-- Ende Textarea //-->
+													{/if}
+													{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD == 3}
+													<!-- Element WYSIWYG //-->
+													<div id="wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield" class="maskedit hoverable cb_wysiwyg" yg_id="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield" yg_type="formfield" yg_property="value" {if !$readonly}onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: 'CONTENTEDITOR', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal}formfield: 'wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield', buttonconfig: '{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].CONFIG}', ce_css: '{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].CUSTOM != $templatedoc}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].CUSTOM}{/if}' {literal} } } {/literal});" style="cursor:pointer;"{/if}>
+														{if !$readonly}
+															<!-- actions //-->
+															<div class="actions">
+																<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+																<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+																	<div class="actionborder"></div>
+																		<a class="edit" onmouseover="$K.yg_showHelp('{$itext.TXT_CONTENT_EDIT}');" title="{$itext.TXT_CONTENT_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: 'CONTENTEDITOR', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal}formfield: 'wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield' {literal} } } {/literal});"></a>
+																	<div class="actionborder"></div>
+																</div>
+															</div>
+															<!-- end actions //-->
+														{/if}
+														<table class="gridflex" cellspacing="0" cellpadding="0">
+															<tr>
+																<td class="col1">
+																	<span class="elemtitle label">{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].NAME}</span>
+																	<div class="textbox elemcontent mk_richtextcnt">{if $dummymode}{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].PRESET}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].PRESET}{/if}{else}{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE}{/if}{/if}</div>
+																	<div style="clear:both;"></div>
+																	<div class="selectionmarker">{$itext.TXT_CONTENT_EDIT|default:'$TXT_CONTENT_EDIT'}</div>
+																</td>
+															</tr>
+														</table>
+													</div>
+													<!-- Ende Element WYSIWYG //-->
+													{/if}
+													{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD == 4}
+													<div class="maskedit" yg_id="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield" yg_type="formfield" yg_property="value">
+														<table class="gridfixed" cellspacing="0" cellpadding="0">
+															<tr>
+																<td class="col1">
+																	<span class="elemtitle label">{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].NAME}</span>
+																	<div class="checkbox" yg_form="checkbox" tabindex="1" {if $readonly}disabled="disabled"{/if}><div class="checkboxicon{if $dummymode}{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].PRESET|trim=='1'}sel{/if}{else}{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE|trim=='1'}sel{/if}{/if}"><input onchange="$K.yg_editControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}');" type="hidden" name="checkbox1" value="{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE|trim=='1'}1{else}0{/if}"><span class="label">aktiv</span></div></div>
+																</td>
+															</tr>
+														</table>
+													</div>
+													<!-- Ende Element Checkbox //-->
+													{/if}
+													{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD == 5}
+													<!-- Element Link //-->
+													<div class="maskedit hoverable mk_link"{if !$readonly} yg_accepts="page,file"{/if} id="wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}_dropcontainer" yg_id="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield" yg_type="formfield" yg_property="link" onmouseup="$K.yg_customSortableOnDrop( this.id );" onmouseover="$K.yg_currentHover=this;" param01="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE01}" param02="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE02}" param03="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE03}" param04="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE04}">
+														{if !$readonly}
+															<!-- actions //-->
+															<div class="actions">
+																<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+																<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+																	<div class="actionborder"></div>
+																	<a class="del" onclick="$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}');" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_RESET}');" title="{$itext.TXT_FORMFIELD_RESET}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																	<a class="edit" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_EDIT}');" title="{$itext.TXT_FORMFIELD_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="$K.yg_openLinkChooserWindow( this, '{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield', '{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}' );"></a>
+																	<div class="actionborder"></div>
+																</div>
+															</div>
+															<!-- end actions //-->
+														{/if}
+														<table class="gridflex editlink" cellspacing="0" cellpadding="0" {if !$readonly}onclick="Event.stop(event);$K.yg_openLinkChooserWindow( this, '{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield', '{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}' );"{/if}>
+															<tr>
+																<td class="col1">
+																	<span class="elemtitle label">{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].NAME}</span>
+																	<div class="selectionmarker">
+																		<div class="icn {if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE01|trim=='' && $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE02|trim=='' && $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].DISPLAYNAME|trim==''}noicon{elseif $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].IS_EMAIL}iconemail{elseif $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].IS_INTERNAL}iconpage{else}iconlink{/if}" style="{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].IS_FILE == true}display:none;{/if}"></div>
+																		<div class="title" {if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].IS_FILE}onmouseover="$K.yg_hoverFileHint('{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FILE_ID}', event);"{/if}><span class="titlecnt"><span class="title_txt" id="wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield">{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].IS_FILE}<span class="filetype {$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].COLOR}">{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].TYPECODE}</span>{/if}{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].DISPLAYNAME!=''}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].DISPLAYNAME}{elseif $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE01|trim!=''}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE01|replace:'mailto:':''}{else}{$itext.TXT_SELECTOR_LINK}{/if}
+																		</span></span></div>
+																	</div>
+																</td>
+															</tr>
+														</table>
+													</div>
+							 						<!-- Ende Element Link //-->
+													{/if}
+													{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD == 6}
+													<!-- Element Medium //-->
+													<div class="maskedit hoverable mk_file"{if !$readonly} yg_accepts="file"{/if} id="wid_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}_file" yg_id="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield" yg_type="formfield" yg_property="file" onmouseup="$K.yg_customSortableOnDrop( this.id );" onmouseover="$K.yg_currentHover=this;">
+														{if !$readonly}
+															<!-- actions //-->
+															<div class="actions">
+																<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+																<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+																	<div class="actionborder"></div>
+																	<a class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_RESET}');" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}');" title="{$itext.TXT_FORMFIELD_RESET}');" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}"></a>
+																	<a class="edit" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_EDIT}');" title="{$itext.TXT_FORMFIELD_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'FILE_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} type: 'formfield', property: 'file', opener_reference: 'wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield' {literal} } } {/literal});"></a>
+																	<div class="actionborder"></div>
+																</div>
+															</div>
+															<!-- end actions //-->
+														{/if}
+														<table class="gridflex editlink" cellspacing="0" cellpadding="0" {if !$readonly}onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: 'FILE_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} type: 'formfield', property: 'file', opener_reference: 'wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield' {literal} } } {/literal});"{/if}>
+															<tr>
+																<td class="col1">
+																	<span class="elemtitle label">{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].NAME}</span>
+																	<div style="display:none;"></div>
+																	<div class="selectionmarker">
+																		<div class="title" onmouseover="$K.yg_hoverFileHint('{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FILE_ID}', event);"><span class="titlecnt"><span class="title_txt" id="wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield">{if ($cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].TYPECODE != "")}<span class="filetype {$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].COLOR|default:'black'}">{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].TYPECODE}</span>{/if}{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].DISPLAYNAME!=''}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].DISPLAYNAME}{else}{$itext.TXT_SELECTOR_FILE}{/if}</span></span></div>
+																	</div>
+																</td>
+															</tr>
+														</table>
+													</div>
+							 						<!-- Ende Element Medium //-->
+													{/if}
+													{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD == 16}
+													<!-- Element Filefolder //-->
+													<div class="maskedit hoverable mk_file"{if !$readonly} yg_accepts="file"{/if} id="wid_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}_filefolder" yg_id="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield" yg_type="formfield" yg_property="filefolder" onmouseup="$K.yg_customSortableOnDrop( this.id );" onmouseover="$K.yg_currentHover=this;">
+														{if !$readonly}
+															<!-- actions //-->
+															<div class="actions">
+																<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+																<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+																	<div class="actionborder"></div>
+																	<a class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_RESET}');" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}');" title="{$itext.TXT_FORMFIELD_RESET}');" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}"></a>
+																	<a class="edit" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_EDIT}');" title="{$itext.TXT_FORMFIELD_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'FILEFOLDER_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} type: 'formfield', property: 'filefolder', opener_reference: 'wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield' {literal} } } {/literal});"></a>
+																	<div class="actionborder"></div>
+																</div>
+															</div>
+															<!-- end actions //-->
+														{/if}
+														<table class="gridflex editlink" cellspacing="0" cellpadding="0" {if !$readonly}onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: 'FILEFOLDER_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} type: 'formfield', property: 'filefolder', opener_reference: 'wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield' {literal} } } {/literal});"{/if}>
+															<tr>
+																<td class="col1">
+																	<span class="elemtitle label">{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].NAME}</span>
+																	<div class="selectionmarker">
+																		<div class="icn {if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].DISPLAYNAME==''}noicon{else}iconfolder{/if}"></div>
+																		<div class="title"><span class="titlecnt"><span class="title_txt" id="wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield">{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].DISPLAYNAME!=''}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].DISPLAYNAME}{else}{$itext.TXT_SELECTOR_FOLDER}{/if}</span></span></div>
+																	</div>
+																</td>
+															</tr>
+														</table>
+													</div>
+							 						<!-- Ende Element Medium //-->
+													{/if}
+
+													{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD == 7}
+													<div class="maskedit hoverable mk_cblock"{if !$readonly} yg_accepts="cblock"{/if} id="wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}_dropcontainer" yg_id="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield" yg_type="formfield" yg_property="value" onmouseup="$K.yg_customSortableOnDrop( this.id );" onmouseover="$K.yg_currentHover=this;">
+														{if !$readonly}
+															<!-- actions //-->
+															<div class="actions">
+																<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+																<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+																	<div class="actionborder"></div>
+																	<a onclick="$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}');" class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_RESET}');" title="{$itext.TXT_FORMFIELD_RESET}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																	<a class="edit" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'CBLOCK_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} opener_reference: this.up('.maskedit').identify(), yg_id: '{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield' {literal}}}{/literal});" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_EDIT}');" title="{$itext.TXT_FORMFIELD_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																	<div class="actionborder"></div>
+																</div>
+															</div>
+															<!-- end actions //-->
+														{/if}
+														<table class="gridflex editlink" cellspacing="0" cellpadding="0" {if !$readonly}onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: 'CBLOCK_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} opener_reference: this.up('.maskedit').identify(), yg_id: '{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield' {literal}}}{/literal});"{/if}>
+															<tr>
+																<td class="col1">
+																	<span class="elemtitle label">{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].NAME}</span>
+																	<div class="selectionmarker">
+																		<div class="icn {if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].DISPLAYNAME==''}noicon{else}iconcblock{/if}"></div>
+																		<div class="title"><span class="titlecnt"><span class="title_txt" id="wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield">{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].DISPLAYNAME!=''}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].DISPLAYNAME}{else}{$itext.TXT_SELECTOR_CBLOCK}{/if}</span></span></div>
+																	</div>
+																</td>
+															</tr>
+														</table>
+													</div>
+							 						<!-- Ende Element Co //-->
+													{/if}
+													{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD == 8}
+													<div class="maskedit hoverable mk_tag"{if !$readonly} yg_accepts="tag"{/if} id="wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}_dropcontainer" yg_id="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield" yg_type="formfield" onmouseup="$K.yg_customSortableOnDrop( this.id );" yg_property="value" onmouseover="$K.yg_currentHover=this;">
+														{if !$readonly}
+															<!-- actions //-->
+															<div class="actions">
+																<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+																<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+																	<div class="actionborder"></div>
+																	<a class="del" onclick="$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}');" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_RESET}');" title="{$itext.TXT_FORMFIELD_RESET}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																	<a class="edit" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'TAG_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} action: 'choose', element: this.up('.maskedit').down('.title_txt'), formfield: '{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}', opener_reference: this.up('.ywindow').id {literal} } } {/literal});" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_EDIT}');" title="{$itext.TXT_FORMFIELD_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																	<div class="actionborder"></div>
+																</div>
+															</div>
+															<!-- end actions //-->
+														{/if}
+														<table class="gridflex editlink" cellspacing="0" cellpadding="0" {if !$readonly}onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: 'TAG_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} action: 'choose', element: this.up('.maskedit').down('.title_txt'), formfield: '{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}', opener_reference: this.up('.ywindow').id {literal} } } {/literal});"{/if}>
+															<tr>
+																<td class="col1">
+																	<span class="elemtitle label">{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].NAME}</span>
+																	<div class="selectionmarker">
+																		<div class="icn {if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].DISPLAYNAME==''}noicon{else}icontag{/if}"></div>
+																		<div class="title"><span class="titlecnt"><span class="title_txt" id="wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield">{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].DISPLAYNAME!=''}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].DISPLAYNAME}{else}{$itext.TXT_SELECTOR_TAG}{/if}</span></span></div>
+																	</div>
+																</td>
+															</tr>
+														</table>
+													</div>
+							 						<!-- Ende Element Tag //-->
+													{/if}
+													{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD == 9}
+													<div class="maskedit" yg_id="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield" yg_type="formfield" yg_property="value">
+														<span class="elemtitle label">{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].NAME}</span>
+														<table class="gridfixed" cellspacing="0" cellpadding="0">
+															<tr>
+																<td class="col{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].WIDTH}">
+																	<div id="wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-dd_values" yg_form="dropdown" class="dropdownbox" {if $readonly}readonly="readonly"{/if}>
+																		<div class="dropdown">
+																			<div class="dropdowninner">
+																				<input id="wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-dd_value" name="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-dd_value" tabindex="1" yg_seq="" yg_onchange="$K.yg_editControl($('wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-dd_value'),'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}');$K.yg_setEdited($('wid_{$win_no}_ctrl_{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-dd_value'));" yg_previous="" type="text" readonly="readonly" value="{if $dummymode}{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].PRESET}{/if}" />
+																			</div>
+																		</div>
+																		<div class="dropdownlistcontainer">
+																			<div class="dropdownlist">
+																				{section name=lv loop=$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].LIST_VALUES}
+																					<div {if ($cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE|trim == $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].LIST_VALUES[lv].VALUE) || (($cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].VALUE|trim == '')&&($smarty.section.lv.iteration==1))}class="selected"{/if} value="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].LIST_VALUES[lv].VALUE}">{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].LIST_VALUES[lv].VALUE}</div>
+																				{/section}
+																			</div>
+																			<div class="mk_scrollbars"></div>
+																		</div>
+																		<input name="{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-dd_values" type="hidden" />
+																	</div>
+																</td>
+																{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].WIDTH == 50}<td>&nbsp;</td>	{/if}
+																{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].WIDTH == 25}<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>{/if}
+																{if $cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].WIDTH == 12}<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>{/if}
+															</tr>
+														</table>
+													</div>
+													<!-- Ende Liste //-->
+													{/if}
+						 						{/section}
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="embordertb"><div class="embordertbc"><!-- --></div></div>
+							</div>
+						</div>
+
+						{if $copymode==true}
+							<div style="height:10px;"></div>
+						{/if}
+
+						<!-- ende eingabemaske  //-->
+
+						{if $copymode == true}
+							</li>
+						{/if}
+
+					{/section}
+
+
+		{if ($cos[ci].EMBEDDED != 1) && ($copymode != true)}
+					</div>
+
+				</div>
+				<div class="embordertb"><div class="embordertbc"><!-- --></div></div>
+				<div style="clear:both;"></div>
+			</div>
+		</div>
+		<!-- Inhaltsobjekt //-->
+		{/if}
+
+	{if $copymode != true}
+		</li>
+	{/if}
+</ul>
+{/section}
+
+{if $spcmargin==true}
+	<div style="height:10px;" id="dummy_contentblock">
+	</div>
+{/if}
+
+{if $render_no_selection==true}
+	<div class="noobject mk_verticalcenter"><span class="bracketleft"></span>{$itext.TXT_NO_OBJECT_CHOSEN|default:'$TXT_NO_OBJECT_CHOSEN'}<span class="bracketright"></span></div>
+{/if}
+
+{if $nofunctions==true}
+	<script>
+		$K.yg_createSortableContentareas('wid_{$win_no}', '{$cos[ci].CO_CONTENTAREA}');
+	</script>
+{/if}

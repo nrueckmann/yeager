@@ -1,0 +1,48 @@
+<form name="wid_{$win_no}_LINK_SELECT_ANCHOR" onsubmit="return false;">
+	<input type="hidden" name="href">
+
+	<div class="dialogcontent">
+		<div class="cntblock">
+			<table class="gridfixed" cellspacing="0" cellpadding="0">
+				<tr>
+					<td colspan="4" class="col1">
+						<span class="label">{$itext.TXT_ANCHOR|default:'$TXT_ANCHOR'}</span>
+						<div id="wid_{$win_no}_dd_anchors" yg_form="dropdown" class="dropdownbox">
+							<div class="dropdown">
+								<div class="dropdowninner">
+									<input name="dd_anchor" tabindex="1" yg_seq="" yg_onchange="" yg_previous="" type="text"  value="">
+								</div>
+							</div>
+							<div class="dropdownlistcontainer" id="wid_{$win_no}_dd_anchors_ddlist">
+								<div class="dropdownlist">
+									<div value="" class="selected">{$itext.TXT_NOT_SET|default:'$TXT_NOT_SET'}</div>
+								</div>
+								<div class="mk_scrollbars"></div>
+							</div>
+							<input name="dd_anchors" type="hidden" />
+						</div>
+					</td>
+				</tr>
+			</table>		
+		</div>
+	</div>
+</form>
+
+<!-- bottom //-->
+<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_midbottom">
+			<table class="buttontable" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="rightbutton">
+						<div class="button" tabindex="1"><a id="wid_{$win_no}_okbutton" onclick="$K.windows['wid_{$win_no}'].submit();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CONFIRM|default:'$TXT_CONFIRM'}</nobr></div></a></div>
+						<div class="button cancel" tabindex="1"><a id="wid_{$win_no}_cancelbutton" onclick="$K.windows['wid_{$win_no}'].remove();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</nobr></div></a></div>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td class="ywindow_rightbt"></td>
+	</tr>
+</table>
+<!-- end bottom //-->

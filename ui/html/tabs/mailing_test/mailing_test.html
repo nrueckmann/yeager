@@ -1,0 +1,35 @@
+<div class="dialogcontent">
+	<div class="cntblock">
+		<table class="gridfixed" cellspacing="0" cellpadding="0" style="width: 343px;"> 
+			<tr>
+				<td >
+					<span class="label">{$itext.TXT_RECIPIENT_EMAIL|default:'$TXT_RECIPIENT_EMAIL'}</span>						
+					<div class="textbox" yg_form="textbox">
+						<input tabindex="1" type="text" id="wid_{$win_no}_send_to" onclick="Event.stop(event);" value="" />
+					</div>		
+				</td>
+
+			</tr>
+		</table>
+	</div>
+</div>
+
+
+<!-- bottom //-->
+<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_midbottom">
+			<table class="buttontable" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="rightbutton">
+						<div class="button" tabindex="1"><a id="wid_{$win_no}_okbutton" onclick="$K.windows['wid_{$win_no}'].submit();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_SEND|default:'$TXT_SEND'}</nobr></div></a></div>
+						<div class="button cancel" tabindex="1"><a id="wid_{$win_no}_cancelbutton" onclick="$K.windows['wid_{$win_no}'].remove();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</nobr></div></a></div>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td class="ywindow_rightbt"></td>
+	</tr>
+</table>
+<!-- end bottom //-->

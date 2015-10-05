@@ -1,0 +1,111 @@
+<!-- LVL 0 -->
+<div class="perm_line_container">
+	{section name='tr' loop=$objects}
+	
+		{if $objects[tr].ID != $embeddedCblockFolder}
+	
+			{if $smarty.section.tr.first}
+				{assign var='base_level' value=$objects[tr].LEVEL}
+			{/if}
+		
+			{assign var='curr_level' value=$objects[tr].LEVEL}
+			{assign var='next_level' value=$objects[$smarty.section.tr.index_next].LEVEL}
+			{if !$curr_level}{assign var='curr_level' value=1}{/if}
+			{if !$next_level}{assign var='next_level' value=0}{/if}
+		
+			<div class="perm_line" yg_id="{$objects[tr].ID}-{$site}">
+				<div class="perm_tree_lines">
+					{section name='ln' loop=$leading_lines}
+						{if $leading_lines[ln] == '1'}
+							{assign var='linestyle' value='line'}
+						{else}
+							{assign var='linestyle' value='blank'}
+						{/if}
+						<div class="perm_tree_{$linestyle}" currentlevel="{$curr_level}"></div>
+					{/section}
+					{if $objects[tr].HASSUBNODES}
+						{if $objects[tr].LAST}
+							{assign var='linestyle' value='plusnb'}
+						{else}
+							{assign var='linestyle' value='plusb'}
+						{/if}
+					{else}
+						{if $objects[tr].LAST}
+							{assign var='linestyle' value='lineang'}
+						{else}
+							{assign var='linestyle' value='lineints'}
+						{/if}
+					{/if}
+					<div class="perm_tree_{$linestyle}" currentlevel="{$curr_level}"></div>
+				</div>
+				{if $objecttype=='files'}
+					{if $objects[tr].FOLDER}
+						<div class="perm_tree_icon_folder"></div>
+					{else}
+						<div class="perm_tree_icon_file">
+							<span class="filetype {$objects[tr].TYPEINFO.COLOR}">{$objects[tr].TYPEINFO.CODE}</span>
+						</div>
+					{/if}
+				{else}
+					{if $objecttype=='pages'}
+						<div class="perm_tree_icon{$objects[tr].ICON}"></div>
+					{elseif $objecttype!='system'}
+						<div class="perm_tree_icon{if $objects[tr].FOLDER}_folder{else}{if $objecttype=='tags'}_tag{/if}{if $objecttype=='cblocks'}_cblock{/if}{if $objecttype=='usergroups'}_usergroup{/if}{/if}"></div>
+					{/if}
+				{/if}
+				{if $objecttype=='pages'}
+					<div class="perm_title" yg_property="name" yg_type="page" yg_id="{$objects[tr].ID}-{$objects[tr].SITEID}" onclick="$K.yg_openObjectDetails('{$objects[tr].ID}-{$objects[tr].SITEID}', 'page', '{$objects[tr].NAME}', '{$objects[tr].ICON}', '{$objects[tr].STYLE}');">{$objects[tr].NAME}</div>
+				{else}
+					<div class="perm_title">{$objects[tr].NAME}</div>
+				{/if}
+				{strip}
+					<div class="perm_chkboxes">
+						{if $objecttype != 'system'}
+							{if $objecttype != 'usergroups'}
+								{if ($objecttype == 'pages') || ($objecttype == 'cblocks') || ($objecttype == 'mailings')}
+									<div class="mk_rstage perm_{if $objects[tr].RSTAGE}ok{else}nok{/if}"><input type="hidden" name="perm_rstage_{$objects[tr].ID}_{$site}" value="" /></div>
+								{/if}
+								{if $objecttype != 'mailings'}
+									<div class="mk_rsub perm_{if $objects[tr].RSUB}ok{else}nok{/if}"><input type="hidden" name="perm_rsub_{$objects[tr].ID}_{$site}" value="" /></div>
+								{/if}
+							{/if}
+							<div class="mk_rdelete perm_{if $objects[tr].RDELETE}ok{else}nok{/if}"><input type="hidden" name="perm_rdelete_{$objects[tr].ID}_{$site}" value="" /></div>
+							<div class="mk_rwrite perm_{if $objects[tr].RWRITE}ok{else}nok{/if}"><input type="hidden" name="perm_rwrite_{$objects[tr].ID}_{$site}" value="" /></div>
+							{if ($objecttype == 'pages') || ($objecttype == 'cblocks') || ($objecttype == 'files')}
+								<div class="mk_rmoderate perm_{if $objects[tr].RMODERATE}ok{else}nok{/if}"><input type="hidden" name="perm_rmoderate_{$objects[tr].ID}_{$site}" value="" /></div>
+								<div class="mk_rcomment perm_{if $objects[tr].RCOMMENT}ok{else}nok{/if}"><input type="hidden" name="perm_rcomment_{$objects[tr].ID}_{$site}" value="" /></div>
+							{/if}
+							{if $objecttype == 'mailings'}
+								<div class="mk_rsend perm_{if $objects[tr].RSEND}ok{else}nok{/if}"><input type="hidden" name="perm_rsend_{$objects[tr].ID}_{$site}" value="" /></div>
+							{/if}
+						{/if}
+						<div class="mk_rread perm_{if $objects[tr].RREAD}ok{else}nok{/if} {if $isRORole}mk_readonly opacity_50{/if}"><input type="hidden" name="perm_rread_{$objects[tr].ID}_{$site}" value="" /></div>
+						<div class="perm_select_all"><a href="javascript:void(0);" onclick="$K.yg_checkAllPermissions(this);">{$itext.TXT_ALL|default:'$TXT_ALL'}</a></div>
+					</div>
+				{/strip}
+			</div>
+			
+			{if $next_level < $curr_level}
+				{math assign='close_cnt' equation='x - y' x=$curr_level y=$next_level}
+				{section name='cls' loop=$close_cnt}
+					</div>
+				{/section}
+				<!-- END LVL {$curr_level} -->
+			{/if}
+			
+			{if $next_level > $curr_level}
+				{assign_c lvar=$parent_nodes.$next_level value=$objects[tr].CHILDREN}
+				<!-- LVL {$curr_level} -->
+				<div class="perm_line_container" {if $curr_level > 1}style="display:none;"{/if}>
+			{/if}
+			
+			{if $parent_nodes.$curr_level}
+				{math assign='rest' equation='x - 1' x=$parent_nodes.$curr_level}
+				{assign_c lvar=$parent_nodes.$curr_level value=$rest}
+			{/if}
+
+		{/if}
+			
+{/section}
+</div>
+<!-- END LVL 0 -->

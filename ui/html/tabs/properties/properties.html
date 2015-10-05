@@ -1,0 +1,902 @@
+<div class="panelcontent {if !$objectpermissions.RWRITE}mk_readonly{/if}">
+	<div class="mk_contentgroup">
+
+		{if $objecttype == 'extension'}
+			<!-- EXTENSIONINFO //-->
+			<div class="ipanel">
+				<div class="panelcontent">
+					<div class="cntblockcontainernohover">
+						<div class="cntblock">
+							<table class="gridfixed" cellspacing="0" cellpadding="0">
+								<tr>
+									<td colspan="8" class="col1 traceline">
+										<div class="ext_version">Version: {$objectInfo.VERSION}</div>
+										<div class="ext_description">{$objectInfo.DESCRIPTION}</div>
+										<div class="ext_developer"><a href="{$objectInfo.URL}" target="_blank">{$objectInfo.DEVELOPERNAME}</a></div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- EXTENSIONINFO END //-->
+		{else}
+			{if !$no_traceline}
+				<!-- TRACELINE //-->
+				<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+					<div class="cntblock">
+						<table class="gridfixed" cellspacing="0" cellpadding="0">
+							<tr>
+								<td colspan="8" class="col1 traceline">
+									{if ($objecttype == "page")}<div class="sitename">{$sitename}</div>{/if}
+									{assign var='padding' value=0}
+									{section name='parents' loop=$objectparents step=-1}
+										<div class="modified" style="padding-left: {$padding}px;">
+											{if $smarty.section.parents.iteration > 1}
+												<div class="treedots"></div>
+											{/if}
+											{assign var='a_opened' value=false}
+											{if ($objecttype == "filefolder") || ($objecttype == "file") || ($objectparents[parents][0].FOLDER==1)}
+											{elseif $objecttype == "page"}
+												{assign var='a_opened' value=true}
+												<a onclick="$K.yg_openObjectDetails('{$objectparents[parents][0].OBJECTID}-{$site}', '{$objecttype}', '{$objectparents[parents][0].NAME}', '{$objectparents[parents][0].ICON}', '{$objectparents[parents][0].STYLE}');">
+  											{elseif $objecttype == "cblock"}
+  												{assign var='a_opened' value=true}
+  												<a onclick="$K.yg_openObjectDetails('{$objectparents[parents][0].OBJECTID}', '{$objecttype}', '{$objectparents[parents][0].NAME}', '{$objectparents[parents][0].ICON}', '{$objectparents[parents][0].STYLE}');">
+  											{elseif $objecttype == "tag"}
+  												{assign var='a_opened' value=true}
+  												{if ($padding != 0)}<a onclick="$K.yg_openObjectDetails('{$objectparents[parents][0].OBJECTID}', '{$objecttype}', '{$objectparents[parents][0].NAME}', 'tag', '');">{/if}
+											{/if}
+												<div class="icn icon{if ($objecttype == "filefolder") || ($objecttype == "file") || ($objectInfo.FOLDER==1) || ($objecttype == "cblock")}folderopen{else}{if $objecttype == "page"}{$objectparents[parents][0].ICON}{else}{$objecttype}{/if}{/if}"></div>
+												<span yg_property="name" yg_type="{$objecttype}" yg_id="{$objectparents[parents][0].ID}-{$site}" class="{if $objecttype == "page"}{$objectparents[parents][0].STYLE}{/if}">
+													{$objectparents[parents][0].NAME}
+												</span>
+											{if $a_opened && (($objecttype != "tag") && ($padding != 0))}
+												</a>
+											{/if}
+										</div>
+										{if $smarty.section.parents.iteration==1}
+											{assign var='padding' value=9}
+										{else}
+											{assign var='padding' value=$padding+15}
+										{/if}
+									{/section}
+									<div class="modified" style="padding-left:{$padding}px;">
+										{if $smarty.section.parents.loop+1 > 1}
+											<div class="treedots"></div>
+										{/if}
+										{assign var='a_opened' value=false}
+										{if ($objecttype == "file") && (!$objectInfo.FOLDER)}
+											{assign var='a_opened' value=true}
+											<a onclick="$K.yg_openObjectDetails('{$objectInfo.OBJECTID}', '{$objecttype}', '{$objectInfo.NAME}', {literal}{{/literal}color:'{$objectInfo.FILECOLOR}',typecode:'{$objectInfo.FILEABBREVIATION|strtoupper}'{literal}}{/literal}, '{$objectInfo.STYLE}');">
+										{elseif $objecttype == "page"}
+											{assign var='a_opened' value=true}
+											<a onclick="$K.yg_openObjectDetails('{$object}-{$site}', '{$objecttype}', '{$objectInfo.NAME}', '{$objectInfo.ICON}', '{$objectInfo.STYLE}');">
+ 										{elseif ($objecttype == "cblock") && (!$objectInfo.FOLDER)}
+ 											{assign var='a_opened' value=true}
+ 											<a onclick="$K.yg_openObjectDetails('{$objectInfo.OBJECTID}', '{$objecttype}', '{$objectInfo.NAME}', '{$objectInfo.ICON}', '{$objectInfo.STYLE}');">
+										{elseif $objecttype == "tag"}
+											{assign var='a_opened' value=true}
+											<a onclick="$K.yg_openObjectDetails('{$objectInfo.OBJECTID}', '{$objecttype}', '{$objectInfo.NAME}', 'tag', '');">
+ 										{else}
+										{/if}
+										{if ($objecttype=="file")}
+											<span class="filetype {$objectInfo.COLOR}" yg_type="file" yg_id="{$objectInfo.OBJECTID}-file" yg_property="type">{$objectInfo.IDENTIFIER|strtoupper}</span>
+										{else}
+											<div class="icon{if ($objecttype == "filefolder") || ($objectInfo.FOLDER==1)}folder{else}{if $objecttype == "page"}{$objectInfo.ICON}{else}{$objecttype}{/if}{/if}"></div>
+										{/if}
+										<span class="{if $objectInfo.STYLE}{$objectInfo.STYLE}{/if}" yg_property="name" yg_type="{$objecttype}" yg_id="{$object}-{$site}">{$objectInfo.NAME}</span>
+										{if $a_opened}
+											</a>
+										{/if}
+										{if ($objecttype != "file")}</div>{/if}
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<!-- TRACELINE END //-->
+			{/if}
+		{/if}
+
+		{if $objecttype == 'user'}
+			<div class="ipanel" yg_panel="true">
+				<div class="panelheader headline1">
+					<a class="opened">{$itext.TXT_PROFILE|default:'$TXT_PROFILE'}</a>
+				</div>
+				<div class="panelcontent">
+						<div class="cntblockcontainernohover">
+							<div class="cntblock">
+								<table class="gridfixed" cellspacing="0" cellpadding="0">
+									<tr>
+										<td class="col4" colspan="2">
+											<!--  LOGIN / EMAIL -->
+											<span class="label">{$itext.TXT_LOGIN_EMAIL|default:'$TXT_LOGIN_EMAIL'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input tabindex="1" {if !$objectpermissions.RWRITE}disabled="disabled"{/if} {if $autosave}yg_onchange="setObjectProperty"{/if} yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="email" onchange="$K.yg_setEdited(this);" type="text" name="objectname" value="{$email|escape:'html':'UTF-8'}" />
+											</div>
+										</td>
+										<td class="col4" colspan="2">
+											<!--  PASSWORD -->
+											<span class="label">{$itext.TXT_PASSWORD|default:'$TXT_PASSWORD'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input tabindex="1" {if !$objectpermissions.RWRITE}disabled="disabled"{/if} {if $autosave}yg_onchange="setObjectProperty"{/if} yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="password" onchange="$K.yg_setEdited(this);" type="password" name="objectname" value="*******" />
+											</div>
+											<div class="password-reset-container">
+												<div class="password-reset-sent" style="display:none;">{$itext.TXT_PASSWORD_RECOVERY_SENT|default:'TXT_PASSWORD_RECOVERY_SENT'}</div>
+												<a class="textlink" onclick="$K.yg_generateNewPassword('{$email|escape:'html':'UTF-8'}', this);">
+													{$itext.TXT_PASSWORD_RECOVERY|default:'$TXT_PASSWORD_RECOVERY'}
+												</a>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td class="col4" colspan="2">
+											<!-- COMPANY -->
+											<span class="label">{$itext.TXT_COMPANY|default:'$TXT_COMPANY'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input tabindex="1" {if !$objectpermissions.RWRITE}disabled="disabled"{/if} {if $autosave}yg_onchange="setObjectProperty"{/if} yg_id="{$object}-user" yg_type="{$objecttype}" yg_property="company" onchange="$K.yg_setEdited(this);" type="text" name="objectname" value="{$company|escape:'html':'UTF-8'}" />
+											</div>
+										</td>
+										<td class="col4" colspan="2">
+											<!-- DEPARTMENT -->
+											<span class="label">{$itext.TXT_DEPARTMENT|default:'$TXT_DEPARTMENT'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input tabindex="1" {if !$objectpermissions.RWRITE}disabled="disabled"{/if} {if $autosave}yg_onchange="setObjectProperty"{/if} yg_id="{$object}-user" yg_type="{$objecttype}" yg_property="department" onchange="$K.yg_setEdited(this);" type="text" name="objectname" value="{$department|escape:'html':'UTF-8'}" />
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td class="col4" colspan="2">
+											<!-- FIRSTNAME -->
+											<span class="label">{$itext.TXT_FIRSTNAME|default:'$TXT_FIRSTNAME'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input tabindex="1" {if !$objectpermissions.RWRITE}disabled="disabled"{/if} {if $autosave}yg_onchange="setObjectProperty"{/if} yg_id="{$object}-user" yg_type="{$objecttype}" yg_property="firstname" onchange="$K.yg_setEdited(this);" type="text" name="objectname" value="{$firstname|escape:'html':'UTF-8'}" />
+											</div>
+										</td>
+										<td class="col4" colspan="2">
+											<!-- LASTNAME -->
+											<span class="label">{$itext.TXT_LASTNAME|default:'$TXT_LASTNAME'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input tabindex="1" {if !$objectpermissions.RWRITE}disabled="disabled"{/if} {if $autosave}yg_onchange="setObjectProperty"{/if} yg_id="{$object}-user" yg_type="{$objecttype}" yg_property="lastname" onchange="$K.yg_setEdited(this);" type="text" name="objectname" value="{$lastname|escape:'html':'UTF-8'}" />
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td class="col4" colspan="2">
+											<!-- PHONE -->
+											<span class="label">{$itext.TXT_PHONE|default:'$TXT_PHONE'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input tabindex="1" {if !$objectpermissions.RWRITE}disabled="disabled"{/if} {if $autosave}yg_onchange="setObjectProperty"{/if} yg_id="{$object}-user" yg_type="{$objecttype}" yg_property="phone" onchange="$K.yg_setEdited(this);" type="text" name="objectname" value="{$phone|escape:'html':'UTF-8'}" />
+											</div>
+										</td>
+										<td class="col4" colspan="2">
+											<!-- FAX -->
+											<span class="label">{$itext.TXT_FAX|default:'$TXT_FAX'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input tabindex="1" {if !$objectpermissions.RWRITE}disabled="disabled"{/if} {if $autosave}yg_onchange="setObjectProperty"{/if} yg_id="{$object}-user" yg_type="{$objecttype}" yg_property="fax" onchange="$K.yg_setEdited(this);" type="text" name="objectname" value="{$fax|escape:'html':'UTF-8'}" />
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td class="col4" colspan="2">
+											<!-- MOBILE -->
+											<span class="label">{$itext.TXT_MOBILE|default:'$TXT_MOBILE'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input tabindex="1" {if !$objectpermissions.RWRITE}disabled="disabled"{/if} {if $autosave}yg_onchange="setObjectProperty"{/if} yg_id="{$object}-user" yg_type="{$objecttype}" yg_property="mobile" onchange="$K.yg_setEdited(this);" type="text" name="objectname" value="{$mobile|escape:'html':'UTF-8'}" />
+											</div>
+										</td>
+										<td class="col4" colspan="2">
+											<!-- WEBSITE -->
+											<span class="label">{$itext.TXT_WEBSITE|default:'$TXT_WEBSITE'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input tabindex="1" {if !$objectpermissions.RWRITE}disabled="disabled"{/if} {if $autosave}yg_onchange="setObjectProperty"{/if} yg_id="{$object}-user" yg_type="{$objecttype}" yg_property="website" onchange="$K.yg_setEdited(this);" type="text" name="objectname" value="{$website|escape:'html':'UTF-8'}" />
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td class="col4" colspan="2">
+											<span class="label">{$itext.TXT_LANGUAGE|default:'$TXT_LANGUAGE'}</span>
+											<div id="wid_{$win_no}_language" yg_form="dropdown" class="dropdownbox">
+												<div class="dropdown">
+													<div class="dropdowninner">
+														<input yg_id="{$object}-user" yg_type="{$objecttype}" yg_property="language" onchange="$K.yg_setEdited(this);$K.yg_setObjectProperty($(this).up('.dropdownbox').down('input[type=hidden]'));" tabindex="1" type="text" value="{$language}" {if !$objectpermissions.RWRITE}disabled="disabled"{/if} />
+													</div>
+												</div>
+												<div class="dropdownlistcontainer">
+													<div class="dropdownlist">
+														{section name='lang' loop=$languages}
+															<div value="{$languages[lang].ID}" {if $language==$languages[lang].ID}class="selected"{/if}>{$languages[lang].NAME}</div>
+														{/section}
+													</div>
+													<div class="mk_scrollbars"></div>
+												</div>
+												<input type="hidden" value="{$language}" yg_id="{$object}-user" yg_type="{$objecttype}" yg_property="language" />
+											</div>
+										</td>
+										<td class="col4" colspan="2">
+											<!-- TIMEZONE -->
+											<span class="label">{$itext.TXT_TIMEZONE|default:'$TXT_TIMEZONE'}</span>
+											<div id="wid_{$win_no}_timezone" yg_form="dropdown" class="dropdownbox">
+												<div class="dropdown">
+													<div class="dropdowninner">
+														<input yg_id="{$object}-user" yg_type="{$objecttype}" yg_property="timezone" onchange="$K.yg_setEdited(this);$K.yg_setObjectProperty($(this).up('.dropdownbox').down('input[type=hidden]'));" tabindex="1" type="text" value="{$timezone|default:'UTC'}" {if !$objectpermissions.RWRITE}disabled="disabled"{/if} />
+													</div>
+												</div>
+												<div class="dropdownlistcontainer">
+													<div class="dropdownlist">
+														{section name='tz' loop=$timezones}
+															{capture assign='idtz'}TXT_TZ_{$timezones[tz]}{/capture}
+															<div value="{$timezones[tz]}" {if $timezone==$timezones[tz]}class="selected"{/if}>{$itext.$idtz}</div>
+														{/section}
+													</div>
+													<div class="mk_scrollbars"></div>
+												</div>
+												<input type="hidden" value="{$timezone|default:'UTC'}" yg_id="{$object}-user" yg_type="{$objecttype}" yg_property="timezone" />
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td class="col4">
+											<span class="label">{$itext.TXT_DATEFORMAT|default:'$TXT_DATEFORMAT'}</span>
+											<div id="wid_{$win_no}_dateformat" yg_form="dropdown" class="dropdownbox">
+												<div class="dropdown">
+													<div class="dropdowninner">
+														<input yg_id="{$object}-user" yg_type="{$objecttype}" yg_property="dateformat" onchange="$K.yg_setEdited(this);$K.yg_setObjectProperty($(this).up('.dropdownbox').down('input[type=hidden]'));" tabindex="1" type="text" value="{$dateformat|default:'23.02.2009'}" {if !$objectpermissions.RWRITE}disabled="disabled"{/if} />
+													</div>
+												</div>
+												<div class="dropdownlistcontainer">
+													<div class="dropdownlist">
+														<div value="mm/dd/YYYY" {if $dateformat=='mm/dd/YYYY'}class="selected"{/if}>mm/dd/yyyy</div>
+														<div value="dd/mm/YYYY" {if $dateformat=='mm/dd/YYYY'}class="selected"{/if}>dd/mm/yyyy</div>
+														<div value="dd.mm.YYYY" {if $dateformat=='dd.mm.YYYY'}class="selected"{/if}>dd.mm.yyyy</div>
+													</div>
+													<div class="mk_scrollbars"></div>
+												</div>
+												<input type="hidden" value="{$dateformat|default:'dd.mm.YYYY'}" yg_id="{$object}-user" yg_type="{$objecttype}" yg_property="dateformat" />
+											</div>
+										</td>
+										<td class="col4">
+											<span class="label">{$itext.TXT_TIMEFORMAT|default:'$TXT_TIMEFORMAT'}</span>
+											<div id="wid_{$win_no}_timeformat" yg_form="dropdown" class="dropdownbox">
+												<div class="dropdown">
+													<div class="dropdowninner">
+														<input yg_id="{$object}-user" yg_type="{$objecttype}" yg_property="timeformat" onchange="$K.yg_setEdited(this);$K.yg_setObjectProperty($(this).up('.dropdownbox').down('input[type=hidden]'));" tabindex="1" type="text" value="{$timeformat|default:'24'}" {if !$objectpermissions.RWRITE}disabled="disabled"{/if} />
+													</div>
+												</div>
+												<div class="dropdownlistcontainer">
+													<div class="dropdownlist">
+														<div value="24" {if $timeformat=='24'}class="selected"{/if}>24h</div>
+														<div value="12" {if $timeformat=='12'}class="selected"{/if}>12h</div>
+													</div>
+													<div class="mk_scrollbars"></div>
+												</div>
+												<input type="hidden" value="{$timeformat|default:'24'}" yg_id="{$object}-user" yg_type="{$objecttype}" yg_property="timeformat" />
+											</div>
+										</td>
+										<td class="col4" colspan="2">
+											<span class="label">{$itext.TXT_WEEKSTART|default:'$TXT_WEEKSTART'}</span>
+											<div id="wid_{$win_no}_weekstart" yg_form="dropdown" class="dropdownbox">
+												<div class="dropdown">
+													<div class="dropdowninner">
+														<input yg_id="{$object}-user" yg_type="{$objecttype}" yg_property="weekstart" onchange="$K.yg_setEdited(this);$K.yg_setObjectProperty($(this).up('.dropdownbox').down('input[type=hidden]'));" tabindex="1" type="text" value="{$weekstart|default:$itext.TXT_MONDAY}" {if !$objectpermissions.RWRITE}disabled="disabled"{/if} />
+													</div>
+												</div>
+												<div class="dropdownlistcontainer">
+													<div class="dropdownlist">
+														<div value="1" {if $weekstart=='1'}class="selected"{/if}>{$itext.TXT_MONDAY|default:'$TXT_MONDAY'}</div>
+														<div value="2" {if $weekstart=='2'}class="selected"{/if}>{$itext.TXT_TUESDAY|default:'$TXT_TUESDAY'}</div>
+														<div value="3" {if $weekstart=='3'}class="selected"{/if}>{$itext.TXT_WEDNESDAY|default:'$TXT_WEDNESDAY'}</div>
+														<div value="4" {if $weekstart=='4'}class="selected"{/if}>{$itext.TXT_THURSDAY|default:'$TXT_THURSDAY'}</div>
+														<div value="5" {if $weekstart=='5'}class="selected"{/if}>{$itext.TXT_FRIDAY|default:'$TXT_FRIDAY'}</div>
+														<div value="6" {if $weekstart=='6'}class="selected"{/if}>{$itext.TXT_SATURDAY|default:'$TXT_SATURDAY'}</div>
+														<div value="0" {if $weekstart=='0'}class="selected"{/if}>{$itext.TXT_SUNDAY|default:'$TXT_SUNDAY'}</div>
+													</div>
+													<div class="mk_scrollbars"></div>
+												</div>
+												<input type="hidden" value="{$weekstart|default:'1'}" yg_id="{$object}-user" yg_type="{$objecttype}" yg_property="weekstart" />
+											</div>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+
+						<!-- PROFILEPICTURE //-->
+						<div class="cntblockcontainer" onmouseover="$K.yg_showHelp('{$itext.TXT_UPLOAD_PROFILEPICTURE}');" title="{$itext.TXT_UPLOAD_PROFILEPICTURE}" onmouseout="$K.yg_showHelp(false);" >
+							<div class="mk_uploadpanel mk_uploaduserprofilepicture" style="position:absolute;height:70px;width:100%;" id="wid_{$win_no}_prop_profilepicture_profilepicture" yg_id="{$object}-{$site}" yg_type="{$objecttype}">
+								<div id="wid_{$win_no}_uploadbutton"></div>
+							</div>
+							<div class="cntblock" style="cursor:pointer;">
+								<table class="gridfixed" cellspacing="0" cellpadding="0">
+									<tr>
+										<td colspan="8" class="col1">
+											<img src="{$userpicture}" border="0" class="userpic mk_tempuserpic" />
+											<div class="selectionmarker">
+												<div class="objecthandle" style="float:left;">{$itext.TXT_UPLOAD_PROFILEPICTURE|default:'$TXT_UPLOAD_PROFILEPICTURE'}</div>
+											</div>
+										</td>
+									</tr>
+								</table>
+								<input type="hidden" value="{$userpicture|escape:'html':'UTF-8'}" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="profilepicture" />
+							</div>
+						</div>
+
+				</div>
+			</div>
+		{/if}
+		{if ($objecttype == 'page') || ($objecttype == 'cblock') || ($objecttype == 'file') || ($objecttype == 'filefolder') || ($objecttype == 'usergroup')  || ($objecttype == 'usergroup') || ($objecttype == 'tag')}
+			<!-- TEXT (NAME) //-->
+			<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+				<div class="cntblock">
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td colspan="8" class="col1">
+								<span class="label">{$itext.TXT_PAGE_NAME|default:'$TXT_PAGE_NAME'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input tabindex="1" {if !$objectpermissions.RWRITE}disabled="disabled"{/if} {if $autosave}yg_onchange="setObjectProperty"{/if} yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="name" onchange="$K.yg_setEdited(this);" type="text" name="objectname" value="{$objectInfo.NAME|escape:'html':'UTF-8'}" maxlength="100" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		{/if}
+		{if ($objecttype == 'page') || ($objecttype == 'cblock') || ($objecttype == 'file') || ($objecttype == 'filefolder')}
+			<!-- TEXT (PNAME) //-->
+			<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+				<div class="cntblock">
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td colspan="8" class="col1">
+								<span class="label">{$itext.TXT_URL_NAME|default:'$TXT_URL_NAME'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input tabindex="1" {if !$objectpermissions.RWRITE}disabled{/if} yg_previous="{$objectInfo.PNAME}" onchange="{if $objecttype == 'page'}$K.yg_changePagePName(this);{elseif $objecttype == 'cblock'}$K.yg_changeCBlockPName(this);{elseif ($objecttype == 'file') || ($objecttype == 'filefolder')}$K.yg_changeFilePName(this);{/if}" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="pname" type="text" name="pname" value="{$objectInfo.PNAME|escape:'html':'UTF-8'}" oldvalue="{$objectInfo.PNAME|escape:'html':'UTF-8'}" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		{/if}
+
+		{counter assign='dynpropcount' name='dynpropcount' start=0}
+		{section name='p' loop=$objectdynprops}
+			{if $objectdynprops[p].VISIBLE > 0}
+				{counter name='dynpropcount'}
+			{/if}
+		{/section}
+
+		{section name='p' loop=$objectdynprops}
+			{if $objectdynprops[p].VISIBLE > 0}
+				<!--
+				{$objectdynprops[p].NAME}/{$objectdynprops[p].IDENTIFIER} [{$objectdynprops[p].TYPE}] ({$objectdynprops[p].ID}) -&gt; '{$objectdynprops[p].VALUE}'<br />
+				-->
+
+				{if $objectdynprops[p].TYPE == 'TEXT'}
+					{if !(($objecttype=='page') && ($objectdynprops[p].IDENTIFIER=='NAME')) &&
+						!(($objecttype=='file') && ($objectdynprops[p].IDENTIFIER=='NAME')) &&
+						!(($objecttype=='filefolder') && ($objectdynprops[p].IDENTIFIER=='NAME')) &&
+						!(($objecttype=='cblock') && ($objectdynprops[p].IDENTIFIER=='NAME')) &&
+						!(($objecttype=='mailing') && ($objectdynprops[p].IDENTIFIER=='NAME')) &&
+						!(($objecttype=='tag') && ($objectdynprops[p].IDENTIFIER=='NAME')) &&
+						!(($objecttype=='usergroup') && ($objectdynprops[p].IDENTIFIER=='NAME'))}
+						<!-- TEXT //-->
+						<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+							<div class="cntblock">
+								<table class="gridfixed" cellspacing="0" cellpadding="0">
+									<tr>
+										<td colspan="8" class="col1">
+											<span class="label">{if $objectdynprops[p].READONLY}{assign var='ival' value=$objectdynprops[p].NAME}{$itext.$ival|default:$objectdynprops[p].NAME}{else}{$objectdynprops[p].NAME}{/if}</span>
+											<div class="textbox" yg_form="textbox">
+												<input tabindex="1" {if !$objectpermissions.RWRITE}disabled="disabled"{/if} {if $autosave}yg_onchange="setObjectProperty"{/if} yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}" onchange="$K.yg_setEdited(this);" type="text" name="objectname" value="{$objectdynprops[p].VALUE|escape:'html':'UTF-8'}" />
+											</div>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					{/if}
+				{elseif $objectdynprops[p].TYPE == 'TEXTAREA'}
+					<!-- TEXTAREA //-->
+					<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+						<div class="cntblock">
+							<table class="gridfixed" cellspacing="0" cellpadding="0">
+								<tr>
+									<td colspan="8" class="col1">
+										<span class="label">{if $objectdynprops[p].READONLY}{assign var='ival' value=$objectdynprops[p].NAME}{$itext.$ival|default:$objectdynprops[p].NAME}{else}{$objectdynprops[p].NAME}{/if}</span>
+										<div class="textbox" yg_form="textbox">
+											<textarea tabindex="1" {if !$objectpermissions.RWRITE}disabled="disabled"{/if} id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_textarea" {if $autosave}yg_onchange="setObjectProperty"{/if} yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}" onchange="$K.yg_setEdited(this);" type="text" name="description">{$objectdynprops[p].VALUE|replace:'\n':"\n"|replace:'\\':''}</textarea>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				{elseif $objectdynprops[p].TYPE == 'RICHTEXT'}
+					<!-- RICHTEXT //-->
+					<div class="cntblockcontainer cb_wysiwyg" id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_richtextproperty" onmouseover="$K.yg_showActions(this);" {if $objectpermissions.RWRITE}onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: 'CONTENTEDITOR', openerYgId: '{$object}-{$site}', loadparams: {literal}{{/literal}formfield: 'wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_richtextproperty' {literal} } } {/literal});" style="cursor:pointer;"{/if}>
+						<div class="cntblock mk_property">
+							<div class="hoverable">
+								{if $objectpermissions.RWRITE}
+									<!-- actions //-->
+									<div class="actions">
+										<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+										<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+											<div class="actionborder"></div>
+											<a class="edit" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_EDIT}');" title="{$itext.TXT_FORMFIELD_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: 'CONTENTEDITOR', openerYgId: '{$object}-{$site}', loadparams: {literal}{{/literal}formfield: 'wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_richtextproperty' {literal} } } {/literal});"></a>
+											<div class="actionborder"></div>
+										</div>
+									</div>
+									<!-- end actions //-->
+								{/if}
+								<table class="gridfixed" cellspacing="0" cellpadding="0">
+									<tr>
+										<td colspan="8" class="col1">
+											<span class="elemtitle label">{if $objectdynprops[p].READONLY}{assign var='ival' value=$objectdynprops[p].NAME}{$itext.$ival|default:$objectdynprops[p].NAME}{else}{$objectdynprops[p].NAME}{/if}</span>
+											<div class="textbox elemcontent mk_richtextcnt" id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_richtext" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}">{strip}
+												{if $objectdynprops[p].VALUE|replace:'\n':"\n"|replace:'\\':''}
+													{$objectdynprops[p].VALUE|replace:'\n':"\n"|replace:'\\':''}
+													{if $objectdynprops[p].VALUE|replace:'\n':"\n"|replace:'\\':'' != ""}<br />{/if}
+												{/if}
+											{/strip}</div>
+											<div class="selectionmarker">{$itext.TXT_CONTENT_EDIT|default:'$TXT_CONTENT_EDIT'}</div>
+											<textarea style="display:none;" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}">{$objectdynprops[p].VALUE}</textarea>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				{elseif $objectdynprops[p].TYPE == 'LINK'}
+					<!-- LINK //-->
+					<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+						<div class="cntblock mk_property">
+							<div class="hoverable mk_link" yg_accepts="file,page" id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_linkproperty" {if $objectpermissions.RWRITE}onmouseup="$K.yg_customSortableOnDrop( 'wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_linkinnerproperty', event );" onmouseover="$K.yg_currentHover=this;"{/if}>
+								{if $objectpermissions.RWRITE}
+									<!-- actions //-->
+									<div class="actions">
+										<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+										<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+											<div class="actionborder"></div>
+											<a class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_RESET}');" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}');" title="{$itext.TXT_FORMFIELD_RESET}');" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}"></a>
+											<a class="edit" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_EDIT}');" title="{$itext.TXT_FORMFIELD_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);$K.yg_openLinkChooserWindow($('wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_linkinnerproperty'));"></a>
+											<div class="actionborder"></div>
+										</div>
+									</div>
+									<!-- end actions //-->
+								{/if}
+								<table class="gridflex editlink mk_property" cellspacing="0" cellpadding="0" {if $objectpermissions.RWRITE}onclick="$K.yg_openLinkChooserWindow($('wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_linkinnerproperty'));"{/if}>
+									<tr>
+										<td colspan="8" class="col1">
+											<span class="label">{$objectdynprops[p].NAME}</span>
+											<div style="display:none;"></div>
+
+											<div class="selectionmarker">
+												<div class="icn {if $objectdynprops[p].IS_EMAIL}iconemail{elseif $objectdynprops[p].IS_INTERNAL}iconpage{else}{if $objectdynprops[p].LINKTITLE}iconlink{else}noicon{/if}{/if}" style="{if $objectdynprops[p].IS_FILE == true}display:none;{/if}"  yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].FILEIDENTIFIER|strtolower}_ICON"></div>
+												<div class="title" onmouseover="$K.yg_hoverPropertyLinkFileHint(this.up('td').down('input[type=hidden]'), event);">
+													<span class="titlecnt">
+														<span class="title_txt" id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_linkinnerproperty" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}">
+															{if $objectdynprops[p].LINKTITLE}
+																{if $objectdynprops[p].IS_FILE}
+																	<span yg_property="type" yg_id="{$object}-{$site}" yg_type="{$objecttype}" class="filetype {$objectdynprops[p].FILECOLOR}">{$objectdynprops[p].FILEABBREVIATION}</span>
+																	{$objectdynprops[p].LINKTITLE}
+																{else}
+																	{$objectdynprops[p].LINKTITLE}
+																{/if}
+															{else}
+																{if !$objectpermissions.RWRITE}{$itext.TXT_SELECTOR_LINK_READONLY}{else}{$itext.TXT_SELECTOR_LINK}{/if}
+															{/if}
+														</span>
+
+													</span>
+												</div>
+											</div>
+											<input type="hidden" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}" value="{$objectdynprops[p].VALUE|escape:'html':'UTF-8'}" />
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				{elseif $objectdynprops[p].TYPE == 'TAG'}
+					<!-- TAG //-->
+					<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+						<div class="cntblock mk_property">
+
+							<div class="hoverable mk_tag" yg_accepts="tag" id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_tagproperty" {if $objectpermissions.RWRITE}onmouseup="$K.yg_customSortableOnDrop( 'wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_taginnerproperty', event );" onmouseover="$K.yg_currentHover=this;"{/if}>
+								{if $objectpermissions.RWRITE}
+									<!-- actions //-->
+									<div class="actions">
+										<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+										<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+											<div class="actionborder"></div>
+											<a class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_RESET}');" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}');" title="{$itext.TXT_FORMFIELD_RESET}');" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}"></a>
+											<a class="edit" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_EDIT}');" title="{$itext.TXT_FORMFIELD_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: 'TAG_SELECT', openerYgId: '{$object}-{$site}', loadparams: {literal}{{/literal} type: 'property', opener_reference: 'wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_taginnerproperty' {literal} } } {/literal});"></a>
+											<div class="actionborder"></div>
+										</div>
+									</div>
+									<!-- end actions //-->
+								{/if}
+
+								<table class="gridflex editlink mk_property" cellspacing="0" cellpadding="0" {if $objectpermissions.RWRITE}onclick="new $K.yg_wndobj({literal}{{/literal} config: 'TAG_SELECT', openerYgId: '{$object}-{$site}', loadparams: {literal}{{/literal}action: 'choose', element: this.down('.title_txt'), type: 'property', opener_reference: 'wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_taginnerproperty' {literal} } } {/literal});"{/if}>
+									<tr>
+										<td colspan="8" class="col1">
+											<span class="label">{$objectdynprops[p].NAME}</span>
+											<div class="selectionmarker">
+												<div class="icn {if $objectdynprops[p].TAGTITLE}icontag{else}noicon{/if}"></div>
+												<div class="title">
+													<span class="titlecnt">
+														<span class="title_txt" id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_taginnerproperty" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}">
+															{if $objectdynprops[p].TAGTITLE}{$objectdynprops[p].TAGTITLE}{else}{if !$objectpermissions.RWRITE}{$itext.TXT_SELECTOR_TAG_READONLY}{else}{$itext.TXT_SELECTOR_TAG}{/if}{/if}
+														</span>
+
+													</span>
+												</div>
+											</div>
+											<input type="hidden" value="{$objectdynprops[p].VALUE|escape:'html':'UTF-8'}" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}" />
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				{elseif $objectdynprops[p].TYPE == 'CBLOCK'}
+					<!-- CBLOCK //-->
+					<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+						<div class="cntblock mk_property">
+							<div class="hoverable mk_cblock" yg_accepts="cblock" id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_cblockproperty" {if $objectpermissions.RWRITE}onmouseup="$K.yg_customSortableOnDrop( 'wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_cblockinnerproperty', event );" onmouseover="$K.yg_currentHover=this;"{/if}>
+								{if $objectpermissions.RWRITE}
+									<!-- actions //-->
+									<div class="actions">
+										<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+										<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+											<div class="actionborder"></div>
+											<a class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_RESET}');" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}');" title="{$itext.TXT_FORMFIELD_RESET}');" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}"></a>
+											<a class="edit" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_EDIT}');" title="{$itext.TXT_FORMFIELD_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: 'CBLOCK_SELECT', loadparams: {literal}{{/literal} type: 'property', opener_reference: 'wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_cblockinnerproperty' {literal} } } {/literal});"></a>
+											<div class="actionborder"></div>
+										</div>
+									</div>
+									<!-- end actions //-->
+								{/if}
+								<table class="gridflex editlink mk_property" cellspacing="0" cellpadding="0" {if $objectpermissions.RWRITE}onclick="new $K.yg_wndobj({literal}{{/literal} config: 'CBLOCK_SELECT', loadparams: {literal}{{/literal} type: 'property', opener_reference: 'wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_cblockinnerproperty' {literal} } } {/literal});"{/if}>
+									<tr>
+										<td colspan="8" class="col1">
+											{capture assign='itext_name'}{$objectdynprops[p].NAME}{/capture}
+											<span class="label">{if $itext.$itext_name}{$itext.$itext_name}{else}{$objectdynprops[p].NAME}{/if}</span>
+											<div class="selectionmarker">
+												<div class="icn {if $objectdynprops[p].CBLOCKTITLE}iconcblock{else}noicon{/if}"></div>
+												<div class="title">
+													<span class="titlecnt">
+														<span class="title_txt" id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_cblockinnerproperty" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}">
+															{if $objectdynprops[p].CBLOCKTITLE}{$objectdynprops[p].CBLOCKTITLE}{else}{if !$objectpermissions.RWRITE}{$itext.TXT_SELECTOR_CBLOCK_READONLY}{else}{$itext.TXT_SELECTOR_CBLOCK}{/if}{/if}
+														</span>
+
+													</span>
+												</div>
+											</div>
+											<input type="hidden" value="{$objectdynprops[p].VALUE|escape:'html':'UTF-8'}" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}" />
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				{elseif $objectdynprops[p].TYPE == 'PAGE'}
+					<!-- PAGE //-->
+					<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+						<div class="cntblock mk_property">
+							<div class="hoverable mk_page" yg_accepts="page" id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_pageproperty" {if $objectpermissions.RWRITE}onmouseup="$K.yg_customSortableOnDrop( 'wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_pageinnerproperty', event );" onmouseover="$K.yg_currentHover=this;"{/if}>
+								{if $objectpermissions.RWRITE}
+									<!-- actions //-->
+									<div class="actions">
+										<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+										<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+											<div class="actionborder"></div>
+											<a class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_RESET}');" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}');" title="{$itext.TXT_FORMFIELD_RESET}');" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}"></a>
+											<a class="edit" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_EDIT}');" title="{$itext.TXT_FORMFIELD_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: 'PAGE_SELECT', loadparams: {literal}{{/literal} action: 'choose', type: 'property', opener_reference: 'wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_pageinnerproperty' {literal} } } {/literal});"></a>
+											<div class="actionborder"></div>
+										</div>
+									</div>
+									<!-- end actions //-->
+								{/if}
+								<table class="gridflex editlink mk_property" cellspacing="0" cellpadding="0" {if $objectpermissions.RWRITE}onclick="new $K.yg_wndobj({literal}{{/literal} config: 'PAGE_SELECT', loadparams: {literal}{{/literal} action: 'choose', type: 'property', opener_reference: 'wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_pageinnerproperty' {literal} } } {/literal});"{/if}>
+									<tr>
+										<td colspan="8" class="col1">
+											<span class="label">{$objectdynprops[p].NAME}</span>
+											<div class="selectionmarker">
+												<div class="icn {if $objectdynprops[p].PAGETITLE}iconpage{else}noicon{/if}"></div>
+												<div class="title">
+													<span class="titlecnt">
+														<span class="title_txt mk_page" id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_pageinnerproperty" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}">
+															{if $objectdynprops[p].PAGETITLE}{$objectdynprops[p].PAGETITLE}{else}{if !$objectpermissions.RWRITE}{$itext.TXT_SELECTOR_PAGE_READONLY}{else}{$itext.TXT_SELECTOR_PAGE}{/if}{/if}
+														</span>
+
+													</span>
+												</div>
+											</div>
+											<input type="hidden" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}" value="{$objectdynprops[p].VALUE|@json_encode|escape:'html'}" />
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				{elseif $objectdynprops[p].TYPE == 'PASSWORD'}
+					<!-- PASSWORD //-->
+					<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+						<div class="cntblock">
+							<table class="gridfixed" cellspacing="0" cellpadding="0">
+								<tr>
+									<td colspan="8" class="col1">
+										<span class="label">{if $objectdynprops[p].READONLY}{assign var='ival' value=$objectdynprops[p].NAME}{$itext.$ival|default:$objectdynprops[p].NAME}{else}{$objectdynprops[p].NAME}{/if}</span>
+										<div class="textbox" yg_form="textbox">
+											<input tabindex="1" {if !$objectpermissions.RWRITE}disabled="disabled"{/if} {if $autosave}yg_onchange="setObjectProperty"{/if} yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}" onchange="$K.yg_setEdited(this);" type="password" name="objectname" value="{$objectdynprops[p].VALUE|escape:'html':'UTF-8'}" />
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				{elseif $objectdynprops[p].TYPE == 'DATE'}
+					<!-- DATE  //-->
+					<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+						<div class="cntblock">
+							<table class="gridfixed" cellspacing="0" cellpadding="0">
+								<tr>
+									<td colspan="8" class="col1">
+										<span class="label">{if $objectdynprops[p].READONLY}{assign var='ival' value=$objectdynprops[p].NAME}{$itext.$ival|default:$objectdynprops[p].NAME}{else}{$objectdynprops[p].NAME}{/if}</span>
+										<table cellspacing="0" cellpadding="0" class="datetable">
+											<tr>
+												<td width="98">
+													<div class="textbox" yg_form="textbox">
+														<input tabindex="1" {if !$objectpermissions.RWRITE}disabled{/if} tabindex="1" onchange="{literal}if($K.yg_checkField(this,{type:'date',format:'{/literal}{$userinfo.PROPS.DATEFORMAT}{literal}',nodatesinpast:false,emptyallowed:true})){$K.yg_setObjectProperty( this.id, this.value );$K.yg_fadeField($(this));}{/literal}" type="text" value="{if $objectdynprops[p].VALUE}{$objectdynprops[p].VALUE|date_format_php:$itext.DATE_FORMAT}{/if}" maxlength="10" id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_dateproperty" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}" />
+													</div>
+												</td>
+												<td>
+													<a yg_form="calendar" pastavailable="true" id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_datechooser" targetfield="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_dateproperty" format="{$itext.JS_DATE_FORMAT}" onmouseover="$K.yg_showHelp('{$itext.TXT_PICKDATE}');" title="{$itext.TXT_PICKDATE}" onmouseout="$K.yg_showHelp(false);" class="btcalendarpicker"></a>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				{elseif $objectdynprops[p].TYPE == 'DATETIME'}
+					<!-- DATE & TIME //-->
+					<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+						<div class="cntblock">
+							<table class="gridfixed" cellspacing="0" cellpadding="0">
+								<tr>
+									<td colspan="8" class="col1">
+										<span class="label">{if $objectdynprops[p].READONLY}{assign var='ival' value=$objectdynprops[p].NAME}{$itext.$ival|default:$objectdynprops[p].NAME}{else}{$objectdynprops[p].NAME}{/if}</span>
+										<table cellspacing="0" cellpadding="0" class="datetable">
+											<tr>
+												<td width="100">
+													<div class="textbox" yg_form="textbox">
+														<input tabindex="1" {if !$objectpermissions.RWRITE}disabled{/if} tabindex="1" onchange="{literal}if($K.yg_checkField(this,{type:'date',format:'{/literal}{$userinfo.PROPS.DATEFORMAT}{literal}',nodatesinpast:false,emptyallowed:true})){$K.yg_setObjectProperty( '{/literal}wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_datetimeproperty', $('wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_datetimeproperty').value+'||'+$('wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_datetime2property').value {literal});$K.yg_fadeField($(this));}{/literal}" type="text" value="{if $objectdynprops[p].VALUE}{$objectdynprops[p].VALUE|date_format_php:$itext.DATE_FORMAT}{/if}" maxlength="10" id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_datetimeproperty" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}" />
+													</div>
+												</td>
+												<td>
+													<a yg_form="calendar" pastavailable="true" id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_datetimechooser" targetfield="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_datetimeproperty" format="{$itext.JS_DATE_FORMAT}" onmouseover="$K.yg_showHelp('{$itext.TXT_PICKDATE}');" title="{$itext.TXT_PICKDATE}" onmouseout="$K.yg_showHelp(false);" class="btcalendarpicker"></a>
+												</td>
+												<td width="100">
+													<div class="textbox" yg_form="textbox">
+														<input tabindex="1" {if !$objectpermissions.RWRITE}disabled{/if} tabindex="1" onchange="{literal}if($K.yg_checkField(this,{type:'time',format:'{/literal}{$userinfo.PROPS.TIMEFORMAT}{literal}',emptyallowed:true})){$K.yg_setObjectProperty( '{/literal}wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_datetimeproperty', $('wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_datetimeproperty').value+'||'+$('wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_datetime2property').value {literal});$K.yg_fadeField($(this));}{/literal}" type="text" value="{if $objectdynprops[p].VALUE}{$objectdynprops[p].VALUE|date_format_php:$itext.TIME_FORMAT}{/if}" maxlength="10" id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_datetime2property" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}2" onclick="this.focus();Event.stop(event);" />
+													</div>
+												</td>
+												<td>
+													<a onmouseover="$K.yg_showHelp('{$itext.TXT_PICKTIME}');" title="{$itext.TXT_PICKTIME}" onmouseout="$K.yg_showHelp(false);" {if $objectpermissions.RWRITE}onclick="$K.yg_pickTime($('wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_datetime2property'),{$userinfo.PROPS.TIMEFORMAT});Event.stop(event);return false;"{/if} class="btcalendarpicker"></a>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				{elseif $objectdynprops[p].TYPE == 'HEADLINE'}
+					{if ($objecttype != 'user') || ($visibleProps > 0)}
+						<!-- HEADLINE //-->
+						{if $subheadline_open}
+							</div>
+						</div>
+						{/if}
+						<div class="ipanel" yg_panel="true" id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_panelproperty">
+							<div class="panelheader headline1">
+								<a class="opened">{strip}
+									{if $objectdynprops[p].IDENTIFIER == 'PROPERTIES_HEADLINE_ID'}
+										{$itext.TXT_PROPERTIES|default:'$TXT_PROPERTIES'}
+									{else}
+										{if $objectdynprops[p].READONLY}{assign var='ival' value=$objectdynprops[p].NAME}{$itext.$ival|default:$objectdynprops[p].NAME}{else}{$objectdynprops[p].NAME}{/if}
+									{/if}
+								{/strip}</a>
+							</div>
+							<div class="panelcontent">
+							{assign var='subheadline_open' value=true}
+					{/if}
+				{elseif $objectdynprops[p].TYPE == 'CHECKBOX'}
+						<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+							<div class="cntblock">
+								<table class="gridfixed" cellspacing="0" cellpadding="0">
+									<tr>
+										<td colspan="4" class="col2">
+											<div class="checkarray">
+												<span class="label">{$objectdynprops[p].NAME}</span>
+												<div class="checkbox" {if $objectpermissions.RWRITE}yg_form="checkbox" tabindex="1" {if $autosave}yg_onclick="setObjectProperty"{/if}{else}disabled="disabled"{/if} yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}" ><div class="checkboxicon{if $objectdynprops[p].VALUE==1}sel{/if}"><input type="hidden" name="{$objectdynprops[p].IDENTIFIER|strtolower}" value="{if $objectdynprops[p].VALUE==1}1{else}0{/if}"><span class="label">{$itext.TXT_ACTIVE|default:'$TXT_ACTIVE'}</span></div></div>
+											</div>
+										</td>
+										<td colspan="4" class="col2"></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+				{elseif $objectdynprops[p].TYPE == 'FILE'}
+					<!-- FILE //-->
+					<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+						<div class="cntblock mk_property">
+							<div class="hoverable mk_file" yg_accepts="file" id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_fileproperty" yg_id="{$objectdynprops[p].IDENTIFIER|strtolower}-property" yg_type="{$objecttype}" {if $objectpermissions.RWRITE}onmouseup="$K.yg_customSortableOnDrop( 'wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_fileproperty', event );" onmouseover="$K.yg_currentHover=this;"{/if}>
+								{if $objectpermissions.RWRITE}
+									<!-- actions //-->
+									<div class="actions">
+										<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+										<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+											<div class="actionborder"></div>
+											<a class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_RESET}');" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}');" title="{$itext.TXT_FORMFIELD_RESET}');" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}"></a>
+											<a class="edit" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_EDIT}');" title="{$itext.TXT_FORMFIELD_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: 'FILE_SELECT', loadparams: {literal}{{/literal} type: 'property', opener_reference: 'wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_fileproperty' {literal} } } {/literal});"></a>
+											<div class="actionborder"></div>
+										</div>
+									</div>
+									<!-- end actions //-->
+								{/if}
+								<table class="gridflex editlink mk_property" cellspacing="0" cellpadding="0" {if $objectpermissions.RWRITE}onclick="new $K.yg_wndobj({literal}{{/literal} config: 'FILE_SELECT', loadparams: {literal}{{/literal} type: 'property', opener_reference: 'wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_fileproperty' {literal} } } {/literal});"{/if}>
+									<tr>
+										<td colspan="8" class="col1">
+											<span class="label">{$objectdynprops[p].NAME}</span>
+											<div style="display:none;"></div>
+											<div class="selectionmarker">
+												<div class="title" onmouseover="$K.yg_hoverFileHint(this.up('td').down('input[type=hidden]').value, event);">
+													<span class="titlecnt">
+														<span class="title_txt">
+															{if $objectdynprops[p].FILETITLE}<span class="filetype {$objectdynprops[p].FILECOLOR|default:'black'}">{$objectdynprops[p].FILEIDENTIFIER|default:'FILE'}</span>{$objectdynprops[p].FILETITLE}{else}{if !$objectpermissions.RWRITE}{$itext.TXT_SELECTOR_FILE_READONLY}{else}{$itext.TXT_SELECTOR_FILE}{/if}{/if}
+														</span>
+
+													</span>
+												</div>
+											</div>
+											<input type="hidden" value="{$objectdynprops[p].VALUE|escape:'html':'UTF-8'}" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}" />
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				{elseif $objectdynprops[p].TYPE == 'LIST'}
+					<!-- LIST //-->
+					<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+						<div class="cntblock">
+							<table class="gridfixed" cellspacing="0" cellpadding="0">
+								<tr>
+									<td colspan="8" class="col1">
+										<span class="label">{$objectdynprops[p].NAME}</span>
+
+										<div id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_list" {if $objectpermissions.RWRITE}yg_form="dropdown"{/if} class="dropdownbox">
+											<div class="dropdown">
+												<div class="dropdowninner">
+													<input {if $objectpermissions.RWRITE}onchange="$K.yg_setEdited(this);$K.yg_setObjectProperty(this);"{else}disabled="disabled"{/if} tabindex="1" type="text" value="{$objectdynprops[p].VALUE|escape:'html':'UTF-8'}" yg_id="{$object}-{$site}" yg_type="{$objecttype}" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}"  />
+												</div>
+											</div>
+											<div class="dropdownlistcontainer">
+												<div class="dropdownlist">
+													<div value="" {if $objectdynprops[p].VALUE == ''}class="selected"{/if}>{$itext.TXT_NO_SELECTION|default:'$TXT_NO_SELECTION'}</div>
+													{section name='lvalues' loop=$objectdynprops[p].LVALUES}
+														<div value="{$objectdynprops[p].LVALUES[lvalues].VALUE|escape:'html':'UTF-8'}" {if $objectdynprops[p].VALUE == $objectdynprops[p].LVALUES[lvalues].VALUE}class="selected"{/if}>{$objectdynprops[p].LVALUES[lvalues].VALUE}</div>
+													{/section}
+												</div>
+												<div class="mk_scrollbars"></div>
+											</div>
+											<input type="hidden" value="{$objectdynprops[p].VALUE|escape:'html':'UTF-8'}" />
+										</div>
+
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				{elseif $objectdynprops[p].TYPE == 'UPLOAD'}
+					<!-- UPLOAD //-->
+					<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+
+						<div class="mk_uploadpanel mk_uploadextensiondata" style="position:absolute;height:50px;width:100%;" yg_property="{$objectdynprops[p].IDENTIFIER|strtolower}">
+							<div id="wid_{$win_no}_{$objectdynprops[p].IDENTIFIER|strtolower}_uploadbutton"></div>
+							{*
+							<!-- actions //-->
+							<div class="actions">
+								<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+								<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+									<div class="actionborder"></div>
+									<a class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_RESET}');" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}');" title="{$itext.TXT_FORMFIELD_RESET}');" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();" onclick="Event.stop(event);$K.yg_clearControl(this,'{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].ID}-formfield','{$cos[ci].ENTRYMASKS[wi].FORMFIELDS[wic].FORMFIELD}"></a>
+									<div class="actionborder"></div>
+								</div>
+							</div>
+							<!-- end actions //-->
+							*}
+						</div>
+
+						<div class="cntblock mk_property">
+							<div class="hoverable" id="wid_{$win_no}_prop_{$objectdynprops[p].IDENTIFIER|strtolower}_fileproperty" yg_id="{$object}-{$site}" yg_type="{$objecttype}">
+								<table class="gridflex editlink mk_property" cellspacing="0" cellpadding="0">
+									<tr>
+										<td colspan="8" class="col1">
+											<span class="label">{$objectdynprops[p].NAME}</span>
+											<div style="display:none;"></div>
+											<div class="selectionmarker">
+												<div class="title">
+													<span class="titlecnt">
+														<span class="title_txt">{if !$objectpermissions.RWRITE}{$itext.TXT_SELECTOR_FILE_READONLY}{else}{$itext.TXT_SELECTOR_FILE}{/if}</span>
+
+													</span>
+												</div>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				{/if}
+			{/if}
+		{/section}
+
+		{if $subheadline_open}
+				</div>
+			</div>
+		{/if}
+
+	</div>
+</div>
+
+
+{if $refresh != 1}
+	{if ($objecttype != 'extension') && ($objecttype != 'user')}
+		<!-- FIXED HEADER EIGENSCHAFTEN //-->
+		<div class="tabhead_small ywindowhead" style="display:none" onmouseover="$K.yg_showActions(this);">
+			<div class="headline1">{$itext.TXT_PROPERTIES|default:'$TXT_PROPERTIES'}</div>
+		</div>
+	{/if}
+	<!-- END FIXED HEADER EIGENSCHAFTEN //-->
+{/if}
+
+{if !$autosave}
+	<!-- BOTTOMLINE PROPERTIES //-->
+	<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+		<tr>
+			<td class="ywindow_leftbt"></td>
+			<td class="ywindow_midbottom">
+				{if $objecttype=='extension'}
+					<div class="button" tabindex="1"><a class="stdbutton">
+						{if ($site == 'extpage') ||	($site == 'extcblock') || ($site == 'extfile') || ($site == 'extmailing') || ($site == 'extimport') || ($site == 'extexport') || ($site == 'extcolistview')}
+							{if $objectInfo.INSTALLED}
+								<div onclick="$K.yg_saveExtensionProperties(this.up('.ywindow'), '{$site}');" class="wrapper"><nobr>{$itext.TXT_SAVE|default:'$TXT_SAVE'}</nobr></div>
+							{else}
+								<div onclick="$K.yg_installExtension(this);" class="wrapper"><nobr>{$itext.TXT_INSTALL|default:'$TXT_INSTALL'}</nobr></div>
+							{/if}
+						{/if}
+						{if $site == 'data'}
+							{if $objectInfo.TYPE == $smarty.const.EXTENSION_IMPORT}
+								<div onclick="$K.yg_saveExtensionImportProperties(this.up('.ywindow')	, '{$site}');" class="wrapper"><nobr>{$itext.TXT_IMPORTING|default:'$TXT_IMPORTING'}</nobr></div>
+							{/if}
+							{if $objectInfo.TYPE == $smarty.const.EXTENSION_EXPORT}
+								<div onclick="$K.yg_saveExtensionExportProperties(this.up('.ywindow'), '{$site}');" class="wrapper"><nobr>{$itext.TXT_EXPORTING|default:'$TXT_EXPORTING'}</nobr></div>
+							{/if}
+						{/if}
+					</a></div>
+				{/if}
+			</td>
+			<td class="ywindow_rightbt"></td>
+		</tr>
+	</table>
+	<!-- END BOTTOMLINE PROPERTIES //-->
+{/if}

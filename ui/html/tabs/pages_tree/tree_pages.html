@@ -1,0 +1,724 @@
+<!-- CONTENT //-->
+<div id="wid_{$win_no}_treeview" class="tabcontenttree" style="display:block;margin-top:23px;">
+
+	<!-- ACTION BUTTON -->
+	<div id="pages_tree{$win_no}_actionbutton" class="actions" onmouseout="if($K.yg_currentHover) $K.yg_currentHover.removeClassName('row_hover');" style="display:none;">
+		<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);" style="display:block;"></div>
+		<div class="actionhover" onmouseover="$K.yg_revealActionButtons(this);" onmouseout="$K.yg_hideActionButtons(this);">
+			{if ($action == '')}
+				<div class="singleselect">
+					<div class="actionborder"></div>
+					<a onclick="$K.yg_fireAction($K.yg_actionDeletePage,this);" class="del"  onmouseover="$K.yg_showHelp('{$itext.TXT_PAGE_DELETE}');" title="{$itext.TXT_PAGE_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<a onclick="$K.yg_fireAction($K.yg_actionMoveUpPage,this);" class="up"  onmouseover="$K.yg_showHelp('{$itext.TXT_PAGE_MOVEUP}');" title="{$itext.TXT_PAGE_MOVEUP}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<a onclick="$K.yg_fireAction($K.yg_actionMoveDownPage,this);" class="down"  onmouseover="$K.yg_showHelp('{$itext.TXT_PAGE_MOVEDOWN}');" title="{$itext.TXT_PAGE_MOVEDOWN}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<a onclick="$K.yg_fireAction($K.yg_actionMovePage,this);" class="moveto"  onmouseover="$K.yg_showHelp('{$itext.TXT_PAGE_MOVE}');" title="{$itext.TXT_PAGE_MOVE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<a onclick="$K.yg_fireAction($K.yg_actionCopyPage,this);" class="copy"  onmouseover="$K.yg_showHelp('{$itext.TXT_PAGE_COPY}');" title="{$itext.TXT_PAGE_COPY}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<a onclick="$K.yg_fireAction($K.yg_actionAddChildPage,this);" class="add"  onmouseover="$K.yg_showHelp('{$itext.TXT_PAGE_ADD}');" title="{$itext.TXT_PAGE_ADD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<a onclick="$K.yg_fireAction($K.yg_actionEditPage,this);" class="edit"  onmouseover="$K.yg_showHelp('{$itext.TXT_PAGE_EDIT}');" title="{$itext.TXT_PAGE_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<a onclick="Event.stop(event);$K.yg_fireAction($K.yg_actionshowPagePreviewTree,this);" onmouseover="$K.yg_actionsSetPagePreviewHref(this);$K.yg_showHelp('{$itext.TXT_PAGE_PREVIEW_WORKING}');" onmouseout="$K.yg_showHelp(false);" class="preview" onfocus="this.blur();"></a>
+					<div class="actionborder"></div>
+				</div>
+				<div class="multiselect">
+					<div class="actionborder"></div>
+					<a onclick="$K.yg_fireAction($K.yg_actionDeletePage,this);" class="del"  onmouseover="$K.yg_showHelp('{$itext.TXT_PAGE_DELETE}');" title="{$itext.TXT_PAGE_DELETE}" onmouseout="$K.yg_showHelp(false);"onfocus="this.blur();"></a>
+					<div class="actionborder"></div>
+				</div>
+			{else}
+				<div class="singleselect">
+					<div class="actionborder"></div>
+					<a onclick="$K.yg_actionSubmit(this,'pages_tree');" class="exec" onfocus="this.blur();"></a>
+					<div class="actionborder"></div>
+				</div>
+			{/if}
+		</div>
+	</div>
+	<!-- ACTION BUTTON END -->
+
+	<div yg_widget="type:tree;treename:pages_tree{$win_no};site:{$site};accepts:{if $action==''}page,template,extpage,{/if}tag;{if $action==''}editable:true;sortable:true;{else}editable:false;sortable:false;{/if}action:{$action};objtype:page;{if $action=='choose'}noclick:true;{/if}" id="pages_tree{$win_no}" class="pages_tree {if ($action=='choose')}mk_chooser{/if}" style="display:none;"></div>
+
+</div>
+
+
+
+<!-- fixed headers //-->
+<div class="tabhead_tree ywindowhead">
+
+	<div class="treedropdown">
+
+		<table class="gridflex" style="width:100%" cellspacing="0" cellpadding="0">
+			<tr>
+				<td>
+					<div id="wid_{$win_no}_dropdowntreesites" yg_form="dropdown" class="dropdownbox">
+						<div class="dropdown">
+							<div class="dropdowninner">
+								<input yg_seq="{$win_no}" yg_onchange="$K.yg_switchSite" type="text" tabindex="1" >
+							</div>
+						</div>
+						<div class="dropdownlistcontainer">
+							<div class="dropdownlist">
+								{section name="i" loop=$sites}
+								<div value="{$sites[i].ID}" {if $site == $sites[i].ID}class="selected"{/if}>{$sites[i].NAME}</div>
+								{/section}
+							</div>
+							<div class="mk_scrollbars"></div>
+						</div>
+						<input type="hidden" value="{$site}" id="wid_{$win_no}_dd_site">
+					</div>
+				</td>
+				{* TRASHCAN/ARCHIVE
+				<td width="30%">
+					<div id="dropdowntreetype" class="dropdownbox">
+						<div class="dropdown">
+							<div class="dropdowninner">
+								<input type="text" tabindex="1" >
+							</div>
+						</div>
+						<div class="dropdownlistcontainer">
+							<div class="dropdownlist">
+								<div value="entry1" class="selected">{$itext.TXT_IN_SERVICE|default:'$TXT_IN_SERVICE'}</div>
+								<div value="entry2">{$itext.TXT_DELETED|default:'$TXT_DELETED'}</div>
+								<div value="entry3">{$itext.TXT_ARCHIVED|default:'$TXT_ARCHIVED'}</div>
+							</div>
+							<div class="mk_scrollbars"></div>
+						</div>
+						<input type="hidden">
+					</div>
+				</td>
+				*}
+			</tr>
+		</table>
+
+	</div>
+
+</div>
+<!-- end fixed headers //-->
+
+
+{if ($action != "")}
+<!-- bottom //-->
+<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_midbottom">
+			<table class="buttontable" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="rightbutton">
+						<div class="button" tabindex="1"><a id="wid_{$win_no}_okbutton" onclick="$K.windows['wid_{$win_no}'].submit();" class="stdbutton"><div class="wrapper"><nobr>{strip}
+							{if ($action == "copy")}
+								{$itext.TXT_COPY|default:'$TXT_COPY'}
+							{elseif ($action == "move")}
+								{$itext.TXT_MOVE|default:'$TXT_MOVE'}
+							{elseif ($action == "choose")}
+								{$itext.TXT_CHOOSE|default:'$TXT_CHOOSE'}
+							{elseif ($action == "restore")}
+								{$itext.TXT_RESTORE|default:'$TXT_RESTORE'}
+							{/if}
+						{/strip}</nobr></div></a></div>
+						<div class="button cancel" tabindex="1"><a id="wid_{$win_no}_cancelbutton" onclick="$K.windows['wid_{$win_no}'].remove();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</nobr></div></a></div>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td class="ywindow_rightbt"></td>
+	</tr>
+</table>
+<!-- end bottom //-->
+{/if}
+
+
+{if ($action == "copy")}
+<div class="ywindowspecialbottom">
+	<table cellspacing="0" cellpadding="0" class="windowtable" border="0">
+		<tr>
+			<td class="ywindow_leftbt"></td>
+			<td class="ywindow_cutbt"></td>
+			<td class="ywindow_rightbt"></td>
+		</tr>
+		<tr>
+			<td class="ywindow_leftbt"></td>
+			<td class="ywindow_midbt">
+
+				<div class="cntblock">
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td colspan="4" class="col1">
+								<div class="checkarray">
+									<span class="label">{$itext.TXT_OPTIONS|default:'$TXT_OPTIONS'}</span>
+									<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" id="wid_{$win_no}_copyrecursive" name="copyrecursive" value="0"><span class="label">{$itext.TXT_ALSO_COPY_SUBPAGES|default:'$TXT_ALSO_COPY_SUBPAGES'}</span></div></div>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+
+			</td>
+			<td class="ywindow_rightbt"></td>
+		</tr>
+	</table>
+</div>
+{/if}
+
+
+{*
+<!-- FILTER START //-->
+<table cellspacing="0" cellpadding="0" class="windowtablecnt ywindowfilter">
+	<tr>
+		<td class="ywindow_left"></td>
+		<td class="ywindow_tmid">
+		<div id="wid_{$win_no}_treecontrol" class="treecontrol" >
+			<div id="wid_{$win_no}_tcsearch" class="controlboxsearch"><div class="controlboxinner"><input tabindex="1" type="text" name="searchbox" value="Suche" onclick="this.value='';"  /></div></div>
+			<div id="wid_{$win_no}_tcdetailsearch" onmouseover="$K.windows['wid_{$win_no}'].treeControlHover('detailsearch','over');" onmouseout="$K.windows['wid_{$win_no}'].treeControlHover('detailsearch','out');" class="controlbox" onclick="$K.windows['wid_{$win_no}'].treeControl('detailsearch');"><div class="controlboxinnericon"><div>{$itext.TXT_DETAIL_SEARCH|default:'$TXT_DETAIL_SEARCH'}</div></div></div>
+			<div id="wid_{$win_no}_tcview" onmouseover="$K.windows['wid_{$win_no}'].treeControlHover('view','over');" onmouseout="$K.windows['wid_{$win_no}'].treeControlHover('view','out');" class="controlbox" onclick="$K.windows['wid_{$win_no}'].treeControl('view');"><div class="controlboxinnericon"><div>{$itext.TXT_VIEW|default:'$TXT_VIEW'}</div></div></div>
+		</div>
+		<div id="wid_{$win_no}_view" class="tcboxhover" style="display:none;" onmouseover="$K.windows['wid_{$win_no}'].treeControlHover('view','over');" onmouseout="$K.windows['wid_{$win_no}'].treeControlHover('view','out');">
+			<div class="tcboxinner">
+				<div class="bordertop"><div class="whitecorner"></div></div>
+				<div class="tcboxcontent" id="wid_{$win_no}_viewcontent">
+					<div class="checkarray">
+						<span class="label">{$itext.TXT_APPEARANCE|default:'$TXT_APPEARANCE'}</span>
+						<div class="checkbox" yg_form="checkbox" tabindex="1" ><div class="checkboxiconsel"><input type="hidden" name="checkbox0" value="1"><span class="label">{$itext.TXT_SHOW_CONTENTAREAS_AND_OBJECTS|default:'$TXT_SHOW_CONTENTAREAS_AND_OBJECTS'}</span></div></div>
+					</div>
+					<div class="checkarray">
+						<span class="label">{$itext.TXT_HIGHLIGHT|default:'$TXT_HIGHLIGHT'}</span>
+						<div class="checkbox" yg_form="checkbox" tabindex="1" ><div class="checkboxicon"><input type="hidden" name="checkbox2" value="1"><span class="label">{$itext.TXT_IN_MY_TODOS|default:'$TXT_IN_MY_TODOS'}</span></div></div>
+						<div class="checkbox" yg_form="checkbox" tabindex="1" ><div class="checkboxicon"><input type="hidden" name="checkbox3" value="1"><span class="label">{$itext.TXT_CHANGED_SINCE_MY_LAST_VISIT|default:'$TXT_CHANGED_SINCE_MY_LAST_VISIT'}</span></div></div>
+					</div>
+				</div>
+				<div class="borderbottom"><div class="whitecorner"></div></div>
+			</div>
+		</div>
+		<div id="wid_{$win_no}_detailsearch" class="tcboxhover" style="display: none;">
+			<div class="tcboxinner">
+				<div class="bordertop"><div class="whitecorner"></div></div>
+				<div class="tcboxcontent" id="wid_{$win_no}_searchcontent">
+					<div class="header" onmouseover="$K.windows['wid_{$win_no}'].treeControlHover('detailsearch','over');" onmouseout="$K.windows['wid_{$win_no}'].treeControlHover('detailsearch','out');">
+						<div class="desc">{$itext.TXT_SEARCH_CRITERA|default:'$TXT_SEARCH_CRITERA'}</div>
+						<!-- actions //-->
+							<div class="actions">
+								<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+								<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+									<div class="actionborder"></div>
+									<a  class="add" onclick="$K.actionhover=true;" onmouseover="$K.yg_showHelp('{$itext.SEARCH_ADD}');" title="{$itext.SEARCH_ADD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+									<div class="actionborder"></div>
+								</div>
+		  					</div>
+						<!-- end actions //-->
+					</div>
+					<div id="wid_{$win_no}_searchouterbox">
+						<div id="wid_{$win_no}_searchoutercontent" class="outercontent">
+							<div id="wid_{$win_no}_searchinnercontent" class="innercontent">
+								<div id="wid_{$win_no}_searchinnercontentie" class="innercontentie">
+									<div id="wid_{$win_no}_searchinnercontentinner" class="mk_contentgroup" yg_multiselect="true">
+
+										<!-- START BEISPIELE, ALLE ELEMENTE DER TREE_SEARCH.HTML //-->
+
+										<div class="cntblockcontainer">
+											<!-- actions //-->
+											<div class="actions">
+												<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+												<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+													<div class="actionborder"></div>
+													<a onclick="$K.yg_removeSearchEntry(this.up('.cntblockcontainer'),this.up('.ywindow').id);$K.actionhover=true;" class="del" onmouseover="$K.yg_showHelp('{$itext.SEARCH_DELETE}');" title="{$itext.SEARCH_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+													<a  class="up" onclick="$K.actionhover=true;" onmouseover="$K.yg_showHelp('{$itext.SEARCH_MOVEUP}');" title="{$itext.SEARCH_MOVEUP}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+													<a  class="down" onclick="$K.actionhover=true;" onmouseover="$K.yg_showHelp('{$itext.SEARCH_MOVEDOWN}');" title="{$itext.SEARCH_MOVEDOWN}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+													<div class="actionborder"></div>
+												</div>
+											</div>
+											<!-- end actions //-->
+											<div class="cntblock" yg_selectable="true">
+												<span class="label">Site</span>
+												<table class="gridflex" cellspacing="0" cellpadding="0">
+													<tr>
+														<td width="40%">
+
+															<div id="ddsearchsiteoperator" yg_form="dropdown" class="dropdownbox">
+																<div class="dropdown">
+																	<div class="dropdowninner">
+																		<input type="text" tabindex="1" >
+																	</div>
+																</div>
+																<div class="dropdownlistcontainer">
+																	<div class="dropdownlist">
+																		<div value="entry1" class="selected">{$itext.TXT_IS_PART_OF|default:'$TXT_IS_PART_OF'}</div>
+																		<div value="entry2">{$itext.TXT_IS_NOT_PART_OF|default:'$TXT_IS_NOT_PART_OF'}</div>
+																	</div>
+																	<div class="mk_scrollbars"></div>
+																</div>
+																<input type="hidden">
+															</div>
+
+														</td>
+														<td width="60%">
+
+															<div id="ddsearchsite" yg_form="dropdown" class="dropdownbox">
+																<div class="dropdown">
+																	<div class="dropdowninner">
+																		<input type="text" tabindex="1" >
+																	</div>
+																</div>
+																<div class="dropdownlistcontainer">
+																	<div class="dropdownlist">
+																		<div value="entry1" class="selected">Site A</div>
+																		<div value="entry2">Site B</div>
+																		<div value="entry3">Site C</div>
+																	</div>
+																	<div class="mk_scrollbars"></div>
+																</div>
+																<input type="hidden">
+															</div>
+
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+
+
+										<div class="cntblockcontainer">
+											<!-- actions //-->
+											<div class="actions">
+												<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+												<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+													<div class="actionborder"></div>
+													<a onclick="$K.yg_removeSearchEntry(this.up('.cntblockcontainer'),this.up('.ywindow').id);$K.actionhover=true;" class="del" onmouseover="$K.yg_showHelp('{$itext.SEARCH_DELETE}');" title="{$itext.SEARCH_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+													<a  class="up" onclick="$K.actionhover=true;" onmouseover="$K.yg_showHelp('{$itext.SEARCH_MOVEUP}');" title="{$itext.SEARCH_MOVEUP}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+													<a  class="down" onclick="$K.actionhover=true;"  onmouseover="$K.yg_showHelp('{$itext.SEARCH_MOVEDOWN}');" title="{$itext.SEARCH_MOVEDOWN}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+													<div class="actionborder"></div>
+												</div>
+											</div>
+											<!-- end actions //-->
+											<div class="cntblock" yg_selectable="true">
+												<span class="label">{$itext.TXT_APPROVEMENT_STATUS|default:'$TXT_APPROVEMENT_STATUS'}</span>
+												<table class="gridflex" cellspacing="0" cellpadding="0">
+													<tr>
+														<td width="40%">
+
+															<div id="ddpublicationoperator" yg_form="dropdown" class="dropdownbox">
+																<div class="dropdown">
+																	<div class="dropdowninner">
+																		<input type="text" tabindex="1" >
+																	</div>
+																</div>
+																<div class="dropdownlistcontainer">
+																	<div class="dropdownlist">
+																		<div value="entry1" class="selected">{$itext.TXT_IS_NOW|default:'$TXT_IS_NOW'}</div>
+																		<div value="entry2">{$itext.TXT_IS_NOT_NOW|default:'$TXT_IS_NOT_NOW'}</div>
+																	</div>
+																	<div class="mk_scrollbars"></div>
+																</div>
+																<input type="hidden">
+															</div>
+
+														</td>
+
+														<td width="60%">
+
+															<div id="ddpublication" yg_form="dropdown" class="dropdownbox">
+																<div class="dropdown">
+																	<div class="dropdowninner">
+																		<input type="text" tabindex="1" >
+																	</div>
+																</div>
+																<div class="dropdownlistcontainer">
+																	<div class="dropdownlist">
+																		<div value="entry1" class="selected">{$itext.TXT_APPROVED|default:'$TXT_APPROVED'}</div>
+																		<div value="entry2">{$itext.TXT_LAST_VERSION_PULICIZED|default:'$TXT_LAST_VERSION_PULICIZED'}</div>
+																	</div>
+																	<div class="mk_scrollbars"></div>
+																</div>
+																<input type="hidden">
+															</div>
+
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+
+
+										<div class="cntblockcontainer">
+											<!-- actions //-->
+											<div class="actions">
+												<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+												<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+													<div class="actionborder"></div>
+													<a onclick="$K.yg_removeSearchEntry(this.up('.cntblockcontainer'),this.up('.ywindow').id);$K.actionhover=true;" class="del" onmouseover="$K.yg_showHelp('{$itext.SEARCH_DELETE}');" title="{$itext.SEARCH_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+													<a  class="up" onclick="$K.actionhover=true;" onmouseover="$K.yg_showHelp('{$itext.SEARCH_MOVEUP}');" title="{$itext.SEARCH_MOVEUP}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+													<a  class="down" onclick="$K.actionhover=true;"  onmouseover="$K.yg_showHelp('{$itext.SEARCH_MOVEDOWN}');" title="{$itext.SEARCH_MOVEDOWN}" onmouseout="$K.yg_showHelp(false);"onfocus="this.blur();"></a>
+													<div class="actionborder"></div>
+												</div>
+											</div>
+											<!-- end actions //-->
+											<div class="cntblock" yg_selectable="true">
+												<span class="label">{$itext.TXT_DELETED_ARCHIVED_INACTIVE|default:'$TXT_DELETED_ARCHIVED_INACTIVE'}</span>
+												<table class="gridflex" cellspacing="0" cellpadding="0">
+													<tr>
+														<td width="40%">
+
+															<div id="ddstateoperator" yg_form="dropdown" class="dropdownbox">
+																<div class="dropdown">
+																	<div class="dropdowninner">
+																		<input type="text" tabindex="1" >
+																	</div>
+																</div>
+																<div class="dropdownlistcontainer">
+																	<div class="dropdownlist">
+																		<div value="entry1" class="selected">{$itext.TXT_IS|default:'$TXT_IS'}</div>
+																		<div value="entry2">{$itext.TXT_IS_NOT|default:'$TXT_IS_NOT'}</div>
+																	</div>
+																	<div class="mk_scrollbars"></div>
+																</div>
+																<input type="hidden">
+															</div>
+
+														</td>
+														<td width="60%">
+
+															<div id="ddstate" yg_form="dropdown" class="dropdownbox">
+																<div class="dropdown">
+																	<div class="dropdowninner">
+																		<input type="text" tabindex="1" >
+																	</div>
+																</div>
+																<div class="dropdownlistcontainer">
+																	<div class="dropdownlist">
+																		<div value="entry1" class="selected">{$itext.TXT_DELETED|default:'$TXT_DELETED'}</div>
+																		<div value="entry2">{$itext.TXT_ARCHIVED|default:'$TXT_ARCHIVED'}</div>
+																		<div value="entry3">{$itext.TXT_INACTIVE|default:'$TXT_INACTIVE'}</div>
+																	</div>
+																	<div class="mk_scrollbars"></div>
+																</div>
+																<input type="hidden">
+															</div>
+
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+
+										<div class="cntblockcontainer">
+											<!-- actions //-->
+											<div class="actions">
+												<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+												<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+													<div class="actionborder"></div>
+													<a onclick="$K.yg_removeSearchEntry(this.up('.cntblockcontainer'),this.up('.ywindow').id);$K.actionhover=true;" class="del" onmouseover="$K.yg_showHelp('{$itext.SEARCH_DELETE}');" title="{$itext.SEARCH_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+													<a  class="up" onmouseover="$K.yg_showHelp('{$itext.SEARCH_MOVEUP}');" title="{$itext.SEARCH_MOVEUP}" onmouseout="$K.yg_showHelp(false);" onclick="$K.actionhover=true;" onfocus="this.blur();"></a>
+													<a  class="down" onmouseover="$K.yg_showHelp('{$itext.SEARCH_MOVEDOWN}');" title="{$itext.SEARCH_MOVEDOWN}" onmouseout="$K.yg_showHelp(false);" onclick="$K.actionhover=true;" onfocus="this.blur();"></a>
+													<div class="actionborder"></div>
+												</div>
+											</div>
+											<!-- end actions //-->
+											<div class="cntblock" yg_selectable="true">
+												<span class="label">Tote Links</span>
+												<table class="gridflex" cellspacing="0" cellpadding="0">
+													<tr>
+														<td width="100%">
+
+															<div id="dddeadlinks" yg_form="dropdown" class="dropdownbox">
+																<div class="dropdown">
+																	<div class="dropdowninner">
+																		<input type="text" tabindex="1" >
+																	</div>
+																</div>
+																<div class="dropdownlistcontainer">
+																	<div class="dropdownlist">
+																		<div value="entry1" class="selected">{$itext.TXT_HAS_DEAD_LINKS|default:'$TXT_HAS_DEAD_LINKS'}</div>
+																		<div value="entry2">{$itext.TXT_HAS_NO_DEAD_LINKS|default:'$TXT_HAS_NO_DEAD_LINKS'}</div>
+																	</div>
+																	<div class="mk_scrollbars"></div>
+																</div>
+																<input type="hidden">
+															</div>
+
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+
+
+										<div class="cntblockcontainer">
+											<!-- actions //-->
+											<div class="actions">
+												<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+												<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+													<div class="actionborder"></div>
+													<a onclick="$K.yg_removeSearchEntry(this.up('.cntblockcontainer'),this.up('.ywindow').id);$K.actionhover=true;" class="del" onmouseover="$K.yg_showHelp('{$itext.SEARCH_DELETE}');" title="{$itext.SEARCH_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+													<a  class="up" onclick="$K.actionhover=true;" onmouseover="$K.yg_showHelp('{$itext.SEARCH_MOVEUP}');" title="{$itext.SEARCH_MOVEUP}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+													<a  class="down" onclick="$K.actionhover=true;"  onmouseover="$K.yg_showHelp('{$itext.SEARCH_MOVEDOWN}');" title="{$itext.SEARCH_MOVEDOWN}" onmouseout="$K.yg_showHelp(false);"onfocus="this.blur();"></a>
+													<div class="actionborder"></div>
+												</div>
+											</div>
+											<!-- end actions //-->
+											<div class="cntblock" yg_selectable="true">
+												<span class="label">{$itext.TXT_TODOS|default:'$TXT_TODOS'}</span>
+												<table class="gridflex" cellspacing="0" cellpadding="0">
+													<tr>
+														<td width="100%">
+
+															<div id="ddtodos" yg_form="dropdown" class="dropdownbox">
+																<div class="dropdown">
+																	<div class="dropdowninner">
+																		<input type="text" tabindex="1" >
+																	</div>
+																</div>
+																<div class="dropdownlistcontainer">
+																	<div class="dropdownlist">
+																		<div value="entry1" class="selected">{$itext.TXT_IS_IN_MY_TODO_LIST|default:'$TXT_IS_IN_MY_TODO_LIST'}</div>
+																		<div value="entry2">{$itext.TXT_IS_NOT_IN_MY_TODO_LIST|default:'$TXT_IS_NOT_IN_MY_TODO_LIST'}</div>
+																	</div>
+																	<div class="mk_scrollbars"></div>
+																</div>
+																<input type="hidden">
+															</div>
+
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+
+
+										<div class="cntblockcontainer">
+											<!-- actions //-->
+											<div class="actions">
+												<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+												<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+													<div class="actionborder"></div>
+													<a onclick="$K.yg_removeSearchEntry(this.up('.cntblockcontainer'),this.up('.ywindow').id);$K.actionhover=true;" class="del" onmouseover="$K.yg_showHelp('{$itext.SEARCH_DELETE}');" title="{$itext.SEARCH_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+													<a  class="up" onclick="$K.actionhover=true;" onmouseover="$K.yg_showHelp('{$itext.SEARCH_MOVEUP}');" title="{$itext.SEARCH_MOVEUP}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+													<a  class="down" onclick="$K.actionhover=true;"  onmouseover="$K.yg_showHelp('{$itext.SEARCH_MOVEDOWN}');" title="{$itext.SEARCH_MOVEDOWN}" onmouseout="$K.yg_showHelp(false);"onfocus="this.blur();"></a>
+													<div class="actionborder"></div>
+												</div>
+											</div>
+											<!-- end actions //-->
+											<div class="cntblock" yg_selectable="true">
+												<span class="label">{$itext.TXT_RIGHTS_USERGROUPS|default:'$TXT_RIGHTS_USERGROUPS'}</span>
+												<table class="gridflex" cellspacing="0" cellpadding="0">
+													<tr>
+														<td width="40%">
+
+																<div id="ddrightsrole" yg_form="dropdown" class="dropdownbox">
+																	<div class="dropdown">
+																		<div class="dropdowninner">
+																			<input type="text" tabindex="1" >
+																		</div>
+																	</div>
+																	<div class="dropdownlistcontainer">
+																		<div class="dropdownlist">
+																			<div value="entry1" class="selected">Administrator</div>
+																			<div value="entry2">Redakteur</div>
+																			<div value="entry3">Übersetzungsbüro</div>
+																			<div value="entry4">Chefredakteur</div>
+																		</div>
+																		<div class="mk_scrollbars"></div>
+																	</div>
+																	<input type="hidden">
+																</div>
+
+														</td>
+														<td width="26%">
+
+																<div id="ddrightsroleoperator" yg_form="dropdown" class="dropdownbox">
+																	<div class="dropdown">
+																		<div class="dropdowninner">
+																			<input type="text" tabindex="1" >
+																		</div>
+																	</div>
+																	<div class="dropdownlistcontainer">
+																		<div class="dropdownlist">
+																			<div value="entry1" class="selected">{$itext.TXT_IS_ALLOWED|default:'$TXT_IS_ALLOWED'}</div>
+																			<div value="entry2">{$itext.TXT_IS_NOT_ALLOWED|default:'$TXT_IS_NOT_ALLOWED'}</div>
+																		</div>
+																		<div class="mk_scrollbars"></div>
+																	</div>
+																	<input type="hidden">
+																</div>
+
+														</td>
+														<td width="34%">
+																<div id="ddrightsrolerights" yg_form="dropdown" class="dropdownbox">
+																	<div class="dropdown">
+																		<div class="dropdowninner">
+																			<input type="text" tabindex="1" >
+																		</div>
+																	</div>
+																	<div class="dropdownlistcontainer">
+																		<div class="dropdownlist">
+																			<div value="entry1" class="selected">{$itext.TXT_READ|default:'$TXT_READ'}</div>
+																			<div value="entry2">{$itext.TXT_WRITE|default:'$TXT_WRITE'}</div>
+																			<div value="entry3">{$itext.TXT_DELETE|default:'$TXT_DELETE'}</div>
+																			<div value="entry4">{$itext.TXT_APPROVE|default:'$TXT_APPROVE'}</div>
+																			<div value="entry5">{$itext.TXT_PUBLICIZE|default:'$TXT_PUBLICIZE'}</div>
+																			<div value="entry6">{$itext.TXT_CREATE_SUBOBJECTS|default:'$TXT_CREATE_SUBOBJECTS'}</div>
+																		</div>
+																		<div class="mk_scrollbars"></div>
+																	</div>
+																	<input type="hidden">
+																</div>
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+
+
+										<!-- ENDE BEISPIELE //-->
+
+										<div class="cntblockadd" onmouseover="$K.yg_showHelp('{$itext.SEARCH_ADD}');" title="{$itext.SEARCH_ADD}" onmouseout="$K.yg_showHelp(false);"> </div>
+
+										<div style="height:50px;"></div>
+									</div>
+								</div>
+							</div>
+							<div id="wid_{$win_no}_searchscroll"></div>
+						</div>
+					</div>
+
+
+
+					<div class="buttoncont">
+						<div class="button" tabindex="1">
+							<a class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_START_SEARCH|default:'$TXT_START_SEARCH'}</nobr></div></a>
+						</div>
+					</div>
+				</div>
+				<div class="borderbottom"><div class="whitecorner"></div></div>
+			</div>
+		</div>
+
+		</td>
+		<td class="ywindow_right"></td>
+	</tr>
+	<tr id="wid_{$win_no}_tablespace" class="ywindow_spacer" style="display:'none';">
+		<td class="ywindow_left"></td>
+		<td class="ywindow_spacemid"></td>
+		<td class="ywindow_right"></td>
+	</tr>
+</table>
+<!-- END FILTER //-->
+*}
+
+{* 
+<!-- SEARCH HEADER // -->
+<div id="wid_{$win_no}_searchview" class="tabcontenttree" style="display:none;">
+
+	<div class="searchblock">
+		<a onclick="$K.yg_treeresultSwap(this);" class="opened"><div>Seiten <span class="count">(5)</span></div><div class="file"><div class="whitecorner"></div></div></a>
+		<div class="searchblockcnt">
+			<div class="searchblockresult">
+				<table cellspacing=0>
+					<tr>
+						<td width="17"><div class="iconpage"></div></td>
+						<td class="title">
+							Mousonweg ewg wg wg wg wegewigewui guehiwgiu ewbwbgui buiwegbuiwturm<br />
+							<div class="date">21.05.2007, 09:52</div>
+							<a  class="user">Miss Gustav Knödelbong</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+
+			<div class="searchblockresult">
+				<table cellspacing=0>
+					<tr>
+						<td width="17"><div class="iconpage"></div></td>
+						<td class="title">
+							Mousonweg ewg wg wg <br />
+							<div class="date">21.05.2007, 09:52</div>
+							<a  class="user">Miss Gustav Knödelbong</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+
+			<div class="searchblockresult">
+				<table cellspacing=0>
+					<tr>
+						<td width="17"><div class="iconpage"></div></td>
+						<td class="title">
+							Mousonweg ewg wg wg wg wegewigewui guehiwgiu ewbwbgui buiwegbuiwturm<br />
+							<div class="date">21.05.2007, 09:52</div>
+							<a  class="user">Miss Gustav Knödelbong</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+
+			<div class="searchblockresult">
+				<table cellspacing=0>
+					<tr>
+						<td width="17"><div class="iconpage"></div></td>
+						<td class="title">
+							Brong<br />
+							<div class="date">heute, 11:12</div>
+							<a  class="user">Mister Bibs</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="searchblock">
+		<a onclick="$K.yg_treeresultSwap(this);" class="opened"><div>Inhaltsbausteine <span class="count">(5)</span></div><div class="file"><div class="whitecorner"></div></div></a>
+		<div class="searchblockcnt">
+			<div class="searchblockresult">
+				<table cellspacing=0>
+					<tr>
+						<td width="17"><div class="iconpage"></div></td>
+						<td class="title">
+							Mousonweg ewg wg wg wg wegewigewui guehiwgiu ewbwbgui buiwegbuiwturm<br />
+							<div class="date">21.05.2007, 09:52</div>
+							<a  class="user">Miss Gustav Knödelbong</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+
+			<div class="searchblockresult">
+				<table cellspacing=0>
+					<tr>
+						<td width="17"><div class="iconpage"></div></td>
+						<td class="title">
+							Mousonweg ewg wg wg <br />
+							<div class="date">21.05.2007, 09:52</div>
+							<a  class="user">Miss Gustav Knödelbong</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+
+			<div class="searchblockresult">
+				<table cellspacing=0>
+					<tr>
+						<td width="17"><div class="iconpage"></div></td>
+						<td class="title">
+							Mousonweg ewg wg wg wg wegewigewui guehiwgiu ewbwbgui buiwegbuiwturm<br />
+							<div class="date">21.05.2007, 09:52</div>
+							<a  class="user">Miss Gustav Knödelbong</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+
+			<div class="searchblockresult">
+				<table cellspacing=0>
+					<tr>
+						<td width="17"><div class="iconpage"></div></td>
+						<td class="title">
+							Brong<br />
+							<div class="date">heute, 11:12</div>
+							<a  class="user">Mister Bibs</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END SEARCH CONTENT //-->
+*}

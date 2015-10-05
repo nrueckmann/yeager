@@ -1,0 +1,314 @@
+/********************************************************************/
+/* tabs styles                                                      */
+/********************************************************************/
+
+.tabdown {
+	display: block;
+	width: 21px;
+	height: 26px;
+	position: absolute;
+	margin-top: 4px;
+}
+.tabdown a {
+	display: block;
+	background-image: url(../img/tabs/tabs.png);
+	background-position: 0px -34px;
+	width: 21px;
+	height: 26px;
+	text-decoration:none;	
+}
+.ydialog .tabdown a {
+	background-image: url(../img/tabs/tabs.png);
+	background-position: 0px -64px;
+}
+.tabdown a:hover {
+	background-position: -21px -34px;
+}
+.ydialog .tabdown a:hover {
+	background-position: -21px -64px;
+}
+.tabright {
+	display: block;
+	width: 21px;
+	height: 26px;
+	position: absolute;
+	left: 0px;
+	margin-top: 4px;
+}
+.tabright a {
+	display: block;
+	background-image: url(../img/tabs/tabs.png);
+	background-position: -105px -34px;
+	width: 21px;
+	height: 26px;
+	text-decoration:none;	
+}
+.ydialog .tabright a {
+	background-image: url(../img/tabs/tabs.png);
+	background-position: -105px -64px;
+}
+.tabright a:hover {
+	background-position: -126px -34px;
+}
+
+.ydialog .tabright a:hover {
+	background-position: -126px -64px;
+}
+
+.tableft {
+	width: 21px;
+	height: 26px;
+	position: absolute;
+	left: 0px;
+	margin-top: 4px;
+}
+.tableft a {
+	display: block;
+	background-image: url(../img/tabs/tabs.png);
+	background-position: -42px -34px;
+	width: 21px;
+	height: 26px;
+	text-decoration:none;	
+}
+.ydialog .tableft a {
+	background-image: url(../img/tabs/tabs.png);
+	background-position: -42px -64px;
+}
+.ydialog .tableft a:hover {
+	background-position: -63px -64px;
+}
+.tableft a:hover {
+	background-position: -63px -34px;
+}
+.tabroundleft {
+	position: absolute;
+	display: block;
+	width: 15px;
+	height: 30px;
+	background-image: url(../img/tabs/tabs.png);
+	background-position: -147px -30px;
+}
+.ydialog .tabroundleft {
+	background-image: url(../img/tabs/tabs.png);
+	background-position: -147px -60px;
+}
+.tabroundright {
+	position: absolute;
+	display: block;
+	width: 15px;
+	height: 30px;
+	background-image: url(../img/tabs/tabs.png);
+	background-position: -182px -30px;
+}
+.ydialog .tabroundright {
+	background-image: url(../img/tabs/tabs.png);
+	background-position: -182px -60px;
+}
+.tabcontainer {
+	width: auto;
+	position: absolute;
+	height: 30px;
+}
+.taboverflow {
+	position: absolute;
+	overflow: hidden;
+	left:0px;
+	height: 30px;
+}
+.tab, .tabwf {
+	background-image: url(../img/tabs/tabs.png);
+	background-position: 0px -180px;
+	width: auto;
+	display: block;
+	float: left;
+}
+.ydialog .tab, .ydialog .tabwf {
+	background-image: url(../img/tabs/tabs.png);
+	background-position: 0px -90px;
+}
+.tab a, .tabwf a {
+	padding-top: 11px;
+	padding-left: 11px;
+	padding-right: 11px;
+	padding-bottom: 19px;
+	display: block;
+	height: 30px;
+	cursor: pointer;
+	color: #9bb397;
+	background-image: url(../img/tabs/tabs.png);
+	background-position: 0px -180px;
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 12px;
+	text-decoration: none;
+}
+.ydialog .tab a,
+.ydialog .tabwf a {
+	color: #acc3a8;
+	background-image: none;
+}
+.tab a:hover, .tabwf a:hover {
+	color: #c6ffde;
+	text-decoration: none;
+}
+.tab a.sel, .tabwf a.sel {
+	padding-top: 11px;
+	padding-left: 11px;
+	padding-right: 11px;
+	padding-bottom: 19px;
+	display: block;
+	height: 30px;
+	color: #c6ffde;
+	background-image: url(../img/tabs/tabs.png);
+	background-position: center -120px;
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 12px;
+	text-decoration: none;
+}
+.ydialog .tab a.sel,
+.ydialog .tabwf a.sel {
+	background-image: url(../img/tabs/tabs.png);
+	background-position: center -220px;
+}
+.tabwf a {
+	background-image: url(../img/tabs/tabs.png);
+	background-position: center -150px;
+}
+.tabwf a.sel {
+	background-image: url(../img/tabs/tabs.png);
+	background-position: center 0px;
+}
+.tabs {
+	width: 100%;
+	height: 30px;
+	position: absolute;
+	overflow: hidden;
+	left: 6px;
+}
+.tabnavnone {
+	display: none;
+	width: 21px;
+	height: 30px;
+	position: absolute;
+	background-image: url(../img/tabs/tabs.png);
+	background-position: -84px -30px;
+}
+.ydialog .tabnavnone {
+	background-image: url(../img/tabs/tabs.png);
+	background-position: -84px -60px;
+}
+.tabcontext, 
+.taskcontext,
+.filtercontext {
+	display: none;
+	cursor: pointer;
+	-moz-user-select: none; 
+    -khtml-user-select: none;
+	position: absolute;
+	z-index: 1000;
+	width: 165px;
+	padding: 3px 0px 3px 0px;
+	background-image: url(../img/content/panelbg.png);
+	text-align: left;
+}
+.taskcontext {
+	display: block;
+	right: 30px;
+	bottom: 23px;
+}
+.filtercontext {
+	margin-top: -15px;
+	margin-left: 0px;
+}
+.tabcontext a,
+.taskcontext a,
+.filtercontext a {
+	-moz-user-select: none; 
+    -khtml-user-select: none;
+	display: block;
+	width:151px;
+	padding-left: 7px;
+	padding-right: 7px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	color: #9bb397;
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-size: 11px;
+	text-decoration: none;	
+}
+.tabcontext a:hover,
+.taskcontext a:hover,
+.filtercontext a:hover {
+	color: #c6ffde;
+	background-image: url(../img/content/panelmo.png);
+}
+.filtercut {
+	cursor: default;
+	width: 167px;
+	height: 7px;
+	background-image: url(../img/content/filtercut.gif)
+}
+
+
+/********************************************************************/
+/* pagedir                                                          */
+/********************************************************************/
+
+.tabpagedirs {
+	width: 100%;
+	position: absolute;
+	bottom: 0px;
+}
+.ywindowpagedir {
+	height: 26px;
+	font-family: Arial;
+	font-size: 10px;
+	line-height: 1.0em;
+	color: #939590;
+	border-top: 1px solid #d9d7d0;
+	background-color: #f4f4f0;
+    cursor: default;
+}
+.ywindowpagedir .perpage div {
+    cursor: default;
+}
+.ywindowpagedir b {
+	color: #000000;	
+}
+.ywindowpagedir .perpage {
+	position: absolute;
+	margin-left: 5px;
+	margin-top: 8px;
+}
+.ywindowpagedir .navpagedir {
+	position: absolute;
+	right: 10px;
+	margin-top: 8px;
+	margin-right: 1px;
+}
+.ywindowpagedir .currentpage {
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	padding-top: 5px;
+}
+.ywindowpagedir .filtercontext {
+	margin-top: -127px;
+}
+.WEBKIT .ywindowpagedir .currentpage {
+	padding-top: 3px;
+}
+.ywindowpagedir .currentpage .textbox,
+.ywindowpagedir .currentpage .textboxfocus {
+	width: 20px;
+	display: inline-block;
+	padding: 0px 0px 0px 0px;
+}
+.ydialog .ywindowpagedir {
+	color: #c4ddbf;
+	border-top: 1px solid #1F2A1E;
+}
+.ydialog .ywindowpagedir b {
+	color: #E0F9DC;
+}

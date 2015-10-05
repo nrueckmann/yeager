@@ -1,0 +1,97 @@
+{if $RPROPERTIES}
+	<form name="wid_{$win_no}_form">
+		<div class="panelcontent">
+			<div class="mk_contentgroup entrymaskcontent" yg_multiselect="true">
+
+				<div id="wid_{$win_no}_formfields">
+					<div id="wid_{$win_no}_formfields_inner">
+						<ul yg_widget="type:sortable;accepts:property;objecttype:property;" id="wid_{$win_no}_formfields_list" yg_type="property" yg_accepts="property" onmouseup="$K.yg_customSortableOnDrop(this.id);">
+							{section name='props' loop=$object_properties}
+								{if !$object_properties[props].READONLY && ($object_properties[props].VISIBLE == 1)}
+									{assign var='item_info' value=$object_properties[props]}
+									{assign var='item_index' value=$smarty.section.props.iteration}
+									{include file="$approot/ui/html/tabs/config_properties/properties.inc.html"}
+								{/if}
+							{/section}
+							<li id="wid_{$win_no}_formfield_1" class="mk_dummy"></li>
+							<input type="hidden" name="wid_{$win_no}_prop_objecttype" value="{$object_type}" />
+						</ul>
+					</div>
+				</div>
+				<div id="wid_{$win_no}_addbutton" class="cntblockadd mk_fillcontentspace" yg_accepts="property" yg_type="property" onmouseup="$K.yg_customSortableOnDrop('wid_{$win_no}_formfields_list');">
+					<div class="cntblockadd" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'PROPERTYFIELD_ADD', loadparams: {literal}{{/literal} opener_reference: 'wid_{$win_no}' {literal}} }{/literal});">
+						<div class="selectionmarker">{$itext.TXT_PROPERTYFIELD_ADD}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
+	<!-- BOTTOMLINE //-->
+	<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+		<tr>
+			<td class="ywindow_leftbt"></td>
+			<td class="ywindow_midbottom">{if $adminAllowed}<div class="button" tabindex="1"><a  class="stdbutton"><div onclick="$K.yg_saveProperties(this, '{$win_no}');" class="wrapper"><nobr>{$itext.TXT_SAVE|default:'$TXT_SAVE'}</nobr></div></a></div>{/if}</td>
+			<td class="ywindow_rightbt"></td>
+		</tr>
+	</table>
+	<!-- END BOTTOMLINE //-->
+
+	{if $refresh != 1}
+		<!-- FIXED HEADER EIGENSCHAFTEN //-->
+		<div class="tabhead_small ywindowhead" style="display:none" onmouseover="$K.yg_showActions(this);">
+			<!-- actions //-->
+			<div class="actions">
+				<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+				<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+					<div class="actionborder"></div>
+					<a onclick="new $K.yg_wndobj({literal}{{/literal} config: 'PROPERTYFIELD_ADD', loadparams: {literal}{{/literal} opener_reference: 'wid_{$win_no}' {literal}} }{/literal});" class="add" onmouseover="$K.yg_showHelp('{$itext.TXT_PROPERTYFIELD_ADD}');" title="{$itext.TXT_PROPERTYFIELD_ADD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<div class="actionborder"></div>
+				</div>
+			</div>
+			<!-- end actions //-->
+			<div class="headline1">{$itext.TXT_PROPERTIES|default:'$TXT_PROPERTIES'}</div>
+		</div>
+		<!-- END FIXED HEADER EIGENSCHAFTEN //-->
+	{/if}
+
+	<script language="javascript">
+		{include assign="js_template_formfield_1" file="$approot/ui/html/tabs/config_properties/properties.inc.html" noscript=true item_index='#<<new_idx>>' item_info=$empty_infos.1}
+		{include assign="js_template_formfield_2" file="$approot/ui/html/tabs/config_properties/properties.inc.html" noscript=true item_index='#<<new_idx>>' item_info=$empty_infos.2}
+		{include assign="js_template_formfield_3" file="$approot/ui/html/tabs/config_properties/properties.inc.html" noscript=true item_index='#<<new_idx>>' item_info=$empty_infos.3}
+		{include assign="js_template_formfield_4" file="$approot/ui/html/tabs/config_properties/properties.inc.html" noscript=true item_index='#<<new_idx>>' item_info=$empty_infos.4}
+		{include assign="js_template_formfield_5" file="$approot/ui/html/tabs/config_properties/properties.inc.html" noscript=true item_index='#<<new_idx>>' item_info=$empty_infos.5}
+		{include assign="js_template_formfield_6" file="$approot/ui/html/tabs/config_properties/properties.inc.html" noscript=true item_index='#<<new_idx>>' item_info=$empty_infos.6}
+		{include assign="js_template_formfield_7" file="$approot/ui/html/tabs/config_properties/properties.inc.html" noscript=true item_index='#<<new_idx>>' item_info=$empty_infos.7}
+		{include assign="js_template_formfield_8" file="$approot/ui/html/tabs/config_properties/properties.inc.html" noscript=true item_index='#<<new_idx>>' item_info=$empty_infos.8}
+		{include assign="js_template_formfield_9" file="$approot/ui/html/tabs/config_properties/properties.inc.html" noscript=true item_index='#<<new_idx>>' item_info=$empty_infos.9}
+
+		{include assign="js_template_formfield_10" file="$approot/ui/html/tabs/config_properties/properties.inc.html" noscript=true item_index='#<<new_idx>>' item_info=$empty_infos.10}
+		{include assign="js_template_formfield_11" file="$approot/ui/html/tabs/config_properties/properties.inc.html" noscript=true item_index='#<<new_idx>>' item_info=$empty_infos.11}
+		{include assign="js_template_formfield_12" file="$approot/ui/html/tabs/config_properties/properties.inc.html" noscript=true item_index='#<<new_idx>>' item_info=$empty_infos.12}
+		{include assign="js_template_formfield_13" file="$approot/ui/html/tabs/config_properties/properties.inc.html" noscript=true item_index='#<<new_idx>>' item_info=$empty_infos.13}
+		{include assign="js_template_formfield_14" file="$approot/ui/html/tabs/config_properties/properties.inc.html" noscript=true item_index='#<<new_idx>>' item_info=$empty_infos.14}
+		{*		{include assign="js_template_formfield_15" file="$approot/ui/html/tabs/config_properties/properties.inc.html" noscript=true item_index='#<<new_idx>>' item_info=$empty_infos.15}
+
+		{include assign="js_template_formfield_16" file="$approot/ui/html/tabs/config_properties/properties.inc.html" noscript=true item_index='#<<new_idx>>' item_info=$empty_infos.16} *}
+
+		formfieldTemplates = new Array();
+		formfieldTemplates[1] = '{$js_template_formfield_1|strip|addslashes}'.replace(/xscript/g,'script');
+		formfieldTemplates[2] = '{$js_template_formfield_2|strip|addslashes}'.replace(/xscript/g,'script');
+		formfieldTemplates[3] = '{$js_template_formfield_3|strip|addslashes}'.replace(/xscript/g,'script');
+		formfieldTemplates[4] = '{$js_template_formfield_4|strip|addslashes}'.replace(/xscript/g,'script');
+		formfieldTemplates[5] = '{$js_template_formfield_5|strip|addslashes}'.replace(/xscript/g,'script');
+		formfieldTemplates[6] = '{$js_template_formfield_6|strip|addslashes}'.replace(/xscript/g,'script');
+		formfieldTemplates[7] = '{$js_template_formfield_7|strip|addslashes}'.replace(/xscript/g,'script');
+		formfieldTemplates[8] = '{$js_template_formfield_8|strip|addslashes}'.replace(/xscript/g,'script');
+		formfieldTemplates[9] = '{$js_template_formfield_9|strip|addslashes}'.replace(/xscript/g,'script');
+		formfieldTemplates[10] = '{$js_template_formfield_10|strip|addslashes}'.replace(/xscript/g,'script');
+		formfieldTemplates[11] = '{$js_template_formfield_11|strip|addslashes}'.replace(/xscript/g,'script');
+		formfieldTemplates[12] = '{$js_template_formfield_12|strip|addslashes}'.replace(/xscript/g,'script');
+		formfieldTemplates[13] = '{$js_template_formfield_13|strip|addslashes}'.replace(/xscript/g,'script');
+		formfieldTemplates[14] = '{$js_template_formfield_14|strip|addslashes}'.replace(/xscript/g,'script');
+		{*	formfieldTemplates[15] = '{$js_template_formfield_15|strip|addslashes}'.replace(/xscript/g,'script');
+		formfieldTemplates[16] = '{$js_template_formfield_16|strip|addslashes}'.replace(/xscript/g,'script'); *}
+		$K.windows['wid_{$win_no}'].formfieldTemplates = formfieldTemplates;
+	</script>
+{/if}

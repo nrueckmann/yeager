@@ -1,0 +1,106 @@
+<!-- CONTENT //-->
+<div id="wid_{$win_no}_treeview" class="tabcontenttree" style="display:block;">
+	<!-- ACTION BUTTON -->
+	{if (($action == "") || ($action == "choosefolder") || ($action == "copy"))}
+	<div id="files_tree{$win_no}_actionbutton" class="actions" onmouseout="if($K.yg_currentHover) $K.yg_currentHover.removeClassName('row_hover');" style="display:none;">
+		<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);" style="display:block;"></div>
+		<div class="actionhover" onmouseover="$K.yg_revealActionButtons(this);" onmouseout="$K.yg_hideActionButtons(this);">
+			{if ($action == "")}
+				<div class="singleselect">
+					<div class="actionborder"></div>
+					<a onclick="$K.yg_fireAction($K.yg_actionDeleteFolder,this);" class="del"  onmouseover="$K.yg_showHelp('{$itext.TXT_FOLDER_DELETE}');" title="{$itext.TXT_FOLDER_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<a onclick="$K.yg_fireAction($K.yg_actionMoveFolder,this);" class="moveto"  onmouseover="$K.yg_showHelp('{$itext.TXT_FOLDER_MOVE}');" title="{$itext.TXT_FOLDER_MOVE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<a onclick="$K.yg_fireAction($K.yg_actionCopyFolder,this);" class="copy"  onmouseover="$K.yg_showHelp('{$itext.TXT_FOLDER_COPY}');" title="{$itext.TXT_FOLDER_COPY}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<a onclick="$K.yg_fireAction($K.yg_actionAddChildFolder,this);" class="addfolder"  onmouseover="$K.yg_showHelp('{$itext.TXT_FOLDER_ADD}');" title="{$itext.TXT_FOLDER_ADD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<div class="actionborder"></div>
+				</div>
+				<div class="multiselect">
+					<div class="actionborder"></div>
+					<a onclick="$K.yg_fireAction($K.yg_actionDeleteFolder,this);" class="del"  onmouseover="$K.yg_showHelp('{$itext.TXT_FOLDER_DELETE}');" title="{$itext.TXT_FOLDER_DELETE}" onmouseout="$K.yg_showHelp(false);"onfocus="this.blur();"></a>
+					<div class="actionborder"></div>
+				</div>
+			{else}
+				<div class="actionborder"></div>
+				<a onclick="$K.yg_actionSubmit(this,'files_tree');" class="exec" onfocus="this.blur();"></a>
+				<div class="actionborder"></div>
+			{/if}
+		</div>
+	</div>
+	{/if}
+
+	<!-- ACTION BUTTON END -->
+	{if $action == ''}
+		<div yg_widget="type:tree;treename:files_tree{$win_no};accepts:file,tag,view;sort:asc;sortable:true;nosamelevel:true;objtype:file;editable:true;" id="files_tree{$win_no}" class="files_tree" style="display:none;"></div>
+	{elseif (($action == "copy") || ($action == "move") || ($action == "restore") || ($action == "choosefolder"))}
+		<div yg_widget="type:tree;treename:files_tree{$win_no};accepts:none;sort:asc;sortable:false;nosamelevel:true;objtype:file;editable:false;" id="files_tree{$win_no}" class="files_tree" style="display:none;"></div>
+	{else}
+		<div yg_widget="type:tree;treename:files_tree{$win_no};accepts:file;sort:asc;nodrag:true;objtype:file;{if $action=='choose'}noclick:true;{/if}" id="files_tree{$win_no}" class="files_tree {if $action=='choose'}mk_chooser{/if}" style="display:none;"></div>
+	{/if}
+</div>
+
+
+{if ($action != "")}
+	<!-- bottom //-->
+	<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+		<tr>
+			<td class="ywindow_leftbt"></td>
+			<td class="ywindow_midbottom">
+				<table class="buttontable" cellspacing="0" cellpadding="0">
+					<tr>
+						<td class="rightbutton">
+							<div class="button" tabindex="1"><a id="wid_{$win_no}_okbutton" onclick="$K.windows['wid_{$win_no}'].submit();" class="stdbutton"><div class="wrapper"><nobr>{strip}
+								{if ($action == "restore")}
+									{$itext.TXT_RESTORE|default:'$TXT_RESTORE'}
+								{else}
+									{$itext.TXT_CHOOSE|default:'$TXT_CHOOSE'}
+								{/if}
+							{/strip}</nobr></div></a></div>
+							<div class="button cancel" tabindex="1"><a id="wid_{$win_no}_cancelbutton" onclick="$K.windows['wid_{$win_no}'].remove();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</nobr></div></a></div>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td class="ywindow_rightbt"></td>
+		</tr>
+	</table>
+	<!-- end bottom //-->
+{/if}
+
+{if $action=='choose'}
+	<!-- VIEWENTRYMASK //-->
+	{include file="$approot/ui/html/tabs/files_foldercontent/files_foldercontent_filter.inc.html"}
+	<!-- END VIEWENTRYMASK //-->
+
+	<!-- FIXED HEADER CNT //-->
+	{include file="$approot/ui/html/tabs/files_foldercontent/files_foldercontent_fixedheader.inc.html"}
+	<!-- END FIXED HEADER VERSIONEN //-->
+
+	<div class="column2bottomviews ywindowbottomcolumn2">
+		<table class="gridflex" cellspacing="0" cellpadding="0">
+			<tr>
+				<td>
+					<span class="label">{$itext.TXT_VIEW_SELECT|default:'$TXT_VIEW_SELECT'}</span>
+				</td>
+				<td style="width:230px;">
+					<div id="wid_{$win_no}_viewselect" yg_form="dropdown" class="dropdownbox">
+						<div class="dropdown">
+							<div class="dropdowninner">
+								<input type="text" tabindex="1" >
+							</div>
+						</div>
+						<div class="dropdownlistcontainer">
+							<div class="dropdownlist">
+								<div value="" class="selected">{$itext.TXT_SOURCE_FILE|default:'$TXT_SOURCE_FILE'}</div>
+								{section name=i loop=$views start=1}
+									<div value="{$views[i].IDENTIFIER}">{$views[i].NAME}: {if $views[i].WIDTH!=0}{$views[i].WIDTH}{else}[-]{/if} x {if $views[i].HEIGHT!=0}{$views[i].HEIGHT}{else}[-]{/if}</div>
+								{/section}
+							</div>
+							<div class="mk_scrollbars"></div>
+						</div>
+						<input type="hidden">
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+{/if}

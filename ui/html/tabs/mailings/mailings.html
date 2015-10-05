@@ -1,0 +1,151 @@
+<div class="panelcontent fullscreen">
+
+	<div class="mk_contentgroup" yg_multiselect="true">
+
+			{section name='nl' loop=$emailList}
+				<!-- MAILING //-->
+				<div id="mailings_{$win_no}_{$emailList[nl].ID}" yg_selectable="true" onclick="$K.yg_selectNode(this,event);" ondblclick="$K.yg_openObjectDetails('{$emailList[nl].ID}', 'mailing', '{$emailList[nl].NAME|escape_quotes}', 'mailing', '{if $emailList[nl].HASCHANGED}changed{/if}');" class="cntblockcontainer mk_mailing {if !$emailList[nl].RDELETE}mk_nodel{/if}" onmouseover="$K.yg_showActions(this);" yg_id="{$emailList[nl].ID}-mailing" yg_type="mailing" yg_property="mailing">
+					<!-- actions //-->
+					<div class="actions">
+						<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+						<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+							<div class="singleselect">
+								<div class="actionborder"></div>
+									{if $emailList[nl].RDELETE}
+										<a class="del" onclick="$K.yg_fireAction($K.yg_deleteElement,this.up(3),event)" onmouseover="$K.yg_showHelp('{$itext.TXT_MAILING_DELETE}');" title="{$itext.TXT_MAILING_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+									{/if}
+									<a class="edit" onclick="Event.stop(event);$K.yg_openObjectDetails('{$emailList[nl].ID}', 'mailing', '{$emailList[nl].NAME|escape_quotes'}', 'mailing', '{if $emailList[nl].HASCHANGED}changed{/if}');" onmouseover="$K.yg_showHelp('{$itext.TXT_MAILING_EDIT}');" title="{$itext.TXT_MAILING_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+									{if $rsub}
+										<a class="copy" onclick="Event.stop(event);$K.yg_duplicateMailing('{$emailList[nl].ID}');" onmouseover="$K.yg_showHelp('{$itext.TXT_MAILING_COPY}');" title="{$itext.TXT_MAILING_COPY}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+									{/if}
+									<a class="preview" onclick="Event.stop(event);$K.yg_preview({literal}{{/literal}objecttype: 'mailing', id: '{$emailList[nl].ID}', fullscreen: true{literal}}{/literal});" onmouseover="$K.yg_showHelp('{$itext.TXT_MAILING_PREVIEW}');" title="{$itext.TXT_MAILING_PREVIEW}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+								<div class="actionborder"></div>
+							</div>
+							<div class="multiselect">
+								<div class="actionborder"></div>
+								{if $emailList[nl].RDELETE}
+									<a onmouseover="$K.yg_showHelp('{$itext.TXT_MAILINGS_DELETE}');" title="{$itext.TXT_MAILINGS_DELETE}" onclick="$K.yg_fireAction($K.yg_deleteElement,this.up(3),event);" class="del" onmouseout="$K.yg_showHelp(false);"></a>
+								{/if}
+								<div class="actionborder"></div>
+							</div>
+						</div>
+					</div>
+					<!-- end actions //-->
+					<div class="cntblockversions listitempage mk_mailing">
+						<table class="gridflex" cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="mailingtd">
+									<span yg_id="{$emailList[nl].ID}-mailing" yg_property="name" yg_type="mailing" class="objheadline {if $emailList[nl].HASCHANGED}changed{/if}">{$emailList[nl].NAME}</span>
+									<div yg_id="{$emailList[nl].ID}-mailing" yg_property="yg_usergrouplist" yg_type="mailing" class="usergrouplist">
+										{section name='gr' loop=$emailList[nl].GROUPS}
+											{$emailList[nl].GROUPS[gr].NAME}{if !$smarty.section.gr.last},{/if}
+										{/section}
+									</div>
+								</td>
+								<td width="110" class="receipientstd" yg_id="{$emailList[nl].ID}-mailing" yg_property="receipients" yg_type="mailing">
+									{$emailList[nl].RECEIPIENTS}
+								</td>
+								<td width="230">
+									<!-- stati: unsent, sent, paused, cancelled, inprogress !-->
+									<div class="status_info {$emailList[nl].STATUS|strtolower}" yg_id="{$emailList[nl].ID}-mailing" yg_type="mailing" yg_property="statusinfo">
+										<div class="status">
+											<span class="status_num">{$emailList[nl].JOBS_DONE} / {$emailList[nl].RECEIPIENTS}</span>
+											<span class="status_text_inprogress">{$itext.TXT_EMAILS_INPROGRESS|default:'$TXT_EMAILS_INPROGRESS'}</span><span class="mailing_processing"></span>
+											<span class="status_text_paused">{$itext.TXT_EMAILS_PAUSED|default:'$TXT_EMAILS_PAUSED'}</span>
+											<span class="status_text_sent">{$itext.TXT_EMAILS_DELIVERY_SUCCESS|default:'$TXT_EMAILS_DELIVERY_SUCCESS'}</span>
+											<span class="status_text_cancelled">{$itext.TXT_EMAILS_CANCELLED|default:'$TXT_EMAILS_CANCELLED'}</span>
+										</div>
+										<div class="progressbar">
+											<div class="progress" style="width:{$emailList[nl].PERCENTAGE}%;"></div>
+										</div>
+										<span class="status_functions">
+											{if $emailList[nl].RSEND}
+												<div onclick="Event.stop(event);$K.yg_resumeMailing(this);" class="bt_resume selectionmarker">{$itext.TXT_RESUME|default:'$TXT_RESUME'}</div>
+												<div onclick="Event.stop(event);$K.yg_pauseMailing(this);" class="bt_pause selectionmarker">{$itext.TXT_PAUSE|default:'$TXT_PAUSE'}</div>
+												<div onclick="Event.stop(event);$K.yg_cancelMailing(this);" class="bt_cancel selectionmarker">{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</div>
+												<div onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: 'MAILING_TEST', loadparams:  {literal}{{/literal} opener_reference: 'wid_{$win_no}', yg_id: '{$emailList[nl].ID}-mailing' {literal}}}{/literal});" class="bt_sendtest selectionmarker">{$itext.TXT_SEND_TEST_EMAIL|default:'$TXT_SEND_TEST_EMAIL'}</div>
+												<div onclick="Event.stop(event);$K.yg_sendMailing(this);" class="bt_send selectionmarker">{$itext.TXT_SEND|default:'$TXT_SEND'}</div>
+											{/if}
+										</span>
+									</div>
+								</td>
+								<td class="author" width="170">
+									{$emailList[nl].CHANGEDTS|date_format_php:$itext.DATE_FORMAT} {$emailList[nl].CHANGEDTS|date_format_php:$itext.TIME_FORMAT}<br />
+									<a class="user {if !$emailList[nl].USERINFO.USER_NAME}unknown{/if}" onclick="$K.yg_openUserInfo('{$emailList[nl].CHANGEDBY}', this);" yg_type="user" yg_id="{$emailList[nl].CHANGEDBY}-user" yg_property="name" onmouseover="$K.yg_hoverUserHint(this);" onmouseout="$K.yg_hideUserHint();">{$emailList[nl].USERINFO.USER_NAME|default:$itext.TXT_UNKNOWN}</a>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<!-- END MAILING //-->
+			{sectionelse}
+				<div class="nocontentareas mk_verticalcenter"><span class="bracketleft"></span>{$itext.TXT_NO_MAILINGS|default:'$TXT_NO_MAILINGS'}<span class="bracketright"></span></div>
+			{/section}
+	</div>
+
+</div>
+
+
+{if $refresh != 1}
+	<!-- FIXED HEADER VERSIONEN //-->
+	<div class="tabhead_mid ywindowhead start fullscreen" style="display:none">
+		<!-- actions //-->
+		<div class="actions">
+			{if $rsub}
+				<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+				<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+					<div class="actionborder"></div>
+					<a class="add" onclick="Event.stop(event);$K.yg_addMailing(this);" onmouseover="$K.yg_showHelp('{$itext.TXT_MAILING_ADD}');" title="{$itext.TXT_MAILING_ADD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<div class="actionborder"></div>
+				</div>
+			{/if}
+		</div>
+		<!-- end actions //-->
+
+		<div class="headercolumns">
+			<table class="gridflex" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+						<div class="filtercol">{$itext.TXT_NAME|default:'$TXT_NAME'}</div>
+					</td>
+					<td width="110">
+						<div class="filtercol">{$itext.TXT_NUM_RECIPIENTS|default:'$TXT_NUM_RECIPIENTS'}</div>
+					</td>
+					<td width="230">
+						<div class="filtercol">{$itext.TXT_DELIVERY_STATUS|default:'$TXT_DELIVERY_STATUS'} <span class="colfilter" onclick="$K.yg_showFilterContext(this, event);">{strip}
+							{if $filterStatus == 'ALL'}{$itext.TXT_SHOW_ALL_SHORT|default:'$TXT_SHOW_ALL_SHORT'}{/if}
+							{if $filterStatus == 'INPROGRESS'}{$itext.TXT_EMAILS_INPROGRESS|default:'$TXT_EMAILS_INPROGRESS'}{/if}
+							{if $filterStatus == 'UNSENT'}{$itext.TXT_EMAILS_UNSENT|default:'$TXT_EMAILS_UNSENT'}{/if}
+							{if $filterStatus == 'SENT'}{$itext.TXT_EMAILS_SENT|default:'$TXT_EMAILS_SENT'}{/if}
+							{if $filterStatus == 'PAUSED'}{$itext.TXT_EMAILS_PAUSED|default:'$TXT_EMAILS_PAUSED'}{/if}
+							{if $filterStatus == 'CANCELLED'}{$itext.TXT_EMAILS_CANCELLED|default:'$TXT_EMAILS_CANCELLED'}{/if}
+						{/strip}</span></div>
+						<div class="filtercontext" id="wid_{$win_no}_mailingfilter_status" onmouseup="this.hide();">
+							<a value="ALL" shortname="{$itext.TXT_SHOW_ALL_SHORT|default:'$TXT_SHOW_ALL_SHORT'}" onclick="$K.yg_filterMailings('status', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_SHOW_ALL|default:'$TXT_SHOW_ALL'}</a>
+							<a shortname="{$itext.TXT_EMAILS_INPROGRESS|default:'$TXT_EMAILS_INPROGRESS'}" value="INPROGRESS" onclick="$K.yg_filterMailings('status', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_EMAILS_INPROGRESS|default:'$TXT_EMAILS_INPROGRESS'}</a>
+							<a shortname="{$itext.TXT_EMAILS_UNSENT|default:'$TXT_EMAILS_UNSENT'}" value="UNSENT" onclick="$K.yg_filterMailings('status', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_EMAILS_UNSENT|default:'$TXT_EMAILS_UNSENT'}</a>
+							<a shortname="{$itext.TXT_EMAILS_SENT|default:'$TXT_EMAILS_SENT'}" value="SENT" onclick="$K.yg_filterMailings('status', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_EMAILS_SENT|default:'$TXT_EMAILS_SENT'}</a>
+							<a shortname="{$itext.TXT_EMAILS_PAUSED|default:'$TXT_EMAILS_PAUSED'}" value="PAUSED" onclick="$K.yg_filterMailings('status', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_EMAILS_PAUSED|default:'$TXT_EMAILS_PAUSED'}</a>
+							<a shortname="{$itext.TXT_EMAILS_CANCELLED|default:'$TXT_EMAILS_CANCELLED'}" value="CANCELLED" onclick="$K.yg_filterMailings('status', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_EMAILS_CANCELLED|default:'$TXT_EMAILS_CANCELLED'}</a>
+						</div>
+					</td>
+					<td width="170">
+						<div class="filtercol">{$itext.TXT_LAST_CHANGE|default:'$TXT_LAST_CHANGE'}</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<!-- END FIXED HEADER VERSIONEN //-->
+
+	<!-- PAGEDIR //-->
+	{include file="$approot/ui/html/tabs/common/pagedir.inc.html"}
+{/if}
+
+<script>
+{if $rsub}
+	$K.yg_enable('tree_btn_add', 'btn-{$win_no}', 'tree_btn');
+{else}
+	$K.yg_disable('tree_btn_add', 'btn-{$win_no}', 'tree_btn');
+{/if}
+</script>

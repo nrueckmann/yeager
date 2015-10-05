@@ -1,0 +1,404 @@
+/********************************************************************/
+/* vertical scrollbars                                              */
+/********************************************************************/
+
+
+
+.defaultSkin .scrollbar_v,
+.scrollbar_v {
+	-moz-user-select: none;
+    -khtml-user-select: none;
+	position: absolute;
+	visibility: hidden;
+	top: 0px;
+	right: 0px;
+	bottom: 9px;
+	width: 9px !important;
+	font-size: 1px;
+	z-index: 100;
+	cursor: default;
+}
+
+.defaultSkin .track_v,
+.track_v {
+	position: absolute;
+	left: 0;
+	top: 10px;
+	bottom: 10px;
+	width: 9px;
+	background: url("../img/scrollbars/track_r.gif") repeat-y;
+	z-index: 101;
+	cursor: default;
+}
+.defaultSkin .dragbar_v,
+.dragbar_v {
+	position: absolute;
+	top: 1px;
+	width: 8px;
+	height: 20px;
+	background: url("../img/scrollbars/dragbar_r.gif") -1px 0px repeat-y;
+	z-index: 101;
+	cursor: pointer;
+}
+.defaultSkin .dragbar_v:hover,
+.dragbar_v:hover {
+	background: url("../img/scrollbars/dragbar_r.gif") -10px 0px repeat-y;
+}
+
+.defaultSkin .scroll_up,
+.scroll_up {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 100;
+	height: 13px;
+	width: 9px;
+	background: url(../img/scrollbars/btn-up.gif) 0px 0px no-repeat;
+	cursor: pointer;
+}
+.defaultSkin .scroll_up:hover,
+.scroll_up:hover {
+	background: url(../img/scrollbars/btn-up.gif) 0px -13px no-repeat;
+}
+.defaultSkin .scroll_down,
+.scroll_down {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	z-index: 101;
+	height: 13px;
+	width: 9px;
+	background: url(../img/scrollbars/btn-dn.gif) 0px 0px no-repeat;
+	cursor: pointer;
+}
+.defaultSkin .scroll_down:hover,
+.scroll_down:hover {
+	background: url(../img/scrollbars/btn-dn.gif) 0px -13px no-repeat;
+}
+
+
+
+
+/********************************************************************/
+/* horizontal scrollbars                                            */
+/********************************************************************/
+
+.defaultSkin .scrollbar_h,
+.scrollbar_h {
+	position: absolute;
+	visibility: hidden;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	height: 9px;
+	font-size: 1px;
+	z-index: 100;
+	cursor: default;
+}
+
+.defaultSkin .track_h,
+.track_h {
+	position: absolute;
+	left: 11px;
+	right: 20px; /* space for button + scr_blank */
+	height: 9px;
+	background: url("../img/scrollbars/track_b.gif") repeat-x;
+	z-index: 100;
+	cursor: default;
+}
+
+.defaultSkin .dragbar_h,
+.dragbar_h {
+	position: absolute;
+	left: 1px;
+	width: 20px;
+	height: 9px;
+	background: url("../img/scrollbars/dragbar_b.gif") 0px -1px repeat-x;
+	z-index: 100;
+	cursor: pointer;
+}
+.defaultSkin .dragbar_h:hover,
+.dragbar_h:hover {
+	background: url("../img/scrollbars/dragbar_b.gif") 0px -10px repeat-x;
+}
+.defaultSkin .scroll_left,
+.scroll_left {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 100;
+	width: 13px;
+	height: 9px;
+	background: url(../img/scrollbars/btn-lft.gif) 0px 0px no-repeat;
+}
+.defaultSkin .scroll_left:hover,
+.scroll_left:hover {
+	background: url(../img/scrollbars/btn-lft.gif) -13px 0px no-repeat;
+}
+.defaultSkin .scroll_right,
+.scroll_right {
+	position: absolute;
+	right: 9px;
+	top: 0;
+	z-index: 100;
+	width: 13px;
+	height: 9px;
+	background: url(../img/scrollbars/btn-rt.gif) 0px 0px no-repeat;
+}
+.defaultSkin .scroll_right:hover,
+.scroll_right:hover {
+	background: url(../img/scrollbars/btn-rt.gif) -9px 0px no-repeat;
+}
+.defaultSkin .scroll_blank,
+.scroll_blank {
+	position: absolute;
+	right: 28px;
+	bottom: 44px;
+	width: 11px;
+	height: 11px;
+	z-index: 100;
+	overflow: hidden;
+	background-image: url(../img/scrollbars/blank.gif);
+}
+
+.ydialog .scroll_blank {
+	z-index: 100;
+}
+
+
+
+/********************************************************************/
+/* dark scrollbars                                                  */
+/********************************************************************/
+
+.ydialog .track_v {
+	background: url("../img/scrollbars/dgtrack_r.gif") repeat-y;
+}
+
+.ydialog .dragbar_v {
+	background: url("../img/scrollbars/dgdragbar_r.gif") -1px 0px repeat-y;
+}
+.ydialog .dragbar_v:hover {
+	background: url("../img/scrollbars/dgdragbar_r.gif") -10px 0px repeat-y;
+}
+
+.ydialog .scroll_up {
+	background: url(../img/scrollbars/dgbtn-up.gif) 0px 0px no-repeat;
+}
+.ydialog .scroll_up:hover {
+	background: url(../img/scrollbars/dgbtn-up.gif) 0px -13px no-repeat;
+}
+.ydialog .scroll_down {
+	background: url(../img/scrollbars/dgbtn-dn.gif) 0px 0px no-repeat;
+}
+.ydialog .scroll_down:hover {
+	background: url(../img/scrollbars/dgbtn-dn.gif) 0px -13px no-repeat;
+}
+.ydialog .track_h {
+	background: url("../img/scrollbars/dgtrack_b.gif") repeat-x;
+}
+.ydialog .dragbar_h {
+	height: 8px;
+	background: url("../img/scrollbars/dgdragbar_b.gif") 0px -1px repeat-x;
+}
+.ydialog .dragbar_h:hover {
+	background: url("../img/scrollbars/dgdragbar_b.gif") 0px -10px repeat-x;
+}
+.ydialog .scroll_left {
+	background: url(../img/scrollbars/dgbtn-lft.gif) 0px 0px no-repeat;
+}
+.ydialog .scroll_left:hover {
+	background: url(../img/scrollbars/dgbtn-lft.gif) -13px 0px no-repeat;
+}
+.ydialog .scroll_right {
+	background: url(../img/scrollbars/dgbtn-rt.gif) 0px 0px no-repeat;
+}
+.ydialog .scroll_right:hover {
+	background: url(../img/scrollbars/dgbtn-rt.gif) -9px 0px no-repeat;
+}
+.ydialog .scroll_blank {
+	background-image: url(../img/scrollbars/dgblank.gif);
+}
+
+.ydialog .defaultSkin .scrollbar_v,
+.ydialog .scrollbar_v,
+.ydialog .defaultSkin .scrollbar_h,
+.ydialog .scrollbar_h {
+	z-index: 100;
+}
+
+/******************
+** For Dropdowns **
+******************/
+
+.dropdownlistcontainer .scrollbar_v {
+	width: 15px !important;
+	bottom: 15px;
+}
+
+.dropdownlistcontainer .scroll_up,
+.ydialog .dropdownlistcontainer.editmode .scroll_up {
+	height: 13px;
+	width: 15px;
+	background: url(../img/scrollbars/dd-btn-up.gif) 0px 0px no-repeat;
+}
+.dropdownlistcontainer .scroll_up:hover,
+.ydialog .dropdownlistcontainer.editmode .scroll_up:hover {
+	background: url(../img/scrollbars/dd-btn-up.gif) 0px -13px no-repeat;
+}
+.dropdownlistcontainer .scroll_up a img {
+	width: 15px;
+}
+
+.dropdownlistcontainer .scroll_down,
+.ydialog .dropdownlistcontainer.editmode .scroll_down {
+	height: 14px;
+	width: 15px;
+	background: url(../img/scrollbars/dd-btn-dn.gif) 0px 0px no-repeat;
+}
+.dropdownlistcontainer .scroll_down:hover,
+.ydialog .dropdownlistcontainer.editmode .scroll_down:hover {
+	background: url(../img/scrollbars/dd-btn-dn.gif) 0px -14px no-repeat;
+}
+.dropdownlistcontainer .scroll_down a img {
+	width: 15px;
+}
+
+.dropdownlistcontainer .track_v,
+.ydialog .dropdownlistcontainer.editmode .track_v {
+	top: 13px;
+	bottom: 14px;
+	width: 15px;
+	background: url("../img/scrollbars/dd-track_r.gif") 0px 0px repeat-y;
+}
+
+.dropdownlistcontainer .dragbar_v,
+.ydialog .dropdownlistcontainer.editmode .dragbar_v {
+	top: 0px;
+	width: 14px;
+	height: 19px;
+	background: url("../img/scrollbars/dd-dragbar_r.gif") 0px 0px no-repeat;
+	border-bottom: solid 1px #666156;
+}
+.dropdownlistcontainer .dragbar_v:hover,
+.ydialog .dropdownlistcontainer.editmode .dragbar_v:hover {
+	background: url("../img/scrollbars/dd-dragbar_r.gif") -14px 0px no-repeat;
+}
+
+/*****************************
+** For Dropdowns in Dialogs **
+*****************************/
+
+.ydialog .dropdownlistcontainer .scroll_up {
+	background: url(../img/scrollbars/dd-btn-up.gif) -15px 0px no-repeat;
+}
+.ydialog .dropdownlistcontainer .scroll_up:hover {
+	background: url(../img/scrollbars/dd-btn-up.gif) -15px -13px no-repeat;
+}
+
+.ydialog .dropdownlistcontainer .scroll_down {
+	background: url(../img/scrollbars/dd-btn-dn.gif) -15px 0px no-repeat;
+}
+.ydialog .dropdownlistcontainer .scroll_down:hover {
+	background: url(../img/scrollbars/dd-btn-dn.gif) -15px -14px no-repeat;
+}
+
+.ydialog .dropdownlistcontainer .track_v {
+	background: url("../img/scrollbars/dd-track_r.gif") -15px 0px repeat-y;
+}
+
+.ydialog .dropdownlistcontainer .dragbar_v {
+	background: url("../img/scrollbars/dd-dragbar_r.gif") -28px 0px no-repeat;
+	border-bottom: solid 1px #161c14;
+}
+.ydialog .dropdownlistcontainer .dragbar_v:hover {
+	background: url("../img/scrollbars/dd-dragbar_r.gif") -42px 0px no-repeat;
+}
+
+
+/***********************
+** For sortable lists **
+***********************/
+
+.sortlist .scrollbar_v {
+	width: 15px !important;
+	bottom: 15px;
+}
+
+.sortlist .scroll_up,
+.ydialog .sortlist .scroll_up {
+	height: 13px;
+	width: 15px;
+	background: url(../img/scrollbars/dd-btn-up.gif) 0px 0px no-repeat;
+}
+.sortlist .scroll_up:hover,
+.ydialog .sortlist .sortablelistcontainer .scroll_up:hover {
+	background: url(../img/scrollbars/dd-btn-up.gif) 0px -13px no-repeat;
+}
+.sortlist .scroll_up a img {
+	width: 15px;
+}
+
+.sortlist .scroll_down,
+.ydialog .sortlist .scroll_down {
+	height: 14px;
+	width: 15px;
+	background: url(../img/scrollbars/dd-btn-dn.gif) 0px 0px no-repeat;
+}
+.sortlist .scroll_down:hover,
+.ydialog .sortlist .scroll_down:hover {
+	background: url(../img/scrollbars/dd-btn-dn.gif) 0px -14px no-repeat;
+}
+.sortlist .scroll_down a img {
+	width: 15px;
+}
+.sortlist .track_v,
+.ydialog .sortlist .track_v {
+	top: 13px;
+	bottom: 14px;
+	width: 15px;
+	background: url("../img/scrollbars/dd-track_r.gif") 0px 0px repeat-y;
+}
+
+.sortlist .dragbar_v,
+.ydialog .sortlist .dragbar_v {
+	top: 0px;
+	width: 14px;
+	height: 19px;
+	background: url("../img/scrollbars/dd-dragbar_r.gif") 0px 0px no-repeat;
+	border-bottom: solid 1px #666156;
+}
+.sortlist .dragbar_v:hover,
+.ydialog .sortlist .dragbar_v:hover {
+	background: url("../img/scrollbars/dd-dragbar_r.gif") -14px 0px no-repeat;
+}
+
+/**********************************
+** For sortable lists in Dialogs **
+**********************************/
+
+.ydialog .sortlist .scroll_up {
+	background: url(../img/scrollbars/dd-btn-up.gif) -15px 0px no-repeat;
+}
+.ydialog .sortlist .scroll_up:hover {
+	background: url(../img/scrollbars/dd-btn-up.gif) -15px -13px no-repeat;
+}
+
+.ydialog .sortlist .scroll_down {
+	background: url(../img/scrollbars/dd-btn-dn.gif) -15px 0px no-repeat;
+}
+.ydialog .sortlist .scroll_down:hover {
+	background: url(../img/scrollbars/dd-btn-dn.gif) -15px -14px no-repeat;
+}
+
+.ydialog .sortlist .track_v {
+	background: url("../img/scrollbars/dd-track_r.gif") -15px 0px repeat-y;
+}
+
+.ydialog .sortlist .dragbar_v {
+	background: url("../img/scrollbars/dd-dragbar_r.gif") -28px 0px no-repeat;
+	border-bottom: solid 1px #161c14;
+}
+.ydialog .sortlist .dragbar_v:hover {
+	background: url("../img/scrollbars/dd-dragbar_r.gif") -42px 0px no-repeat;
+}

@@ -1,0 +1,81 @@
+####### BEGIN YEAGER GENERATED - DO NOT EDIT #######
+RewriteEngine on
+############### END YEAGER GENERATED ###############
+
+####### BEGIN YEAGER GENERATED - DO NOT EDIT #######
+# Block access and execution of certain filetypes in frontend folder
+RewriteCond %{REQUEST_URI}	^[__CFG_WEB_ROOT__][__CFG_FRONTEND_DIR__]/
+RewriteRule \.(htaccess|htpasswd|phps|php|php3|php4|php5|exe|pl|jsp|asp|aspx|sh|cgi|py)$ /$1 [F]
+############### END YEAGER GENERATED ###############
+
+####### BEGIN YEAGER GENERATED - DO NOT EDIT #######
+# For Root
+RewriteCond %{REQUEST_URI}	^[__CFG_WEB_ROOT__]$
+RewriteRule ^(.*)$ [__CFG_WEB_ROOT__][__SITE_NAME__]/ [L]
+############### END YEAGER GENERATED ###############
+
+####### BEGIN YEAGER GENERATED - DO NOT EDIT #######
+# Block direct access on files folder
+RewriteCond %{REQUEST_URI}	^[__CFG_WEB_ROOT__][__CFG_FILES_DIR__]/
+RewriteRule ^(.*)$ /$1 [F]
+############### END YEAGER GENERATED ###############
+
+####### BEGIN YEAGER GENERATED - DO NOT EDIT #######
+# Block direct access on extensions folder
+RewriteCond %{REQUEST_URI}	^[__CFG_WEB_ROOT__][__CFG_EXTENSIONS_DIR__]/
+RewriteCond %{REQUEST_URI}	!^[__CFG_WEB_ROOT__][__CFG_EXTENSIONS_DIR__]/(.*)/icon.png$
+RewriteRule ^(.*)$ /$1 [F]
+############### END YEAGER GENERATED ###############
+
+####### BEGIN YEAGER GENERATED - DO NOT EDIT #######
+# Rewrite for images and downloads
+RewriteCond %{REQUEST_URI}	^[__CFG_WEB_ROOT__]image/
+RewriteRule ^(.*)$ [__CFG_WEB_ROOT__]yeager/y.php/image/$1 [L]
+
+RewriteCond %{REQUEST_URI}	^[__CFG_WEB_ROOT__]userimage/
+RewriteRule ^(.*)$ [__CFG_WEB_ROOT__]yeager/y.php/userimage/$1 [L]
+
+RewriteCond %{REQUEST_URI}	^[__CFG_WEB_ROOT__]download/
+RewriteRule ^(.*)$ [__CFG_WEB_ROOT__]yeager/y.php/download/$1 [L]
+############### END YEAGER GENERATED ###############
+
+####### BEGIN YEAGER GENERATED - DO NOT EDIT #######
+RewriteCond %{REQUEST_URI}	^[__CFG_WEB_ROOT__]mailing/
+RewriteRule ^(.*)$ [__CFG_WEB_ROOT__]yeager/y.php/mailing/$1 [L]
+############### END YEAGER GENERATED ###############
+
+####### BEGIN YEAGER GENERATED - DO NOT EDIT #######
+# Rewrite for yeager backend
+RewriteCond %{REQUEST_URI}	^[__CFG_WEB_ROOT__]yeager/$
+RewriteCond %{REQUEST_URI}	!^[__CFG_WEB_ROOT__]yeager/y.php/
+RewriteRule ^(.*)$ [__CFG_WEB_ROOT__]yeager/y.php/ [L]
+############### END YEAGER GENERATED ###############
+
+####### BEGIN YEAGER GENERATED - DO NOT EDIT #######
+# Only rewrite page urls when not special url
+RewriteCond %{REQUEST_URI}	!^[__CFG_WEB_ROOT__][__CFG_FRONTEND_DIR__]/
+RewriteCond %{REQUEST_URI}	!^[__CFG_WEB_ROOT__][__CFG_EXTENSIONS_DIR__]/
+RewriteCond %{REQUEST_URI}	!^[__CFG_WEB_ROOT__]yeager/
+RewriteCond %{REQUEST_URI}	!^[__CFG_WEB_ROOT__]image/
+RewriteCond %{REQUEST_URI}	!^[__CFG_WEB_ROOT__]userimage/
+RewriteCond %{REQUEST_URI}	!^[__CFG_WEB_ROOT__]mailing/
+RewriteCond %{REQUEST_URI}	!^[__CFG_WEB_ROOT__]download/
+RewriteCond %{REQUEST_URI}	!^[__CFG_WEB_ROOT__]\xC2\xA7\xC2\xA7LINKTO\:
+RewriteRule ^(.*)$ [__CFG_WEB_ROOT__]yeager/y.php/page/$1 [L]
+############### END YEAGER GENERATED ###############
+
+####### BEGIN YEAGER GENERATED - DO NOT EDIT #######
+# Rewrite special short URLs
+# §§LINKTO:PAGE:5:3§§	<- Pages
+# §§LINKTO:IMG:578§§	<- Images
+# §§LINKTO:DOWN:578§§	<- Downloads
+# For Images (and their views)
+RewriteCond %{REQUEST_URI}	^[__CFG_WEB_ROOT__]\xC2\xA7\xC2\xA7LINKTO\:IMG\:(.*)\xC2\xA7\xC2\xA7(.*)$
+RewriteRule ^\xC2\xA7\xC2\xA7LINKTO\:IMG\:(.*)\xC2\xA7\xC2\xA7(.*)$ [__CFG_WEB_ROOT__]yeager/y.php/image/$1/$2 [L]
+# For Downloads
+RewriteCond %{REQUEST_URI}	^[__CFG_WEB_ROOT__]\xC2\xA7\xC2\xA7LINKTO\:DOWN\:(.*)\xC2\xA7\xC2\xA7$
+RewriteRule ^\xC2\xA7\xC2\xA7LINKTO\:DOWN\:(.*)\xC2\xA7\xC2\xA7$ [__CFG_WEB_ROOT__]yeager/y.php/download/$1 [L]
+# For Pages
+RewriteCond %{REQUEST_URI}	^[__CFG_WEB_ROOT__]\xC2\xA7\xC2\xA7LINKTO\:PAGE\:(.*)\:(.*)\xC2\xA7\xC2\xA7$
+RewriteRule ^\xC2\xA7\xC2\xA7LINKTO\:PAGE\:(.*)\:(.*)\xC2\xA7\xC2\xA7$ [__CFG_WEB_ROOT__]yeager/y.php/page/$1/$2 [L]
+############### END YEAGER GENERATED ###############

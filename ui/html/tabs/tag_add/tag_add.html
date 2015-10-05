@@ -1,0 +1,37 @@
+<div class="tabcontent">
+	<div class="dialogcontent">
+		<div class="cntblock">
+			<form onsubmit="$K.windows['wid_{$win_no}'].submit();return false;">		
+				<table class="gridfixed3" cellspacing="0" cellpadding="0">
+					<tr>
+						<td colspan="3" class="col">
+							<span class="label">{$itext.TXT_NAME|default:'$TXT_NAME'}</span>
+							<div class="textbox" yg_form="textbox">
+								<input tabindex="1" type="text" id="wid_{$win_no}_tagname" name="tag_name" maxlength="64" value="" />		
+							</div>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- bottom //-->
+<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_midbottom">
+			<table class="buttontable" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="rightbutton">
+						<div class="button" tabindex="1"><a id="wid_{$win_no}_okbutton" onclick="$K.windows['wid_{$win_no}'].submit();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CONFIRM|default:'$TXT_CONFIRM'}</nobr></div></a></div>
+						<div class="button cancel" tabindex="1"><a id="wid_{$win_no}_cancelbutton" onclick="$K.windows['wid_{$win_no}'].remove();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</nobr></div></a></div>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td class="ywindow_rightbt"></td>
+	</tr>
+</table>
+<!-- end bottom //-->

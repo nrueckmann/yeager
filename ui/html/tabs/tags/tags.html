@@ -1,0 +1,59 @@
+<div class="panelcontent">
+
+	<div class="mk_contentgroup" yg_multiselect="true">
+		
+		<div id="wid_{$win_no}_{$page}_container">
+			<div id="wid_{$win_no}_{$page}_inner">
+				<ul yg_widget="type:sortable;accepts:tag;objecttype:{if $object_permissions.RWRITE}tag{else}nodrop_tags{/if};callbacks:tagsSortCallbacks;" id="wid_{$win_no}_{$page}_list" yg_type="{$objecttype}" yg_id="{$ygid}" yg_property="yg_taglist" class="tag_list objectlist" {if $object_permissions.RWRITE}yg_accepts="tag" onmouseup="$K.yg_customSortableOnDrop(this.id);"{/if}>
+					{section name=i loop=$tags}
+	
+						{capture assign="item_trace"}
+							{section name=p loop=$tags[i].PARENTS  step=-1}
+								{$tags[i].PARENTS[p].INFO.NAME} {if $smarty.section.p.last neq true}<span class="traceicon"></span>{/if}
+							{/section}
+						{/capture}
+						
+						{include file="$approot/ui/html/tabs/tags/tag.inc.html" item_index=$smarty.section.i.index item_id=$tags[i].ID win_no=$win_no item_name=$tags[i].NAME item_trace=$item_trace}
+					
+					{/section}
+				</ul>
+			</div>
+		</div>
+		{if $object_permissions.RWRITE}
+			<div id="wid_{$win_no}_{$page}_addmarker" onmousedown="Event.stop(event);" class="cntblockadd mk_nodrag mk_fillcontentspace" yg_id="{$ygid}" yg_accepts="tag" yg_type="page" onmouseup="$K.yg_customSortableOnDrop( 'wid_{$win_no}_{$page}_list');">
+				<div class="cntblockadd" onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: 'TAG_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} action: 'addtag', opener_reference: 'wid_{$win_no}' {literal} } } {/literal});">
+					<div class="selectionmarker">{$itext.TXT_TAG_ADD}</div>
+				</div>
+			</div>
+		{elseif $tags|@count == 0}
+			<div class="nocontentareas mk_fillcontentspace"><div class="cntspacer"></div><span class="bracketleft"></span>{$itext.TXT_NO_TAGS|default:'$TXT_NO_TAGS'}<span class="bracketright"></span></div>
+		{/if}	
+
+	</div>
+</div>
+			
+{if $refresh != 1}		
+	<!-- FIXED HEADER TAGS //-->
+	<div class="tabhead_small hoverable ywindowhead" style="display:none" onmouseover="$K.yg_showActions(this);$K.yg_ipanelHighlight($('wid_{$win_no}_ywindowinner'),'over');" onmouseout="$K.yg_ipanelHighlight($('wid_{$win_no}_ywindowinner'),'out');">
+		{if $object_permissions.RWRITE}	  
+			<!-- actions //-->
+			<div class="actions">
+				<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+				<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+					<div class="actionborder"></div>
+					<a onclick="new $K.yg_wndobj({literal}{{/literal} config: 'TAG_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} action: 'addtag', opener_reference: 'wid_{$win_no}' {literal} } } {/literal});" class="add" onmouseover="$K.yg_showHelp('{$itext.TXT_TAG_ADD}');" title="{$itext.TXT_TAG_ADD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<div class="actionborder"></div>
+				</div>
+			</div>	
+			<!-- end actions //-->
+		{/if}	
+		<div class="headline1">{$itext.TXT_ASSIGNED_TAGS|default:'$TXT_ASSIGNED_TAGS'}</div>
+	</div>
+	<!-- END FIXED HEADER TAGS //-->
+{/if}
+
+<script type="text/javascript" language="javascript">
+	// Prepare Prototype/Smarty Template
+	{include assign="js_template" file="$approot/ui/html/tabs/tags/tag.inc.html" win_no=$win_no item_index='#<<item_index>>' item_id='#<<item_id>>' item_name='#<<item_name>>' item_trace='#<<item_trace>>'}
+	$K.windows['wid_{$win_no}'].jsTemplate = '{$js_template|strip|addslashes}';
+</script>

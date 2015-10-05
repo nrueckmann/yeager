@@ -1,0 +1,27 @@
+<li id="item_{$win_no}_{$item_index}" yg_id="{$item_id}-navigation" yg_type="navigation" class="mk_navigation listitem">
+	<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+		<!-- actions //-->
+		<div class="actions">
+			<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+			<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+				<div class="actionborder"></div>
+				<a onclick="$K.yg_actionSubmit(this,'list',event);" class="exec" onfocus="this.blur();"></a>
+				<div class="actionborder"></div>
+			</div>
+		</div>
+		<!-- end actions //-->	   	
+		<div id="item_{$win_no}_{$item_id}_selector" class="listitempage" yg_selectable="true" ondblclick="$K.yg_actionSubmit(this,'list');">
+			<table class="listable">
+				<tr>
+					<td class="object">
+						<table class="objectable">
+							<tr>
+								<td id="item_{$win_no}_{$item_index}_txt" class="title txt noicon">{$item_name}</td>																						
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>	
+		</div>						   		   	
+	</div>		
+</li>

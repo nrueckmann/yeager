@@ -1,0 +1,29 @@
+<div class="mk_contentgroup" yg_multiselect="true">
+	<ul yg_widget="type:sortable;accepts:view;objecttype:view;callbacks:viewListSortCallbacks;" id="wid_{$win_no}_viewlist" style="position:relative;" yg_type="views">
+		{section name=n loop=$views}
+			{include file="$approot/ui/html/tabs/view_select/view.inc.html" item_index=$smarty.section.n.index item_id=$views[n].ID item_name=$views[n].NAME item_width=$views[n].WIDTH item_height=$views[n].HEIGHT item_identifier=$views[n].IDENTIFIER}
+		{/section}
+	</ul>
+	{if $viewcount == 0}
+		<div class="nocontentareas mk_verticalcenter"><span class="bracketleft"></span>{$itext.TXT_NO_VIEWS|default:'$TXT_NO_VIEWS'}<span class="bracketright"></span></div>
+	{/if}	
+</div>
+
+<!-- bottom //-->
+<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_midbottom">
+			<table class="buttontable" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="rightbutton">
+						<div class="button" tabindex="1"><a id="wid_{$win_no}_okbutton" onclick="$K.windows['wid_{$win_no}'].submit();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CHOOSE|default:'$TXT_CHOOSE'}</nobr></div></a></div>
+						<div class="button cancel" tabindex="1"><a id="wid_{$win_no}_cancelbutton" onclick="$K.windows['wid_{$win_no}'].remove();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</nobr></div></a></div>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td class="ywindow_rightbt"></td>
+	</tr>
+</table>
+<!-- end bottom //-->

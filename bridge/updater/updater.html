@@ -1,0 +1,72 @@
+<html>
+<head>
+<title>Yeager CMS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="{$docabsolut}ui/css/text.css" rel="stylesheet" type="text/css">
+<link href="{$docabsolut}ui/css/main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<form name="pageform" action="{$base}updater" method="post" enctype="multipart/form-data">
+<input type="hidden" name="sid" value="{$sid}">
+<input type="hidden" name="action" value="update">
+<input type="hidden" name="site" value="{$site}">
+<input type="hidden" name="page" value="{$page}">
+  <tr> 
+    <td height="2" class="bg-white"><img src="{$imgpath}x.gif" width="2" height="2"></td>
+  </tr>
+  <tr> 
+    <td class="bg-lightgrey"><table width="618" border="0" cellspacing="0" cellpadding="5">
+	  {if $message != ''}
+        <tr> 
+          <td width="481" align="left" class="form-text"> <table width="478" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="32" height="18" align="center"></td>
+                <td width="446" height="18" class="form-text">{$message}
+                </td>
+              </tr>
+            </table> </td>
+        </tr>
+	  {else}
+       <tr> 
+        <td width="481" align="left" class="form-text"> <table width="478" border="0" cellspacing="0" cellpadding="0">
+            <tr> 
+              <td width="32" height="18" align="center"></td>
+              <td width="446" height="18">
+              
+              <span class="form-text">
+              {if $updatesavailable[0] > 0}
+              <strong>Verfügbare Updates:</strong><br/>
+              {section name=i loop=$updatesavailable}
+              <ul>
+                <li>{$updatesavailable[i].VERFORMAT}</li><br/>
+              </ul>
+              {/section}
+              {else}
+              <strong>keine Updates verfügbar</strong><br/>
+              {/if}
+              </span>
+              </td>
+            </tr>
+          </table> </td>
+       </tr>
+	  {/if}
+      </table></td>
+  </tr>
+
+  <tr> 
+    <td height="2" class="bg-white"><img src="{$imgpath}x.gif" width="2" height="2"></td>
+  </tr>
+{if $message == ''}
+ <tr> 
+    <td height="40" align="right" class="bg-darkgrey">&nbsp; <img src="{$imgpath}ico_save.gif" width="12" height="7"><a href="javascript: document.pageform.submit();" class="savelink">Update</a><img src="{$imgpath}x.gif" width="15" height="2"></td>
+  </tr>
+  <tr> 
+    <td height="2" class="bg-white"><img src="{$imgpath}x.gif" width="2" height="2"></td>
+  </tr>
+{/if}
+</form>
+</table>
+</body>
+</html>

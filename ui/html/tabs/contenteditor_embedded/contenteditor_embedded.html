@@ -1,0 +1,439 @@
+<form name="wid_{$win_no}_linkForm" onsubmit="return false;">
+	<div class="dialogcontent">
+		<div class="cntblockcontainernohover">
+			<div class="cntblock">
+				<table class="gridfixed" cellspacing="0" cellpadding="0">
+					<tr>
+						<td colspan="4" class="col1">
+							<span class="label">{$itext.TXT_PATH|default:'$TXT_PATH'}</span>
+							<div class="textbox" yg_form="textbox">
+								<input tabindex="1" yg_onchange="" type="text" name="src" value="" />
+							</div>
+							<div align="right" class="selectionadd">
+								<div class="selectionmarker" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'FILE_SELECT', loadparams: {literal}{{/literal} type: 'image', opener_reference: 'wid_{$win_no}_linkForm' {literal} } } {/literal});" onmouseover="$K.yg_showHelp('{$itext.TXT_CHOOSE_FILE}');" title="{$itext.TXT_CHOOSE_FILE}" onmouseout="$K.yg_showHelp(false);">{$itext.TXT_SELECTOR_FILE|default:'$TXT_SELECTOR_FILE'}</div>
+							</div>		
+						</td>
+					</tr>
+				</table>		
+			</div>
+		</div>
+
+		<div class="cntblockcontainernohover">
+		<div class="cntblock">
+			<table class="gridfixed" cellspacing="0" cellpadding="0">
+				<tr>
+					<td colspan="2" class="col2">
+						<span class="label">{$itext.TXT_TYPE|default:'$TXT_TYPE'}</span>
+						<div id="dd_types" class="dropdownbox" yg_form="dropdown">
+							<div class="dropdown">
+								<div class="dropdowninner">
+									<input name="dd_type" yg_onchange="changedType" tabindex="1" yg_seq="" yg_onchange="" yg_previous="" type="text"  value="">
+								</div>
+							</div>
+							<div class="dropdownlistcontainer">
+								<div class="dropdownlist">
+									<div value="" class="selected">{$itext.TXT_NOT_SET|default:'$TXT_NOT_SET'}</div>
+									<div value="flash">{$itext.TXT_FLASH|default:'$TXT_FLASH'}</div>
+									<div value="qt">{$itext.TXT_QUICKTIME|default:'$TXT_QUICKTIME'}</div>
+									<div value="shockwave">{$itext.TXT_SHOCKWAVE|default:'$TXT_SHOCKWAVE'}</div>
+									<div value="wmp">{$itext.TXT_WINDOWS_MEDIA|default:'$TXT_WINDOWS_MEDIA'}</div>
+								</div>
+								<div class="mk_scrollbars"></div>
+							</div>
+							<input name="dd_types" type="hidden" />
+						</div>
+
+					</td>
+					<td colspan="2" class="col2"></td>
+				</tr>
+				<tr>
+					<td colspan="2" class="col2">
+						<span class="label">{$itext.TXT_ALIGNMENT|default:'$TXT_ALIGNMENT'}</span>
+						<div id="align" class="dropdownbox" yg_form="dropdown">
+							<div class="dropdown">
+								<div class="dropdowninner">
+									<input name="dd_align" tabindex="1" yg_seq="" yg_onchange="" yg_previous="" type="text"  value="">
+								</div>
+							</div>
+							<div class="dropdownlistcontainer">
+								<div class="dropdownlist">
+									<div value="" class="selected">{$itext.TXT_NOT_SET|default:'$TXT_NOT_SET'}</div>
+									<div value="top">{$itext.TXT_TOP|default:'$TXT_TOP'}</div>
+									<div value="right">{$itext.TXT_RIGHT|default:'$TXT_RIGHT'}</div>
+									<div value="bottom">{$itext.TXT_BOTTOM|default:'$TXT_BOTTOM'}</div>
+									<div value="left">{$itext.TXT_LEFT|default:'$TXT_LEFT'}</div>
+								</div>
+								<div class="mk_scrollbars"></div>
+							</div>
+							<input name="align" type="hidden" />
+						</div>
+
+					</td>
+					<td colspan="2" class="col2"></td>
+				</tr>
+
+				<tr>
+					<td class="col4">
+						<span class="label">{$itext.TXT_WIDTH_PX|default:'$TXT_WIDTH_PX'}</span>
+						<div class="textbox" yg_form="textbox">
+							<input tabindex="1" yg_onchange="" type="text" name="width" value="" />
+						</div>		
+					</td>
+					<td class="col4">
+						<span class="label">{$itext.TXT_HEIGHT_PX|default:'$TXT_HEIGHT_PX'}</span>
+						<div class="textbox" yg_form="textbox">
+							<input tabindex="1" yg_onchange="" type="text" name="height" value="" />
+						</div>		
+					</td>
+					<td class="col4">
+						<span class="label">{$itext.TXT_X_SPACE|default:'$TXT_X_SPACE'}</span>
+						<div class="textbox" yg_form="textbox">
+							<input tabindex="1" yg_onchange="" type="text" name="hspace" value="" />
+						</div>		
+					</td>
+					<td class="col4">
+						<span class="label">{$itext.TXT_Y_SPACE|default:'$TXT_Y_SPACE'}</span>
+						<div class="textbox" yg_form="textbox">
+							<input tabindex="1" yg_onchange="" type="text" name="vspace" value="" />
+						</div>		
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="col2">
+						<span class="label">{$itext.TXT_NAME|default:'$TXT_NAME'}</span>
+						<div class="textbox" yg_form="textbox">
+							<input tabindex="1" yg_onchange="" type="text" name="name" value="" />
+						</div>
+					</td>
+					<td colspan="2" class="col2"></td>
+				</tr>
+				<tr>
+					<td colspan="2" class="col2">
+						<span class="label">{$itext.TXT_ID|default:'$TXT_ID'}</span>
+						<div class="textbox" yg_form="textbox">
+							<input tabindex="1" yg_onchange="" type="text" name="id" value="" />
+						</div>
+					</td>
+					<td colspan="2" class="col2"></td>
+				</tr>
+			</table>
+		</div>
+		</div>
+				
+				
+		<div class="cntblock" id="flash_options">
+			<table class="gridfixed" cellspacing="0" cellpadding="0">
+				<tr>
+					<td colspan="4"><span class="label">{$itext.TXT_FLASH_OPTIONS|default:'$TXT_FLASH_OPTIONS'}</span></td>
+				</tr>
+				<tr>
+					<td class="col4">
+						<div class="checkarray">
+							<div id="chk_flash_play" class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="flash_play" value="0" /><span class="label">{$itext.TXT_AUTO_PLAY|default:'$TXT_AUTO_PLAY'}</span></div></div>
+						</div>
+					</td>
+					<td class="col4">
+						<div class="checkarray">
+							<div id="chk_flash_loop" class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="flash_loop" value="0" /><span class="label">{$itext.TXT_LOOP|default:'$TXT_LOOP'}</span></div></div>
+						</div>
+					</td>
+					<td class="col4">
+						<div class="checkarray">
+							<div id="chk_flash_menu" class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="flash_menu" value="0"><span class="label">{$itext.TXT_SHOW_MENU|default:'$TXT_SHOW_MENU'}</span></div></div>
+						</div>
+					</td>
+					<td class="col4">
+						<div class="checkarray">
+							<div id="chk_flash_swliveconnect" class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="flash_swliveconnect" value="0"><span class="label">{$itext.TXT_LIVECONNECT|default:'$TXT_LIVECONNECT'}</span></div></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="col2">
+						<span class="label">{$itext.TXT_WMODE|default:'$TXT_WMODE'}</span>
+						<div id="flash_wmode" class="dropdownbox" yg_form="dropdown">
+							<div class="dropdown">
+								<div class="dropdowninner">
+									<input name="dd_flashwmode" tabindex="1" yg_seq="" yg_onchange="" yg_previous="" type="text"  value="">
+								</div>
+							</div>
+							<div class="dropdownlistcontainer">
+								<div class="dropdownlist">
+									<div value="" class="selected">{$itext.TXT_NOT_SET|default:'$TXT_NOT_SET'}</div>
+									<div value="window">{$itext.TXT_WINDOW|default:'$TXT_WINDOW'}</div>
+									<div value="opaque">{$itext.TXT_OPAQUE|default:'$TXT_OPAQUE'}</div>
+									<div value="transparent">{$itext.TXT_TRANSPARENT|default:'$TXT_TRANSPARENT'}</div>
+								</div>
+								<div class="mk_scrollbars"></div>
+							</div>
+							<input name="flash_wmode" type="hidden" />
+						</div>
+
+					</td>
+					<td colspan="2" class="col2"></td>
+				</tr>
+				<tr>
+					<td colspan="2" class="col2">
+						<span class="label">{$itext.TXT_SCALE|default:'$TXT_SCALE'}</span>
+						<div id="flash_scale" class="dropdownbox" yg_form="dropdown">
+							<div class="dropdown">
+								<div class="dropdowninner">
+									<input name="dd_flashscale" tabindex="1" yg_seq="" yg_onchange="" yg_previous="" type="text"  value="">
+								</div>
+							</div>
+							<div class="dropdownlistcontainer">
+								<div class="dropdownlist">
+									<div value="" class="selected">{$itext.TXT_NOT_SET|default:'$TXT_NOT_SET'}</div>
+									<div value="showall">{$itext.TXT_SHOWALL|default:'$TXT_SHOWALL'}</div>
+									<div value="noborder">{$itext.TXT_NOBORDER|default:'$TXT_NOBORDER'}</div>
+									<div value="exactfit">{$itext.TXT_EXACTFIT|default:'$TXT_EXACTFIT'}</div>
+									<div value="noscale">{$itext.TXT_NOSCALE|default:'$TXT_NOSCALE'}</div>
+								</div>
+								<div class="mk_scrollbars"></div>
+							</div>
+							<input name="flash_scale" type="hidden" />
+						</div>
+
+					</td>
+					<td colspan="2" class="col2"></td>
+				</tr>
+
+			</table>	
+			<br />
+			<br />
+		</div>
+		<div class="cntblock" id="qt_options">
+			<table class="gridfixed" cellspacing="0" cellpadding="0">
+				<tr>
+					<td colspan="4"><span class="label">{$itext.TXT_QUICKTIME_OPTIONS|default:'$TXT_QUICKTIME_OPTIONS'}</span></td>
+				</tr>
+				<tr>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="qt_autoplay" value="0" /><span class="label">{$itext.TXT_AUTO_PLAY|default:'$TXT_AUTO_PLAY'}</span></div></div>
+						</div>
+					</td>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="qt_loop" value="0" /><span class="label">{$itext.TXT_LOOP|default:'$TXT_LOOP'}</span></div></div>
+						</div>
+					</td>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="qt_cache" value="0" /><span class="label">{$itext.TXT_CACHE|default:'$TXT_CACHE'}</span></div></div>
+						</div>
+					</td>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="qt_controller" value="0" /><span class="label">{$itext.TXT_CONTROLLER|default:'$TXT_CONTROLLER'}</span></div></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="qt_kioskmode" value="0" /><span class="label">{$itext.TXT_KIOSK_MODE|default:'$TXT_KIOSK_MODE'}</span></div></div>
+						</div>
+					</td>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="qt_playeveryframe" value="0" /><span class="label">{$itext.TXT_PLAY_EVERY_FRAME|default:'$TXT_PLAY_EVERY_FRAME'}</span></div></div>
+						</div>
+					</td>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxiconsel"><input type="hidden" name="qt_targetcache" value="1" /><span class="label">{$itext.TXT_TARGET_CACHE|default:'$TXT_TARGET_CACHE'}</span></div></div>
+						</div>
+					</td>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="qt_autohref" value="0" /><span class="label">{$itext.TXT_AUTO_HREF|default:'$TXT_AUTO_HREF'}</span></div></div>
+						</div>
+					</td>
+				</tr>
+				
+
+			</table>	
+			<br />
+			<br />
+		</div>
+		<div class="cntblock" id="shockwave_options">
+			<table class="gridfixed" cellspacing="0" cellpadding="0">
+				<tr>
+					<td colspan="4"><span class="label">{$itext.TXT_SHOCKWAVE_OPTIONS|default:'$TXT_SHOCKWAVE_OPTIONS'}</span></td>
+				</tr>
+				<tr>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="shockwave_autostart" value="0" /><span class="label">{$itext.TXT_AUTO_PLAY|default:'$TXT_AUTO_PLAY'}</span></div></div>
+						</div>
+					</td>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="shockwave_sound" value="0" /><span class="label">{$itext.TXT_SOUND|default:'$TXT_SOUND'}</span></div></div>
+						</div>
+					</td>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="shockwave_progress" value="0"><span class="label">{$itext.TXT_PROGRESS|default:'$TXT_PROGRESS'}</span></div></div>
+						</div>
+					</td>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="shockwave_swliveconnect" value="0" /><span class="label">{$itext.TXT_LIVECONNECT|default:'$TXT_LIVECONNECT'}</span></div></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="col2">
+						<span class="label">{$itext.TXT_STRETCH_STYLE|default:'$TXT_STRETCH_STYLE'}</span>
+						<div id="shockwave_swstretchstyle" class="dropdownbox" yg_form="dropdown">
+							<div class="dropdown">
+								<div class="dropdowninner">
+									<input name="dd_flashwmode" tabindex="1" yg_seq="" yg_onchange="" yg_previous="" type="text"  value="">
+								</div>
+							</div>
+							<div class="dropdownlistcontainer">
+								<div class="dropdownlist">
+									<div value="" class="selected">{$itext.TXT_NOT_SET|default:'$TXT_NOT_SET'}</div>
+									<div value="meet">{$itext.TXT_MEET|default:'$TXT_MEET'}</div>
+									<div value="fill">{$itext.TXT_FILL|default:'$TXT_FILL'}</div>
+									<div value="stage">{$itext.TXT_STAGE|default:'$TXT_STAGE'}</div>
+								</div>
+								<div class="mk_scrollbars"></div>
+							</div>
+							<input name="shockwave_swstretchstyle" type="hidden" />
+						</div>
+
+					</td>
+					<td colspan="2" class="col2"></td>
+				</tr>
+				<tr>
+					<td colspan="2" class="col2">
+						<span class="label">{$itext.TXT_STRETCH_H_ALIGN|default:'$TXT_STRETCH_H_ALIGN'}</span>
+						<div id="shockwave_swstretchhalign" class="dropdownbox" yg_form="dropdown">
+							<div class="dropdown">
+								<div class="dropdowninner">
+									<input name="dd_flashscale" tabindex="1" yg_seq="" yg_onchange="" yg_previous="" type="text"  value="">
+								</div>
+							</div>
+							<div class="dropdownlistcontainer">
+								<div class="dropdownlist">
+									<div value="" class="selected">{$itext.TXT_NOT_SET|default:'$TXT_NOT_SET'}</div>
+									<div value="showall">{$itext.TXT_LEFT|default:'$TXT_LEFT'}</div>
+									<div value="noborder">{$itext.TXT_CENTER|default:'$TXT_CENTER'}</div>
+									<div value="exactfit">{$itext.TXT_RIGHT|default:'$TXT_RIGHT'}</div>
+								</div>
+								<div class="mk_scrollbars"></div>
+							</div>
+							<input name="shockwave_swstretchhalign" type="hidden" />
+						</div>
+
+					</td>
+					<td colspan="2" class="col2"></td>
+				</tr>
+				<tr>
+					<td colspan="2" class="col2">
+						<span class="label">{$itext.TXT_STRETCH_V_ALIGN|default:'$TXT_STRETCH_V_ALIGN'}</span>
+						<div id="shockwave_swstretchvalign" class="dropdownbox" yg_form="dropdown">
+							<div class="dropdown">
+								<div class="dropdowninner">
+									<input name="dd_flashscale" tabindex="1" yg_seq="" yg_onchange="" yg_previous="" type="text"  value="">
+								</div>
+							</div>
+							<div class="dropdownlistcontainer">
+								<div class="dropdownlist">
+									<div value="" class="selected">{$itext.TXT_NOT_SET|default:'$TXT_NOT_SET'}</div>
+									<div value="meet">{$itext.TXT_MEET|default:'$TXT_MEET'}</div>
+									<div value="fill">{$itext.TXT_FILL|default:'$TXT_FILL'}</div>
+									<div value="stage">{$itext.TXT_STAGE|default:'$TXT_STAGE'}</div>
+								</div>
+								<div class="mk_scrollbars"></div>
+							</div>
+							<input name="shockwave_swstretchvalign" type="hidden" />
+						</div>
+
+					</td>
+					<td colspan="2" class="col2"></td>
+				</tr>
+
+			</table>	
+			<br />
+			<br />
+		</div>
+		<div class="cntblock" id="wmp_options">
+			<table class="gridfixed" cellspacing="0" cellpadding="0">
+				<tr>
+					<td colspan="4"><span class="label">{$itext.TXT_WINDOWS_MEDIA_OPTIONS|default:'$TXT_WINDOWS_MEDIA_OPTIONS'}</span></td>
+				</tr>
+				<tr>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="wmp_autostart" value="0" /><span class="label">{$itext.TXT_AUTO_START|default:'$TXT_AUTO_START'}</span></div></div>
+						</div>
+					</td>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="wmp_enabled" value="0" /><span class="label">{$itext.TXT_ENABLED|default:'$TXT_ENABLED'}</span></div></div>
+						</div>
+					</td>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="wmp_fullscreen" value="0" /><span class="label">{$itext.TXT_FULLSCREEN|default:'$TXT_FULLSCREEN'}</span></div></div>
+						</div>
+					</td>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="wmp_mute" value="0" /><span class="label">{$itext.TXT_MUTE|default:'$TXT_MUTE'}</span></div></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="wmp_stretchtofit" value="0" /><span class="label">{$itext.TXT_STRETCH_TO_FIT|default:'$TXT_STRETCH_TO_FIT'}</span></div></div>
+						</div>
+					</td>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="wmp_invokeurls" value="0" /><span class="label">{$itext.TXT_INVOKE_URLS|default:'$TXT_INVOKE_URLS'}</span></div></div>
+						</div>
+					</td>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="wmp_windowlessvideo" value="0" /><span class="label">{$itext.TXT_WINDOWLESS_VIDEO|default:'$TXT_WINDOWLESS_VIDEO'}</span></div></div>
+						</div>
+					</td>
+					<td class="col4">
+						<div class="checkarray">
+							<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="wmp_enablecontextmenu" value="0" /><span class="label">{$itext.TXT_SHOW_MENU|default:'$TXT_SHOW_MENU'}</span></div></div>
+						</div>
+					</td>
+				</tr>
+
+			</table>
+			<br />
+			<br />
+		</div>
+
+	</div>
+</form>
+
+<!-- bottom //-->
+<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_midbottom">
+			<table class="buttontable" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="rightbutton">
+						<div class="button" tabindex="1"><a id="wid_{$win_no}_okbutton" onclick="$K.windows['wid_{$win_no}'].submit();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_INSERT|default:'$TXT_INSERT'}</nobr></div></a></div>
+						<div class="button cancel" tabindex="1"><a id="wid_{$win_no}_cancelbutton" onclick="$K.windows['wid_{$win_no}'].remove();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</nobr></div></a></div>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td class="ywindow_rightbt"></td>
+	</tr>
+</table>
+<!-- end bottom //-->

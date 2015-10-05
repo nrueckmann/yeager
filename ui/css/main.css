@@ -1,0 +1,1887 @@
+/********************************************************************/
+/* main															 */
+/********************************************************************/
+
+form {
+	margin: 0px;
+	padding: 0px;
+}
+body {
+	background-color: #4e534c;
+	background-image: url(../img/background/background.jpg);
+	background-position: top;
+	background-repeat: repeat-x;
+}
+.unauthorized #maincontainer,
+.unauthorized #dialogcontainer,
+.unauthorized #previewcontainer,
+.unauthorized #mainnav,
+.unauthorized #bottomline,
+.unauthorized #yg_timediv,
+.unauthorized #yg_caldiv,
+.unauthorized #yg_userHint,
+.unauthorized #yg_tagHint,
+.unauthorized #yg_fileHint,
+.unauthorized #yg_ddGhost {
+	display: none;
+}
+html {
+	overflow: hidden;
+}
+td {
+	vertical-align: top;
+}
+.tab_loading {
+	background-image: url(../img/content/loading/loading_cnt.gif);
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.ydialog .tab_loading {
+	background-image: url(../img/content/loading/loading_cnt_dialog.gif);
+}
+#filepreview.tab_loading {
+	background-image: url(../img/content/loading/loading_preview.gif);
+}
+#maincontainer {
+	margin-left: 0px;
+}
+
+/* HTML5 */
+img, ul, a {
+	vertical-align: top;
+}
+table {
+	line-height: 12px;
+}
+input.magicfocus {
+	display: block;
+	height: 0px;
+}
+.listable {
+	border-spacing: 1px;
+}
+/*a, div, li {
+	-webkit-transition-property: background-color, color !important;
+	-webkit-transition-duration: 0.05s, 0.05s !important;
+	-webkit-transition-timing-function: ease-out, linear !important;
+	-moz-transition-property: background-color, color !important;
+	-moz-transition-duration:0.1s !important;
+	-moz-transition-timing-function: ease-out, linear !important;
+	-o-transition-property: background-color, color !important;
+	-o-transition-duration:0.1s !important;
+	-o-transition-timing-function: ease-out, linear !important;
+}*/
+
+/*  */
+
+.pages_tree,
+.files_tree,
+.tags_tree,
+.templates_tree,
+.entrymasks_tree,
+.pagesextras_tree,
+.cblocks_tree {
+	padding-left: 4px;
+	padding-right: 5px;
+	padding-bottom: 4px;
+}
+.tags_tree,
+.entrymasks_tree {
+	margin-top: 4px;
+}
+.templates_tree {
+	margin-top: 3px;
+}
+#yg_tagHint {
+	display: none;
+	position: absolute;
+	font-family: Arial;
+	font-size: 11px;
+	line-height: 15px;
+	background-image: url(../img/content/taghint.png);
+	padding-left: 12px;
+	padding-right: 12px;
+	padding-top: 12px;
+	padding-bottom: 7px;
+	max-width: 375px;
+	color: #7fa38c;
+	z-index: 100001;
+}
+#yg_tagHint nobr {
+	white-space: nowrap;
+}
+#yg_fileHint {
+	z-index: 100000;
+	left: 100px;
+	top: 100px;
+	width: 530px;
+	height: 190px;
+	position: absolute;
+}
+#yg_fileHint .left,
+#yg_fileHint .right {
+	display: block;
+	float: left;
+	width: 10px;
+	height: 190px;
+	background-image: url(../img/content/filehint_arrows.png);
+}
+#yg_fileHint .cnt {
+	width: 510px;
+	height: 190px;
+	display: block;
+	float: left;
+	background-image: url(../img/content/filehint.png);
+}
+#yg_fileHint.lft.tp .left {
+	background-position: -10px 0px;
+}
+#yg_fileHint.lft.tp .right {
+	visibility: hidden;
+}
+#yg_fileHint.lft.bt .left {
+	background-position: -10px -190px;
+}
+#yg_fileHint.lft.bt .right {
+	visibility: hidden;
+}
+#yg_fileHint.rgt.tp .left {
+	visibility: hidden;
+}
+#yg_fileHint.rgt.tp .right {
+	background-position: 0px 0px;
+}
+#yg_fileHint.rgt.bt .left {
+	visibility: hidden;
+}
+#yg_fileHint.rgt.bt .right {
+	background-position: 0px -190px;
+}
+#yg_fileHint .cnt .mk_thumbnail {
+	width: 223px;
+	height: 168px;
+	margin-left: 11px;
+	margin-top: 11px;
+	position: absolute;
+	top: 0px;
+}
+#yg_fileHint .cnt .thumbdesc {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	margin-left: 190px;
+	padding: 0px;
+	margin-top: 152px;
+	position: absolute;
+	top: 0px;
+}
+.WEBKIT.WIN #yg_fileHint .cnt .thumbdesc,
+.MOZ.WIN #yg_fileHint .cnt .thumbdesc {
+    margin-top: 150px;
+}
+#yg_fileHint .cnt .thumbdesc .typewrapper {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+#yg_fileHint .thumbcnt {
+	background-image: none;
+	border: none !important;
+	background-color: transparent;
+	position: absolute;
+	top: 0px;
+}
+#yg_fileHint .thumbcnt img {
+	max-height: 168px;
+	max-width: 223px;
+}
+#yg_fileHint .thumbcnt_nothumb {
+	margin-top: 83px;
+}
+#yg_fileHint .thumbcnt_nothumb .noimg {
+	color: #758b74;
+}
+#yg_fileHint .filedesc {
+	font-family: Arial;
+	position: absolute;
+	width: 257px;
+	height: 167px;
+	font-size: 11px;
+	line-height: 15px;
+	top: 10px;
+	left: 255px;
+	color: #c4ddbf;
+}
+#yg_fileHint .filename {
+	position: absolute;
+	top: 30px;
+	white-space: nowrap;
+}
+#yg_fileHint .datetime {
+	position: absolute;
+	top: 70px;
+}
+#yg_fileHint .tags {
+	position: absolute;
+	top: 127px;
+}
+#yg_fileHint .taglist {
+	margin-left: -4px;
+	padding-left: 19px;
+	padding-top: 2px;
+	background-image: url(../img/icons/ico_tag_s.png);
+	background-repeat: no-repeat;
+}
+#yg_fileHint .label {
+	color: #758b74;
+	padding-left: 0px;
+	padding-top: 10px;
+}
+#yg_fileHint .title {
+	color: #e0f9dc;
+	font-weight: bold;
+}
+
+
+/********************************************************************/
+/* toolbar														  */
+/********************************************************************/
+
+#toolbar {
+	height: 40px;
+}
+#toolbar.expanded {
+	height: 40px;
+	padding-top: 25px;
+}
+#toolbar .filtercontext {
+	margin-left: -125px;
+	margin-top: -8px;
+}
+#toolbar .outer,
+.unauthorized #toolbar.expanded .outer {
+	display: none;
+}
+#toolbar.expanded .outer {
+	display: block;
+	margin-left: 7px;
+	margin-right: 7px;
+	height: 30px;
+	padding-left: 5px;
+	background-image: url(../img/navigation/navigation.png);
+	background-position: 0px -360px;
+	background-repeat: no-repeat;
+}
+#toolbar .outer .right {
+	height: 30px;
+	background-image: url(../img/navigation/navigation.png);
+	background-position: right -390px;
+	background-repeat: no-repeat;
+	padding-right: 5px;
+}
+#toolbar .cnt {
+	height: 30px;
+	background-image: url(../img/navigation/navigation.png);
+	background-position: 0px -330px;
+}
+#toolbar .cnt > div {
+	display: inline-block;
+	vertical-align: center;
+	color: #e0f9dc;
+	margin-top: 10px;
+	margin-left: 10px;
+	line-height: 11px;
+	font-weight: normal;
+	font-family: Arial;
+	font-size: 11px;
+}
+
+#toolbar .cnt > div.tools {
+	padding-left: 0px;
+	background-image: none;
+	float: right;
+	margin-right: 12px;
+}
+#toolbar .cnt > div div:hover {
+	cursor: pointer;
+	color: #b4c7b2;
+}
+#toolbar .cnt div.filtercut {
+	margin-top: 0px;
+}
+#toolbar .cnt > div + div {
+	padding-left: 23px;
+	background-image: url(../img/navigation/navigation.png);
+	background-position: -4px -426px;
+}
+#toolbar .cnt > div div div {
+	margin-top: -4px;
+	margin-right: 5px;
+	float: left !important;
+}
+.WEBKIT.MAC #toolbar .cnt > div span {
+	line-height: 9px;
+}
+.WEBKIT.MAC #toolbar .cnt > div {
+	margin-top: 8px;
+}
+#toolbar .cnt > div div div {
+	margin-top: -3px;
+}
+#toolbar .cnt > div.tools div div {
+	float: none !important;
+}
+
+/********************************************************************/
+/* user styles													  */
+/********************************************************************/
+
+a.user,
+#mainnav .user {
+	text-decoration: none;
+	color: #1f8cf2;
+	cursor: pointer;
+}
+a.user:hover,
+#mainnav a:hover .user {
+	color: #3f9dff;
+}
+
+/********************************************************************/
+/* errorhint													   */
+/********************************************************************/
+.errorhint {
+	position: absolute;
+	width: 361px;
+	display: block;
+	z-index: 10000;
+	background-repeat: no-repeat;
+	background-image: url(../img/content/errorhint_bottom.png);
+	background-position: center bottom;
+	padding-bottom: 23px;
+}
+.errorhint .top {
+	display: block;
+	height: 9px;
+	width: 361px;
+	background-image: url(../img/content/errorhint_top.png);
+	background-repeat: no-repeat;
+}
+.errorhint .cnt {
+	width: 331px;
+	padding-left: 12px;
+	padding-right: 18px;
+	background-image: url(../img/content/errorhint_mid_kachelvert.png);
+	background-repeat: repeat-y;
+}
+.errorhint .cnt .headline {
+	display: block;
+	font-weight: bold;
+	padding-bottom: 6px;
+}
+.errorhint .cnt p {
+	padding: 0px 0px 0px 0px;
+
+}
+#loginload {
+	margin-top: 43px;
+	position: absolute;
+	display: block;
+	width: 345px;
+	height: 240px;
+	opacity: 0.7;
+	z-index: 100000;
+	filter: alpha(opacity=70);
+	-ms-filter: "alpha(opacity=70)";
+	background-image: url(../img/content/loading/loading_login.gif);
+}
+#loginerror {
+	bottom: 0px;
+	margin-left: 300px;
+	margin-bottom: 260px;
+}
+#passwordreseterror {
+	bottom: 0px;
+	margin-left: 300px;
+	margin-bottom: 223px;
+}
+#recoverloginerror {
+	margin-left: 300px;
+	margin-top: 105px;
+}
+.errorhint .cnt,
+.errorhint .cnt b {
+	font-family: Arial;
+	font-size: 11px;
+	line-height: 14px;
+	color: #ffffff;
+}
+
+
+
+/********************************************************************/
+/* login															*/
+/********************************************************************/
+
+.logincontainer {
+	padding-top: 60px;
+	padding-left: 11px;
+	padding-right: 11px;
+	height: 230px;
+}
+.logincontainer .logo {
+	position: absolute;
+	width: 200px;
+	height: 40px;
+	margin-top: -60px;
+	margin-left: -11px;
+	background-image: url(../img/navigation/navigation.png);
+	background-position: -88px -190px;
+	background-repeat: no-repeat;
+}
+.logincontainer,
+.logincontainer a {
+	font-family: Arial;
+	font-size: 11px;
+	color: #c4ddbf;
+}
+.logincontainer .pbox_leftbutton a {
+	margin-top: 15px;
+	display: block;
+}
+.logincontainer a:hover {
+	text-decoration: none;
+}
+.loginspacer {
+	height: 16px;
+}
+.logincontainer .label {
+	padding-bottom: 3px;
+}
+.logincontainer .textbox {
+	margin-bottom: 9px;
+}
+.logincontainer .recoverylink {
+	width: 332px;
+	text-align: right;
+	position: absolute;
+	margin-top: 210px;
+}
+.logincontainer .checkboxicon,
+.logincontainer .checkboxiconsel {
+	margin-left: -1px;
+}
+.logincontainer .checkarray {
+	margin-top: 11px;
+}
+.logincontainer .button {
+	margin-top: 14px !important;
+}
+.logincontainer input {
+	border: none;
+	width: 323px;
+	font-size: 14px;
+	padding-left: 4px;
+	padding-right: 4px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+.WEBKIT .logincontainer .textboxfocus {
+	padding: 0px 0px 0px 0px;
+}
+.IE8 .logincontainer input {
+	height: 16px;
+	padding-bottom: 3px;
+	padding-top: 3px;
+}
+.login_subline,
+.login_subline a {
+	width: 381px;
+	color: #98a493;
+	line-height: 11px;
+	font-family: Arial;
+	font-size: 10px;
+	text-align: right;
+	margin-top: 13px;
+}
+.login_subline a {
+	font-size: 11px;
+}
+.login_subline a:hover {
+	text-decoration: none;
+}
+.login_subline .linkcut {
+	display: inline-block;
+	font-size: 11px;
+	margin-right: 6px;
+	margin-left: 6px;
+}
+.login_subline .crightbt {
+	display: block;
+	margin-top: 4px;
+}
+
+
+
+/********************************************************************/
+/* bottomline													   */
+/********************************************************************/
+
+#bottomline {
+	position: fixed;
+	z-index: 200000;
+	bottom: 0px;
+	left: 0px;
+	height: 29px;
+	width: 100%;
+}
+#bottomline .bleft {
+	table-layout: fixed;
+	/*background-image: url(../img/bottom/bottom_l.png);*/
+	background-image: url(../img/bottom/bottom.png);
+	background-position: -77px -54px;
+	background-repeat: no-repeat;
+	width: 19px;
+	height: 29px;
+}
+#bottomline .bborderin,
+#mainnav .bborderin {
+	width: 19px;
+}
+#bottomline .bright {
+	table-layout: fixed;
+	/*background-image: url(../img/bottom/bottom_r.png);*/
+	background-image: url(../img/bottom/bottom.png);
+	background-position: -96px -54px;
+	background-repeat: no-repeat;
+	width: 19px;
+	height: 29px;
+}
+#bottomline .bmid {
+	table-layout: fixed;
+	/*background-image: url(../img/bottom/bottom.png);*/
+	background-image: url(../img/bottom/bottom.png);
+	background-position: 0px 0px;
+	width: 380px;
+	height: 29px;
+}
+#bottomline .bwins {
+	/*background-image: url(../img/bottom/bottom.png);*/
+	background-image: url(../img/bottom/bottom.png);
+	background-position: 0px 0px;
+	height: 29px;
+}
+#minwins {
+	overflow: hidden;
+	height: 29px;
+	width: 100%;
+}
+#bottomline .bottomspace {
+	float: right;
+	width: 1px;
+	margin-right: -1px;
+	height: 23px;
+}
+#bottomline .loadingind {
+	display: none;
+	background-image: url(../img/bottom/loading_misc.gif);
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	z-index: 100;
+	margin-left: 8px;
+	margin-right: -4px;
+	margin-top: 8px;
+	background-repeat: no-repeat;
+}
+#bottomline #helpdesc {
+	position: absolute;
+	height: 16px;
+	z-index: 99;
+	font-family: Arial;
+	font-size: 10px;
+	color: #c6ffde;
+	margin-left: 12px;
+	background-image: url(../img/bottom/bottomfile.gif);
+	background-repeat: no-repeat;
+	background-position: 0px 4px;
+	margin-top: 9px;
+	padding-left: 16px;
+}
+#bottomline.loadingsmall .loadingind {
+	display: block;
+}
+#bottomline.loadingsmall #helpdesc {
+	background-image: none;
+}
+
+
+
+/********************************************************************/
+/* navigation													   */
+/********************************************************************/
+
+#mainnav {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	height: 23px;
+	width: 100%;
+	z-index: 40000;
+}
+#mainnav .collapsed {
+	display: block;
+	text-align: center;
+}
+#mainnav .extended {
+	display: none;
+}
+#mainnav .collapsed table {
+	width: 100%;
+	padding: 0px;
+	margin: 0px;
+	height: 22px;
+}
+#mainnav .collapsed .left,
+#mainnav .collapsed .leftinner,
+#mainnav .collapsed .right,
+#mainnav .collapsed .rightinner {
+	width: 19px;
+	background-image: url(../img/navigation/navigation.png);
+	background-position: -23px -171px;
+	background-repeat: no-repeat;
+}
+#mainnav .collapsed .right,
+#mainnav .collapsed .rightinner {
+	background-position: left;
+	background-position: -42px -171px;
+	background-image: url(../img/navigation/navigation.png);
+}
+#mainnav .collapsed .mid {
+	background-image: url(../img/navigation/navigation.png);
+	background-repeat: repeat-x;
+	background-position: 0px 0px;
+	text-align: center;
+	padding-top: 3px;
+}
+#mainnav .extended table {
+	width: 100%;
+	padding: 0px;
+	margin: 0px;
+	height: 149px;
+	table-layout: fixed;
+}
+#mainnav .extended .left,
+#mainnav .extended .leftinner,
+#mainnav .extended .right,
+#mainnav .extended .rightinner {
+	width: 19px;
+	table-layout: fixed;
+	background-position: right;
+	background-position: 0px -171px;
+	background-image: url(../img/navigation/navigation.png);
+	background-repeat: no-repeat;
+}
+#mainnav .extended .right,
+#mainnav .extended .rightinner {
+	background-position: left;
+	background-position: -19px -171px;
+	background-image: url(../img/navigation/navigation.png);
+}
+#mainnav .extended .rightinner,
+#mainnav .collapsed .rightinner,
+#mainnav .extended .leftinner,
+#mainnav .collapsed .leftinner {
+	width: 7px;
+}
+#mainnav .collapsed .leftinner {
+	background-position: -35px -171px;
+}
+#mainnav .extended .leftinner {
+	background-position: -12px -171px;
+}
+#mainnav .extended .mid {
+	background-image: url(../img/navigation/navigation.png);
+	background-repeat: repeat-x;
+	background-position: 0px -22px;
+	width: 100%;
+	text-align: left;
+}
+#mainnav #navtoolbarextended {
+	margin-top: -95px;
+}
+#mainnav #navtoolbarextended .mid {
+	text-align: center;
+	padding-top: 101px;
+	font-size: 11px;
+	line-height: 11px;
+	font-family: Arial;
+}
+#mainnav #navtoolbarextended .label {
+	display: block;
+	padding-left: 0px;
+	color: #9BB397;
+}
+#mainnav .collapsed .navfile {
+	width: 5px;
+	height: 3px;
+	display: inline-block;
+	background-image: url(../img/navigation/navigation.png);
+	background-position: -205px -171px;
+	margin-top: 6px;
+}
+#mainnav .yglogolink {
+	width: 110px;
+	height: 40px;
+	margin-top: 15px;
+	margin-left: 5px;
+	cursor: pointer;
+}
+#mainnav .innerleft {
+	overflow: hidden;
+	width: 177px;
+	background-repeat: no-repeat;
+	background-position: -80px -181px;
+	background-image: url(../img/navigation/navigation.png);
+	text-align: left;
+}
+#mainnav .innerright table {
+	height: auto;
+}
+#mainnav .user {
+	vertical-align: bottom;
+	font-family: Arial;
+	height: 40px;
+	font-size: 10px;
+	letter-spacing: 0.1em;
+}
+.settingstd {
+	padding-top: 4px;
+	height: 38px;
+}
+#mainnav .innerright {
+	text-align: right;
+	width: 210px;
+	padding-right: 34px;
+}
+#mainnav #icondesc {
+	font-family: Arial;
+	font-size: 10px;
+	color: #9bb397;
+	cursor: pointer;
+	letter-spacing: 0.15em;
+	line-height: 9px;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+#mainnav #icondesc {
+	line-height: 11px;
+}
+#mainnav a.logout {
+	padding-top: 30px;
+}
+#mainnav a.pages,
+#mainnav a.cblocks,
+#mainnav a.files,
+#mainnav a.tags,
+#mainnav a.comments,
+#mainnav a.mailings,
+#mainnav a.updates,
+#mainnav a.entrymasks,
+#mainnav a.system,
+#mainnav a.extensions,
+#mainnav a.data,
+#mainnav a.templates,
+#mainnav a.mailing,
+#mainnav a.users,
+#mainnav a.usergroups,
+#mainnav a.sites {
+	text-decoration: none;
+	text-align: center;
+	display: block;
+	float:left;
+	width: 70px;
+	height: 60px;
+	font-family: Arial;
+	font-size: 10px;
+	color: #7fa38c;
+	background-image: url(../img/icons/icons.png);
+	background-repeat: no-repeat;
+	cursor: pointer;
+	outline: none;
+}
+#mainnav .settitles {
+	display: block;
+	padding-top: 59px;
+}
+#mainnav #sets {
+	text-align: left;
+	position: absolute;
+	left: 36px;
+	width: 150px;
+	display: block;
+}
+#mainnav .meta,
+#mainnav .logout {
+	display: block;
+	position: absolute;
+	left: 196px;
+	top: 24px;
+	font-size: 11px;
+	line-height: 11px;
+	font-family: Arial;
+	color: #7fa38c;
+}
+#mainnav .meta a {
+    cursor: pointer;
+}
+#mainnav .meta .user {
+	font-size: 11px;
+	letter-spacing: 0em;
+}
+#mainnav .meta a {
+    text-decoration: none;
+    color: #7fa38c;
+}
+#mainnav .meta a + a {
+    margin-left: 30px;
+}
+#mainnav .logout {
+	left: auto;
+	right: 155px;
+}
+#mainnav .logout a,
+#navtoolbarextended a {
+	cursor: pointer;
+	color: #ff009c;
+}
+#navtoolbarextended a {
+	display: inline-block;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	margin-top: 3px;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+}
+#navtoolbarcollapsed .navtoolbaricon {
+	width: 70px;
+	height: 15px;
+	display: inline-block;
+	background-position: 0px -435px;
+	background-image: url(../img/navigation/navigation.png);
+}
+#navtoolbarextended .expanded a.toolbarshow,
+#navtoolbarextended a.toolbarhide {
+	display: none;
+}
+#navtoolbarextended .expanded a.toolbarhide,
+#navtoolbarextended a.toolbarshow {
+	display: inline-block;
+}
+#mainnav .logout a:hover,
+#navtoolbarextended a:hover {
+	color: #ff6bc6;
+}
+#mainnav .settitle,
+#mainnav #sets a {
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	display: inline-block;
+	font-family: Arial;
+	font-size: 10px;
+	color: #9bb397;
+	letter-spacing: 0.15em;
+	line-height: 11px;
+	text-decoration: none;
+	text-transform: uppercase;
+	padding-right: 13px;
+	cursor: pointer;
+}
+#mainnav .settitle {
+	float: left;
+	display: none;
+	cursor: default;
+}
+#mainnav #sets a {
+	width: auto;
+	margin-top: -11px;
+	padding-top: 11px;
+	padding-bottom: 11px;
+}
+#mainnav .navfiler {
+	float:left;
+	width: 3px;
+	height: 5px;
+	margin-top: 3px;
+	background-repeat: no-repeat;
+	background-position: -207px -176px;
+	background-image: url(../img/navigation/navigation.png);
+}
+#mainnav .settitle a:hover,
+#mainnav #sets a:hover,
+#mainnav #icondesc,
+#mainnav #sets a.sel,
+#mainnav .meta a:hover {
+	color: #c6ffde;
+}
+#mainnav .set {
+	position: absolute;
+	margin-left: -25px;
+	margin-top: 7px;
+	height: 60px;
+	overflow: hidden;
+	display: block;
+}
+#mainnav #icondesc {
+	white-space: nowrap;
+	margin-left: 15px;
+	float: left;
+}
+#mainnav a.pages:hover,
+#mainnav a.cblocks:hover,
+#mainnav a.files:hover,
+#mainnav a.tags:hover,
+#mainnav a.comments:hover,
+#mainnav a.mailings:hover,
+#mainnav a.updates:hover,
+#mainnav a.mailing:hover,
+#mainnav a.templates:hover,
+#mainnav a.templates:hover,
+#mainnav a.entrymasks:hover,
+#mainnav a.usergroups:hover,
+#mainnav a.users:hover {
+	color: #c6ffde;
+}
+#mainnav a.pages {
+	background-position: 0px 0px;
+}
+#mainnav a.pages:hover {
+	background-position: 0px -60px;
+}
+#mainnav a.cblocks {
+	background-position: 0px -120px;
+}
+#mainnav a.cblocks:hover {
+	background-position: 0px -180px;
+}
+#mainnav a.files {
+	background-position: 0px -240px;
+}
+#mainnav a.files:hover {
+	background-position: 0px -300px;
+}
+#mainnav a.tags {
+	background-position: 0px -360px;
+}
+#mainnav a.tags:hover {
+	background-position: 0px -420px;
+}
+#mainnav a.comments {
+	background-position: -70px 0px;
+}
+#mainnav a.comments:hover {
+	background-position: -70px -60px;
+}
+#mainnav a.users {
+	background-position: 0px -480px;
+}
+#mainnav a.users:hover {
+	background-position: 0px -540px;
+}
+#mainnav a.system {
+	background-position: 0px -600px;
+}
+#mainnav a.system:hover {
+	background-position: 0px -660px;
+}
+#mainnav a.templates {
+	background-position: 0px -720px;
+}
+#mainnav a.templates:hover {
+	background-position: 0px -780px;
+}
+#mainnav a.entrymasks {
+	background-position: 0px -840px;
+}
+#mainnav a.entrymasks:hover {
+	background-position: 0px -900px;
+}
+#mainnav a.sites {
+	background-position: 0px -960px;
+}
+#mainnav a.sites:hover {
+	background-position: 0px -1020px;
+}
+#mainnav a.extensions {
+	background-position: -70px -600px;
+}
+#mainnav a.extensions:hover {
+	background-position: -70px -660px;
+}
+#mainnav a.data {
+	background-position: -70px -720px;
+}
+#mainnav a.data:hover {
+	background-position: -70px -780px;
+}
+#mainnav a.mailings {
+	background-position: -70px -120px;
+}
+#mainnav a.mailings:hover {
+	background-position: -70px -180px;
+}
+#mainnav a.usergroups {
+	background-position: -70px -240px;
+}
+#mainnav a.usergroups:hover {
+	background-position: -70px -300px;
+}
+#mainnav a.updates {
+	background-position: -70px -360px;
+}
+#mainnav a.updates:hover {
+	background-position: -70px -420px;
+}
+
+
+/********************************************************************/
+/* drag and drop													*/
+/********************************************************************/
+
+.yg_ghost {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	z-index: 200000;
+}
+.yg_ghost {
+	display: none;
+}
+.yg_ghost table,
+#yg_ddGhostTree table {
+	border-collapse: collapse;
+	white-space: nowrap;
+}
+.yg_ghost .info,
+#yg_ddGhostTree .info {
+	background-image: url('../img/dragndrop/ghost_bg.png');
+}
+.yg_ghost .nodrop,
+#yg_ddGhostTree .nodrop {
+	background-image: url('../img/dragndrop/ghost_nodrop.png');
+	background-repeat: no-repeat;
+	display: none;
+}
+
+.yg_ghost .nodrop,
+#yg_ddGhostTree .nodrop {
+	height: 19px;
+}
+
+.yg_ghost .nodrop_outer,
+#yg_ddGhostTree .nodrop_outer {
+	height: 17px;
+	padding: 0px;
+}
+.yg_ghost a.node,
+#yg_ddGhostTree a.node,
+#yg_ddGhostTree a.darknode {
+	font-family: Arial;
+	font-size: 11px;
+	line-height: 20px;
+	color: #c6ffde;
+	margin-right: 5px
+}
+.yg_ghost img,
+#yg_ddGhostTree img {
+	margin-top: 1px;
+	margin-left: 1px;
+	margin-right: 2px;
+}
+#yg_ddGhostTree {
+	font-family: Arial;
+	font-size: 11px;
+	z-index: 100000;
+	color: #c6ffde;
+	padding-right: 6px;
+	margin-top: -3px;
+	padding-left: 12px;
+}
+
+
+
+
+/********************************************************************/
+/* drag and drop needle											 */
+/********************************************************************/
+
+div.dropmarker {
+	height: 6px;
+	width: 320px;
+	background-repeat: repeat-x;
+	background: url('../img/dragndrop/dropmarker.png') left top;
+	margin-top: -3px;
+	margin-left: -5px;
+	z-index: 3;
+	overflow: hidden;
+	clear: both;
+	margin-top: 0px;
+	height: 2px;
+	line-height: 1px;
+	font-size: 1px;
+	/* border: solid 4px #ff0000; */
+}
+div.dropmarker_dialog,
+.ydialog div.dropmarker {
+	background: url('../img/dragndrop/dropmarker_dialog.png') left top;
+}
+.ydialog div.dropmarker {
+	margin-top: 0px;
+
+}
+.emptyPlaceMarker {
+	border-right: #555555 thin dashed;
+	border-top: #555555 thin dashed;
+	border-left: #555555 thin dashed;
+	border-bottom: #555555 thin dashed;
+	background-color: transparent;
+}
+
+
+
+/********************************************************************/
+/* preview mode														*/
+/********************************************************************/
+
+#previewcontainer {
+	display: none;
+	position: absolute;
+	background-image: url('../img/background/background.jpg');
+	z-index: 150000;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+}
+#previewcontainer.page {
+	background-image: none;
+	background-color: white;
+}
+#previewiframe {
+	display: none;
+	width: 100%;
+	height: 100%;
+	border: none;
+}
+#filepreview {
+	display: none;
+	width: 100%;
+	height: 100%;
+}
+#filepreviewcontainer {
+	display: block;
+	position: absolute;
+	cursor: move;
+	padding: 2000px 2000px 2000px 2000px;
+	/*-webkit-box-shadow: 3px 3px 3px #434a42;
+	-moz-box-shadow: 3px 3px 3px #434a42;*/
+}
+#filepreviewcontainer.nodrag {
+	cursor: default;
+}
+#filepreviewwrap {
+	border: 1px solid #454d44;
+}
+#filepreviewwrap.nopreview {
+	border: none;
+}
+#previewcontainer .closepreview {
+	z-index: 100000;
+	position: absolute;
+	right: 15px;
+	top: 13px;
+	height: 57px;
+	width: 59px;
+	cursor: pointer;
+	background-image: url('../img/window/window_vertical.png');
+	background-position: -969px 0px;
+}
+#previewcontainer .closepreview:hover {
+	background-position: 0px -57px;
+	background-position: -910px 0px;
+}
+
+/********************************************************************/
+/* tinymce hack													 */
+/********************************************************************/
+
+.mceEditorIframe {
+	width: 100% !important;
+}
+
+
+/********************************************************************/
+/* swfupload styles												 */
+/********************************************************************/
+object.swfupload {
+	display: block;
+	height: 56px;
+	position: absolute;
+	width: 100%;
+	color: #3D3D3D;
+	text-align: left;
+	cursor: pointer;
+}
+.mk_uploadlist object.swfupload {
+	margin-top: -38px;
+}
+object.swfupload:hover {
+	cursor: pointer;
+}
+
+a.add object.swfupload:hover {
+	background-image: none;
+	background-color: transparent;
+	cursor: pointer;
+}
+
+.mk_uploadpanel object.swfupload {
+	position: absolute;
+	display: block;
+	background-image: none;
+	border-bottom: 0px;
+	height: 47px;
+	width: 100%;
+	color: #3D3D3D;
+	text-align: left;
+	cursor: pointer;
+}
+.mk_uploadpanel object.swfupload:hover {
+	background-color: transparent;
+}
+
+.mk_uploadextensiondata object.swfupload {
+	height: 50px;
+}
+
+.mk_uploaduserprofilepicture object.swfupload {
+	height: 70px;
+}
+
+.mk_uploadpanel {
+	cursor: pointer;
+}
+
+.actionhover object.swfupload {
+	display: block;
+	float: right;
+	background-image: none;
+	border-bottom: 0px;
+	width: 22px;
+	height: 21px;
+	color: #3D3D3D;
+	text-align: left;
+	cursor: pointer;
+	background-position: -220px -42px;
+	background-color: transparent;
+	background-image: url(../img/actions/actions.png);
+}
+.actionhover object.swfupload:hover {
+	background-color: transparent;
+}
+
+.cntblockadd.mk_uploadpanel div #wid_upload_addfilebutton {
+	opacity: 0.1;
+}
+
+#wid_upload_addfilebutton_top_container object.swfupload {
+	height: 23px;
+	width: 23px;
+}
+
+/********************************************************************/
+/* permissions													  */
+/********************************************************************/
+
+.perm_container {
+	border-bottom: solid 1px #d8d6cd;
+	font-family: Arial;
+	font-size: 8pt;
+	line-height: 10pt;
+}
+.perm_line_container,
+.perm_line {
+	position: relative;
+}
+.perm_tree_lines div:first-child {
+	padding-left: 3px;
+}
+.perm_line:hover .perm_ok,
+.perm_line:hover .perm_nok,
+.perm_line:hover .perm_user_ok,
+.perm_line:hover .perm_user_nok {
+	border-left: solid 1px #d8d6cd;
+}
+.usergroupgeneral .perm_line:hover .perm_ok,
+.usergroupgeneral .perm_line:hover .perm_nok,
+.usergroupgeneral .perm_line:hover .perm_user_ok,
+.usergroupgeneral .perm_line:hover .perm_user_nok {
+	border-left: none;
+}
+.perm_title {
+	display: inline-block;
+	height: 18px;
+	vertical-align: top;
+	margin-top: 5px;
+}
+.usergroupgeneral .perm_title {
+	padding-left: 2px;
+}
+.MOZ.MAC .usergroupgeneral {
+	margin-top: 4px;
+}
+.usergroupgeneral .perm_tree_lines {
+	padding-left: 4px;
+}
+.perm_chkboxes {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	width: 300px;
+	height: 24px;
+	text-align: right;
+}
+.perm_tree_lines {
+	display: inline-block;
+	height: 24px;
+	vertical-align: top;
+}
+.perm_tree_lines div {
+	display: inline-block;
+	width: 16px;
+	background-position: center right;
+	background-repeat: no-repeat;
+	height: 24px;
+	vertical-align: top;
+}
+.perm_tree_lines .perm_tree_blank { background-image: none; }
+.perm_tree_lines .perm_tree_line { background-image: url(../img/tree/perm_line.gif); }
+.perm_tree_lines .perm_tree_lineang { background-image: url(../img/tree/perm_lineang.gif); }
+.perm_tree_lines .perm_tree_lineints { background-image: url(../img/tree/perm_lineints.gif); }
+.perm_tree_lines .perm_tree_minusb { background-image: url(../img/tree/perm_minusb.gif); cursor: pointer; }
+.perm_tree_lines .perm_tree_plusb { background-image: url(../img/tree/perm_plusb.gif); cursor: pointer; }
+.perm_tree_lines .perm_tree_minusnb { background-image: url(../img/tree/perm_minusnb.gif); cursor: pointer; }
+.perm_tree_lines .perm_tree_plusnb { background-image: url(../img/tree/perm_plusnb.gif);cursor: pointer; }
+.perm_tree_lines .perm_tree_minusnl { background-image: url(../img/tree/perm_minusnl.gif); cursor: pointer; }
+.perm_tree_lines .perm_tree_plusnl { background-image: url(../img/tree/perm_plusnl.gif); cursor: pointer; }
+.perm_tree_icon,
+.perm_tree_iconpage,
+.perm_tree_iconpageinactive,
+.perm_tree_iconpagehidden,
+.perm_tree_iconpagehiddeninactive,
+.perm_tree_icon_tag,
+.perm_tree_icon_mailing,
+.perm_tree_icon_file,
+.perm_tree_icon_cblock,
+.perm_tree_icon_folder,
+.perm_tree_icon_folder_open,
+.perm_tree_icon_usergroup {
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	vertical-align: top;
+	background-image: url(../img/icons/ico_page_s.png);
+	margin-left: -1px;
+	margin-top: 2px;
+}
+.perm_tree_iconpageinactive {
+	background-image: url(../img/icons/ico_page_inactive_s.png);
+}
+.perm_tree_iconpagehidden {
+	background-image: url(../img/icons/ico_page_hidden_s.png);
+}
+.perm_tree_iconpagehiddeninactive {
+	background-image: url(../img/icons/ico_page_inactive_hidden_s.png);
+}
+.perm_tree_icon_folder {
+	background-image: url(../img/icons/ico_folder_s.png);
+}
+.perm_tree_icon_folder_open {
+	background-image: url(../img/icons/ico_folderopen_s.png);
+}
+.perm_tree_icon_tag {
+	background-image: url(../img/icons/ico_tag_s.png);
+}
+.perm_tree_icon_mailing {
+	background-image: url(../img/icons/ico_mailing_s.png);
+}
+.perm_tree_icon_cblock {
+	background-image: url(../img/icons/ico_cblock_s.png);
+}
+.perm_tree_icon_usergroup {
+	background-image: url(../img/icons/ico_usergroup_s.png);
+}
+.perm_tree_icon_file {
+	background-image: none;
+	width: 36px;
+	height: 15px;
+	padding-top: 5px;
+}
+.mk_hasnorread .mk_rread,
+.mk_hasnorwrite .mk_rwrite,
+.mk_hasnordelete .mk_rdelete,
+.mk_hasnorsub .mk_rsub,
+.mk_hasnorstage .mk_rstage,
+.mk_hasnormoderate .mk_rmoderate,
+.mk_hasnorcomment .mk_rcomment,
+.mk_hasnorsend .mk_rsend {
+	background-position: center top;
+}
+
+.mk_hasrread .mk_rread,
+.mk_hasrwrite .mk_rwrite,
+.mk_hasrdelete .mk_rdelete,
+.mk_hasrsub .mk_rsub,
+.mk_hasrstage .mk_rstage,
+.mk_hasrmoderate .mk_rmoderate,
+.mk_hasrcomment .mk_rcomment,
+.mk_hasrsend .mk_rsend {
+	background-position: center bottom;
+}
+
+.perm_line_container .mk_hasnorread .mk_rread,
+.perm_line_container .mk_hasnorwrite .mk_rwrite,
+.perm_line_container .mk_hasnordelete .mk_rdelete,
+.perm_line_container .mk_hasnorsub .mk_rsub,
+.perm_line_container .mk_hasnorstage .mk_rstage,
+.perm_line_container .mk_hasnormoderate .mk_rmoderate,
+.perm_line_container .mk_hasnorcomment .mk_rcomment,
+.perm_line_container .mk_hasnorsend .mk_rsend {
+	background-position: center top;
+}
+
+.perm_line_container .mk_hasrread .mk_rread,
+.perm_line_container .mk_hasrwrite .mk_rwrite,
+.perm_line_container .mk_hasrdelete .mk_rdelete,
+.perm_line_container .mk_hasrsub .mk_rsub,
+.perm_line_container .mk_hasrstage .mk_rstage,
+.perm_line_container .mk_hasrmoderate .mk_rmoderate,
+.perm_line_container .mk_hasrcomment .mk_rcomment,
+.perm_line_container .mk_hasrsend .mk_rsend {
+	background-position: center bottom;
+}
+
+/** 12 Ebenen **/
+.perm_line_container .perm_line_container .mk_hasnorread .mk_rread,
+.perm_line_container .perm_line_container .mk_hasnorwrite .mk_rwrite,
+.perm_line_container .perm_line_container .mk_hasnordelete .mk_rdelete,
+.perm_line_container .perm_line_container .mk_hasnorsub .mk_rsub,
+.perm_line_container .perm_line_container .mk_hasnorstage .mk_rstage,
+.perm_line_container .perm_line_container .mk_hasnormoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .mk_hasnorcomment .mk_rcomment,
+.perm_line_container .perm_line_container .mk_hasnorsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .mk_hasnorread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .mk_hasnorwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .mk_hasnordelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .mk_hasnorsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .mk_hasnorstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .mk_hasnormoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .mk_hasnorcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .mk_hasnorsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnordelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnormoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnordelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnormoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnordelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnormoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnordelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnormoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnordelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnormoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnordelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnormoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnordelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnormoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnordelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnormoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnordelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnormoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasnorsend .mk_rsend {
+	background-position: center top;
+}
+
+.perm_line_container .perm_line_container .mk_hasrread .mk_rread,
+.perm_line_container .perm_line_container .mk_hasrwrite .mk_rwrite,
+.perm_line_container .perm_line_container .mk_hasrdelete .mk_rdelete,
+.perm_line_container .perm_line_container .mk_hasrsub .mk_rsub,
+.perm_line_container .perm_line_container .mk_hasrstage .mk_rstage,
+.perm_line_container .perm_line_container .mk_hasrmoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .mk_hasrcomment .mk_rcomment,
+.perm_line_container .perm_line_container .mk_hasrsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .mk_hasrread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .mk_hasrwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .mk_hasrdelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .mk_hasrsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .mk_hasrstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .mk_hasrmoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .mk_hasrcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .mk_hasrsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrdelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrmoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrdelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrmoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrdelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrmoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrdelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrmoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrdelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrmoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrdelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrmoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrdelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrmoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrdelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrmoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrsend .mk_rsend,
+
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrread .mk_rread,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrwrite .mk_rwrite,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrdelete .mk_rdelete,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrsub .mk_rsub,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrstage .mk_rstage,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrmoderate .mk_rmoderate,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrcomment .mk_rcomment,
+.perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .perm_line_container .mk_hasrsend .mk_rsend {
+	background-position: center bottom;
+}
+
+.perm_ok,
+.perm_nok,
+.perm_user_ok,
+.perm_user_nok {
+	top: 0px;
+	display: block;
+	position: absolute;
+	width: 41px;
+	height: 24px;
+	background-image: url(../img/forms/permission.png);
+	background-position: center bottom;
+	background-repeat: no-repeat;
+	vertical-align: top;
+	cursor: pointer;
+	border-left: solid 1px #d8d6cd;
+	background-color: #f4f4f0;
+}
+.usergroupgeneral .perm_ok,
+.usergroupgeneral .perm_nok,
+.usergroupgeneral .perm_user_ok,
+.usergroupgeneral .perm_user_nok {
+	border-left: none;
+}
+
+.perm_nok,
+.perm_user_nok {
+	background-position: center top;
+}
+.perm_user_ok {
+	background-position: center bottom !important;
+}
+.perm_user_nok {
+	background-position: center top !important;
+}
+.usergroup_list.mk_hilite_rread .mk_rread,
+.usergroup_list.mk_hilite_rread .mk_rread_head,
+.usergroup_list.mk_hilite_rwrite .mk_rwrite,
+.usergroup_list.mk_hilite_rwrite .mk_rwrite_head,
+.usergroup_list.mk_hilite_rdelete .mk_rdelete,
+.usergroup_list.mk_hilite_rdelete .mk_rdelete_head,
+.usergroup_list.mk_hilite_rsub .mk_rsub,
+.usergroup_list.mk_hilite_rsub .mk_rsub_head,
+.usergroup_list.mk_hilite_rstage .mk_rstage,
+.usergroup_list.mk_hilite_rstage .mk_rstage_head,
+.usergroup_list.mk_hilite_rmoderate .mk_rmoderate,
+.usergroup_list.mk_hilite_rmoderate .mk_rmoderate_head,
+.usergroup_list.mk_hilite_rcomment .mk_rcomment,
+.usergroup_list.mk_hilite_rcomment .mk_rcomment_head,
+.usergroup_list.mk_hilite_rsend .mk_rsend,
+.usergroup_list.mk_hilite_rsend .mk_rsend_head {
+	background-color: #ebebe7;
+}
+.perm_select_all {
+	display: block;
+	width: 50px;
+	position: absolute;
+	margin-left: 5px;
+	vertical-align: center;
+	padding-top: 5px;
+	display: none;
+	top: 0px;
+}
+.perm_select_all a {
+	color: #a4a6a2;
+	font-size: 9px;
+	text-decoration: underline;
+	background-color: #e1e1dd;
+	padding: 4px;
+	padding-right: 11px;
+	padding-left: 8px;
+}
+.perm_select_all a:hover {
+	text-decoration: none;
+	background-color: #e1e1dd;
+	padding: 4px;
+	padding-right: 11px;
+	padding-left: 8px;
+}
+.usergroupgeneral .headline1 {
+	padding-left: 3px;
+	margin-top: 6px;
+	margin-bottom: 18px;
+}
+.perm_line:hover,
+.perm_line:hover .mk_rread,
+.perm_line:hover .mk_rwrite,
+.perm_line:hover .mk_rdelete,
+.perm_line:hover .mk_rsub,
+.perm_line:hover .mk_rstage,
+.perm_line:hover .mk_rmoderate,
+.perm_line:hover .mk_rcomment,
+.perm_line:hover .mk_rsend {
+	background-color: #e1e1dd;
+}
+.perm_line:hover .perm_select_all {
+	display: inline-block;
+}
+.usergroupgeneral .perm_line:hover .perm_select_all {
+	display: none;
+}
+.perm_subtitle {
+	padding-left: 6px;
+	padding-top: 6px;
+}
+.perm_line.perm_line_header {
+	height: 30px;
+	border-bottom: solid 1px #d8d6cd;
+}
+.perm_line.perm_line_header:hover {
+	background-color: transparent;
+}
+.perm_line.perm_line_header .perm_chkboxes > div,
+.perm_line .perm_chkboxes > div {
+	right: 0px;
+}
+.perm_line.perm_line_header .perm_chkboxes > div + div,
+.perm_line .perm_chkboxes > div + div {
+	right: 42px;
+}
+.perm_line.perm_line_header .perm_chkboxes > div + div + div,
+.perm_line .perm_chkboxes > div + div + div  {
+	right: 84px;
+}
+.perm_line.perm_line_header .perm_chkboxes > div + div + div + div,
+.perm_line .perm_chkboxes > div + div + div + div {
+	right: 126px;
+}
+.perm_line.perm_line_header .perm_chkboxes > div + div + div + div + div,
+.perm_line .perm_chkboxes > div + div + div + div + div {
+	right: 168px;
+}
+.perm_line.perm_line_header .perm_chkboxes > div + div + div + div + div + div,
+.perm_line .perm_chkboxes > div + div + div + div + div + div {
+	right: 210px;
+}
+.perm_line.perm_line_header .perm_chkboxes > div + div + div + div + div + div + div,
+.perm_line .perm_chkboxes > div + div + div + div + div + div + div {
+	right: 252px;
+}
+.perm_line.perm_line_header .perm_chkboxes > div + div + div + div + div + div + div + div,
+.perm_line .perm_chkboxes > div + div + div + div + div + div + div + div {
+	right: 294px;
+}
+.perm_line.perm_line_header .perm_chkboxes > div {
+	width: 41px;
+	height: 21px;
+	display: block;
+	float: right;
+	vertical-align: top;
+	padding-top: 9px;
+	text-align: center;
+	color: #90938e;
+	font-family: Arial;
+	font-size: 9px;
+	line-height: 10pt;
+	border-left: solid 1px #d8d6cd;
+}
+.usergroupgeneral .perm_line.perm_line_header .perm_chkboxes > div {
+	border-left: none;
+}
+.perm_line.perm_line_header .perm_siteswitcher_container {
+	width: 250px;
+	padding-top: 4px;
+	padding-left: 3px;
+}
+.usergroupgeneral .perm_container,
+.usergroupgeneral .cntblockcontainernohover {
+	border-bottom: none !important;
+}
+.opacity_50 {
+	/* IE8 */
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+	/* IE7 */
+	filter: alpha(opacity=30);
+	/* other browsers */
+	opacity: .3;
+}
+
+div.password-reset-container {
+	text-align: right;
+	margin-top: -6px;
+	position: relative;
+	padding-right: 0px;
+	height: 34px;
+}
+div.password-reset-sent {
+	font-family: Arial;
+	color: #555d56;
+	font-size: 11px;
+	display: inline-block;
+}
+
+a.textlink {
+	cursor: pointer;
+	font-family: Arial;
+	font-size: 11px;
+	color: #3B8BEF;
+	text-decoration: underline !important;
+}
+a.textlink:hover {
+	text-decoration: none !important;
+}
+
+table.mceToolbar.mceToolbarRow1.Enabled td:last-child {
+	width: auto !important;
+}
+table.mceToolbar.mceToolbarRow2.Enabled td:last-child {
+	width: auto !important;
+}

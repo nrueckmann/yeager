@@ -1,0 +1,25 @@
+<div class="ywindowpagedir">
+	<div class="currentpage">
+		{$itext.TXT_PAGEDIR_PAGE|default:'$TXT_PAGEDIR_PAGE'}
+		<div class="textbox" yg_form="textbox">
+			<input tabindex="1" value="{$pageDirPage}" onchange="$K.yg_pageDir(this);" onkeypress="$K.yg_pageDirIE(this,event);" nolateonchange="true" />
+		</div>
+		&nbsp; / &nbsp;<strong>{$pageDirMaxPages}</strong> 
+	</div>
+	<div class="perpage">
+		<div><span class="colfilter" onclick="$K.yg_showFilterContext(this, event);">{$pageDirPerPage}</span>&nbsp; / &nbsp;{$itext.TXT_PAGEDIR_PAGE|default:'$TXT_PAGEDIR_PAGE'}</div>
+		<div class="filtercontext" onmouseup="this.hide();">
+			<a shortname="{$itext.TXT_PAGEDIR_SHOWALL_SHORT|default:'$TXT_PAGEDIR_SHOWALL_SHORT'}" value="ALL" onclick="$K.yg_pageDir(this);">{$itext.TXT_PAGEDIR_SHOWALL|default:'$TXT_PAGEDIR_SHOWALL'}</a>
+			<div class="filtercut"></div>
+			{*<a shortname="3" value="3" onclick="$K.yg_pageDir(this);">3</a>*}
+			<a shortname="20" value="20" onclick="$K.yg_pageDir(this);">20</a>
+			<a shortname="40" value="40" onclick="$K.yg_pageDir(this);">40</a>
+			<a shortname="60" value="60" onclick="$K.yg_pageDir(this);">60</a>
+			<a shortname="80" value="80" onclick="$K.yg_pageDir(this);">80</a>
+			<a shortname="100" value="100" onclick="$K.yg_pageDir(this);">100</a>
+		</div>
+	</div>
+	<div class="navpagedir">
+		<span class="colfilter" onclick="$K.yg_pageDirPrevious(this);">{$itext.TXT_PAGEDIR_PREV|default:'$TXT_PAGEDIR_PREV'}</span>&nbsp; &nbsp;<span class="colfilter" onclick="$K.yg_pageDirNext(this);">{$itext.TXT_PAGEDIR_NEXT|default:'$TXT_PAGEDIR_NEXT'}</span>
+	</div>
+</div>

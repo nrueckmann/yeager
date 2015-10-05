@@ -1,0 +1,149 @@
+<div class="panelcontent">
+
+	{if $RPAGES}
+		{section name='s' loop=$sites}
+		<div class="sectionbox" onclick="$K.switchAdmin('pages', {$sites[s].ID} );">
+			<div class="icon page"></div>
+			<h2>{$sites[s].NAME}</h2>
+			<nobr>
+				{assign var='has_changes' value=false}
+				{section name='lcp' loop=$lastchanges_pages}
+					{if $lastchanges_pages[lcp].SITE == $sites[s].ID}
+						{if !$lastchanges_pages[lcp].USERINFO.FIRSTNAME && !$lastchanges_pages[lcp].USERINFO.LASTNAME}
+							{assign var='user_fullname' value=$itext.TXT_UNKNOWN}
+							{assign var='user_unknown' value='unknown'}
+						{else}
+							{capture assign='user_fullname'}{$lastchanges_pages[lcp].USERINFO.FIRSTNAME} {$lastchanges_pages[lcp].USERINFO.LASTNAME}{/capture}
+							{assign var='user_unknown' value=''}
+						{/if}
+						{capture assign='last_changes_txt'}
+							<a class="user {$user_unknown}" onclick="Event.stop(event);$K.yg_openUserInfo('{$lastchanges_pages[lcp].UID}', this);" yg_type="user" yg_id="{$lastchanges_pages[lcp].UID}-user" yg_property="name" onmouseover="$K.yg_hoverUserHint(this);" onmouseout="$K.yg_hideUserHint();">{$user_fullname}</a>,
+							{$lastchanges_pages[lcp].DATETIME|date_format_php:$itext.DATETIME_FORMAT}
+						{/capture}
+						{assign var='has_changes' value=true}
+					{/if}
+				{/section}
+				{if $has_changes}
+					{$itext.TXT_LASTCHANGE_BY|default:'$TXT_LASTCHANGE_BY'}
+					{$last_changes_txt}
+				{else}
+					{$itext.TXT_NO_LASTCHANGES|default:'$TXT_NO_LASTCHANGES'}
+				{/if}
+			</nobr>
+
+		</div>
+		{/section}
+	{/if}
+	{if $RTAGS}
+		<div class="sectionbox nosubline" onclick="$K.switchAdmin('tags');">
+			<div class="icon tag"></div>
+			<h2>{$itext.TXT_TAGS}</h2>
+		</div>
+	{/if}
+	{if $RFILES}
+		<div class="sectionbox" onclick="$K.switchAdmin('files');">
+			<div class="icon file"></div>
+			<h2>{$itext.TXT_FILES}</h2>
+			<nobr>
+				{if $lastchanges_files[0].DATETIME}
+					{$itext.TXT_LASTCHANGE_BY|default:'$TXT_LASTCHANGE_BY'}
+					{if !$lastchanges_files[0].USERINFO.FIRSTNAME && !$lastchanges_files[0].USERINFO.LASTNAME}
+						{assign var='user_fullname' value=$itext.TXT_UNKNOWN}
+						{assign var='user_unknown' value='unknown'}
+					{else}
+						{capture assign='user_fullname'}{$lastchanges_files[0].USERINFO.FIRSTNAME} {$lastchanges_files[0].USERINFO.LASTNAME}{/capture}
+						{assign var='user_unknown' value=''}
+					{/if}
+					<a class="user {$user_unknown}" onclick="Event.stop(event);$K.yg_openUserInfo('{$lastchanges_files[0].UID}', this);" yg_type="user" yg_id="{$lastchanges_files[0].UID}-user" yg_property="name" onmouseover="$K.yg_hoverUserHint(this);" onmouseout="$K.yg_hideUserHint();">{$user_fullname}</a>,
+					{$lastchanges_files[0].DATETIME|date_format_php:$itext.DATETIME_FORMAT}
+				{else}
+					{$itext.TXT_NO_LASTCHANGES|default:'$TXT_NO_LASTCHANGES'}
+				{/if}
+			</nobr>
+
+		</div>
+	{/if}
+	{if $RCONTENTBLOCKS}
+		<div class="sectionbox" onclick="$K.switchAdmin('contentblocks');">
+			<div class="icon cblock"></div>
+			<h2>{$itext.TXT_CONTENTBLOCKS}</h2>
+			<nobr>
+				{if $lastchanges_content[0].DATETIME}
+					{$itext.TXT_LASTCHANGE_BY|default:'$TXT_LASTCHANGE_BY'}
+					{if !$lastchanges_content[0].USERINFO.FIRSTNAME && !$lastchanges_content[0].USERINFO.LASTNAME}
+						{assign var='user_fullname' value=$itext.TXT_UNKNOWN}
+						{assign var='user_unknown' value='unknown'}
+					{else}
+						{capture assign='user_fullname'}{$lastchanges_content[0].USERINFO.FIRSTNAME} {$lastchanges_content[0].USERINFO.LASTNAME}{/capture}
+						{assign var='user_unknown' value=''}
+					{/if}
+					<a class="user {$user_unknown}" onclick="Event.stop(event);$K.yg_openUserInfo('{$lastchanges_content[0].UID}', this);" yg_type="user" yg_id="{$lastchanges_content[0].UID}-user" yg_property="name" onmouseover="$K.yg_hoverUserHint(this);" onmouseout="$K.yg_hideUserHint();">{$user_fullname}</a>,
+					{$lastchanges_content[0].DATETIME|date_format_php:$itext.DATETIME_FORMAT}
+				{else}
+					{$itext.TXT_NO_LASTCHANGES|default:'$TXT_NO_LASTCHANGES'}
+				{/if}
+			</nobr>
+
+		</div>
+	{/if}
+	{if $RCOMMENTS}
+		<div class="sectionbox nosubline" onclick="$K.switchAdmin('comments');">
+			<div class="icon comments"></div>
+			<h2>{$itext.TXT_COMMENTS}</h2>
+			{*
+			<nobr>
+				{if $lastchanges_comments[0].CHANGEDTS}
+					{$itext.TXT_LASTCHANGE_BY|default:'$TXT_LASTCHANGE_BY'}
+					{if !$lastchanges_comments[0].USERINFO.FIRSTNAME && !$lastchanges_comments[0].USERINFO.LASTNAME}
+						{assign var='user_fullname' value=$itext.TXT_UNKNOWN}
+						{assign var='user_unknown' value='unknown'}
+					{else}
+						{capture assign='user_fullname'}{$lastchanges_comments[0].USERINFO.FIRSTNAME} {$lastchanges_comments[0].USERINFO.LASTNAME}{/capture}
+						{assign var='user_unknown' value=''}
+					{/if}
+					<a class="user {$user_unknown}" onclick="Event.stop(event);$K.yg_openUserInfo('{$lastchanges_comments[0].USERID}', this);" yg_type="user" yg_id="{$lastchanges_comments[0].USERID}-user" yg_property="name" onmouseover="$K.yg_hoverUserHint(this);" onmouseout="$K.yg_hideUserHint();">{$user_fullname}</a>,
+					{$lastchanges_comments[0].CHANGEDTS|date_format_php:$itext.DATETIME_FORMAT}
+				{else}
+					{$itext.TXT_NO_LASTCHANGES|default:'$TXT_NO_LASTCHANGES'}
+				{/if}
+			</nobr>
+			*}
+
+		</div>
+	{/if}
+	{if $RMAILINGS}
+		<div class="sectionbox" onclick="$K.switchAdmin('mailings');">
+			<div class="icon mailing"></div>
+			<h2>{$itext.TXT_MAILINGS}</h2>
+			<nobr>
+				{if $lastchanges_mailing[0].DATETIME}
+					{$itext.TXT_LASTCHANGE_BY|default:'$TXT_LASTCHANGE_BY'}
+					{if !$lastchanges_mailing[0].USERINFO.FIRSTNAME && !$lastchanges_mailing[0].USERINFO.LASTNAME}
+						{assign var='user_fullname' value=$itext.TXT_UNKNOWN}
+						{assign var='user_unknown' value='unknown'}
+					{else}
+						{capture assign='user_fullname'}{$lastchanges_mailing[0].USERINFO.FIRSTNAME} {$lastchanges_mailing[0].USERINFO.LASTNAME}{/capture}
+						{assign var='user_unknown' value=''}
+					{/if}
+					<a class="user {$user_unknown}" onclick="Event.stop(event);$K.yg_openUserInfo('{$lastchanges_mailing[0].UID}', this);" yg_type="user" yg_id="{$lastchanges_mailing[0].UID}-user" yg_property="name" onmouseover="$K.yg_hoverUserHint(this);" onmouseout="$K.yg_hideUserHint();">{$user_fullname}</a>,
+					{$lastchanges_mailing[0].DATETIME|date_format_php:$itext.DATETIME_FORMAT}
+				{else}
+					{$itext.TXT_NO_LASTCHANGES|default:'$TXT_NO_LASTCHANGES'}
+				{/if}
+			</nobr>
+		</div>
+	{/if}
+	{if $RUPDATER}
+		<div class="sectionbox nosubline mk_updater" onclick="$K.switchAdmin('updates');">
+			<div class="icon updates"></div>
+			<h2>{$itext.TXT_UPDATES}</h2>
+			{*<nobr>A new update is available for download: v3.0.0 (r9999, 35.02.2999)</nobr>*}
+		</div>
+	{/if}
+	{if $RPROPERTIES || $RVIEWS || $RFILETYPES || $RCOMMENTCONFIG || $RMAILINGCONFIG}
+		<div class="sectionbox nosubline" onclick="$K.switchAdmin('systemconfig');">
+			<div class="icon system"></div>
+			<h2>{$itext.TXT_SYSTEMCONFIG}</h2>
+		</div>
+	{/if}
+</div>

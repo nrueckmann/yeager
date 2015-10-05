@@ -1,0 +1,31 @@
+<div class="mk_contentgroup">
+	<ul yg_widget="type:sortable;accepts:navigation;objecttype:navigation;callbacks:navigationListSortCallbacks;" id="wid_{$win_no}_navigationlist" style="position: relative;">
+		{include file="$approot/ui/html/tabs/navigations/navigation.inc.html" item_index='0' item_id='0' item_name=$itext.TXT_NO_SELECTION_PAGE_INVISIBLE|default:'$TXT_NO_SELECTION_PAGE_INVISIBLE' presel_id=$preselected}
+		
+		{section name=n loop=$navigations}
+							
+			{include file="$approot/ui/html/tabs/navigations/navigation.inc.html" item_index=$smarty.section.n.index+1 item_id=$navigations[n].ID item_name=$navigations[n].NAME presel_id=$preselected}
+				
+		{/section}
+		
+	</ul>
+</div>
+
+<!-- bottom //-->
+<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_midbottom">
+			<table class="buttontable" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="rightbutton">
+						<div class="button" tabindex="1"><a id="wid_{$win_no}_okbutton" onclick="$K.windows['wid_{$win_no}'].submit();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_ASSIGN|default:'$TXT_ASSIGN'}</nobr></div></a></div>
+						<div class="button cancel" tabindex="1"><a id="wid_{$win_no}_cancelbutton" onclick="$K.windows['wid_{$win_no}'].remove();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</nobr></div></a></div>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td class="ywindow_rightbt"></td>
+	</tr>
+</table>
+<!-- end bottom //-->

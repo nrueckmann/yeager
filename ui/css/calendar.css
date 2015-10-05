@@ -1,0 +1,154 @@
+/********************************************************************/
+/* calendar & time                                                  */
+/********************************************************************/
+
+#yg_caldiv,
+#yg_timediv {
+	position:absolute;
+	visibility:hidden;
+	z-index:55000;
+}
+#yg_timediv {
+	visibility: visible;
+	display: none;
+	padding-right:8px;
+}
+#yg_timediv {
+	background-image: url(../img/content/timepick_bg.png);
+	background-position: 0px 0px;
+	background-repeat: no-repeat;
+}
+.ygtd24,
+.yg12h .ygtd12 {
+	display:block;
+}
+.ygtd12,
+.yg12h .ygtd24 {
+	display:none;
+}
+#yg_caldiv .headline1,
+#yg_timediv .headline1 {
+	padding-left: 8px;
+	padding-top: 12px;
+	padding-bottom: 6px;
+	display: block;
+	text-align: left;
+}
+.yg_cpDayColumnHeader,
+.yg_cpYearNavigation,
+.yg_cpMonthNavigation,
+.yg_cpCurrentMonthDate,
+.yg_cpCurrentMonthDateDisabled,
+.yg_cpOtherMonthDate,
+.yg_cpOtherMonthDateDisabled,
+.yg_cpCurrentDate,
+.yg_cpCurrentDateDisabled,
+.yg_cpText {
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	font-family: arial;
+	font-size: 11px;
+}
+.yg_cpCurrentMonthDate,
+.yg_cpOtherMonthDate,
+.yg_cpCurrentDate {
+	text-align: right;
+	text-decoration: none;
+}
+.yg_cpCurrentMonthDateDisabled,
+.yg_cpOtherMonthDateDisabled,
+.yg_cpCurrentDateDisabled {
+	text-align: right;
+	color: #849580;
+	cursor: default;
+}
+td.yg_cpCurrentDateDisabled {
+	border-width: 1px;
+	border: solid thin #FFAAAA;
+}
+.yg_cpTodayText {
+	display: none;
+}
+.yg_cpBorder {
+	background-image: url(../img/content/calpick_bg.png);
+	background-position: 0px 0px;
+	background-repeat: no-repeat;
+	height: 180px;
+}
+a.yg_cpOtherMonthDate,
+a.yg_cpCurrentMonthDate,
+a.yg_cpCurrentMonthDateDisabled,
+span.yg_cpCurrentMonthDateDisabled,
+a.yg_cpOtherMonthDateDisabled,
+span.yg_cpOtherMonthDateDisabled,
+a.yg_cpCurrentDate,
+a.yg_cpCurrentDateDisabled,
+span.yg_cpCurrentDateDisabled {
+	display: block;
+	text-align: center;
+	padding-top: 2px;
+	width: 21px;
+	padding-bottom: 3px;
+}
+.WEBKIT a.yg_cpOtherMonthDate,
+.WEBKIT a.yg_cpCurrentMonthDate,
+.WEBKIT a.yg_cpCurrentMonthDateDisabled,
+.WEBKIT span.yg_cpCurrentMonthDateDisabled,
+.WEBKIT a.yg_cpOtherMonthDateDisabled,
+.WEBKIT span.yg_cpOtherMonthDateDisabled,
+.WEBKIT a.yg_cpCurrentDate,
+.WEBKIT a.yg_cpCurrentDateDisabled,
+.WEBKIT span.yg_cpCurrentDateDisabled {
+	padding-top: 3px;
+}
+a.yg_cpOtherMonthDate:hover,
+a.yg_cpCurrentMonthDate:hover,
+a.yg_cpCurrentMonthDateDisabled:hover,
+a.yg_cpCurrentDate:hover {
+	background-color: #515b4e;
+}
+.yg_cpCurrentMonthDate,
+.yg_cpCurrentDate {
+	color: #d9f7d4;
+}
+.monthtable {
+	margin-left:4px;
+	margin-bottom: 5px;
+}
+.yg_cpOtherMonthDate {
+	color: #849580;
+}
+td.yg_cpDayColumnHeader {
+	color: #849580;
+	text-align: center;
+	padding-right: 4px;
+	padding-bottom: 5px;
+}
+.IE8 td.yg_cpDayColumnHeader {
+	padding-bottom: 2px;
+}
+.yg_cpDayColumnHeader {
+	font-size: 9px;	
+}
+.yg_cpCurrentDate,
+.yg_cpCurrentDate a:hover {
+	color: #242824;
+	background-color: #d9f7d4;
+	border: none;
+	margin-right: -1px;
+}
+td.yg_cpCurrentDate {
+	background-color: transparent;
+	border: 0px;
+	margin: 0px;
+}
+td.yg_cpMonthNavigation {
+	padding-left: 5px;
+	padding-top: 5px;
+}
+
+td.yg_cpYearNavigation {
+	padding-right: 5px;
+	padding-top: 5px;
+}

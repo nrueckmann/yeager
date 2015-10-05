@@ -1,0 +1,5 @@
+<extension>
+	<namespace>com\yg</namespace>
+	<class>PwdrecoveryLogin</class>
+	<api>1.0</api>
+</extension>

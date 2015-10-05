@@ -1,0 +1,272 @@
+{assign var='perm_RMODERATE' value=$object_permissions.RMODERATE}
+{assign var='perm_RCOMMENT' value=$object_permissions.RCOMMENT}
+<div class="panelcontent fullscreen">
+
+	<div class="mk_contentgroup" yg_multiselect="true">
+
+		{section name='c' loop=$comments}
+			{if $type=='allcomments'}
+				{assign var='objectID' value=$comments[c].OBJECTID}
+				{if $comments[c].OBJECTTYPE == 'PAGE'}
+					{assign var='objectType' value='page'}
+					{capture assign='objectYgID'}{$comments[c].OBJECTID}-{$comments[c].SITEID}{/capture}
+				{/if}
+				{if $comments[c].OBJECTTYPE == 'FILE'}
+					{assign var='objectType' value='file'}
+					{capture assign='objectYgID'}{$comments[c].OBJECTID}-file{/capture}
+				{/if}
+				{if $comments[c].OBJECTTYPE == 'CO'}
+					{assign var='objectType' value='cblock'}
+					{capture assign='objectYgID'}{$comments[c].OBJECTID}-cblock{/capture}
+				{/if}
+				{assign var='perm_RMODERATE' value=$comments[c].RMODERATE}
+				{assign var='perm_RCOMMENT' value=$comments[c].RCOMMENT}
+			{/if}
+			<!-- COMMENT //-->
+			<div id="wid_{$win_no}_{$comments[c].ID}-comment" {if ($perm_RMODERATE || ($userID == $comments[c].USERID) && $commentStatus)}ondblclick="Event.stop(event);if (!this.up('div.cntmain').hasClassName('mk_comments_closed')) new $K.yg_wndobj({literal}{{/literal} config: '{if $commentsSettings.ALLOW_HTML}CONTENTEDITOR{else}CONTENTEDITOR_HTML{/if}', title: '{$itext.TXT_COMMENT_EDIT}', openerYgId: '{$objectID}-{$siteID}', loadparams: {literal}{{/literal}commentMode: 'edit', commentID: '{$comments[c].ID}', formfield: 'wid_{$win_no}_{$comments[c].ID}-comment', openerWinID: 'wid_{$win_no}', openerYgID: '{$objectYgID}', openerType: '{$objectType}' {literal}} }{/literal} );"{/if} yg_selectable="true" class="mk_comment {* mk_nowrite *} cntblockcontainer" onmouseover="$K.yg_showActions(this);" yg_id="{$comments[c].ID}-comment" yg_type="comment" yg_property="comment" obj_yg_id="{$objectYgID}" obj_yg_type="{$objectType}">
+				{if $perm_RMODERATE || ($perm_RCOMMENT && ($comments[c].STATUS == 1))}
+					<!-- actions //-->
+					<div class="actions">
+						<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+						<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+							<div class="singleselect">
+								<div class="actionborder"></div>
+									{if $perm_RMODERATE}
+										<a class="del" onclick="$K.yg_fireAction($K.yg_deleteElement,this.up(3),event)" onmouseover="$K.yg_showHelp('{$itext.TXT_COMMENT_DELETE}');" title="{$itext.TXT_COMMENT_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+									{/if}
+									{if $perm_RMODERATE || ($userID == $comments[c].USERID)}
+										<a class="edit" onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: '{if $commentsSettings.ALLOW_HTML}CONTENTEDITOR{else}CONTENTEDITOR_HTML{/if}', title: '{$itext.TXT_COMMENT_EDIT}', openerYgId: '{$objectID}-{$siteID}', loadparams: {literal}{{/literal}commentMode: 'edit', commentID: '{$comments[c].ID}', formfield: 'wid_{$win_no}_{$comments[c].ID}-comment', openerWinID: 'wid_{$win_no}', openerYgID: '{$objectYgID}', openerType: '{$objectType}' {literal}} }{/literal} );" onmouseover="$K.yg_showHelp('{$itext.TXT_COMMENT_EDIT}');" title="{$itext.TXT_COMMENT_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+									{/if}
+									{if (($type!='allcomments') || ($comments[c].STATUS == 1)) && $perm_RCOMMENT}
+										<a class="add" onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: '{if $commentsSettings.ALLOW_HTML}CONTENTEDITOR{else}CONTENTEDITOR_HTML{/if}', title: '{$itext.TXT_COMMENT_ADD}', openerYgId: '{$objectID}-{$siteID}', loadparams: {literal}{{/literal}commentMode: 'add', parentCommentID: '{$comments[c].ID}', openerWinID: 'wid_{$win_no}', openerYgID: '{$objectYgID}', openerType: '{$objectType}' {literal}} }{/literal} );" onmouseover="$K.yg_showHelp('{$itext.TXT_COMMENT_ADD}');" title="{$itext.TXT_COMMENT_ADD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+									{/if}
+								<div class="actionborder"></div>
+							</div>
+							<div class="multiselect">
+								{if $perm_RMODERATE}
+									<div class="actionborder"></div>
+									<a onmouseover="$K.yg_showHelp('{$itext.TXT_COMMENT_DELETE}');" title="{$itext.TXT_COMMENT_DELETE}" onclick="$K.yg_fireAction($K.yg_deleteElement,this.up(3),event);" class="del" onmouseout="$K.yg_showHelp(false);"></a>
+									<div class="actionborder"></div>
+								{/if}
+							</div>
+						</div>
+					</div>
+					<!-- end actions //-->
+				{/if}
+				<div class="cntblockversions listitempage">
+					<table class="gridflex" cellspacing="0" cellpadding="0">
+						<tr>
+							{if $type=='allcomments'}
+								<td width="308">
+									<div class="trace">
+										{if $comments[c].OBJECTTYPE == 'PAGE'}
+											{section name='t' loop=$comments[c].PARENTS step=-1 max=1}
+												{$comments[c].PARENTS[t][0].NAME}{if $comments[c].PARENTS|@count > 1}:&nbsp;{/if}
+											{/section}
+											{if $comments[c].PARENTS|@count > 1}
+												{section name='t' loop=$comments[c].PARENTS step=-1}
+													{if !$smarty.section.t.first}
+														{$comments[c].PARENTS[t][0].NAME}
+														{if !$smarty.section.t.last}<span class="traceicon"></span>{/if}
+													{/if}
+												{/section}
+											{/if}
+										{else}
+											{section name='t' loop=$comments[c].PARENTS step=-1}
+												{$comments[c].PARENTS[t][0].NAME}
+												{if !$smarty.section.t.last}<span class="traceicon"></span>{/if}
+											{/section}
+										{/if}
+									</div>
+									<div class="txt modified">
+										{if $comments[c].OBJECTTYPE == 'PAGE'}
+											<a onclick="$K.yg_openObjectDetails('{$comments[c].OBJECTID}-{$comments[c].SITEID}', 'page', '{$comments[c].PAGEINFO.NAME}', '{$comments[c].ICON}', '{$comments[c].STYLE}');">
+												<div class="icon{$comments[c].ICON} icn"></div><span class="{$comments[c].STYLE}" yg_property="name" yg_type="page" yg_id="{$comments[c].OBJECTID}-{$comments[c].SITEID}">{$comments[c].PAGEINFO.NAME}</span>
+											</a>
+										{/if}
+										{if $comments[c].OBJECTTYPE == 'CO'}
+											<a onclick="$K.yg_openObjectDetails('{$comments[c].OBJECTID}', 'cblock', '{$comments[c].CBLOCKINFO.NAME}', 'cblock', '{$comments[c].STYLE}');">
+												<div class="iconcblock icn"></div><span class="{$comments[c].STYLE}" yg_property="name" yg_type="cblock" yg_id="{$comments[c].OBJECTID}-cblock">{$comments[c].CBLOCKINFO.NAME}</span>
+											</a>
+										{/if}
+										{if $comments[c].OBJECTTYPE == 'FILE'}
+											<a onclick="$K.yg_openObjectDetails('{$comments[c].OBJECTID}', 'file', '{$comments[c].FILEINFO.NAME}', {literal}{{/literal}color:'{$comments[c].FILEINFO.COLOR}',typecode:'{$comments[c].FILEINFO.CODE|strtoupper}'{literal}}{/literal});">
+												<span onmouseover="$K.yg_hoverFileHint(this);" yg_property="type" yg_type="file" yg_id="{$comments[c].OBJECTID}-file" class="filetype {$comments[c].FILEINFO.COLOR}" style="display:inline-block;">{$comments[c].FILEINFO.CODE|strtoupper}</span> <span onmouseover="$K.yg_hoverFileHint(this);" yg_property="name" yg_type="file" yg_id="{$comments[c].OBJECTID}-file">{$comments[c].FILEINFO.NAME}</span>
+											</a>
+										{/if}
+									</div>
+								</td>
+							{/if}
+							<td class="author" width="130">
+								{$comments[c].CREATEDTS|date_format_php:$itext.DATE_FORMAT}, {$comments[c].CREATEDTS|date_format_php:$itext.TIME_FORMAT}<br />
+								{if $comments[c].ANONYMOUS == 0}
+									<a class="user {if !$comments[c].USERNAME}unknown{/if}" onclick="$K.yg_openUserInfo('{$comments[c].USERID}', this);" yg_type="user" yg_id="{$comments[c].USERID}-user" yg_property="name" onmouseover="$K.yg_hoverUserHint(this);" onmouseout="$K.yg_hideUserHint();">
+										{$comments[c].USERNAME|default:$itext.TXT_UNKNOWN}
+									</a>
+								{else}
+									{if ($comments[c].ANON_USEREMAIL != "")}<a class="webuser" href="mailto:{$comments[c].ANON_USEREMAIL}">{/if}{if ($comments[c].ANON_USERNAME == "")}{$itext.TXT_ANONYMOUS|default:'$TXT_ANONYMOUS'}{$comments[c].ANON_USERNAME}{/if}{if ($comments[c].ANON_USEREMAIL != "")}</a>{/if}
+								{/if}
+							</td>
+							{if $type=='allcomments'}
+								<td class="author" width="110">
+									{if $comments[c].RMODERATE}
+										{$itext.TXT_RIGHT_MODERATE|default:'$TXT_RIGHT_MODERATE'}
+									{elseif $comments[c].RCOMMENT}
+										{$itext.TXT_RIGHT_COMMENT|default:'$TXT_RIGHT_COMMENT'}
+									{else}
+										-
+									{/if}
+								</td>
+							{/if}
+							<td class="commentpost less" {if $type=='allcomments'}{/if}>
+								{capture assign='comment_short'}{$comments[c].COMMENT|strip_tags|truncate:350}{/capture}
+								{assign var='comment_full' value=$comments[c].COMMENT}
+								<div class="less">
+									<div class="mk_shortcomment">{$comment_short}</div>
+									<br />
+									{if $comment_short != $comment_full}
+										<a class="cmtcontrol" onclick="$K.yg_toggleComment(this, event);">{$itext.TXT_MORE|default:'$TXT_MORE'}</a>
+									{/if}
+								</div>
+								<div class="more">
+									<div class="mk_longcomment">{$comment_full}</div>
+									<br />
+									{if $comment_short != $comment_full}
+										<a class="cmtcontrol" onclick="$K.yg_toggleComment(this, event);">{$itext.TXT_LESS|default:'$TXT_LESS'}</a>
+									{/if}
+								</div>
+							</td>
+							<td width="90">
+								<div class="cstatus {if $comments[c].SPAM}spam{elseif $comments[c].APPROVED}ok{else}unapproved{/if}" {if $perm_RMODERATE}onclick="$K.yg_showFilterContext(this.down(), event);"{/if}>
+									<span class="txtok">{$itext.TXT_COMMENT_STATUS_OK_SHORT|default:'$TXT_COMMENT_STATUS_OK_SHORT'}</span>
+									<span class="txtunapproved">{$itext.TXT_COMMENT_STATUS_UNAPPROVED_SHORT|default:'$TXT_COMMENT_STATUS_UNAPPROVED_SHORT'}</span>
+									<span class="txtspam">{$itext.TXT_COMMENT_STATUS_SPAM_SHORT|default:'$TXT_COMMENT_STATUS_SPAM_SHORT'}</span>
+								</div>
+								{if $perm_RMODERATE}
+									<div class="filtercontext" onmouseup="this.hide();">
+										<a onclick="$K.yg_changeCommentStatus(this.up('.mk_comment'),'ok', event);">{$itext.TXT_COMMENT_STATUS_OK|default:'$TXT_COMMENT_STATUS_OK'}</a>
+										<a onclick="$K.yg_changeCommentStatus(this.up('.mk_comment'),'unapproved', event);">{$itext.TXT_COMMENT_STATUS_UNAPPROVED|default:'$TXT_COMMENT_STATUS_UNAPPROVED'}</a>
+										<a onclick="$K.yg_changeCommentStatus(this.up('.mk_comment'),'spam', event);">{$itext.TXT_COMMENT_STATUS_SPAM|default:'$TXT_COMMENT_STATUS_SPAM'}</a>
+									</div>
+								{/if}
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<!-- COMMENT END //-->
+		{/section}
+		{if $object_permissions.RCOMMENT}
+			<div id="wid_{$win_no}_{$page}_addmarker" onmousedown="Event.stop(event);" class="cntblockadd mk_nodrag">
+				<div class="cntblockadd" onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: '{if $commentsSettings.ALLOW_HTML}CONTENTEDITOR{else}CONTENTEDITOR_HTML{/if}', title: '{$itext.TXT_COMMENT_ADD}', openerYgId: '{$objectID}-{$siteID}', loadparams: {literal}{{/literal}commentMode: 'add', parentCommentID: '{$comments[c].ID}', openerWinID: 'wid_{$win_no}', openerYgID: '{$objectYgID}', openerType: '{$objectType}' {literal}} }{/literal} );">
+					<div class="selectionmarker">{$itext.TXT_COMMENT_ADD}</div>
+				</div>
+			</div>
+		{elseif $comments|@count == 0}
+			<div class="nocontentareas mk_verticalcenter"><span class="bracketleft"></span>{$itext.TXT_NO_COMMENTS|default:'$TXT_NO_COMMENTS'}<span class="bracketright"></span></div>
+		{/if}
+	</div>
+
+</div>
+
+
+{if $refresh != 1}
+	<!-- FIXED HEADER VERSIONEN //-->
+	<div class="{if $type!='allcomments'}tabhead_comments{else}tabhead_mid start{/if} fullscreen ywindowhead" style="display:none">
+		{if $type!='allcomments'}
+			{if $perm_RCOMMENT}
+				<!-- actions //-->
+				<div class="actions mk_commentactions">
+					<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+					<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+						<div class="actionborder"></div>
+						<a class="add" onclick="Event.stop(event);new $K.yg_wndobj({literal}{{/literal} config: '{if $commentsSettings.ALLOW_HTML}CONTENTEDITOR{else}CONTENTEDITOR_HTML{/if}', title: '{$itext.TXT_COMMENT_ADD}', openerYgId: '{$objectID}-{$siteID}', loadparams: {literal}{{/literal}commentMode: 'add', openerWinID: 'wid_{$win_no}', openerYgID: '{$objectYgID}', openerType: '{$objectType}' {literal}} }{/literal} );" onmouseover="$K.yg_showHelp('{$itext.TXT_COMMENT_ADD}');" title="{$itext.TXT_COMMENT_ADD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+						<div class="actionborder"></div>
+					</div>
+				</div>
+				<!-- end actions //-->
+			{/if}
+
+			<div class="headline1">
+				{$itext.TXT_COMMENTS|default:'$TXT_COMMENTS'} <em>(</em><span class="mk_comment_count">{$commentsCount}</span><em>)</em>
+			</div>
+			<div class="headstatus {if $commentStatus}copened{else}cclosed{/if}">
+				{$itext.TXT_COMMENTING_FOR_THIS_OBJECT|default:'$TXT_COMMENTING_FOR_THIS_OBJECT'}:
+
+				{if $perm_RMODERATE}
+					<a class="copened" onclick="$K.yg_toggleCommenting(this);">
+						{$itext.TXT_COMMENTING_OPENED|default:'$TXT_COMMENTING_OPENED'}
+					</a>
+					<a class="cclosed" onclick="$K.yg_toggleCommenting(this);">
+						{$itext.TXT_COMMENTING_CLOSED|default:'$TXT_COMMENTING_CLOSED'}
+					</a>
+				{else}
+					{if $commentStatus}
+						{$itext.TXT_COMMENTING_OPENED|default:'$TXT_COMMENTING_OPENED'}
+					{else}
+						{$itext.TXT_COMMENTING_CLOSED|default:'$TXT_COMMENTING_CLOSED'}
+					{/if}
+				{/if}
+			</div>
+			<div style="clear:both;height:8px;overflow:hidden;"></div>
+		{/if}
+
+		<div class="headercolumns">
+			<table class="gridflex" cellspacing="0" cellpadding="0">
+				<tr>
+					{if $type=='allcomments'}
+						<td width="308">
+							<div class="filtercol">{$itext.TXT_OBJECTTYPE|default:'$TXT_OBJECTTYPE'} <span class="colfilter" onclick="$K.yg_showFilterContext(this, event);">{$itext.TXT_ALL_CHANGES_SHORT|default:'$TXT_ALL_CHANGES_SHORT'}</span></div>
+							<div class="filtercontext" id="wid_{$win_no}_commentfilter_objecttype" onmouseup="this.hide();">
+								<a shortname="{$itext.TXT_ALL_OBJECTTYPES_SHORT|default:'$TXT_ALL_OBJECTTYPE_SHORT'}" value="ALL" onclick="$K.yg_filterComments('objecttype', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_ALL_OBJECTTYPES|default:'$TXT_ALL_OBJECTTYPES'}</a>
+								<div class="filtercut"></div>
+								<a shortname="{$itext.TXT_PAGES|default:'$TXT_PAGES'}" value="PAGES" onclick="$K.yg_filterComments('objecttype', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_PAGES|default:'$TXT_PAGES'}</a>
+								<a shortname="{$itext.TXT_CONTENTBLOCKS|default:'$TXT_CONTENTBLOCKS'}" value="CONTENT" onclick="$K.yg_filterComments('objecttype', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_CONTENTBLOCKS|default:'$TXT_CONTENTBLOCKS'}</a>
+								<a shortname="{$itext.TXT_FILES|default:'$TXT_FILES'}" value="FILES" onclick="$K.yg_filterComments('objecttype', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_FILES|default:'$TXT_FILES'}</a>
+							</div>
+						</td>
+					{/if}
+					<td width="130">
+						<div class="filtercol">{$itext.TXT_DATE|default:'$TXT_DATE'} <span class="colfilter" onclick="$K.yg_showFilterContext(this, event);">{$itext.TXT_ALL_DATES_SHORT|default:'$TXT_ALL_DATES_SHORT'}</span></div>
+						<div class="filtercontext" id="wid_{$win_no}_commentfilter_timeframe" onmouseup="this.hide();">
+							<a value="ALL" shortname="{$itext.TXT_ALL_DATES_SHORT|default:'$TXT_ALL_DATES_SHORT'}" onclick="$K.yg_filterComments('timeframe', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_ALL_DATES|default:'$TXT_ALL_DATES'}</a>
+							<a shortname="{$itext.TXT_LAST_WEEK_SHORT|default:'$TXT_LAST_WEEK_SHORT'}" value="LAST_WEEK" onclick="$K.yg_filterComments('timeframe', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_LAST_WEEK|default:'$TXT_LAST_WEEK'}</a>
+							<a shortname="{$itext.TXT_LAST_2_WEEKS_SHORT|default:'$TXT_LAST_2_WEEKS_SHORT'}" value="LAST_2_WEEKS" onclick="$K.yg_filterComments('timeframe', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_LAST_2_WEEKS|default:'$TXT_2_LAST_WEEKS'}</a>
+							<a shortname="{$itext.TXT_LAST_4_WEEKS_SHORT|default:'$TXT_LAST_4_WEEKS_SHORT'}" value="LAST_4_WEEKS" onclick="$K.yg_filterComments('timeframe', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_LAST_4_WEEKS|default:'$TXT_4_LAST_WEEKS'}</a>
+							<a shortname="{$itext.TXT_LAST_8_WEEKS_SHORT|default:'$TXT_LAST_8_WEEKS_SHORT'}" value="LAST_8_WEEKS" onclick="$K.yg_filterComments('timeframe', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_LAST_8_WEEKS|default:'$TXT_8_LAST_WEEKS'}</a>
+							<div class="filtercut"></div>
+							<a shortname="{$itext.TXT_CUSTOM_TIMEFRAME_SHORT|default:'$TXT_CUSTOM_TIMEFRAME_SHORT'}" value="CUSTOM" onclick="$K.yg_filterComments('timeframe', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_CUSTOM_TIMEFRAME|default:'$TXT_CUSTOM_TIMEFRAME'}</a>
+						</div>
+					</td>
+					{if $type=='allcomments'}
+						<td width="110">
+							<div class="filtercol">{$itext.TXT_RIGHTS|default:'$TXT_RIGHTS'} <span class="colfilter" onclick="$K.yg_showFilterContext(this, event);">{$itext.TXT_SHOW_ALL_SHORT|default:'$TXT_SHOW_ALL_SHORT'}</span></div>
+							<div class="filtercontext" id="wid_{$win_no}_commentfilter_rights" onmouseup="this.hide();">
+								<a value="ALL" shortname="{$itext.TXT_SHOW_ALL_SHORT|default:'$TXT_SHOW_ALL_SHORT'}" onclick="$K.yg_filterComments('rights', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_SHOW_ALL|default:'$TXT_SHOW_ALL'}</a>
+								<a shortname="{$itext.TXT_PERM_MODERATE|default:'$TXT_PERM_MODERATE'}" value="ONLY_MOD" onclick="$K.yg_filterComments('rights', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_RIGHT_MODERATE|default:'$TXT_RIGHT_MODERATE'}</a>
+								<a shortname="{$itext.TXT_PERM_COMMENT|default:'$TXT_PERM_COMMENT'}" value="ONLY_COMMENT" onclick="$K.yg_filterComments('rights', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_RIGHT_COMMENT|default:'$TXT_RIGHT_COMMENT'}</a>
+							</div>
+						</td>
+					{/if}
+					<td {if $type=='allcomments'}{/if}>
+						<div class="filtercol">{$itext.TXT_COMMENT_POST|default:'$TXT_COMMENT_POST'}</div>
+					</td>
+					<td width="90">
+						<div class="filtercol">{$itext.TXT_COMMENT_STATUS|default:'$TXT_COMMENT_STATUS'} <span class="colfilter" onclick="$K.yg_showFilterContext(this, event);">{$itext.TXT_COMMENT_STATUS_ALL_SHORT|default:'$TXT_COMMENT_STATUS_ALL_SHORT'}</span></div>
+						<div class="filtercontext" id="wid_{$win_no}_commentfilter_status" onmouseup="this.hide();">
+							<a shortname="{$itext.TXT_COMMENT_STATUS_ALL_SHORT|default:'$TXT_COMMENT_STATUS_ALL_SHORT'}" value="ALL" onclick="$K.yg_filterComments('status', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_COMMENT_STATUS_ALL|default:'$TXT_COMMENT_STATUS_ALL'}</a>
+							<a shortname="{$itext.TXT_COMMENT_STATUS_OK_SHORT|default:'$TXT_COMMENT_STATUS_OK_SHORT'}" value="OK" onclick="$K.yg_filterComments('status', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_COMMENT_STATUS_OK|default:'$TXT_COMMENT_STATUS_OK'}</a>
+							<a shortname="{$itext.TXT_COMMENT_STATUS_UNAPPROVED_SHORT|default:'$TXT_COMMENT_STATUS_UNAPPROVED_SHORT'}" value="UNAPPROVED" onclick="$K.yg_filterComments('status', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_COMMENT_STATUS_UNAPPROVED|default:'$TXT_COMMENT_STATUS_UNAPPROVED'}</a>
+							<a shortname="{$itext.TXT_COMMENT_STATUS_SPAM_SHORT|default:'$TXT_COMMENT_STATUS_SPAM_SHORT'}" value="SPAM" onclick="$K.yg_filterComments('status', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_COMMENT_STATUS_SPAM|default:'$TXT_COMMENT_STATUS_SPAM'}</a>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<!-- END FIXED HEADER VERSIONEN //-->
+
+	<!-- PAGEDIR //-->
+	{include file="$approot/ui/html/tabs/common/pagedir.inc.html"}
+
+{/if}

@@ -1,0 +1,66 @@
+<div class="dialogcontent">
+	<table class="gridfixed" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="col2">
+				<span class="label">{$itext.TXT_COMPANY|default:'$TXT_COMPANY'}</span>
+				<span class="txt" yg_type="user" yg_id="{$userinfo.ID}-user" yg_property="company">{$userinfo.PROPS.COMPANY}</span>
+			</td>
+			<td class="col2">
+				<span class="label">{$itext.TXT_DEPARTMENT|default:'$TXT_DEPARTMENT'}</span>
+				<span class="txt" yg_type="user" yg_id="{$userinfo.ID}-user" yg_property="department">{$userinfo.PROPS.DEPARTMENT}</span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="linespacer"></td>
+		</tr>
+		<tr>
+			<td class="col2">
+				<span class="label">{$itext.TXT_EMAIL|default:'$TXT_EMAIL'}</span>
+				<span class="txt"><a href="mailto:{$userinfo.PROPS.EMAIL}" yg_type="user" yg_id="{$userinfo.ID}-user" yg_property="email">{$userinfo.PROPS.EMAIL}</a></span>
+			</td>
+			<td class="col2">
+				<span class="label">{$itext.TXT_TIMEZONE|default:'$TXT_TIMEZONE'}</span>
+				<span class="txt">{$userinfo.PROPS.TIMEZONE}</span>	
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="linespacer"></td>
+		</tr>
+		<tr>
+			<td class="col2">
+				<span class="label">{$itext.TXT_PHONE|default:'$TXT_PHONE'}</span>
+				<span class="txt" yg_type="user" yg_id="{$userinfo.ID}-user" yg_property="phone">{$userinfo.PROPS.PHONE}</span>
+			</td>
+			<td class="col2">
+				<span class="label">{$itext.TXT_FAX|default:'$TXT_FAX'}</span>
+				<span class="txt" yg_type="user" yg_id="{$userinfo.ID}-user" yg_property="fax">{$userinfo.PROPS.FAX}</span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="linespacer"></td>
+		</tr>
+		<tr>
+			<td class="col2">
+				<span class="label">{$itext.TXT_MOBILE|default:'$TXT_MOBILE'}</span>
+				<span class="txt" yg_type="user" yg_id="{$userinfo.ID}-user" yg_property="mobile">{$userinfo.PROPS.MOBILE}</span>
+			</td>
+			<td class="col2">
+				<span class="label">{$itext.TXT_WEBSITE|default:'$TXT_WEBSITE'}</span>
+				<span class="txt"><a href="{$userinfo.PROPS.WEBSITE}" target="_blank" yg_type="user" yg_id="{$userinfo.ID}-user" yg_property="website">{$userinfo.PROPS.WEBSITE}</a></span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="linespacer"></td>
+		</tr>
+		<tr>
+			<td class="col1" colspan="2">
+				<span class="label">{$itext.TXT_USERGROUPS|default:'$TXT_USERGROUPS'}</span>
+				<div class="usergrouplist">
+					{section name='r' loop=$userroles}
+						{$userroles[r].NAME}{if !$smarty.section.r.last}, {/if}
+					{/section}
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>

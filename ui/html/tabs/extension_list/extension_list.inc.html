@@ -1,0 +1,37 @@
+<li id="item_{$win_no}_{$item.ID}" yg_id="{$item.ID}-{$objecttype}" yg_type="{$objecttype}" class="mk_extension listitem">
+	<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+
+			<!-- actions //-->
+			<div class="actions">
+				<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+				<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+					<div class="actionborder"></div>
+					{if ($selectiondialog)}
+						<a onclick="$K.yg_actionSubmit(this,'list',event);" class="exec" onfocus="this.blur();"></a>
+					{else}
+						<a onclick="$K.yg_blockSelect($('extensions_{$win_no}_{$item.ID}'),event);$K.yg_selectNode($('extensions_{$win_no}_{$item.ID}'),event);" onmouseover="$K.yg_showHelp('{$itext.TXT_EXTENSION_EDIT}');" title="{$itext.TXT_EXTENSION_EDIT}" onmouseout="$K.yg_showHelp(false);" class="edit" onfocus="this.blur();"></a>
+						<a onclick="$K.yg_uninstallExtension(this);" onmouseover="$K.yg_showHelp('{$itext.TXT_UNINSTALL}');" title="{$itext.TXT_UNINSTALL}" onmouseout="$K.yg_showHelp(false);" class="del" onfocus="this.blur();" {if !$item.INSTALLED || ($objecttype == 'data')}style="display:none;"{/if}></a>
+					{/if}
+					<div class="actionborder"></div>
+				</div>
+			</div>
+			<!-- end actions //-->
+		<div id="extensions_{$win_no}_{$item.ID}" class="listitempage" yg_selectable="true" onclick="$K.yg_selectNode(this,event);" ondblclick="$K.yg_actionSubmit(this,'list');">
+			<table class="listable">
+				<tr>
+					<td class="object">
+						<table class="objectable">
+							<tr>
+								<td class="listicontd"><div class="iconextension" style="background-image: url('{$docabsolut}{$extensiondir}{$item.PATH}/img/icon.png');"></div></td>
+								<td class="title noicon txt">
+									<strong id="item_{$win_no}_{$item.ID}_txt" class="mk_txt">{$item.NAME}</strong><br />
+									<span class="version">{$itext.TXT_VERSION}: {$item.VERSION}</span>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</li>

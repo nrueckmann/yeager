@@ -1,0 +1,348 @@
+<div class="panelcontent">
+	<div class="mk_contentgroup" yg_multiselect="false">
+
+		{assign var='empty' value=true}
+		{section name=counter loop=$history}
+			{assign var=tKey value=$history[counter].TEXT}
+			{assign var=pKey value=$history[counter].TAB|replace:"P_":"TXT_"}
+
+			{assign var='show_entry' value=true}
+
+			{if $show_entry==true}
+				{assign var='empty' value=false}
+				<div class="cntblockcontainer{if ($history[counter].TAB == 'P_VERSIONS')}2{/if}" onmouseover="$K.yg_showActions(this);">
+					{if $objectInfo.RWRITE}
+						{if ($history[counter].TAB == 'P_VERSIONS')}
+							{if $objectInfo.VERSION != $history[counter].NEWVALUE}
+								{if $type == 'file'}
+									<!-- actions //-->
+									<div class="actions">
+										<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+										<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+											<div class="actionborder"></div>
+											<a class="moveto" onclick="Event.stop(event);$K.yg_restoreFileVersion(this,'{$history[counter].NEWVALUE}');" onmouseover="$K.yg_showHelp('{$itext.TXT_VERSION_RESTORE}');" title="{$itext.TXT_VERSION_RESTORE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+											<a href="{$fileurl}?version={$history[counter].NEWVALUE}" class="preview" onclick="Event.stop(event);$K.yg_preview({literal}{{/literal}objecttype: 'file', id: {$objectid}, version: {$history[counter].NEWVALUE}{literal}}{/literal});" onmouseover="$K.yg_showHelp('{$itext.TXT_VERSION_PREVIEW}');" title="{$itext.TXT_VERSION_PREVIEW}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+											<a href="{$fileurl}?version={$history[counter].NEWVALUE}" class="download" onmouseover="$K.yg_showHelp('{$itext.TXT_FILE_DOWNLOAD}');" title="{$itext.TXT_FILE_DOWNLOAD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+											<div class="actionborder"></div>
+										</div>
+									</div>
+									<!-- end actions //-->
+								{/if}
+								{if $type == 'page'}
+									<!-- actions //-->
+									<div class="actions">
+										<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+										<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+											<div class="actionborder"></div>
+											<a class="moveto" onclick="Event.stop(event);$K.yg_restorePageVersion(this,'{$history[counter].NEWVALUE}');" onmouseover="$K.yg_showHelp('{$itext.TXT_VERSION_RESTORE}');" title="{$itext.TXT_VERSION_RESTORE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+											<a href="{$pageurl}?version={$history[counter].NEWVALUE}" class="preview" onclick="Event.stop(event);$K.yg_preview({literal}{{/literal}objecttype: 'page', id: {$objectid}, site: {$site}, url: '{$pageurl}', version: {$history[counter].NEWVALUE}{literal}}{/literal});" onmouseover="$K.yg_showHelp('{$itext.TXT_VERSION_PREVIEW}');" onmouseover="$K.yg_showHelp('{$itext.TXT_VERSION_PREVIEW}');" title="{$itext.TXT_VERSION_PREVIEW}');" onmouseover="$K.yg_showHelp('{$itext.TXT_VERSION_PREVIEW}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+											<div class="actionborder"></div>
+										</div>
+									</div>
+									<!-- end actions //-->
+								{/if}
+								{if $type == 'mailing'}
+									<!-- actions //-->
+									<div class="actions">
+										<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+										<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+											<div class="actionborder"></div>
+											<a class="moveto" onclick="Event.stop(event);$K.yg_restoreMailingVersion(this,'{$history[counter].NEWVALUE}');" onmouseover="$K.yg_showHelp('{$itext.TXT_VERSION_RESTORE}');" title="{$itext.TXT_VERSION_RESTORE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+											<a href="{$internalprefix}?preview=1&objecttype=mailing&id={$objectid}&version={$history[counter].NEWVALUE}" class="preview" onclick="Event.stop(event);$K.yg_preview({literal}{{/literal}objecttype: 'mailing', id: {$objectid}, version: {$history[counter].NEWVALUE}{literal}}{/literal});" onmouseover="$K.yg_showHelp('{$itext.TXT_VERSION_PREVIEW}');" onmouseover="$K.yg_showHelp('{$itext.TXT_VERSION_PREVIEW}');" title="{$itext.TXT_VERSION_PREVIEW}');" onmouseover="$K.yg_showHelp('{$itext.TXT_VERSION_PREVIEW}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+											<div class="actionborder"></div>
+										</div>
+									</div>
+									<!-- end actions //-->
+								{/if}
+								{if $type == 'cblock'}
+									<!-- actions //-->
+									<div class="actions">
+										<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+										<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+											<div class="actionborder"></div>
+											<a class="moveto" onclick="Event.stop(event);$K.yg_restoreCBlockVersion(this,'{$history[counter].NEWVALUE}');" onmouseover="$K.yg_showHelp('{$itext.TXT_VERSION_RESTORE}');" title="{$itext.TXT_VERSION_RESTORE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+											<!--
+												<a href="{$internalprefix}?preview=1&objecttype=page&id={$objectid}&site={$site}&version={$history[counter].NEWVALUE}" class="preview" onclick="Event.stop(event);$K.yg_preview({literal}{{/literal}objecttype: 'page', id: {$objectid}, site: {$site}, version: {$history[counter].NEWVALUE}{literal}}{/literal});" onmouseover="$K.yg_showHelp('{$itext.TXT_VERSION_PREVIEW}');" onmouseover="$K.yg_showHelp('{$itext.TXT_VERSION_PREVIEW}');" title="{$itext.TXT_VERSION_PREVIEW}');" onmouseover="$K.yg_showHelp('{$itext.TXT_VERSION_PREVIEW}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+											-->
+											<div class="actionborder"></div>
+										</div>
+									</div>
+									<!-- end actions //-->
+								{/if}
+							{/if}
+						{/if}
+					{/if}
+
+					{if ($history[counter].TAB == 'P_VERSIONS') || ($history[counter].TEXT == 'TXT_PAGE_H_AUTOPUBLISH') }
+						<div class="cntblockversionsjump">
+							<table class="gridflex" cellspacing="0" cellpadding="0">
+								<tr>
+									{if $type=='recent'}
+										<td width="300">
+											<div class="trace">
+												{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_PAGE}
+													{if $history[counter].PARENTS|@count > 0}
+														{section name='t' loop=$history[counter].PARENTS step=-1 max=1}
+															{$history[counter].PARENTS[t][0].NAME}{if $history[counter].PARENTS|@count > 1}:&nbsp;{/if}
+														{/section}
+														{section name='t' loop=$history[counter].PARENTS step=-1}
+															{if !$smarty.section.t.first}
+																{$history[counter].PARENTS[t][0].NAME}
+																{if !$smarty.section.t.last}<span class="traceicon"></span>{/if}
+															{/if}
+														{/section}
+													{/if}
+												{else}
+													{section name='t' loop=$history[counter].PARENTS step=-1}
+														{$history[counter].PARENTS[t][0].NAME}
+														{if !$smarty.section.t.last}<span class="traceicon"></span>{/if}
+													{/section}
+												{/if}
+											</div>
+											<div class="txt modified">
+												<a {if $history[counter].TYPE == $smarty.const.HISTORYTYPE_FILE}onmouseover="$K.yg_hoverFileHint('{$history[counter].OID}', event);"{/if} href="javascript:void(0);" onclick="{strip}
+														{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_FILE}$K.yg_openObjectDetails('{$history[counter].OID}', 'file', '{$history[counter].NAME|addslashes}', {literal}{{/literal}color:'{$history[counter].FILEINFO.COLOR}',typecode:'{$history[counter].FILEINFO.CODE|strtoupper}'{literal}}{/literal});{/if}
+														{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_PAGE}$K.yg_openObjectDetails('{$history[counter].OID}-{$history[counter].SITEID}', 'page', '{$history[counter].NAME|addslashes}', '{$history[counter].ICON}', '{$history[counter].STYLE}');{/if}
+														{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_CO}$K.yg_openObjectDetails('{$history[counter].OID}', 'cblock', '{$history[counter].NAME|addslashes}', 'cblock', '{$history[counter].STYLE}');{/if}
+														{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_MAILING}$K.yg_openObjectDetails('{$history[counter].OID}', 'mailing', '{$history[counter].NAME|addslashes}', 'mailing', '{$history[counter].STYLE}');{/if}
+													{/strip}">
+													{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_FILE}
+														<span onmouseover="$K.yg_hoverFileHint(this);" yg_property="type" yg_type="file" yg_id="{$history[counter].OID}-file" class="filetype {$history[counter].FILEINFO.COLOR}" style="display:inline-block;">{$history[counter].FILEINFO.CODE|strtoupper}</span> <span onmouseover="$K.yg_hoverFileHint(this);" yg_property="name" yg_type="file" yg_id="{$history[counter].OID}-file">{$history[counter].NAME}</span>
+													{else}
+														{assign var='icon' value='icontag'}
+														{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_CO}{assign var='icon' value='iconcblock'}{/if}
+														{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_PAGE}{assign var='icon' value='icon'}{/if}
+														{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_MAILING}{assign var='icon' value='iconmailing'}{/if}
+														<div class="{$icon}{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_PAGE}{$history[counter].ICON}{/if} icn"></div><span class="{$history[counter].STYLE}" yg_property="name" yg_type="{strip}
+															{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_PAGE}page{/if}
+															{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_CO}cblock{/if}
+														{/strip}" yg_id="{strip}
+															{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_PAGE}{$history[counter].OID}-{$history[counter].SITEID}{/if}
+															{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_CO}{$history[counter].OID}-cblock{/if}
+														{/strip}"> {$history[counter].NAME}</span>
+													{/if}
+												</a>
+											</div>
+										</td>
+									{/if}
+									<td width="125"><div class="labeltd"></div></td>
+									<td>
+										{$itext.$tKey|replace:"TARGETID":$history[counter].TARGETID|replace:"NEWVALUE":$history[counter].NEWVALUE|replace:"OLDVALUE":$history[counter].OLDVALUE}
+									</td>
+									<td width="150" class="author">
+										{$history[counter].DATETIME|date_format_php:$itext.DATE_FORMAT}, {$history[counter].DATETIME|date_format_php:$itext.TIME_FORMAT}<br />
+										<a class="user {if !$history[counter].USERNAME|addslashes}unknown{/if}" onclick="$K.yg_openUserInfo('{$history[counter].USERID}', this);" yg_type="user" yg_id="{$history[counter].USERID}-user" yg_property="name" onmouseover="$K.yg_hoverUserHint(this);" onmouseout="$K.yg_hideUserHint();">{$history[counter].USERNAME|default:$itext.TXT_UNKNOWN}</a>
+									</td>
+								</tr>
+							</table>
+						</div>
+					{else}
+						<div class="cntblockversions">
+							<table class="gridflex" cellspacing="0" cellpadding="0">
+								<tr>
+									{if $type=='recent'}
+										<td width="300">
+											<div class="trace">
+												{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_PAGE}
+													{section name='t' loop=$history[counter].PARENTS step=-1 max=1}
+														{if $history[counter].PARENTS|@count > 1}{$history[counter].PARENTS[t][0].NAME}:&nbsp;{/if}
+													{/section}
+													{if $history[counter].PARENTS|@count > 1}
+														{section name='t' loop=$history[counter].PARENTS step=-1}
+															{if !$smarty.section.t.first}
+																{$history[counter].PARENTS[t][0].NAME}
+																{if !$smarty.section.t.last}<span class="traceicon"></span>{/if}
+															{/if}
+														{/section}
+													{/if}
+												{else}
+													{section name='t' loop=$history[counter].PARENTS step=-1}
+														{$history[counter].PARENTS[t][0].NAME}
+														{if !$smarty.section.t.last}<span class="traceicon"></span>{/if}
+													{/section}
+												{/if}
+											</div>
+											<div class="txt modified">
+												<a onclick="{strip}
+														{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_FILE}$K.yg_openObjectDetails('{$history[counter].OID}', 'file', '{$history[counter].NAME|addslashes}', {literal}{{/literal}color:'{$history[counter].FILEINFO.COLOR}',typecode:'{$history[counter].FILEINFO.CODE|strtoupper}'{literal}}{/literal}){/if}
+														{if ($history[counter].TYPE == $smarty.const.HISTORYTYPE_PAGE) || ($history[counter].TYPE == 'COEDIT')}$K.yg_openObjectDetails('{$history[counter].OID}-{$history[counter].SITEID}', 'page', '{$history[counter].NAME|addslashes}', '{$history[counter].ICON}'){/if}
+														{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_CO}$K.yg_openObjectDetails('{$history[counter].OID}', 'cblock', '{$history[counter].NAME|addslashes}', 'cblock'){/if}
+														{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_MAILING}$K.yg_openObjectDetails('{$history[counter].OID}', 'mailing', '{$history[counter].NAME|addslashes}', 'mailing'){/if}
+													{/strip}">
+													{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_FILE}
+														<span onmouseover="$K.yg_hoverFileHint(this);" yg_property="type" yg_type="file" yg_id="{$history[counter].OID}-file" class="filetype {$history[counter].FILEINFO.COLOR}" style="display:inline-block;">{$history[counter].FILEINFO.CODE|strtoupper}</span> <span onmouseover="$K.yg_hoverFileHint(this);" yg_property="name" yg_type="file" yg_id="{$history[counter].OID}-file">{$history[counter].NAME}</span>
+													{else}
+														{assign var='icon' value='icontag'}
+														{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_CO}{assign var='icon' value='iconcblock'}{/if}
+														{if ($history[counter].TYPE == $smarty.const.HISTORYTYPE_PAGE) || ($history[counter].TYPE == 'COEDIT')}{assign var='icon' value='icon'}{/if}
+														{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_MAILING}{assign var='icon' value='iconmailing'}{/if}
+														<div class="{$icon}{if ($history[counter].TYPE == $smarty.const.HISTORYTYPE_PAGE) || ($history[counter].TYPE == 'COEDIT')}{$history[counter].ICON}{/if} icn"></div><span {if $history[counter].HASCHANGED}class="changed"{/if} yg_property="name" yg_type="{strip}
+															{if ($history[counter].TYPE == $smarty.const.HISTORYTYPE_PAGE) || ($history[counter].TYPE == 'COEDIT')}page{/if}
+															{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_CO}cblock{/if}
+														{/strip}" yg_id="{strip}
+															{if ($history[counter].TYPE == $smarty.const.HISTORYTYPE_PAGE) || ($history[counter].TYPE == 'COEDIT')}{$history[counter].OID}-{$history[counter].SITEID}{/if}
+															{if $history[counter].TYPE == $smarty.const.HISTORYTYPE_CO}{$history[counter].OID}-cblock{/if}
+														{/strip}">{$history[counter].NAME}</span>
+													{/if}
+												</a>
+											</div>
+										</td>
+									{/if}
+									<td width="125"><div class="labeltd">{$itext.$pKey}</div></td>
+									<td>
+										{*::{$tKey}::*}
+										{*::{$history[counter].TAB}::*}
+										{*::{$history[counter].TYPE}::*}
+
+										{if ($history[counter].TAB == 'P_EXTENSIONS') && ($tKey == 'TXT_EXTENSION_H_LOGENTRY')}
+											{$history[counter].NEWVALUE}
+										{/if}
+
+										{if ($history[counter].TAB == 'P_VERSIONS') || ($history[counter].TEXT == 'TXT_PAGE_H_AUTOPUBLISH')}<strong>{/if}
+
+										{if ($history[counter].TYPE == 'COACTION') && ($history[counter].CONTENTAREA != '')}
+											<div class="labeltd">{$history[counter].CONTENTAREA}</div>
+										{/if}
+
+										{if $history[counter].TYPE == 'COEDIT'}
+											<div class="labeltd">{if $history[counter].CONTENTAREA}{$history[counter].CONTENTAREA} |{/if} {$history[counter].EMBLOCK} | {$history[counter].FORMFIELD}</div>
+										{/if}
+
+										{if $history[counter].LNK|@count > 0}
+											{$itext.PAGE_H_COLNK|replace:"TARGETID":$history[counter].TARGETID|replace:"NEWVALUE":$history[counter].NEWVALUE|replace:"OLDVALUE":$history[counter].OLDVALUE|replace:"CONTENTAREA":$history[counter].LNK[0].TEMPLATECONTENTAREA}
+										{/if}
+
+										{if ($tKey=='TXT_PAGE_H_AUTOPUBLISH_ADDED') || ($tKey=='TXT_PAGE_H_AUTOPUBLISH_CHANGED') || ($tKey=='TXT_PAGE_H_AUTOPUBLISH_DELETED') || ($tKey=='TXT_CBLOCK_H_AUTOPUBLISH_ADDED') || ($tKey=='TXT_CBLOCK_H_AUTOPUBLISH_CHANGED') || ($tKey=='TXT_CBLOCK_H_AUTOPUBLISH_DELETED')}
+											{capture assign='formatted_date'}{$history[counter].OLDVALUE|date_format_php:$itext.DATETIME_FORMAT|strtolower}{/capture}
+											{$itext.$tKey|replace:"TARGETID":$history[counter].TARGETID|replace:"NEWVALUE":$history[counter].NEWVALUE|replace:"OLDVALUE":$formatted_date}
+										{else}
+											{$itext.$tKey|replace:"TARGETID":$history[counter].TARGETID|replace:"NEWVALUE":$history[counter].NEWVALUE|replace:"OLDVALUE":$history[counter].OLDVALUE|replace:"FORMFIELD":$history[counter].FORMFIELD|replace:'\\\n':'<br />'}
+										{/if}
+
+										{if ($history[counter].TAB == 'P_VERSIONS') || ($history[counter].TEXT == 'TXT_PAGE_H_AUTOPUBLISH')}</strong>{/if}
+									</td>
+									<td width="150" class="author">
+										{$history[counter].DATETIME|date_format_php:$itext.DATE_FORMAT}, {$history[counter].DATETIME|date_format_php:$itext.TIME_FORMAT}<br />
+										<a class="user {if !$history[counter].USERNAME|addslashes}unknown{/if}" onclick="$K.yg_openUserInfo('{$history[counter].USERID}', this);" yg_type="user" yg_id="{$history[counter].USERID}-user" yg_property="name" onmouseover="$K.yg_hoverUserHint(this);" onmouseout="$K.yg_hideUserHint();">{$history[counter].USERNAME|default:$itext.TXT_UNKNOWN}</a>
+									</td>
+								</tr>
+							</table>
+						</div>
+					{/if}
+				</div>
+			{/if}
+
+		{/section}
+
+		{if $empty == true}
+			<div class="nocontentareas mk_verticalcenter"><span class="bracketleft"></span>{$itext.TXT_NO_ACTIVITY_LOGGED|default:'$TXT_NO_ACTIVITY_LOGGED'}<span class="bracketright"></span></div>
+		{/if}
+
+	</div>
+
+</div>
+
+
+{if $refresh != 1}
+	<!-- FIXED HEADER VERSIONEN //-->
+	<div class="tabhead_mid ywindowhead {if $type=='recent'}start{/if}" style="display:none">
+		{if $type!='recent'}
+			<div class="headline1">{$itext.TXT_VERSIONS|default:'$TXT_VERSIONS'}</div>
+			<div style="clear:both;height:8px;overflow:hidden;"></div>
+		{/if}
+		<div class="headercolumns">
+			<table class="gridflex" cellspacing="0" cellpadding="0">
+				<tr>
+					{if $type=='recent'}
+						<td width="300">
+							<div class="filtercol">{$itext.TXT_OBJECTTYPE|default:'$TXT_OBJECTTYPE'} <span class="colfilter" onclick="$K.yg_showFilterContext(this, event);">{$itext.TXT_ALL_CHANGES_SHORT|default:'$TXT_ALL_CHANGES_SHORT'}</span></div>
+							<div class="filtercontext" id="wid_{$win_no}_versionfilter_objecttype" onmouseup="this.hide();">
+								<a shortname="{$itext.TXT_ALL_OBJECTTYPES_SHORT|default:'$TXT_ALL_OBJECTTYPE_SHORT'}" value="ALL" onclick="$K.yg_filterVersions('objecttype', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_ALL_OBJECTTYPES|default:'$TXT_ALL_OBJECTTYPES'}</a>
+								<div class="filtercut"></div>
+								<a shortname="{$itext.TXT_PAGES|default:'$TXT_PAGES'}" value="PAGES" onclick="$K.yg_filterVersions('objecttype', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_PAGES|default:'$TXT_PAGES'}</a>
+								<a shortname="{$itext.TXT_CONTENTBLOCKS|default:'$TXT_CONTENTBLOCKS'}" value="CONTENT" onclick="$K.yg_filterVersions('objecttype', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_CONTENTBLOCKS|default:'$TXT_CONTENTBLOCKS'}</a>
+								<a shortname="{$itext.TXT_FILES|default:'$TXT_FILES'}" value="FILES" onclick="$K.yg_filterVersions('objecttype', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_FILES|default:'$TXT_FILES'}</a>
+							</div>
+						</td>
+					{/if}
+					<td width="125">
+						<div class="filtercol">{$itext.TXT_TAB|default:'$TXT_TAB'}{if $type!='recent'} <span class="colfilter" onclick="$K.yg_showFilterContext(this, event);">{$itext.TXT_IN_ALL_TABS_SHORT|default:'$TXT_IN_ALL_TABS_SHORT'}</span>{else}<span class="colfilter">&nbsp;</span>{/if}</div>
+						{if $type!='recent'}
+							<div class="filtercontext" id="wid_{$win_no}_versionfilter_tab" onmouseup="this.hide();">
+								<a value="ALL" shortname="{$itext.TXT_IN_ALL_TABS_SHORT|default:'$TXT_IN_ALL_TABS_SHORT'}" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_IN_ALL_TABS|default:'$TXT_IN_ALL_TABS'}</a>
+								<div class="filtercut"></div>
+								{if $type=='page'}
+									<a shortname="{$itext.TXT_CONTENT|default:'$TXT_CONTENT'}" value="P_CONTENT" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_CONTENT|default:'$TXT_CONTENT'}</a>
+									<a shortname="{$itext.TXT_PROPERTIES|default:'$TXT_PROPERTIES'}" value="P_PROPERTIES" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_PROPERTIES|default:'$TXT_PROPERTIES'}</a>
+									<a shortname="{$itext.TXT_TAGS|default:'$TXT_TAGS'}" value="P_TAGS" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_TAGS|default:'$TXT_TAGS'}</a>
+									<a shortname="{$itext.TXT_APPEARANCE|default:'$TXT_APPEARANCE'}" value="P_APPEARANCE" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_APPEARANCE|default:'$TXT_APPEARANCE'}</a>
+									<a shortname="{$itext.TXT_EXTENSIONS|default:'$TXT_EXTENSIONS'}" value="P_EXTENSIONS" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_EXTENSIONS|default:'$TXT_EXTENSIONS'}</a>
+									<a shortname="{$itext.TXT_PUBLISHING|default:'$TXT_PUBLISHING'}" value="P_PUBLISHING" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_PUBLISHING|default:'$TXT_PUBLISHING'}</a>
+									<a shortname="{$itext.TXT_COMMENTS|default:'$TXT_COMMENTS'}" value="P_COMMENTS" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_COMMENTS|default:'$TXT_COMMENTS'}</a>
+								{/if}
+								{if $type=='file'}
+									<a shortname="{$itext.TXT_FILEINFO|default:'$TXT_FILEINFO'}" value="P_FILEINFO" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_FILEINFO|default:'$TXT_FILEINFO'}</a>
+									<a shortname="{$itext.TXT_PROPERTIES|default:'$TXT_PROPERTIES'}" value="P_PROPERTIES" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_PROPERTIES|default:'$TXT_PROPERTIES'}</a>
+									<a shortname="{$itext.TXT_TAGS|default:'$TXT_TAGS'}" value="P_TAGS" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_TAGS|default:'$TXT_TAGS'}</a>
+									<a shortname="{$itext.TXT_VIEWS|default:'$TXT_VIEWS'}" value="P_VIEWS" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_VIEWS|default:'$TXT_VIEWS'}</a>
+									<a shortname="{$itext.TXT_EXTENSIONS|default:'$TXT_EXTENSIONS'}" value="P_EXTENSIONS" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_EXTENSIONS|default:'$TXT_EXTENSIONS'}</a>
+									<a shortname="{$itext.TXT_COMMENTS|default:'$TXT_COMMENTS'}" value="P_COMMENTS" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_COMMENTS|default:'$TXT_COMMENTS'}</a>
+								{/if}
+								{if $type=='cblock'}
+									<a shortname="{$itext.TXT_CONTENT|default:'$TXT_CONTENT'}" value="P_CONTENT" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_CONTENT|default:'$TXT_CONTENT'}</a>
+									<a shortname="{$itext.TXT_PROPERTIES|default:'$TXT_PROPERTIES'}" value="P_PROPERTIES" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_PROPERTIES|default:'$TXT_PROPERTIES'}</a>
+									<a shortname="{$itext.TXT_TAGS|default:'$TXT_TAGS'}" value="P_TAGS" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_TAGS|default:'$TXT_TAGS'}</a>
+									<a shortname="{$itext.TXT_EXTENSIONS|default:'$TXT_EXTENSIONS'}" value="P_EXTENSIONS" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_EXTENSIONS|default:'$TXT_EXTENSIONS'}</a>
+									<a shortname="{$itext.TXT_PUBLISHING|default:'$TXT_PUBLISHING'}" value="P_PUBLISHING" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_PUBLISHING|default:'$TXT_PUBLISHING'}</a>
+									<a shortname="{$itext.TXT_COMMENTS|default:'$TXT_COMMENTS'}" value="P_COMMENTS" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_COMMENTS|default:'$TXT_COMMENTS'}</a>
+								{/if}
+								{if $type=='mailing'}
+									<a shortname="{$itext.TXT_PROPERTIES|default:'$TXT_PROPERTIES'}" value="P_PROPERTIES" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_PROPERTIES|default:'$TXT_PROPERTIES'}</a>
+									<a shortname="{$itext.TXT_CONTENT|default:'$TXT_CONTENT'}" value="P_CONTENT" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_CONTENT|default:'$TXT_CONTENT'}</a>
+									<a shortname="{$itext.TXT_USERGROUPS|default:'$TXT_USERGROUPS'}" value="P_USERGROUPS" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_USERGROUPS|default:'$TXT_USERGROUPS'}</a>
+									<a shortname="{$itext.TXT_EXTENSIONS|default:'$TXT_EXTENSIONS'}" value="P_EXTENSIONS" onclick="$K.yg_filterVersions('tab', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_EXTENSIONS|default:'$TXT_EXTENSIONS'}</a>
+								{/if}
+							</div>
+						{/if}
+					</td>
+					<td>
+						<div class="filtercol">{$itext.TXT_ACTION|default:'$TXT_ACTION'} <span class="colfilter" onclick="$K.yg_showFilterContext(this, event);">{$itext.TXT_ALL_CHANGES_SHORT|default:'$TXT_ALL_CHANGES_SHORT'}</span></div>
+						<div class="filtercontext" id="wid_{$win_no}_versionfilter_action" onmouseup="this.hide();">
+							<a shortname="{$itext.TXT_ALL_CHANGES_SHORT|default:'$TXT_ALL_CHANGES_SHORT'}" value="ALL" onclick="$K.yg_filterVersions('action', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_ALL_CHANGES|default:'$TXT_ALL_CHANGES'}</a>
+							<a shortname="{$itext.TXT_ONLY_VERSION_CHANGES_SHORT|default:'$TXT_ONLY_VERSION_CHANGES_SHORT'}" value="ONLY_VERSIONS" onclick="$K.yg_filterVersions('action', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_ONLY_VERSION_CHANGES|default:'$TXT_ONLY_VERSION_CHANGES'}</a>
+						</div>
+					</td>
+					<td width="150">
+						<div class="filtercol">{$itext.TXT_DATE_AUTHOR|default:'$TXT_DATE_AUTHOR'}{if $type!='recent'} <span class="colfilter" onclick="$K.yg_showFilterContext(this, event);">{$itext.TXT_LAST_WEEK_SHORT|default:'$TXT_LAST_WEEK_SHORT'}</span>{else}<span class="colfilter">&nbsp;</span>{/if}</div>
+						{if $type!='recent'}
+							<div class="filtercontext" id="wid_{$win_no}_versionfilter_timeframe" onmouseup="this.hide();">
+								<a shortname="{$itext.TXT_LAST_WEEK_SHORT|default:'$TXT_LAST_WEEK_SHORT'}" value="LAST_WEEK" onclick="$K.yg_filterVersions('timeframe', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_LAST_WEEK|default:'$TXT_LAST_WEEK'}</a>
+								<a shortname="{$itext.TXT_LAST_2_WEEKS_SHORT|default:'$TXT_LAST_2_WEEKS_SHORT'}" value="LAST_2_WEEKS" onclick="$K.yg_filterVersions('timeframe', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_LAST_2_WEEKS|default:'$TXT_2_LAST_WEEKS'}</a>
+								<a shortname="{$itext.TXT_LAST_4_WEEKS_SHORT|default:'$TXT_LAST_4_WEEKS_SHORT'}" value="LAST_4_WEEKS" onclick="$K.yg_filterVersions('timeframe', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_LAST_4_WEEKS|default:'$TXT_4_LAST_WEEKS'}</a>
+								<a shortname="{$itext.TXT_LAST_8_WEEKS_SHORT|default:'$TXT_LAST_8_WEEKS_SHORT'}" value="LAST_8_WEEKS" onclick="$K.yg_filterVersions('timeframe', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_LAST_8_WEEKS|default:'$TXT_8_LAST_WEEKS'}</a>
+								<div class="filtercut"></div>
+								<a shortname="{$itext.TXT_CUSTOM_TIMEFRAME_SHORT|default:'$TXT_CUSTOM_TIMEFRAME_SHORT'}" value="CUSTOM" onclick="$K.yg_filterVersions('timeframe', this.readAttribute('value'), this.readAttribute('shortname'), 'wid_{$win_no}');">{$itext.TXT_CUSTOM_TIMEFRAME|default:'$TXT_CUSTOM_TIMEFRAME'}</a>
+							</div>
+						{/if}
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<!-- END FIXED HEADER VERSIONEN //-->
+
+{/if}
+
+{if ($type=='page') || ($type=='file') || ($type=='cblock') || ($type=='mailing')}
+	{if $objectInfo.RWRITE}
+		<!-- BOTTOMLINE VERSIONEN //-->
+		<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+			<tr>
+				<td class="ywindow_leftbt"></td>
+				<td class="ywindow_midbottom"><div class="button" tabindex="1"><a  class="stdbutton"><div yg_onclick="{if $type=='page'}savePageVersion{elseif $type=='file'}saveFileVersion{elseif $type=='cblock'}saveCBlockVersion{elseif $type=='mailing'}saveMailingVersion{/if}" yg_id="{$objectid}-{$site}-{$win_no}" yg_type="{$type}" yg_property="null" class="wrapper"><nobr>{$itext.TXT_SAVE_SNAPSHOT_AS_VERSION|default:'$TXT_SAVE_SNAPSHOT_AS_VERSION'}</nobr></div></a></div></td>
+				<td class="ywindow_rightbt"></td>
+			</tr>
+		</table>
+		<!-- END BOTTOMLINE VERSIONEN //-->
+	{/if}
+{/if}

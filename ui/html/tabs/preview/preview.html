@@ -1,0 +1,273 @@
+<div class="dialogcontent">
+		{if ($objecttype == "file")}
+			<table class="gridfixed mk_filecrop" cellspacing="0" cellpadding="0" style="width:330px;">
+				<tr>
+					<td width="33%">
+						<span class="label">{$itext.TXT_DIMENSION|default:'$TXT_DIMENSION'}</span>
+						<div id="yg_cropdim_dim" class="txt">a</div>
+					</td>
+					<td width="33%" class="txt">
+						<span class="label">X1:Y1 </span>
+						<div id="yg_cropdim_xy1" class="txt">b</div>
+					</td>
+					<td width="34%">
+						<span class="label">X2:Y2</span>
+						<div id="yg_cropdim_xy2" class="txt">c</div>
+					</td>
+				</tr>
+			</table>
+		{/if}
+
+		<table class="gridfixed" cellspacing="0" cellpadding="0" style="width:220px;">
+			{if ($objecttype == "page")}
+				<tr>
+					<td class="col1" colspan="2">
+						<span class="label">{$itext.TXT_URL|default:'$TXT_URL'}</span>
+						<div class="textbox">
+							<input tabindex="1" id="wid_{$win_no}_url" value="{$url}" onfocus="$K.yg_formFocus(this,'textbox');" onblur="$K.yg_formBlur(this,'textbox');" type="text" readonly="readonly" />
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="col1" colspan="2">
+						<span class="label">{$itext.TXT_VERSION|default:'$TXT_VERSION'}</span>
+						<div id="wid_{$win_no}_ddversion" yg_form="dropdown" class="dropdownbox">
+							<div class="dropdown">
+								<div class="dropdowninner">
+									<input tabindex="1" onchange="$K.yg_switchPreviewVersion({literal}{{/literal}objecttype: '{$objecttype}', id: {$id}, site: {$site}, version: this.up(1).next('input').value{literal}}{/literal});" type="text"  />
+								</div>
+							</div>
+							<div class="dropdownlistcontainer">
+								<div class="dropdownlist">
+									{section name=i loop=$versions}
+										{if $versions[i].VERSION != 0}
+											<div value="{$versions[i].VERSION}" {if $version==$versions[i].VERSION}class="selected"{/if}>V{$versions[i].VERSION} {$itext.TXT_VERSION_FROM} {$versions[i].CHANGEDTS|date_format_php:$itext.DATETIME_FORMAT|strtolower}</div>
+										{/if}
+									{/section}
+								</div>
+								<div class="mk_scrollbars"></div>
+							</div>
+							<input type="hidden" value="{$version}" />
+						</div>
+					</td>
+				</tr>
+				{*
+				// später einbinden wenn vorschau an datum / vergangenheit / zukunft möglich
+				<tr>
+					<td class="col2">
+						<span class="label">{$itext.TXT_POINT_IN_TIME|default:'$TXT_POINT_IN_TIME'}</span>
+						<table width="100%" cellspacing="0" cellpadding="0" class="frm_date">
+							<tr>
+								<td>
+									<div class="textbox" yg_form="textbox">
+
+										<input tabindex="1" onchange="{literal}if($K.yg_checkField(this,{type:'date',format:'{/literal}{$userinfo.PROPS.DATEFORMAT}{literal}',nodatesinpast:true})){ alert('BLA'); }{/literal}" type="text" value="{if ($item_timestamp != "")}{$item_timestamp|date_format_php:$itext.DATE_FORMAT}{/if}" maxlength="10" id="wid_{$parent_win_no}_autopublish_date_{$item_index}" xonclick="Event.stop(event);" />
+
+									</div>
+								</td>
+								<td width="20">
+									<a yg_form="calendar" id="yg_calendar_{$item_index}" targetfield="wid_{$parent_win_no}_autopublish_date_{$item_index}" format="{$itext.JS_DATE_FORMAT}" onmouseover="$K.yg_showHelp('{$itext.TXT_PICKDATE}');" title="{$itext.TXT_PICKDATE}" onmouseout="$K.yg_showHelp(false);" class="btcalendarpicker"></a>
+								</td>
+							</tr>
+						</table>
+					</td>
+					<td class="col2" colspan="2">
+						<span class="label">{$itext.TXT_TIME|default:'$TXT_TIME'}</span>
+
+						{if $item_timestamp==''}
+							{assign var='item_hour' value=''}
+							{assign var='item_minute' value=''}
+						{else}
+							{capture assign='item_hour'}{$item_timestamp|date_format_php:"H"}{/capture}
+							{capture assign='item_minute'}{$item_timestamp|date_format_php:"M"}{/capture}
+						{/if}
+
+						<table width="100%" cellspacing="0" cellpadding="0" class="frm_time">
+							<tr>
+								<td>
+									<div class="textbox" yg_form="textbox">
+
+										<input tabindex="1" onchange="{literal} if ($K.yg_checkField(this,{type:'time',format:'{/literal}{$userinfo.PROPS.TIMEFORMAT}{literal}'})) { alert('BLA'); } {/literal}" type="text" value="{if ($item_timestamp != "")}{$item_timestamp|date_format_php:$itext.TIME_FORMAT}{/if}" maxlength="10" id="wid_{$parent_win_no}_autopublish_time_{$item_index}" onclick="this.focus();Event.stop(event);" />
+
+										<a id="wid_{$parent_win_no}_autopublish_anchor_{$item_index}" name="wid_{$parent_win_no}_autopublish_anchor_{$item_index}"></a>
+									</div>
+								</td>
+								<td width="20">
+									<a onmouseover="$K.yg_showHelp('{$itext.TXT_PICKTIME}');" title="{$itext.TXT_PICKTIME}" onmouseout="$K.yg_showHelp(false);" onclick="$K.yg_pickTime($('wid_{$parent_win_no}_autopublish_time_{$item_index}'),{$userinfo.PROPS.TIMEFORMAT});Event.stop(event);return false;" class="btcalendarpicker"></a>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				*}
+			{elseif ($objecttype == 'mailing')}
+				{*<tr>
+					<td class="col1" colspan="2">
+						<span class="label">{$itext.TXT_URL|default:'$TXT_URL'}</span>
+						<div class="textbox">
+							<input tabindex="1" id="wid_{$win_no}_url" value="{$url}" onfocus="$K.yg_formFocus(this,'textbox');" onblur="$K.yg_formBlur(this,'textbox');" type="text" readonly="readonly" />
+						</div>
+					</td>
+				</tr>*}
+				<tr>
+					<td class="col1" colspan="2">
+						<span class="label">{$itext.TXT_VERSION|default:'$TXT_VERSION'}</span>
+						<div id="wid_{$win_no}_ddversion" yg_form="dropdown" class="dropdownbox">
+							<div class="dropdown">
+								<div class="dropdowninner">
+									<input tabindex="1" onchange="$K.yg_switchPreviewVersion({literal}{{/literal}objecttype: '{$objecttype}', id: {$id}, version: this.up(1).next('input').value{literal}}{/literal});" type="text"  />
+								</div>
+							</div>
+							<div class="dropdownlistcontainer">
+								<div class="dropdownlist">
+									{section name=i loop=$versions}
+										{if $versions[i].VERSION != 0}
+											<div value="{$versions[i].VERSION}" {if $version==$versions[i].VERSION}class="selected"{/if}>V{$versions[i].VERSION} {$itext.TXT_VERSION_FROM} {$versions[i].CHANGEDTS|date_format_php:$itext.DATETIME_FORMAT|strtolower}</div>
+										{/if}
+									{/section}
+								</div>
+								<div class="mk_scrollbars"></div>
+							</div>
+							<input type="hidden" value="{$version}" />
+						</div>
+					</td>
+				</tr>
+			{elseif ($objecttype == "file")}
+				<tr class="mk_filepreview">
+					<td class="col1" colspan="3">
+						<span class="label">{$itext.TXT_VERSION|default:'$TXT_VERSION'}</span>
+						<div id="wid_{$win_no}_ddversion" yg_form="dropdown" class="dropdownbox">
+							<div class="dropdown">
+								<div class="dropdowninner">
+									<input tabindex="1" onchange="$K.yg_switchPreviewVersion({literal}{{/literal}objecttype: '{$objecttype}', id: {$id}, version: $('wid_{$win_no}_ddversion').down().next('input').value, view: $('wid_{$win_no}_ddview').down().next('input').value.split('#!#!#')[0], zoom: $('wid_{$win_no}_ddzoom').down().next('input').value, win: '{$win_no}', fullscreen: true, url: '{$url}'{literal}}{/literal});" type="text"  />
+								</div>
+							</div>
+							<div class="dropdownlistcontainer">
+								<div class="dropdownlist">
+									{section name=i loop=$versions}
+										{if $versions[i].VERSION != 0}
+											<div value="{$versions[i].VERSION}" {if $version==$versions[i].VERSION}class="selected"{/if}>V{$versions[i].VERSION} {$itext.TXT_VERSION_FROM} {$versions[i].CHANGEDTS|date_format_php:$itext.DATETIME_FORMAT|strtolower}</div>
+										{/if}
+									{/section}
+								</div>
+								<div class="mk_scrollbars"></div>
+							</div>
+							<input type="hidden" value="{$version}" />
+						</div>
+					</td>
+				</tr>
+				<tr class="mk_filepreview">
+					<td class="col1" colspan="3">
+						<span class="label">{$itext.TXT_VIEW|default:'$TXT_VIEW'}</span>
+						<div id="wid_{$win_no}_ddview" yg_form="dropdown" class="dropdownbox">
+							<div class="dropdown">
+								<div class="dropdowninner">
+									<input tabindex="1" onchange="$K.yg_switchPreviewView({literal}{{/literal}id: {$id}, version: $('wid_{$win_no}_ddversion').down().next('input').value, view: $('wid_{$win_no}_ddview').down().next('input').value, zoom: $('wid_{$win_no}_ddzoom').down().next('input').value, win: '{$win_no}', fullscreen: true, url: '{$url}'{literal}}{/literal});" type="text"  />
+								</div>
+							</div>
+							<div class="dropdownlistcontainer">
+								<div class="dropdownlist">
+									{section name=i loop=$views}
+										<div value="{$views[i].IDENTIFIER}#!#!#{$views[i].VIEWTYPE}#!#!#{$views[i].WIDTH}#!#!#{$views[i].CONSTRAINWIDTH}#!#!#{$views[i].HEIGHT}#!#!#{$views[i].CONSTRAINHEIGHT}" {if $views[i].IDENTIFIER==$fileinfo.VIEW}class="selected"{/if}>{if ($views[i].IDENTIFIER == "YGSOURCE")}{$itext.TXT_SOURCEFILE|default:'$TXT_SOURCEFILE'}{else}{$views[i].NAME}{/if}: {if $views[i].WIDTH!=0}{$views[i].WIDTH}{else}[-]{/if} x {if $views[i].HEIGHT!=0}{$views[i].HEIGHT}{else}[-]{/if}</div>
+									{/section}
+								</div>
+								<div class="mk_scrollbars"></div>
+							</div>
+							<input type="hidden" value="{$fileinfo.VIEW}#!#!#{$fileinfo.VIEWTYPE}#!#!#{$fileinfo.VIEWWIDTH}#!#!#{$fileinfo.CONSTRAINWIDTH}#!#!#{$fileinfo.VIEWHEIGHT}#!#!#{$fileinfo.CONSTRAINHEIGHT}" />
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="col1" colspan="3">
+						<span class="label">{$itext.TXT_ZOOM|default:'$TXT_ZOOM'}</span>
+						<div id="wid_{$win_no}_ddzoom" yg_form="dropdown" class="dropdownbox">
+							<div class="dropdown">
+								<div class="dropdowninner">
+									<input tabindex="1" onchange="$K.yg_switchPreviewZoom({literal}{{/literal}zoom: $('wid_{$win_no}_ddzoom').down().next('input').value, win: '{$win_no}', fullscreen: true{literal}}{/literal});" type="text"  />
+								</div>
+							</div>
+							<div class="dropdownlistcontainer">
+								<div class="dropdownlist">
+									<div value="300"{if ($zoom == 300)} class="selected"{/if}>300%</div>
+									<div value="200"{if ($zoom == 200)} class="selected"{/if}>200%</div>
+									<div value="150"{if ($zoom == 150)} class="selected"{/if}>150%</div>
+									<div value="100"{if ($zoom == 100)} class="selected"{/if}>100%</div>
+									<div value="75"{if ($zoom == 75)} class="selected"{/if}>75%</div>
+									<div value="50"{if ($zoom == 50)} class="selected"{/if}>50%</div>
+									<div value="25"{if ($zoom == 25)} class="selected"{/if}>25%</div>
+									<div value="10"{if ($zoom == 10)} class="selected"{/if}>10%</div>
+								</div>
+								<div class="mk_scrollbars"></div>
+							</div>
+							<input type="hidden" value="{$zoom}" />
+						</div>
+					</td>
+				</tr>
+				<tr class="mk_filecrop" id="croppreviewarea">
+					<td class="col1" colspan="3">
+						<span class="label">{$itext.TXT_PREVIEW|default:'$TXT_PREVIEW'}</span>
+						<div class="smallpreviewcontainer">
+							<div id="previewArea"></div>
+						</div>
+					</td>
+				</tr>
+			{/if}
+		</table>
+
+	</div>
+	<div id="wid_{$win_no}_nopreview" style="display:none;"><div class="nopreview mk_verticalcenter">{$itext.TXT_NO_PREVIEW|default:'$TXT_NO_PREVIEW'}</div></div>
+	<div id="wid_{$win_no}_notgenerated" style="display:none;"><div class="nopreview mk_verticalcenter">{$itext.TXT_VIEW_NOT_GENERATED|default:'$TXT_VIEW_NOT_GENERATED'}</div></div>
+
+	{if ($objecttype == 'file')}
+		<!-- bottom //-->
+		<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+			<tr>
+				<td class="ywindow_leftbt"></td>
+				<td class="ywindow_midbottom">
+					<table class="buttontable" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="rightbutton">
+								<div class="button" tabindex="1"><a id="wid_{$win_no}_okbutton" onclick="$K.windows['wid_{$win_no}'].submit();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_SAVE|default:'$TXT_SAVE'}</nobr></div></a></div>
+								<div class="button cancel" tabindex="1"><a id="wid_{$win_no}_cancelbutton" onclick="$K.windows['wid_{$win_no}'].cancel();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</nobr></div></a></div>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td class="ywindow_rightbt"></td>
+			</tr>
+		</table>
+		<!-- end bottom //-->
+	{/if}
+
+<script language="javascript">
+
+	{if ($onload == 'true')}
+		if ($('wid_{$win_no}_previewlink')) $('wid_{$win_no}_previewlink').up().remove();
+	{/if}
+
+	{if ($objecttype == 'file')}
+		$K.yg_initDlgFilePreview( '{$win_no}', '{$fileinfo.NAME}', '{$fileinfo.OBJECTID}', '{$fileinfo.COLOR}', '{$fileinfo.CODE|strtoupper}', '0', '0', '{$fileinfo.VIEW}', '{$version}', '{$crop}' );
+		$K.yg_renderFilePreview({literal}{{/literal}
+			id: {$fileinfo.OBJECTID},
+			view:'{$fileinfo.VIEW}',
+			version: {$version},
+			viewtype: '{$fileinfo.VIEWTYPE}',
+			zoom: {$zoom},
+			win: '{$win_no}',
+			fullscreen: true,
+			url: '{$url}',
+			{if $crop == 'true'}crop: true, {/if}
+			{if $fileinfo.CONSTRAINWIDTH}contrainwidth: {$fileinfo.CONSTRAINWIDTH}, {/if}
+			{if $fileinfo.CONSTRAINHEIGHT}constrainheight: {$fileinfo.CONSTRAINHEIGHT}, {/if}
+			viewwidth: {$fileinfo.VIEWWIDTH},
+			viewheight:{$fileinfo.VIEWHEIGHT}
+		{literal}}{/literal});
+	{elseif ($objecttype == 'page')}
+		$('wid_{$win_no}').show();
+		$K.windows['wid_{$win_no}'].setCaption( '{$name}', 'page' );
+	{elseif ($objecttype == 'mailing')}
+		$('wid_{$win_no}').show();
+		$K.windows['wid_{$win_no}'].setCaption( '{$name}', 'mailing' );
+	{/if}
+
+</script>
