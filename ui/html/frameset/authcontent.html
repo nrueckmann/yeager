@@ -1,0 +1,12 @@
+{include file="$approot/ui/html/frameset/mainnav.inc.html"}
+{include file="$approot/ui/html/frameset/toolbar.inc.html"}
+{include file="$approot/ui/html/frameset/hints.inc.html"}
+<div id="previewcontainer"><div id="ygpreviewclosediv" class="closepreview" onmouseover="$K.yg_showHelp('{$itext.TXT_CLOSE_PREVIEW}');" title="{$itext.TXT_CLOSE_PREVIEW}" title="{$itext.TXT_CLOSE_PREVIEW}" onmouseout="$K.yg_showHelp(false);" onclick="$K.yg_closePreview();"></div><div id="filepreview"><div id="filepreviewcontainer" yg_draggable="true"><div id="filepreviewwrap"></div></div></div><iframe id="previewiframe" src=""></iframe></div>
+{include file="$approot/ui/html/frameset/bottomline.inc.html"}
+
+<script language="javascript">
+	$K.lang = '{$lang|strtolower}';
+	{include file="$approot/ui/js/lang/language.js"}
+	$K.yg_windowdata = {$windowconfig};
+	$K.yg_launchFuncs();
+</script>

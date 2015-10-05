@@ -1,0 +1,5 @@
+<extension>
+	<namespace>com\yg</namespace>
+	<class>ExampleCBListSmall</class>
+	<api>1.0</api>
+</extension>

@@ -1,0 +1,143 @@
+{if $item_index==''}{assign var='item_index' value='0'}{/if}
+	
+<li id="wid_{$win_no}_view_item_{$item_index}" class="mk_fileview {if $noscript}opened{else}closed{/if}">
+	<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+		<!-- actions //-->
+		<div class="actions">
+			<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+			<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+				<div class="actionborder"></div>
+				<a  class="del" onclick="Event.stop(event);$K.yg_deleteElement(this.up(2));" onmouseover="$K.yg_showHelp('{$itext.TXT_VIEW_DELETE}');" title="{$itext.TXT_VIEW_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+				<div class="actionborder"></div>
+			</div>
+		</div>	
+		<!-- end actions //-->
+		<div class="cntblock listcollaps" yg_selectable="true">
+			<a class="handler" onclick="$K.yg_listCollapsSwap(this.up(2),event);">{$item_info.NAME|default:$itext.TXT_NEW_OBJECT}</a>
+			<div class="desc" id="wid_{$win_no}_view_item_{$item_index}_txt">{$item_info.WIDTH} x {$item_info.HEIGHT}</div>
+			<div class="collapscontent">
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2" colspan="2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_view_{$item_info.ID}_name" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_updateViewTitle(this);" type="text" value="{$item_info.NAME}" maxlength="64" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2"  colspan="2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_view_{$item_info.ID}_identifier" tabindex="1" onchange="$K.yg_setEdited(this);" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="col4">
+								<span class="label">{$itext.TXT_WIDTH|default:'$TXT_WIDTH'}</span>
+								
+								<div id="wid_{$win_no}_view_{$item_info.ID}_constrainwidth" yg_form="dropdown" class="dropdownbox">
+									<div class="dropdown">
+										<div class="dropdowninner">
+											<input onchange="$K.yg_setEdited(this);" tabindex="1" type="text"  value="" />
+										</div>
+									</div>
+									<div class="dropdownlistcontainer">
+										<div class="dropdownlist">
+											<div value="0" {if !$item_info.CONSTRAINWIDTH}class="selected"{/if}>{$itext.TXT_VARIABLE}</div>
+											<div value="1" {if $item_info.CONSTRAINWIDTH}class="selected"{/if}>{$itext.TXT_FIXED}</div>
+										</div>
+										<div class="mk_scrollbars"></div>
+									</div>
+									<input type="hidden" value="{if $item_info.CONSTRAINWIDTH}{$itext.TXT_FIXED}{else}{$itext.TXT_VARIABLE}{/if}" />
+								</div>
+									
+								<input type="hidden" value="" />
+							</td>
+							
+							<td class="col4">
+								<span class="label">{$itext.TXT_VALUE_PX|default:'$TXT_VALUE_PX'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input id="wid_{$win_no}_view_{$item_info.ID}_width" name="wid_{$win_no}_view_{$item_info.ID}_width" tabindex="1" onchange="{literal}if($K.yg_checkField(this,{type:'integer',min:0,max:9999})){$K.yg_setEdited(this);$K.yg_updateViewSizes(this);}{/literal}" type="text" value="{$item_info.WIDTH}" mandatory="mandatory" unique="unique" />
+								</div>
+							</td>
+							
+							<td class="col4">
+								<span class="label">{$itext.TXT_HEIGHT|default:'$TXT_HEIGHT'}</span>
+								
+								<div id="wid_{$win_no}_view_{$item_info.ID}_constrainheight" yg_form="dropdown" class="dropdownbox" >
+									<div class="dropdown">
+										<div class="dropdowninner">
+											<input onchange="$K.yg_setEdited(this);" tabindex="1" type="text"  value="" />
+										</div>
+									</div>
+									<div class="dropdownlistcontainer">
+										<div class="dropdownlist">
+											<div value="0" {if !$item_info.CONSTRAINHEIGHT}class="selected"{/if}>{$itext.TXT_VARIABLE}</div>
+											<div value="1" {if $item_info.CONSTRAINHEIGHT}class="selected"{/if}>{$itext.TXT_FIXED}</div>
+										</div>
+										<div class="mk_scrollbars"></div>
+									</div>
+									<input type="hidden" value="{if $item_info.CONSTRAINHEIGHT}{$itext.TXT_FIXED}{else}{$itext.TXT_VARIABLE}{/if}" />
+								</div>
+									
+								<input type="hidden" value="" />
+							</td>
+							<td class="col4">
+								<span class="label">{$itext.TXT_VALUE_PX|default:'$TXT_VALUE_PX'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input id="wid_{$win_no}_view_{$item_info.ID}_height" name="wid_{$win_no}_view_{$item_info.ID}_height" tabindex="1" onchange="{literal}if($K.yg_checkField(this,{type:'integer',min:0,max:9999})){$K.yg_setEdited(this);$K.yg_updateViewSizes(this);}{/literal}" type="text" value="{$item_info.HEIGHT}" mandatory="mandatory" unique="unique" />
+								</div>
+							</td>
+						</tr>						
+						
+						
+						
+						
+						<tr>
+							<td class="col2" colspan="2">
+								<span class="label">{$itext.TXT_CROPPING_H|default:'$TXT_CROPPING_H'}</span>
+								
+								<div id="wid_{$win_no}_view_{$item_info.ID}_widthcrop" yg_form="dropdown" class="dropdownbox" >
+									<div class="dropdown">
+										<div class="dropdowninner">
+											<input onchange="$K.yg_setEdited(this);" tabindex="1" type="text"  value="{if $item_info.WIDTHCROP == 0}{$itext.TXT_CENTER}{elseif $item_info.WIDTHCROP == 1}{$itext.TXT_LEFT}{elseif $item_info.WIDTHCROP == 2}{$itext.TXT_RIGHT}{/if}" />
+										</div>
+									</div>
+									<div class="dropdownlistcontainer">
+										<div class="dropdownlist">
+											<div value="0" {if $item_info.WIDTHCROP == 0}class="selected"{/if}>{$itext.TXT_LEFT}</div>
+											<div value="1" {if $item_info.WIDTHCROP == 1}class="selected"{/if}>{$itext.TXT_CENTER}</div>
+											<div value="2" {if $item_info.WIDTHCROP == 2}class="selected"{/if}>{$itext.TXT_RIGHT}</div>
+										</div>
+										<div class="mk_scrollbars"></div>
+									</div>
+									<input type="hidden" value="" />
+								</div>
+							</td>
+							<td class="col2" colspan="2">
+								<span class="label">{$itext.TXT_CROPPING_V|default:'$TXT_CROPPING_V'}</span>
+								
+								<div id="wid_{$win_no}_view_{$item_info.ID}_heightcrop" yg_form="dropdown" class="dropdownbox" >
+									<div class="dropdown">
+										<div class="dropdowninner">
+											<input onchange="$K.yg_setEdited(this);" tabindex="1" type="text"  value="{if $item_info.HEIGHTCROP == 0}{$itext.TXT_MIDDLE}{elseif $item_info.HEIGHTCROP == 1}{$itext.TXT_TOP}{elseif $item_info.HEIGHTCROP == 2}{$itext.TXT_BOTTOM}{/if}" />
+										</div>
+									</div>
+									<div class="dropdownlistcontainer">
+										<div class="dropdownlist">
+											<div value="0" {if $item_info.HEIGHTCROP == 0}class="selected"{/if}>{$itext.TXT_TOP}</div>
+											<div value="1" {if $item_info.HEIGHTCROP == 1}class="selected"{/if}>{$itext.TXT_MIDDLE}</div>
+											<div value="2" {if $item_info.HEIGHTCROP == 2}class="selected"{/if}>{$itext.TXT_BOTTOM}</div>
+										</div>
+										<div class="mk_scrollbars"></div>
+									</div>
+									<input type="hidden" value="" />
+								</div>
+							</td>
+						</tr>
+					</table>
+			</div>
+		</div>
+	</div>
+	<input name="wid_{$win_no}_view_ids[]" type="hidden" value="{$item_info.ID}" />
+</li>

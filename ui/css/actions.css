@@ -1,0 +1,629 @@
+/********************************************************************/
+/* actionbuttons                                                    */
+/********************************************************************/
+
+.actions {
+	position: absolute;
+	right: 10px;
+	z-index: 4;
+}
+.actions .actionbutton,
+.ydialog .maskedit .actions .actionbutton {
+	display: none;
+	width: 14px;
+	height: 14px;
+	overflow: hidden;
+	background: url(../img/actions/bt_action.gif) 0px 0px no-repeat;
+}
+.ydialog .actions .actionbutton {
+	background-position: -14px 0px;
+}
+.actions .actionhover {
+	display: none;
+	left: -242px;
+	top: -7px;
+	width: 260px;
+	position: absolute;
+}
+.actions:hover .actionhover {
+	display: block;
+}
+.actionhover .actionborder,
+.ydialog .maskedit .actionhover .actionborder {
+	float: right;
+	width: 1px;
+	height: 29px;
+	line-height: 1px;
+	font-size: 1px;
+	background: url(../img/actions/act_lr.png) 0px 0px no-repeat;
+}
+.ydialog .actionhover .actionborder {
+	background-position: -1px 0px;
+}
+.actionhover a {
+	float: right;
+	display: block;
+	cursor: pointer;
+	width: 32px;
+	height: 29px;
+}
+.actionhover a,
+.ydialog .maskedit .actionhover a {
+	background: url(../img/actions/actions.png) 0px 0px no-repeat;
+}
+.actionhover a:hover,
+.ydialog .maskedit .actionhover a:hover {
+	background-position-y: -29px;
+}
+.ydialog .actionhover a {
+	background-position-y: -58px;
+}
+.ydialog .actionhover a:hover {
+	background-position-y: -87px;
+}
+.panelheader .actionbutton,
+.emheader .actionsbutton,
+.cbheader .actionsbutton {
+	display: none;
+}
+.emheader:hover .actionbutton {
+	display: block;
+}
+.cntblockcontainersortable .actions .actionbutton,
+.editblocksortable .actions .actionbutton {
+	display: none;
+}
+.cntblockcontainersortable.entrylist .actions {
+	margin-top: 2px;
+}
+.entrylist .listitempage .actions,
+.entrylist .listitempagefocus .actions {
+	margin-top: -2px;
+}
+.cntblockcontainer .mk_property .actions {
+	margin-top: 0px;
+}
+.mk_formfield .cntblockcontainer .actions {
+	margin-top: 5px;
+}
+.mk_filetype .cntblockcontainer .actions {
+    margin-top: 7px;
+}
+.mk_formfield .sortlist .entries .actions {
+	margin-top: 4px;
+}
+.panelheader:hover .actionbutton,
+.panelheadernocollaps:hover .actionbutton {
+	display: block;
+}
+.cntblockcontainer .actions,
+.cntblockcontainer2 .actions {
+	margin-top: 5px;
+	right: 7px;
+}
+li.mk_contentarea .cntblockcontainer .actions {
+    margin-top: 7px;
+}
+.mk_dropstackitem .cntblockcontainer .actions {
+	margin-top: 3px;
+}
+.cntblockcontainerlist .actions {
+	margin-top: 7px;
+}
+.listitempage .actions,
+.listitempagefocus .actions {
+	margin-top: 0px;
+}
+
+.cntblockcontainersoftsync .actions {
+	margin-top: 8px;
+}
+.ywindowinner .ipanelhighlight,
+.ipanelhighlight .cntblockcontainer2 {
+	background-color: #e7e7e3;
+}
+.cntblockcontainer:hover .actions .actionbutton,
+.maskedit:hover .actions .actionbutton,
+.ytable tr:hover .actions .actionbutton,
+.emheader:hover .actions .actionbutton,
+.cbheader:hover .actions .actionbutton,
+.cntblockcontainer2:hover .actions .actionbutton,
+.cntblockcontainersoftsync:hover .actions .actionbutton,
+.cntblockcontainerlist:hover .actions .actionbutton,
+.tcboxhover .header .actions .actionsbutton,
+.cntblockversions:hover .actions .actionbutton,
+.cntblockversionsjump:hover .actions .actionbutton,
+.tabhead_small:hover .actions .actionbutton,
+.tabhead_mid:hover .actions .actionbutton,
+.tabhead_big:hover .actions .actionbutton,
+.tabhead_comments:hover .actions .actionbutton,
+.cntblockcontainersortable:hover .actions .actionbutton,
+.editblocksortable:hover .actions .actionbutton {
+	display: block;
+}
+.editblocksortable .actions,
+.cntblockcontainersortable .actions {
+	margin-top: 4px;
+}
+
+.cntblockcontainer:hover .cntblockcontainersortable.entries .actions .actionbutton {
+	display: none;
+}
+.cntblockcontainer:hover .cntblockcontainersortable.entries:hover .actions .actionbutton {
+	display: block;
+}
+.ytable td .actions,
+.ytable td .actionbutton {
+	min-width: 0px;
+}
+.emcontainer:hover .actions .actionbutton,
+.emcontainer:hover .actions,
+.emheader:hover .actions,
+.emheader:hover .actions .actionbutton,
+.emcontainer .closed:hover .actions,
+.emcontainer .closed:hover .actionbutton,
+.emborder:hover .actions,
+.emborder:hover .actionbutton,
+.emcontent:hover .actions,
+.emcontent:hover .actionbutton  {
+	visibility: visible;
+	display:block;
+}
+.cbcontainer .emcontainer .actionbutton,
+.cbcontainerfocus .emcontainer .actionbutton {
+	display: none;
+}
+.emcontainer .maskedit .actions,
+.emcontainerfocus .maskedit .actions,
+.cbcontainerfocus .maskedit .actionbutton {
+	position: relative;
+	margin-bottom: -20px;
+	float: right;
+	margin-right: -4px;
+	margin-top: 6px;
+	display: none;
+}
+.WEBKIT .emcontainer .maskedit .actionbutton,
+.WEBKIT .emcontainerfocus .maskedit .actionbutton,
+.WEBKIT .emcontainer .maskedit .actionhover,
+.WEBKIT .emcontainerfocus .maskedit .actionhover {
+	position: absolute;
+	margin-top: 4px;
+}
+.WEBKIT .emcontainer .maskedit .actions,
+.WEBKIT .emcontainerfocus .maskedit .actions {
+	margin-right: 9px;
+	margin-top: 0px;
+}
+.maskedit:hover .actions {
+	display: block;
+}
+.cbcontainer .maskedit .actions,
+.cbcontainerfocus .maskedit .actions {
+	margin-right: -4px;
+}
+.panelheader .actions .actionbutton,
+.panelheadernocollaps .actions .actionbutton,
+.tcbox .header .actions .actionbutton {
+	display: none;
+}
+.tcboxcontent .cntblockcontainer .actions {
+	right: 7px;
+}
+.panelheader:hover .actions .actionbutton,
+.panelheadernocollaps:hover .actions .actionbutton,
+.tcboxhover .header .actions .actionbutton {
+	display: block;
+}
+.tcboxhover .header .actions {
+	margin-right: 24px;
+	margin-top: -13px;
+}
+.panelheader .actions,
+.panelheadernocollaps .actions {
+	margin-top: 7px;
+}
+.tcboxcontent .actions {
+	margin-right: -4px;
+}
+.tabhead_small .actions,
+.tabhead_mid .actions,
+.tabhead_big .actions,
+.tabhead_comments .actions {
+	margin-top: 8px;
+}
+.emheader .actions,
+.cbheader .actions {
+	margin-top: -1px;
+	margin-right: 7px;
+}
+.mk_extension .emheader .actions {
+	margin-top: -30px;
+}
+.WEBKIT .mk_extension .emheader .actions {
+	float: right;
+	display: inline-block;
+	position: absolute;
+	margin-top: -18px;
+}
+.cbcontentinner .emheader .actions {
+	display: none;
+}
+.cbcontent .emheader .actions {
+	display: none !important;
+}
+.cbcontent .actions {
+	position: absolute;
+	float: none;
+}
+.sortablelist .actions {
+	margin-right: 4px;
+}
+.filelist1 .ytable .actions {
+	margin-top: 4px;
+}
+.IE8 .filelist1 .ytable .actions {
+	margin-top: 6px;
+}
+.filelist3 .ytable .actions {
+	margin-top: 4px;
+}
+.filelist2 .ytable .actions {
+	margin-top: 3px;
+}
+.mk_filechooser .mk_file .actionhover a.previewwin,
+.mk_filechooser .mk_file .actionhover a.preview,
+.mk_filechooser .mk_file .actionhover a.copy,
+.mk_filechooser .mk_file .actionhover a.del,
+.mk_filechooser .mk_file .actionhover a.moveto,
+.mk_file .actionhover a.exec,
+.mk_filechooser.mk_noexec .mk_file .actionhover a.exec {
+	display: none;
+}
+.mk_filechooser .mk_file .actionhover a.exec {
+	display: block;
+}
+
+
+
+
+/* ADD */
+.actionhover a.add,
+.elemcontent a.add,
+.ydialog .maskedit .actionhover a.add {
+	background-position: 0px 0px;
+}
+.actionhover a.add:hover,
+.elemcontent .actionhover a.add:hover,
+.ydialog .maskedit .actionhover a.add:hover {
+	background-position: 0px -29px;
+}
+.ydialog .actionhover a.add {
+	background-position: 0px -58px;
+}
+.ydialog .actionhover a.add:hover {
+	background-position: 0px -87px;
+}
+
+/* ADD FOLDER */
+.actionhover a.addfolder,
+.elemcontent a.addfolder,
+.ydialog .maskedit .actionhover a.addfolder {
+	background-position: -352px 0px;
+}
+.actionhover a.addfolder:hover,
+.elemcontent .actionhover a.addfolder:hover,
+.ydialog .maskedit .actionhover a.addfolder:hover {
+	background-position: -352px -29px;
+}
+.ydialog .actionhover a.addfolder {
+	background-position: -352px -58px;
+}
+.ydialog .actionhover a.addfolder:hover {
+	background-position: -352px -87px;
+}
+
+/* COMPARE */
+.actionhover a.compare,
+.elemcontent a.compare,
+.ydialog .maskedit .actionhover a.compare  {
+	background-position: -32px 0px;
+}
+.actionhover a.compare:hover,
+.elemcontent .actionhover a.compare:hover,
+.ydialog .maskedit .actionhover a.compare:hover {
+	background-position: -32px -29px;
+}
+.ydialog .actionhover a.compare {
+	background-position: -32px -58px;
+}
+.ydialog .actionhover a.compare:hover {
+	background-position: -32px -87px;
+}
+
+/* COPY */
+.actionhover a.copy,
+.elemcontent a.copy,
+.ydialog .maskedit .actionhover a,copy {
+	background-position: -64px 0px;
+}
+.actionhover a.copy:hover,
+.elemcontent .actionhover a.copy:hover,
+.ydialog .maskedit .actionhover a.copy:hover {
+	background-position: -64px -29px;
+}
+.ydialog .actionhover a.copy {
+	background-position: -64px -58px;
+}
+.ydialog .actionhover a.copy:hover {
+	background-position: -64px -87px;
+}
+
+/* DEL */
+.actionhover a.del,
+.elemcontent a.del,
+.ydialog .maskedit .actionhover a.del {
+	background-position: -96px 0px;
+}
+.actionhover a.del:hover,
+.elemcontent .actionhover a.del:hover,
+.ydialog .maskedit .actionhover a.del:hover {
+	background-position: -96px -29px;
+}
+.ydialog .actionhover a.del {
+	background-position: -96px -58px;
+}
+.ydialog .actionhover a.del:hover {
+	background-position: -96px -87px;
+}
+
+/* DOWN */
+.actionhover a.down,
+.elemcontent a.down,
+.ydialog .maskedit .actionhover a.down {
+	background-position: -128px 0px;
+}
+.actionhover a.down:hover,
+.elemcontent .actionhover a.down:hover,
+.ydialog .maskedit .actionhover a.down:hover {
+	background-position: -128px -29px;
+}
+.ydialog .actionhover a.down {
+	background-position: -128px -58px;
+}
+.ydialog .actionhover a.down:hover {
+	background-position: -128px -87px;
+}
+
+/* UP */
+.actionhover a.up,
+.elemcontent a.up,
+.ydialog .maskedit .actionhover a.up {
+	background-position: -160px 0px;
+}
+.actionhover a.up:hover,
+.elemcontent .actionhover a.up:hover,
+.ydialog .maskedit .actionhover a.up:hover {
+	background-position: -160px -29px;
+}
+.ydialog .actionhover a.up {
+	background-position: -160px -58px;
+}
+.ydialog .actionhover a.up:hover {
+	background-position: -160px -87px;
+}
+
+
+/* EXEC */
+.actionhover a.exec,
+.elemcontent a.exec,
+.ydialog .maskedit .actionhover a.exec {
+	background-position: -192px 0px;
+}
+.actionhover a.exec:hover,
+.elemcontent .actionhover a.exec:hover,
+.ydialog .maskedit .actionhover a.exec:hover {
+	background-position: -192px -29px;
+}
+.ydialog .actionhover a.exec {
+	background-position: -192px -58px;
+}
+.ydialog .actionhover a.exec:hover {
+	background-position: -192px -87px;
+}
+
+/* DOWNLAOD */
+.actionhover a.download,
+.elemcontent a.download,
+.ydialog .maskedit .actionhover a.download {
+	background-position: -384px 0px;
+}
+.actionhover a.download:hover,
+.elemcontent .actionhover a.download:hover,
+.ydialog .maskedit .actionhover a.download:hover {
+	background-position: -384px -29px;
+}
+.ydialog .actionhover a.download {
+	background-position: -384px -58px;
+}
+.ydialog .actionhover a.download:hover {
+	background-position: -384px -87px;
+}
+
+/* PREVIEW IN WINDOW */
+.actionhover a.previewwin,
+.elemcontent a.previewwin,
+.ydialog .maskedit .actionhover a.previewwin {
+	background-position: -416px 0px;
+}
+.actionhover a.previewwin:hover,
+.elemcontent .actionhover a.previewwin:hover,
+.ydialog .maskedit .actionhover a.previewwin:hover {
+	background-position: -416px -29px;
+}
+.ydialog .actionhover a.previewwin {
+	background-position: -416px -58px;
+}
+.ydialog .actionhover a.previewwin:hover {
+	background-position: -416px -87px;
+}
+
+/* MOVE */
+.actionhover a.moveto,
+.elemcontent a.moveto,
+.ydialog .maskedit .actionhover a.moveto {
+	background-position: -224px 0px;
+}
+.actionhover a.moveto:hover,
+.elemcontent .actionhover a.moveto:hover,
+.ydialog .maskedit .actionhover a.moveto:hover {
+	background-position: -224px -29px;
+}
+.ydialog .actionhover a.moveto {
+	background-position: -224px -58px;
+}
+.ydialog .actionhover a.moveto:hover {
+	background-position: -224px -87px;
+}
+
+/* PREVIEW */
+.actionhover a.preview,
+.elemcontent a.preview,
+.ydialog .maskedit .actionhover a.preview {
+	background-position: -256px 0px;
+}
+.actionhover a.preview:hover,
+.elemcontent .actionhover a.preview:hover,
+.ydialog .maskedit .actionhover a.preview:hover {
+	background-position: -256px -29px;
+}
+.ydialog .actionhover a.preview {
+	background-position: -256px -58px;
+}
+.ydialog .actionhover a.preview:hover {
+	background-position: -256px -87px;
+}
+.actionhover a.mk_preview_view_btn {
+	display: none;
+}
+.ydialog .actionhover a.mk_preview_view_btn {
+	display: block;
+}
+
+/* UNDO */
+.actionhover a.undo,
+.elemcontent a.undo,
+.ydialog .maskedit .actionhover a.undo {
+	background-position: -288px 0px;
+}
+.actionhover a.undo:hover,
+.elemcontent .actionhover a.undo:hover,
+.ydialog .maskedit .actionhover a.undo:hover {
+	background-position: -288px -29px;
+}
+.ydialog .actionhover a.undo {
+	background-position: -288px -58px;
+}
+.ydialog .actionhover a.undo:hover {
+	background-position: -288px -87px;
+}
+
+/* EDIT */
+.actionhover a.edit,
+.elemcontent a.edit,
+.ydialog .maskedit .actionhover a.edit {
+	background-position: -320px 0px;
+}
+.actionhover a.edit:hover,
+.elemcontent .actionhover a.edit:hover,
+.ydialog .maskedit .actionhover a.edit:hover {
+	background-position: -320px -29px;
+}
+.ydialog .actionhover a.edit {
+	background-position: -320px -58px;
+}
+.ydialog .actionhover a.edit:hover {
+	background-position: -320px -87px;
+}
+
+
+/********************************************************************/
+/* tree                                                             */
+/********************************************************************/
+
+.row .actions,
+.selrow .actions {
+	margin-top: -16px;
+	right: 11px;
+}
+.row:hover .actions .actionbutton,
+.selrow:hover .actions .actionbutton {
+	display: block;
+}
+div.tabcontenttree div.actions {
+	visibility: hidden;
+}
+div.tabcontenttree:hover div.actions {
+	visibility: visible;
+}
+div.dialogtree div.actions {
+	visibility: hidden;
+}
+div.dialogtree:hover div.actions {
+	visibility: visible;
+}
+
+
+/********************************************************************/
+/* drag and drop                                                    */
+/********************************************************************/
+
+.drag .actions,
+.drop .actions {
+	background-color: #ff0000 !important;
+	display: none !important;
+	visibility: hidden !important;
+}
+
+
+/********************************************************************/
+/* multiselect                                                      */
+/********************************************************************/
+
+.actions .actionhover .multiselect {
+	display: none;
+}
+
+.mk_multiselect .mk_selected .actions .actionhover .multiselect {
+    display: block;
+}
+.mk_multiselect .mk_selected .actions .actionhover .singleselect {
+	display: none;
+}
+.emcontainer .actions .actionhover .singleselect,
+.cbcontainer .actions .actionhover .singleselect,
+.cntblock .actions .actionhover .singleselect,
+.listitempage .actions .actionhover .singleselect {
+	display: block;
+}
+.emcontainer .actions .actionhover .multiselect,
+.cbcontainer .actions .actionhover .multiselect,
+.cntblock .actions .actionhover .multiselect,
+.listitempage .actions .actionhover .multiselect {
+	display: none;
+}
+
+/*
+.ydialog.mk_noexec a.exec {
+	display: none;
+}
+*/
+
+.ydialog.mk_noexec div.dialogtree div.actions,
+.ydialog.mk_noexec div.tabcontenttree div.actions {
+	display: none;
+}
+
+.mk_comments_closed .mk_contentgroup .actions {
+    display: none;
+}

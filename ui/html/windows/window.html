@@ -1,0 +1,159 @@
+{if ($windowtype == "modal")}
+<a><div id="wid_{$win_no}_modalbg" class="modalbg"></div></a>
+{/if}
+
+<div id="wid_{$win_no}" class="ywindow" yg_draggable="true" style="float:left;">
+
+	<div id="wid_{$win_no}_tabs" class="tabscontainer"></div>
+	<table cellspacing="0" cellpadding="0" class="windowtable">
+		<tr id="wid_{$win_no}_buttons" class="buttons">
+			<td class="ywindow_tl" id="wid_{$win_no}_topleft"><!-- //--></td>
+			<td class="ywindow_tm"><nobr><div class="head"><div id="wid_{$win_no}_header"><div yg_id="" yg_type="" yg_property="name" id="wid_{$win_no}_title" class="title"></div><div id="wid_{$win_no}_lock" class="lockicon"></div></div></div></nobr></td>
+			<td class="ywindow_bts"></td>
+			<td class="ywindow_tr{if ($windowtype == "modal")}_clean{/if}">{if ($windowtype != "modal")}<a id="wid_{$win_no}_closelink" onclick="$K.windows['wid_{$win_no}'].remove();" class="close"></a><a onclick="$K.windows['wid_{$win_no}'].min();" class="min"></a>{/if}</td>
+		</tr>
+	</table>
+	
+	<div id="wid_{$win_no}_filter" class="filterwrapper">
+		<!-- FILTER //-->
+	</div>
+
+	<div class="ywindowwrapper">
+				
+		<table id="wid_{$win_no}_cnttable" cellspacing="0" cellpadding="0" class="windowtable">
+			<tr>
+				<td class="ywindow_left"></td>
+				<td class="ywindow_midborder"><div class="whitecorner"></div></td>
+				
+				<!-- START COLUMN2 PARTS //-->
+				<td class="ywindow_vertcut" id="wid_{$win_no}_vertcuttop"></td>
+				<td class="ywindow_midborder" id="wid_{$win_no}_column2top"></td>
+				<!-- END COLUMN2 PARTS //-->
+					
+				<td class="ywindow_right"></td>
+			</tr>
+			<tr>
+				<td class="ywindow_left"></td>
+				<td class="ywindow_mid">
+
+					<div class="cntmain">
+					<div id="wid_{$win_no}_container" class="container">
+						<div id="wid_{$win_no}_ywindowouter" class="ywindowouter">
+							
+							<div id="wid_{$win_no}_ywindowinner" class="ywindowinner">
+								<div id="wid_{$win_no}_ywindowinnerie" class="ywindowinnerie">
+									<div id="wid_{$win_no}_innercontent" class="innercontent">
+										
+										<!-- CONTENT //-->
+										
+									</div>
+
+									<div id="wid_{$win_no}_pagedirs" class="tabpagedirs">
+										
+										<!-- PAGEDIRS //-->
+									
+									</div>
+
+								</div>
+
+							</div>
+
+							<div id="wid_{$win_no}_headers" class="tabheaders">
+								
+								<!-- FIXED HEADERS //-->
+							
+							</div>
+
+							<div id="wid_{$win_no}_scrollbars"></div>
+						</div>
+						<div id="wid_{$win_no}_scrollblank" class="scroll_blank"></div>
+					</div>
+					</div>
+
+				</td>
+				
+
+				<!-- START COLUMN2 //-->
+				<td class="ywindow_vertcut" id="wid_{$win_no}_vertcut"><div id="wid_{$win_no}_vertcutdrag" yg_draggable="true"></div></td>
+				<td class="ywindow_column2" id="wid_{$win_no}_column2">
+					<div id="wid_{$win_no}_column2content">
+						<div id="wid_{$win_no}_column2outerbox">
+							<table cellpadding="0" cellspacing="0">
+								<tr>
+									<td id="wid_{$win_no}_column2filter" class="column2filter">
+									
+										<!-- CONTENT COLUMN 2 FILTER //-->
+									
+									</td>
+								</tr>
+								<tr>
+									<td>			
+										<div id="wid_{$win_no}_column2outercontent" class="outercontent column2content">
+						
+											<div id="wid_{$win_no}_column2headers" class="tabheaders">
+											
+												<!-- COLUMN 2 FIXED HEADERS //-->
+											
+											</div>
+						
+											<div id="wid_{$win_no}_column2innercontent" class="ywindowinner">
+												<div id="wid_{$win_no}_column2innercontentie" class="innercontentie">
+													<div id="wid_{$win_no}_column2innercontentinner" class="innercontent">
+														
+														<!-- CONTENT COLUMN 2 //-->
+														
+													</div>
+												</div>
+											</div>		
+											
+											<div id="wid_{$win_no}_column2scrollbars"></div>
+										
+										</div>
+										<div id="wid_{$win_no}_scrollblankcolumn2" class="scroll_blank"></div>
+									</td>
+								</tr>
+								<tr>
+									<td id="wid_{$win_no}_column2bottom" style="display:none;">
+									
+										<!-- CONTENT COLUMN 2 BOTTOM //-->
+									
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</td>
+				<!-- END COLUMN2 //-->
+
+				<td class="ywindow_right"></td>
+			</tr>
+			<tr>
+				<td class="ywindow_left corner"></td>
+				<td class="ywindow_midborder"><div class="whitecorner"></div></td>
+				<td class="ywindow_vertcut" id="wid_{$win_no}_vertcutbot"></td>
+				<td class="ywindow_midborder" id="wid_{$win_no}_column2bot"></td>
+				<td class="ywindow_right corner"></td>
+			</tr>
+		</table>
+		
+		<!-- SPECIAL BOTTOMS //-->
+		<div id="wid_{$win_no}_spcbottom"></div>
+		<!-- SPECIAL BOTTOMS END //-->
+		
+		<!-- BOTTOMS //-->
+		<div id="wid_{$win_no}_bottom" class="ywindowbottom"></div>
+		<!-- BOTTOMS END //-->
+
+	</div>
+
+	<table cellspacing="0" cellpadding="0" class="windowtable">
+		<tr>
+			<td class="ywindow_bleft"></td>
+			<td class="ywindow_bmid"><div class="whitecorner"></div></td>
+			<td class="ywindow_bright"><a id="wid_{$win_no}_dragcorner" class="dragbox" yg_draggable="true"></a></td>
+		</tr>
+	</table>
+
+</div>
+<div id="wid_{$win_no}_klops" class="klops" onclick="$K.windows['wid_{$win_no}'].max();"><div class="{$minimizedclass}"><span class="titlespan"></span></div></div>
+<!-- END DETAILS //-->

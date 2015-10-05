@@ -1,0 +1,27 @@
+<li id="item_{$win_no}_{$item_index}" yg_id="{$item_id}-view" yg_type="view" class="mk_view listitem">
+	<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+		<!-- actions //-->
+		<div class="actions">
+			<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+			<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+				<div class="actionborder"></div>
+				<a onclick="$K.yg_actionSubmit(this,'list', event);" class="exec" onfocus="this.blur();"></a>
+				<div class="actionborder"></div>
+			</div>
+		</div>
+		<!-- end actions //-->	   	
+		<div id="item_{$win_no}_{$item_index}_selector" class="listitempage" yg_selectable="true" ondblclick="$K.yg_actionSubmit(this,'list');">
+			<table class="listable">
+				<tr>
+					<td class="object">
+						<table class="objectable">
+							<tr>
+								<td class="title txt"><span class="label" id="item_{$win_no}_{$item_index}_txt">{$item_name}</span><span class="size">{if $item_width}{$item_width}{else}<span class="bracket">[</span> - <span class="bracket">]</span>{/if} x {if $item_height}{$item_height}{else}<span class="bracket">[</span> - <span class="bracket">]</span{/if}</span></td>																								
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>	
+		</div>						   		   	
+	</div>		
+</li>

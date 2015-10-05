@@ -1,0 +1,49 @@
+<a><div id="wid_{$win_no}_modalbg" class="modalbg"></div></a>
+
+<div id="wid_{$win_no}" class="ywindow pbox {$prompttype}" yg_draggable="true" style="width:400px;position:absolute;-moz-user-focus:normal;" onclick="this.focus();$K.log('focus set');">
+	<form id="wid_{$win_no}_form" onsubmit="$K.promptfunc['{$funcid}'].okfunction($('wid_{$win_no}_form').getInputs());$K.yg_removePrompt('wid_{$win_no}');return false;">
+		<table cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="pbox_tl"></td>
+				<td class="pbox_tm"></td>
+				<td class="pbox_tr"></td>
+			</tr>
+			<tr>
+				<td class="pbox_l"></td>
+				<td class="pbox_m">
+					<div id="wid_{$win_no}_header" class="pboxheadalert">{$txtheadline}</div>
+					<div id="wid_{$win_no}_header" class="pboxhead">{$txtheadline}</div>
+					<div class="pboxtext">
+						{$txtcopy}
+						<div class="remove_w_options">
+							{$itext.TXT_REMOVE_OR_ARCHIVE|default:'$TXT_REMOVE_OR_ARCHIVE'}
+							<br /><br />
+							<div class="radiogroup" value="radiogroup1">
+								<div class="radioarray">
+									<div class="radiobox" yg_form="radiobox" tabindex="1" id="radiobox1"><div class="radioboxiconsel"><div class="label">{$itext.TXT_MOVE_TO_TRASH|default:'$TXT_MOVE_TO_TRASH'}</div></div></div>
+									<div class="radiobox" yg_form="radiobox" tabindex="1" id="radiobox2"><div class="radioboxicon"><div class="label">{$itext.TXT_MOVE_TO_ARCHIVE|default:'$TXT_MOVE_TO_ARCHIVE'}</div></div></div>
+									<input type="hidden" name="radiogroup1" id="radiogroup1" value="radiobox1">
+								</div>
+							</div>
+						</div>
+					</div>
+					<table cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="pbox_rightbutton">
+								<div id="wid_{$win_no}_okbutton" class="button"><a onclick="$K.promptfunc['{$funcid}'].okfunction($('wid_{$win_no}_form').getInputs());$K.yg_removePrompt('wid_{$win_no}');" class="stdbutton"><div onclick="" class="wrapper"><nobr>{$acknowledgetext}</nobr></div></a></div>
+								<div id="wid_{$win_no}_cancelbutton" class="button cancel"><a onclick="$K.promptfunc['{$funcid}'].abortfunction();$K.yg_removePrompt('wid_{$win_no}');" class="stdbutton"><div onclick="" class="wrapper"><nobr>{$canceltext}</nobr></div></a></div>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td class="pbox_r"></td>
+			</tr>
+			<tr>
+				<td class="pbox_bl"></td>
+				<td class="pbox_bm"></td>
+				<td class="pbox_br"></td>
+			</tr>
+		</table>
+		<input tabindex="1" id="wid_{$win_no}_focus" type="text" name="focus" class="magicfocus" />
+	</form>
+</div>

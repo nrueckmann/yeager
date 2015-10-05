@@ -1,0 +1,102 @@
+	<!-- PANEL PUBLIKATION -->
+	<div class="ipanel" yg_panel="true">	
+		<div class="panelheadernocollaps headline1">
+			<a class="opened">{$itext.TXT_PUBLISHING|default:'$TXT_PUBLISHING'}</a>
+		</div>
+		<div class="panelcontent">
+			<div class="mk_contentgroup">
+				<div class="cntblockcontainernohover">
+					<div class="cntblock">									
+						<table class="gridfixed" cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="col2">
+									<span class="label">{$itext.TXT_CURRENTLY_PUBLISHED|default:'$TXT_CURRENTLY_PUBLISHED'}</span>
+
+									{if $objectInfo.VERSIONPUBLISHED == $smarty.const.ALWAYS_LATEST_APPROVED_VERSION}
+										{assign var='dd_selected' value=$itext.TXT_ALWAYS_LAST_PUBLISHED_VERSION}
+										{assign var='dd_selected_value' value='version_latest'}
+									{else}
+										{section name=i loop=$versions}
+											{if $versions[i].VERSION == $objectInfo.VERSIONPUBLISHED}
+												{capture assign='dd_selected'}V{$versions[i].VERSION} {$itext.TXT_VERSION_FROM} {$versions[i].CHANGEDTS|date_format_php:$itext.DATETIME_FORMAT|strtolower}{/capture}
+												{capture assign='dd_selected_value'}version_{$versions[i].VERSION}{/capture}
+											{/if}
+										{/section}
+									{/if}
+									<div id="wid_{$win_no}_dropdownboxpublication" yg_form="dropdown" class="dropdownbox">
+										<div class="dropdown">
+											<div class="dropdowninner">
+												<input tabindex="1" {if $objectInfo.RSTAGE != 1}disabled{/if} yg_seq="{$win_no}" yg_onchange="$K.yg_switchPublishedVersion" yg_previous="{$dd_selected_value}" type="text" value="{$dd_selected}">
+											</div>
+										</div>
+										<div class="dropdownlistcontainer" style="display:none;">
+											<div class="dropdownlist">
+												<div value="version_latest" {if $dd_selected_value=='version_latest'}class="selected"{/if}>{$itext.TXT_ALWAYS_LAST_PUBLISHED_VERSION}</div>
+												{section name=i loop=$versions}
+													{if $versions[i].APPROVED == 1}
+														{capture assign='dd_selected_act_value'}version_{$versions[i].VERSION}{/capture}
+														<div value="version_{$versions[i].VERSION}" {if $dd_selected_value==$dd_selected_act_value}class="selected"{/if}>V{$versions[i].VERSION} {$itext.TXT_VERSION_FROM} {$versions[i].CHANGEDTS|date_format_php:$itext.DATETIME_FORMAT|strtolower}</div>
+													{/if}
+												{/section}
+											</div>
+											<div class="mk_scrollbars"></div>
+										</div>
+										<input type="hidden">
+									</div>
+								</td>
+								<td class="col2 datebig" style="padding-top:20px;padding-left:13px;">
+									<div class="last_approved_version" {if $dd_selected_value!='version_latest'}style="display:none;"{/if}>
+										{if !$neverpublished}
+											=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="versioninfo">V{$latestversion}</span> &nbsp;&nbsp;&nbsp;&nbsp;{$latestversioninfo.CHANGEDTS|date_format_php:$itext.DATETIME_FORMAT|strtolower}
+										{/if}
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>	
+	<!-- ENDE PANEL PUBLIKATION -->
+
+
+	<!-- PANEL ZEITGESTEUERTE PUBLIKATION -->
+	{if (($autopublish.length > 0) || $objectInfo.RSTAGE)}
+		<div class="ipanel" yg_panel="true">
+			<div class="panelheader headline1">
+				<a class="opened">{$itext.TXT_TIMER_CONTROLLED_PUBLICATION|default:'$TXT_TIMER_CONTROLLED_PUBLICATION'}</a>
+				{if $objectInfo.RSTAGE}
+					<!-- actions //-->
+					<div class="actions">
+						<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+						<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+							<div class="actionborder"></div>
+							<a class="add" onclick="$K.yg_addAutopublishItem('autopublishitems_container_{$win_no}','top');" onmouseover="$K.yg_showHelp('{$itext.TXT_PUBLISHING_ADD}');" title="{$itext.TXT_PUBLISHING_ADD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+							<div class="actionborder"></div>
+						</div>
+					</div>	
+				<!-- end actions //-->
+				{/if}	
+			</div>
+			<div class="panelcontent">
+				<div class="mk_contentgroup" id="autopublishitems_container_{$win_no}" yg_multiselect="true">
+					{section name='ap' loop=$autopublish step=-1}
+						{if ($autopublish[ap].TIMESTAMP >= $smarty.now) && ($autopublish[ap].STATUS == 0)}
+							{include file="$approot/ui/html/tabs/publishing/autopublish.inc.html" item_index=$autopublish[ap].ID item_version=$autopublish[ap].PARAMETERS.VERSION item_timestamp=$autopublish[ap].TIMESTAMP}
+						{/if}
+					{/section}
+				</div>
+				
+				{if $objectInfo.RSTAGE}
+					<div class="cntblockadd">
+						<div class="cntblockadd" onclick="$K.yg_addAutopublishItem('autopublishitems_container_{$win_no}','bottom');">
+							<div class="selectionmarker">{$itext.TXT_PUBLISHING_ADD}</div>
+						</div>
+					</div>
+				{/if}
+				
+			</div>
+		</div>	
+		<!-- ENDE PANEL ZEITGESTEUERTE PUBLIKATION -->
+	{/if}

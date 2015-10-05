@@ -1,0 +1,493 @@
+/********************************************************************/
+/* dialog window styles                                             */
+/********************************************************************/
+
+.ydialog {
+	position: absolute;
+	visibility: hidden;
+}
+.ydialog .column2content {
+	background-color: #343C33;
+	overflow: hidden;
+	position: relative;
+}
+.ydialog .cntmain {
+	background-color: #353d34;
+}
+.ydialog .cntmain .container .ywindowinner {
+	background-color: #353d34;
+}
+.ydialog .ywindow_column2 .ywindowinner {
+	overflow: hidden;
+	position: relative;
+}
+.ydialog .ywindow_column2 .innercontentie {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+}
+.ydialog .ywindow_column2 .innercontent {
+	min-width: 100%;
+	min-height: 100%;
+	position: absolute;
+}
+.ydialog .ywindow_tl {
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -40px 0px;
+}
+.ydialog .ywindow_tltabs {
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -142px 0px;
+}
+.ydialog.hidetabs .ywindow_tltabs {
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -142px 0px;
+}
+.ydialog .ywindow_tm,
+.ydialog .ywindow_bt,
+.ydialog .ywindow_bts,
+.ydialog .ywindow_btl {
+	background-image: url(../img/window/window_horizontal.png);
+	background-position: 0px -17px;
+	background-repeat: repeat-x;
+}
+.ydialog .ywindow_tr {
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -53px 0px;
+}
+.ydialog .ywindow_tr:hover {
+	background-position: -76px 0px;
+}
+.ydialog .ywindow_tm {
+	color: #e0f9dc;
+}
+.ydialog .ywindow_bt a.add {
+	background-position: -69px -290px;
+}
+.ydialog .ywindow_bt a.edit {
+	background-position: -69px -29px;
+}
+.ydialog .ywindow_bt a.download {
+	background-position: -69px -232px;
+}
+.ydialog .ywindow_bt a.preview {
+	background-position: -69px -0px;
+}
+.ydialog .ywindow_bt a.undo {
+	background-position: -69px -319px;
+}
+.ydialog .ywindow_bt a.redo {
+	background-position: -69px -348px;
+}
+.ydialog .ywindow_bt a.previewwin {
+	background-position: -69px -377px;
+}
+.ydialog .ywindow_bt a.disabled,
+.ydialog .ywindow_bt a.disabled:hover {
+	cursor: default;
+}
+.ydialog .ywindow_bt a.add.disabled,
+.ydialog .ywindow_bt a.add.disabled:hover {
+	background-position: -92px -290px;
+}
+.ydialog .ywindow_bt a.undo.disabled,
+.ydialog .ywindow_bt a.undo.disabled:hover {
+	background-position: -92px -319px;
+}
+.ydialog .ywindow_bt a.redo.disabled,
+.ydialog .ywindow_bt a.redo.disabled:hover {
+	background-position: -92px -348px;
+}
+.ydialog .ywindow_bt a.download.disabled,
+.ydialog .ywindow_bt a.download.disabled:hover {
+	background-position: -92px -232px;
+}
+.ydialog .ywindow_bt a.preview.disabled,
+.ydialog .ywindow_bt a.preview.disabled:hover {
+	background-position: -92px 0px;
+}
+.ydialog .ywindow_bt a.previewwin.disabled,
+.ydialog .ywindow_bt a.previewwin.disabled:hover {
+	background-position: -92px -377px;
+}
+.ydialog .ywindow_bt a.edit.disabled,
+.ydialog .ywindow_bt a.edit.disabled:hover {
+	background-position: -92px -29px;
+}
+.ydialog .ywindow_left,
+.ydialog .ywindow_leftbt {
+	background-image: url(../img/window/window_vertical.png);
+	background-position: 0px 1px;
+	background-repeat: repeat-y;
+}
+.ydialog .ywindow_right,
+.ydialog .ywindow_rightbt {
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -15px 1px;
+	background-repeat: repeat-y;
+}
+.ydialog .ywindow_midborder {
+	background-color: #1e231e;
+	background-image: url(../img/window/window_horizontal.png);
+	background-position: -1px -999px;
+}
+.ydialog .whitecorner,
+.ydialog .ywindow_midbottom,
+.ydialog .ywindow_vertcut,
+.ydialog .ywindow_column2,
+.ydialog .ywindow_midnoborder {
+	background-color: #1a2118;
+}
+.ydialog .ywindow_vertcut div {
+	background-position: -888px 0px;
+}
+.ydialog .ywindow_mid,
+.ydialog .ywindow_midbt,
+.ydialog .ywindow_column2 {
+	border-left: 1px solid #1e231e;
+	border-right: 1px solid #1e231e;
+}
+.ydialog .ywindowfilter .ywindow_mid,
+.ydialog .ywindowfiltercolumn2 .ywindow_mid {
+	border-left: 1px solid #353d34;
+	border-right: 1px solid #353d34;
+}
+.IE8 .ydialog .ywindowfilter .ywindow_mid,
+.IE8 .ydialog .ywindowfiltercolumn2 .ywindow_mid {
+	border-right: 4px solid #353d34;
+}
+.ydialog .ywindow_midbt,
+.ydialog .ywindow_cutbt {
+	border: 1px solid #1e231e;
+	background-color: #353d34
+}
+.ydialog .ywindowfilter,
+.ydialog .ywindowfiltercolumn2 {
+	margin-top: -1px;
+	margin-bottom: 0px;
+}
+.ydialog .ywindow_mid {
+	background-color: #353d34;
+}
+.ydialog .ywindow_cutbt {
+	height: 4px;
+	background-color: #1a2118;
+	border: none;
+}
+.ydialog .ywindow_bleft {
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -99px 0px;
+}
+.ydialog .ywindow_bmid {
+	background-image: url(../img/window/window_horizontal.png);
+	background-position: 0px 0px;
+	background-repeat: repeat-x;
+}
+.ydialog .ywindow_bright {
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -99px -17px;
+}
+.ydialog a.stdbutton,
+.pbox a.stdbutton {
+	background-color: #dff6e2;
+	color: #1c241a;
+	background-image: url(../img/buttons/buttons.png);
+	background-position: -145px -63px;
+}
+.ydialog .button.cancel a.stdbutton,
+.pbox .button.cancel a.stdbutton {
+	background-color: #7c897b;
+}
+.ydialog .stdbutton .wrapper,
+.pbox .stdbutton .wrapper {
+	background-image: url(../img/buttons/buttons.png);
+	background-position: right -101px;
+}
+
+
+
+
+/********************************************************************/
+/* dark cnt elements                                                */
+/********************************************************************/
+
+.ydialog .textbox {
+	padding: 3px 7px 3px 3px;
+	margin-bottom: 4px;
+	outline: none;
+	color: #BFD8BA;
+}
+.ydialog input,
+.ydialog textarea {
+	font-family: Arial;
+	font-size: 11px;
+	line-height: 11px;
+	width: 100%;
+	padding-left: 2px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	border-left: 1px solid #232822;
+	border-top: 1px solid #232822;
+	border-bottom: 1px solid #414940;
+	border-right: 1px solid #414940;
+	background-color: #252d23;
+	color: #c4ddbf;
+	background-image: none;
+}
+
+.ydialog .titlecnt {
+	display: block;
+	color: #e0f9dc;
+}
+.ydialog .listitempage .title,
+.ydialog .listitempagesub .title,
+.ydialog .listitempagenoselect .title,
+.ydialog .listitempagefocus .title,
+.ydialog .cntblockversionsjump strong,
+.ydialog .cntblockversions strong,
+.ydialog .cntblockversionsjump .author,
+.ydialog .cntblockversions .author {
+	color: #c4ddbf;
+}
+.ydialog .gridflex {
+	table-layout: auto;
+}
+.ydialog .dropdowninner {
+	background-image: url(../img/forms/forms.png);
+	background-position: right -672px;
+}
+.ydialog .dropdowninner input {
+	border-left: 1px solid #232822;
+	border-top: 1px solid #232822;
+	border-bottom: 1px solid #414940;
+}
+.ydialog .dropdownlistcontainer {
+	border: 1px solid #414940;
+}
+
+
+
+
+/********************************************************************/
+/* dark list                                                        */
+/********************************************************************/
+
+
+.ydialog li {
+	margin: 0px;
+}
+
+.ydialog li .cntblockcontainer {
+	border-bottom: 1px solid #1f2a1e;
+}
+
+li .title .txt {
+	padding-left: 0px;
+	padding-top: 0px;
+}
+.ydialog li .title .txt,
+.ydialog .txt,
+.ydialog .usergrouplist {
+	color: #bfd8ba;
+}
+
+.ydialog .cntblockcontainer:hover,
+.ydialog .ytable tr:hover,
+.ydialog .mk_filepreview:hover .cntblock {
+	background-color: #50594f;
+}
+
+
+
+
+
+
+
+/********************************************************************/
+/* dark panels, cntblocks                                           */
+/********************************************************************/
+
+.ydialog .cntblockcontainer,
+.ydialog .contentcontainer,
+.ydialog .tabhead_big,
+.ydialog .tabhead_comments,
+.ydialog .tabhead_mid,
+.ydialog .tabhead_small,
+.ydialog .tabhead_table,
+.ydialog .ywindowpagedir {
+	background-color: #353d34;
+}
+.ydialog .contentcontainer:hover,
+.ydialog .ywindowinner .ipanelhighlight .contentcontainer,
+.ydialog .ipanelhighlight .contentcontainer:hover,
+.ydialog .ipanelhighlight .cntblockcontainer,
+.ydialog .ipanelhighlight .cntblockcontainernohover,
+.ydialog .ipanelhighlight .contentcontainer,
+.ydialog .ipanelhighlight .panelheader,
+.ydialog .ipanelhighlight .panelheadernocollaps,
+.ydialog .cntblockcontainer:hover,
+.ydialog .cntblockcontainersoftsync:hover,
+.ydialog .cntblockcontainerlist:hover,
+.ydialog .cntblockadd .cntblockadd:hover,
+.ydialog li.listitem:hover .cntblockcontainer,
+.ydialog .ywindowinner .ipanelhighlight,
+.ydialog .ipanelhighlight .cntblockcontainer2,
+.ydialog .ipanelhighlight .ywindowinnerie,
+.ydialog .tabheaders .hoverable:hover {
+	background-color: #3d473c !important;
+}
+.ydialog .contentcontainer,
+.ydialog .tabhead_comments,
+.ydialog .tabhead_big,
+.ydialog .tabhead_mid,
+.ydialog .tabhead_small,
+.ydialog .cntblockcontainer,
+.ydialog .cntblockcontainer2,
+.ydialog .cntblockcontainernohover,
+.ydialog .cntblockcontainer2nohover,
+.ydialog .cntblockadd .cntblockadd,
+.ydialog .cntblockcontainergroup,
+.ydialog .cntblockcontainersoftsync,
+.ydialog .cntblockcontainerlist,
+.ydialog .cntblockcontainersortable,
+.ydialog .editblocksortable {
+	border-bottom: 1px solid #1f2a1e;
+}
+.ydialog .contentcontainer {
+    border-bottom: none;
+}
+
+.ydialog .headercolumns,
+.ydialog .headercolumnsfm {
+	color: #bfd8ba;
+}
+.ydialog .panelheader:hover {
+	background-color: #4d554b;
+}
+.ydialog .ipanel .panelheaderclosed,
+.ydialog .cntblockversionsjump {
+	background-color: #464f44;
+}
+.ydialog .ipanel .panelheaderclosed:hover,
+.ydialog .cntblockversionsjump:hover {
+	background-color: #515a4f;
+}
+.ydialog .ywindowinner .ipanel .panelheader,
+.ydialog .ywindowinner .ipanel .panelheadernocollaps {
+	border-bottom: 1px solid #171b17;
+}
+.ydialog .ipanel .panelcontent,
+.ydialog .ywindowinner .ipanelhighlight .panelheaderclosed,
+.ydialog .ywindowinner .ipanel .panelheaderclosed {
+	border-bottom: 3px solid #212620;
+}
+.ydialog .cntblockcontainernohover {
+	border-bottom: 1px solid #1e231e;
+}
+.ydialog .cntblockcontainergroup .cntblockcontainernohover,
+.ydialog .cntblockcontainergroup .cntblockcontainer {
+	padding-bottom: 0px;
+	border-bottom: none;
+}
+.ydialog .ywindowinner .ipanel {
+	border-bottom: 1px solid #515950;
+}
+.ydialog .panelheader a.opened, .ydialog .panelheader a.closed,
+.ydialog .panelheadernocollaps a.opened, .ydialog .panelheadernocollaps a.closed,
+.ydialog .headline1,
+.pbox .headline1,
+.ydialog .tabhead_big .headline1,
+.ydialog .tabhead_comments .headline1,
+.ydialog .tabhead_mid .headline1,
+.ydialog .tabhead_small .headline1 {
+	color: #bfd8ba;
+}
+.ydialog .panelheader a.opened {
+	background: url(../img/content/panels/ipanel_plus_dark.gif) right top no-repeat;
+}
+.ydialog .panelheader a.opened:hover {
+	color: #a1b49d;
+	background: url(../img/content/panels/ipanel_plus_mo_dark.gif) right top no-repeat;
+}
+.ydialog .panelheader a.closed {
+	background: url(../img/content/panels/ipanel_minus_dark.gif) right top no-repeat;
+}
+.ydialog .panelheader a.closed:hover {
+	color: #a1b49d;
+	background: url(../img/content/panels/ipanel_minus_mo_dark.gif) right top no-repeat;
+}
+.ydialog .panelcontent .noselection,
+.ydialog .nocontentareas {
+	color: #bfd8ba;
+}
+.ydialog .panelcontent .cntblockcontainer:hover {
+	cursor: default;
+}
+.ydialog .label,
+.pbox .label,
+.ydialog .labeltd,
+.ydialog .headstatus  {
+	color: #758b74;
+}
+.pbox .label {
+	padding-left: 0px;
+}
+.ydialog .checkbox .label,
+.ydialog .radiobox .label {
+	color: #9bb397;
+}
+.ydialog .ywindow_midbt .cntblock {
+	padding-top: 4px;
+}
+
+
+
+/********************************************************************/
+/* prompt box form elems                                            */
+/********************************************************************/
+
+.pbox .checkbox .label,
+.pbox .radiobox .label {
+	color: #889887;
+}
+.pbox .checkbox,
+.pbox .radiobox {
+	padding-left: 0px;
+}
+
+.ydialog .checkarry {
+	padding-top: 1px;
+	padding-bottom: 0px;
+}
+.ydialog div.plupload_iframe input[type=file] {
+	font-size: 100px;
+	cursor: pointer;
+}
+
+div.pboxheadalert {
+	display: none;
+}
+div.ywindow.pbox.alert div.pboxheadalert {
+	display: block;
+}
+div.ywindow.pbox.alert div.pboxhead {
+	display: none;
+}
+
+/********************************************************************/
+/* fixes for safari & ie                                            */
+/********************************************************************/
+
+.WEBKIT .ydialog .dropdowninner {
+	background-repeat: no-repeat;
+	height: 16px;
+	background-image: url(../img/forms/forms.png);
+	background-position: right -672px;
+}
+.WEBKIT .ydialog input {
+	background-image: none;
+}
+.WEBKIT .ydialog .elemcontent {
+	width: 100%;
+}
+

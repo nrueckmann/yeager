@@ -1,0 +1,91 @@
+<div class="mk_contentgroup">
+	<ul yg_widget="type:sortable;accepts:none;objecttype:extension;callbacks:extensionslistSortCallbacks;" id="wid_{$win_no}_extensionslist" style="position: relative;">
+		{section name='ext' loop=$extensions}
+			{assign var='item' value=$extensions[ext]}
+			{include file="$approot/ui/html/tabs/extension_list/extension_list.inc.html"}
+		{/section}
+	</ul>
+	{if $extensioncount == 0}
+		<div class="nocontentareas mk_verticalcenter"><span class="bracketleft"></span>{$itext.TXT_NO_EXTENSIONS|default:'$TXT_NO_EXTENSIONS'}<span class="bracketright"></span></div>
+	{/if}
+</div>
+
+{if (($mode != "refresh") && (!$selectiondialog))}
+<div class="ywindowfilter">
+	<table cellspacing="0" cellpadding="0" class="ywindowfilter">
+		<tr>
+			<td class="ywindow_left"></td>
+			<td class="ywindow_midborder"><div class="whitecorner"></div></td>
+			<td class="ywindow_right"></td>
+		</tr>
+		<tr>
+			<td class="ywindow_left"></td>
+			<td class="ywindow_mid">
+				<table cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<td width="100%">
+							<div id="wid_{$win_no}_extensionstype" yg_form="dropdown" class="dropdownbox">
+								<div class="dropdown">
+									<div class="dropdowninner">
+										<input yg_seq="{$win_no}" yg_onchange="$K.yg_switchExtensionType('wid_{$win_no}',$('wid_{$win_no}_extensionstype_ddlist').down('.selected').readAttribute('value'), {if ($objecttype == "data")}'data'{else}$('wid_{$win_no}_extensionstype_ddlist').down('.selected').readAttribute('value'){/if});" type="text" tabindex="1" value="">
+									</div>
+								</div>
+								<div class="dropdownlistcontainer">
+									<div class="dropdownlist">
+										{if ($objecttype == "data")}
+											<div value="import" class="selected">{$itext.TXT_IMPORT_EXTENSIONS|default:'$TXT_IMPORT_EXTENSIONS'}</div>
+											<div value="export">{$itext.TXT_EXPORT_EXTENSIONS|default:'$TXT_EXPORT_EXTENSIONS'}</div>
+										{else}
+											{if ($REXTENSIONS_PAGE)}<div value="extpage" class="selected">{$itext.TXT_PAGE_EXTENSIONS|default:'$TXT_PAGE_EXTENSIONS'}</div>{/if}
+											{if ($REXTENSIONS_CBLOCK)}<div value="extcblock"{if ($REXTENSIONS_PAGE == false)} class="selected"{/if}>{$itext.TXT_CBLOCK_EXTENSIONS|default:'$TXT_CBLOCK_EXTENSIONS'}</div>{/if}
+											{if ($REXTENSIONS_CBLISTVIEW)}<div value="extcolistview"{if ($REXTENSIONS_PAGE == false) && ($REXTENSIONS_CBLOCK == false)} class="selected"{/if}>{$itext.TXT_COLISTVIEW_EXTENSIONS|default:'$TXT_COLISTVIEW_EXTENSIONS'}</div>{/if}
+											{if ($REXTENSIONS_FILE)}<div value="extfile"{if ($REXTENSIONS_PAGE == false) && ($REXTENSIONS_CBLOCK == false) && ($REXTENSIONS_CBLISTVIEW == false)} class="selected"{/if}>{$itext.TXT_FILE_EXTENSIONS|default:'$TXT_FILE_EXTENSIONS'}</div>{/if}
+											{if ($REXTENSIONS_MAILING)}<div value="extmailing"{if ($REXTENSIONS_PAGE == false) && ($REXTENSIONS_CBLOCK == false) && ($REXTENSIONS_CBLISTVIEW == false) && ($REXTENSIONS_FILE == false)} class="selected"{/if}>{$itext.TXT_MAILING_EXTENSIONS|default:'$TXT_MAILING_EXTENSIONS'}</div>{/if}
+											{if ($RIMPORT)}<div value="extimport"{if ($REXTENSIONS_PAGE == false) && ($REXTENSIONS_CBLOCK == false) && ($REXTENSIONS_CBLISTVIEW == false) && ($REXTENSIONS_FILE == false) && ($REXTENSIONS_MAILING == false)} class="selected"{/if}>{$itext.TXT_IMPORT_EXTENSIONS|default:'$TXT_IMPORT_EXTENSIONS'}</div>{/if}
+											{if ($REXPORT)}<div value="extexport"{if ($REXTENSIONS_PAGE == false) && ($REXTENSIONS_CBLOCK == false) && ($REXTENSIONS_CBLISTVIEW == false) && ($REXTENSIONS_FILE == false) && ($REXTENSIONS_MAILING == false) && ($RIMPORT == false)} class="selected"{/if}>{$itext.TXT_EXPORT_EXTENSIONS|default:'$TXT_EXPORT_EXTENSIONS'}</div>{/if}
+										{/if}
+									</div>
+									<div class="mk_scrollbars"></div>
+								</div>
+								<input type="hidden" value="listview">
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td class="ywindow_right"></td>
+		</tr>
+		<tr>
+			<td class="ywindow_leftbt"></td>
+			<td class="ywindow_midborder"><div class="whitecorner"></div></td>
+			<td class="ywindow_rightbt"></td>
+		</tr>
+		<tr>
+			<td class="ywindow_leftbt"></td>
+			<td class="ywindow_spacemid"></td>
+			<td class="ywindow_rightbt"></td>
+		</tr>
+	</table>
+</div>
+{/if}
+
+{if $selectiondialog}
+	<!-- bottom //-->
+	<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+		<tr>
+			<td class="ywindow_leftbt"></td>
+			<td class="ywindow_midbottom">
+				<table class="buttontable" cellspacing="0" cellpadding="0">
+					<tr>
+						<td class="rightbutton">
+							<div class="button" tabindex="1"><a id="wid_{$win_no}_okbutton" onclick="$K.windows['wid_{$win_no}'].submit();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_ASSIGN|default:'$TXT_ASSIGN'}</nobr></div></a></div>
+							<div class="button cancel" tabindex="1"><a id="wid_{$win_no}_cancelbutton" onclick="$K.windows['wid_{$win_no}'].remove();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</nobr></div></a></div>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td class="ywindow_rightbt"></td>
+		</tr>
+	</table>
+	<!-- end bottom //-->
+{/if}

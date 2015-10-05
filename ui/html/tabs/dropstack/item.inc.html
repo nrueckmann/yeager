@@ -1,0 +1,21 @@
+<li id="wid_{$win_no}_item_{$item_index}" yg_id="{$item_id}" yg_property="name" yg_type="{$item_type}" ondblclick="$K.yg_openObjectDetails('{$item_id}', '{$item_type}', '{$item_name}'{if ($item_type == 'file')}, {literal}{{/literal} color: '{$item_color}', typecode: '{$item_filetype}' {literal}}{/literal}{/if} );" class="mk_{$item_type} mk_dropstackitem">
+	<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+		<!-- actions //-->
+		<div class="actions">
+			<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+			<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+				<div class="actionborder"></div>
+				<a onmouseover="$K.yg_showHelp('{$itext.TXT_DROPSTACK_DELETE}');" title="{$itext.TXT_DROPSTACK_DELETE}" onclick="$K.yg_fireAction($K.yg_deleteElement,this.up(3),event);" class="del" onmouseout="$K.yg_showHelp(false);"></a>
+				<div class="actionborder"></div>
+			</div>
+		</div>
+		<!-- end actions //-->		   	
+		<div id="wid_{$win_no}_item_{$item_index}_selector" class="listitempage" yg_selectable="true">
+			{if ($item_type != "file")}
+			<div id="wid_{$win_no}_item_{$item_index}_icn" class="icon{$item_type} icn"></div><div yg_type="{$item_type}" yg_id="{$item_id}" yg_property="name" class="title txt mk_txt">{$item_name}</div>
+			{else}
+			<span class="filetitle title mk_txt"><span class="filetype {$item_color}" yg_type="file" yg_id="{$item_id}" yg_property="type">{$item_filetype}</span> <span class="title" yg_id="{$item_id}" yg_type="file" yg_property="name" onmouseover="$K.yg_hoverFileHint(this);">{$item_name}</span></span>
+			{/if}
+		</div>						   		   	
+	</div>		
+</li>

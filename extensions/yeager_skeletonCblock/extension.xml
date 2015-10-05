@@ -1,0 +1,4 @@
+<extension>
+	<namespace>com\yg</namespace>
+	<class>ExampleCblock</class>
+</extension>

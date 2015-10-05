@@ -1,0 +1,126 @@
+<form name="wid_{$win_no}_LINK_SELECT_PAGE" onsubmit="return false;">
+<input type="hidden" name="onclick" value="" />
+<input type="hidden" name="pagename" value="" />
+<div class="dialogcontent">
+	<div class="cntblockcontainernohover">
+		<div class="cntblock">
+			<table class="gridfixed" cellspacing="0" cellpadding="0">
+				<tr>
+					<td colspan="4" class="col1">
+						<span class="label">{$itext.TXT_PATH|default:'$TXT_PATH'}</span>
+						<div class="textbox" yg_form="textbox">
+							<input tabindex="1" yg_onchange="" onchange="$K.yg_resetPageInfo(this);" type="text" name="href" value="{$presetURL}" {if $presetURL}preset="true"{/if} />
+						</div>
+						<div align="right" class="selectionadd">
+							<div class="selectionmarker" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'PAGE_SELECT', loadparams: {literal}{{/literal} action: 'choose', site: '{$site}', opener_reference: 'wid_{$win_no}', field_reference: document.forms['wid_{$win_no}_LINK_SELECT_PAGE'].href.identify() {literal} } } {/literal});"  onmouseover="$K.yg_showHelp('{$itext.TXT_CHOOSE_PAGE}');" title="{$itext.TXT_CHOOSE_PAGE}" onmouseout="$K.yg_showHelp(false);">{$itext.TXT_SELECTOR_PAGE|default:'$TXT_SELECTOR_PAGE'}</div>
+						</div>
+					</td>
+				</tr>
+				{if $fromContentEditor}
+					<tr>
+						<td colspan="2" class="col2">
+							<span class="label">{$itext.TXT_TARGET|default:'$TXT_TARGET'}</span>
+							<div id="wid_{$win_no}_dd_targets" yg_form="dropdown" class="dropdownbox">
+								<div class="dropdown">
+									<div class="dropdowninner">
+										<input name="dd_target" tabindex="1" yg_seq="" yg_onchange="" yg_previous="" type="text"  value="">
+									</div>
+								</div>
+								<div class="dropdownlistcontainer">
+									<div class="dropdownlist">
+										<div value="_self" class="selected">{$itext.TXT_OPEN_IN_THIS_WINDOW|default:'$TXT_OPEN_IN_THIS_WINDOW'}</div>
+										<div value="_blank">{$itext.TXT_OPEN_IN_NEW_WINDOW|default:'$TXT_OPEN_IN_NEW_WINDOW'}</div>
+										<div value="_parent">{$itext.TXT_OPEN_IN_PARENT_WINDOW|default:'$TXT_OPEN_IN_PARENT_WINDOW'}</div>
+										<div value="_top">{$itext.TXT_OPEN_IN_TOPFRAME|default:'$TXT_OPEN_IN_TOPFRAME'}</div>
+									</div>
+									<div class="mk_scrollbars"></div>
+								</div>
+								<input name="dd_targets" type="hidden" />
+							</div>
+						</td>
+						<td colspan="2" class="col2">
+						</td>
+					</tr>
+				{/if}
+			</table>
+		</div>
+	</div>
+
+	{if $fromContentEditor}
+		<div class="cntblock">
+			<table class="gridfixed" cellspacing="0" cellpadding="0">
+				<tr>
+					<td colspan="2" class="col2">
+						<span class="label">{$itext.TXT_JAVASCRIPT_POPUP|default:'$TXT_JAVASCRIPT_POPUP'}</span>
+						<div class="checkarray">
+							<div id="wid_{$win_no}_chk_ispopup" class="checkbox" yg_form="checkbox" tabindex="1" onchange="$('wid_{$win_no}_javascriptdetails').toggle();$K.windows[this.up('.ywindow').id].refresh();yeagerCE_buildOnClick(this.up('form'));"><div class="checkboxicon"><input type="hidden" name="ispopup" value="0" /><span class="label">{$itext.TXT_CHECKBOX_ON|default:'$TXT_CHECKBOX_ON'}</span></div></div>
+						</div>
+					</td>
+					<td colspan="2" class="col2"></td>
+				</tr>
+			</table>
+			<div id="wid_{$win_no}_javascriptdetails" style="display:none;">
+			<table class="gridfixed" cellspacing="0" cellpadding="0">
+				<tr>
+					<td colspan="2" class="col2">
+						<span class="label">{$itext.TXT_WINDOW_NAME|default:'$TXT_WINDOW_NAME'}</span>
+						<div class="textbox" yg_form="textbox">
+							<input tabindex="1" yg_onchange="" onchange="yeagerCE_buildOnClick(this.up('form'));" type="text" name="popupname" value="" />
+						</div>
+					</td>
+					<td class="col4">
+						<span class="label">{$itext.TXT_WIDTH_PX|default:'$TXT_WIDTH_PX'}</span>
+						<div class="textbox" yg_form="textbox">
+							<input tabindex="1" yg_onchange="" onchange="yeagerCE_buildOnClick(this.up('form'));" type="text" name="popupwidth" value="" />
+						</div>
+					</td>
+					<td class="col4">
+						<span class="label">{$itext.TXT_HEIGHT_PX|default:'$TXT_HEIGHT_PX'}</span>
+						<div class="textbox" yg_form="textbox">
+							<input tabindex="1" yg_onchange="" onchange="yeagerCE_buildOnClick(this.up('form'));" type="text" name="popupheight" value="" />
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="col2">
+						<span class="label">{$itext.TXT_OPTIONS|default:'$TXT_OPTIONS'}</span>
+						<div class="checkarray">
+							<div id="wid_{$win_no}_chk_popuplocation" class="checkbox" yg_form="checkbox" tabindex="1" onchange="yeagerCE_buildOnClick(this.up('form'));"><div class="checkboxicon"><input type="hidden" name="popuplocation" value="0"><span class="label">{$itext.TXT_SHOW_LOCATION_BAR|default:'$TXT_SHOW_LOCATION_BAR'}</span></div></div>
+							<div id="wid_{$win_no}_chk_popupmenubar" class="checkbox" yg_form="checkbox" tabindex="1" onchange="yeagerCE_buildOnClick(this.up('form'));"><div class="checkboxicon"><input type="hidden" name="popupmenubar" value="0"><span class="label">{$itext.TXT_SHOW_MENU_BAR|default:'$TXT_SHOW_MENU_BAR'}</span></div></div>
+							<div id="wid_{$win_no}_chk_popuptoolbar" class="checkbox" yg_form="checkbox" tabindex="1" onchange="yeagerCE_buildOnClick(this.up('form'));"><div class="checkboxicon"><input type="hidden" name="popuptoolbar" value="0"><span class="label">{$itext.TXT_SHOW_TOOLBARS|default:'$TXT_SHOW_TOOLBARS'}</span></div></div>
+						</div>
+					</td>
+					<td colspan="2" class="col2">
+						<span class="label">&nbsp;</span>
+						<div class="checkarray">
+							<div id="wid_{$win_no}_chk_popupscrollbars" class="checkbox" yg_form="checkbox" tabindex="1" onchange="yeagerCE_buildOnClick(this.up('form'));"><div class="checkboxicon"><input type="hidden" name="popupscrollbars" value="0"><span class="label">{$itext.TXT_SHOW_SCROLLBARS|default:'$TXT_SHOW_SCROLLBARS'}</span></div></div>
+							<div id="wid_{$win_no}_chk_popupresizable" class="checkbox" yg_form="checkbox" tabindex="1" onchange="yeagerCE_buildOnClick(this.up('form'));"><div class="checkboxicon"><input type="hidden" name="popupresizable" value="0"><span class="label">{$itext.TXT_MAKE_WINDOW_RESIZABLE|default:'$TXT_MAKE_WINDOW_RESIZABLE'}</span></div></div>
+							<div id="wid_{$win_no}_chk_popupstatus" class="checkbox" yg_form="checkbox" tabindex="1" onchange="yeagerCE_buildOnClick(this.up('form'));"><div class="checkboxicon"><input type="hidden" name="popupstatus" value="0"><span class="label">{$itext.TXT_SHOW_STATUSBAR|default:'$TXT_SHOW_STATUSBAR'}</span></div></div>
+						</div>
+					</td>
+				</tr>
+			</table>
+			</div>
+		</div>
+	{/if}
+</div>
+</form>
+
+<!-- bottom //-->
+<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_midbottom">
+			<table class="buttontable" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="rightbutton">
+						<div class="button" tabindex="1"><a id="wid_{$win_no}_okbutton" onclick="$K.windows['wid_{$win_no}'].submit();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CONFIRM|default:'$TXT_CONFIRM'}</nobr></div></a></div>
+						<div class="button cancel" tabindex="1"><a id="wid_{$win_no}_cancelbutton" onclick="$K.windows['wid_{$win_no}'].remove();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</nobr></div></a></div>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td class="ywindow_rightbt"></td>
+	</tr>
+</table>
+<!-- end bottom //-->

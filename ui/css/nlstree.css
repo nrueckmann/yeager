@@ -1,0 +1,548 @@
+/********************************************************************/
+/* nlstree                                                          */
+/********************************************************************/
+
+.ywindow .row a {
+	color: #242824;
+	cursor: pointer;
+	font-family: Arial;
+	font-size: 8pt;
+	line-height: 10pt;
+	margin: 0;
+	padding: 2px 1px 1px 0;
+	text-decoration: none;	
+}
+.ywindow .selrow a {
+	cursor: pointer;
+	font-family: Arial;
+	font-size: 8pt;
+	line-height: 10pt;
+	margin: 0;
+	padding: 2px 1px 1px 0;
+	text-decoration: none;	
+	color: #DCF9FE;
+}
+.ywindow .selrow a.changed,
+.ywindow .selrow a.selchanged {
+	color: #242824;
+}
+.ywindow .row,
+.ywindow .selrow,
+.ywindow .darkrow,
+.ywindow .darkselrow,
+.ywindow .nlstree,
+.ywindow .darknlstree {
+	-moz-user-select: none; 
+    -khtml-user-select: none;
+}
+.ywindow .row a.nowrite,
+.ywindow .selrow a.selchanged.nowrite {
+    color: #7c817c;
+}
+
+.ydialog .darkrow a,
+.ydialog .darkselrow a {
+    font-family: Arial;
+    font-size: 8pt;
+    line-height: 10pt;
+    color: #e0f9dc;
+    text-decoration: none;
+    cursor: pointer;
+	margin: 2px 0 0 -3px;
+	padding: 0 3px 1px;
+}
+.ydialog .darkselrow a {
+	color: #E0F9DC;
+}
+.ydialog .darkrow a.changed,
+.ydialog .darkselrow a.changed,
+.ydialog a.darkselnode.changed {
+	color: #242824;
+}
+.ydialog .darkrow a.nowrite,
+.ydialog .darkselrow a.selchanged.nowrite {
+    color: #758b74 !important;
+}
+
+
+
+a.prnnode  {
+    font-family: Arial;
+    font-size: 8pt;
+    line-height: 10pt;
+    color: #242824;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0px;
+    padding: 2px 1px 1px 0px;
+}
+
+a.prnnode:hover {
+	color: #242824;
+	background-color: #e2e3dd;
+}
+
+a.node {
+    font-family: Arial;
+    font-size: 8pt;
+    line-height: 10pt;
+    color: #242824;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0px;
+    padding: 2px 1px 1px 0px;
+}
+a.node i,
+a.node em,
+a.darkprnnode i,
+a.darkprnnode em {
+	color: #889887;
+}
+a.darknode i,
+a.darknode em,
+a.darkprnnode i,
+a.darkprnnode em {
+	color: #849580;
+}
+
+/*
+a.node:hover {
+	color: #242824;
+	background-color: #e1e1dd;
+}
+*/
+
+a.selnode {
+    font-family: Arial;
+    font-size: 8pt;
+    line-height: 10pt;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0px;
+    padding: 2px 1px 1px 0px;
+}
+a.selprnnode,
+div.selrow a.prnnode {
+    font-family: Arial;
+    font-size: 8pt;
+    line-height: 10pt;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0px;
+    padding: 2px 1px 1px 0px;
+}
+
+div.row {
+    color: #0066cc;
+    text-decoration: none;
+    cursor: pointer;
+	height: 18px;
+}
+
+div.selrow,
+div.darkselrow, div.darkselrow:hover {
+    cursor: pointer;
+	height: 18px;
+}
+
+div.row:hover,
+div.row_hover {
+    background-color: #e1e1dd;
+}
+
+.ydialog div.row:hover,
+.ydialog div.row_hover {
+    background-color: #3d473c;
+}
+
+input.nodeedit {
+    font-family:  Arial;
+    font-size: 8pt;
+    line-height: 10pt;
+    color: #666666;
+    text-decoration: none;
+    position: absolute;
+    height: 14px;
+    border: #cfcfcf 1px solid;
+    z-index: 1;
+    margin-top: 0px;
+    padding-left: 2px;
+}
+
+
+/* Workflow marker */
+a.wf,
+a.selwf,
+a.prnwf, 
+a.selprnwf {
+    font-family: Arial;
+    font-size: 8pt;
+    line-height: 10pt;
+    color: #242824;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0px;
+    padding: 2px 17px 1px 0px;
+    background-image: url(../img/icons/ico_page_wf.png);
+    background-repeat: no-repeat;
+    background-position: right 3px;
+}
+a.selwf,
+a.selprnwf {
+	color: #ffffff;
+}
+a.wf:hover,
+a.selwf:hover,
+a.prnwf:hover,
+a.selprnwf:hover {
+		color: #4f574d;
+}
+a.selwf:hover,
+a.selprnwf:hover {
+	color: #ffffff;
+}
+
+
+/* No rights for writing */
+a.nowrite,
+span.nowrite,
+a.selnowrite,
+a.prnnowrite,
+a.selprnnowrite {
+    font-family: Arial;
+    font-size: 8pt;
+    font-style: italic;
+    line-height: 10pt;
+    color: #7c817c !important;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0px;
+    padding: 2px 1px 1px 0px;
+}
+a.selnowrite,
+a.selprnnowrite {
+	color: #ffffff;
+}
+.row a.nowrite:hover,
+.row a.prnnowrite:hover,
+.row a.selprnnowrite:hover {
+    font-style: italic;
+	color: #7c817c;
+}
+a.selnowrite:hover,
+a.selprnnowrite:hover {
+	color: #ffffff;
+}
+
+/* Broken link */
+a.brokenlink,
+a.selbrokenlink,
+a.prnbrokenlink,
+a.selprnbrokenlink {
+    font-family: Arial;
+    font-size: 8pt;
+    line-height: 10pt;
+    color: white;
+    background-color: #ed3612;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 2px 0px 0px 0px;
+    padding: 0px 3px 1px 3px;
+    background-color: #db1e00;
+    margin-left: -3px;
+}
+
+
+/* Dark styles */
+a.darkprnnode  {
+    font-family: Arial;
+    font-size: 8pt;
+    line-height: 10pt;
+    color: #e0f9dc;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0px;
+    padding: 2px 1px 1px 0px;
+}
+
+a.darkprnnode:hover {
+	color: #e0f9dc;
+	background-color: #444f43;
+}
+
+a.darknode {
+    font-family: Arial;
+    font-size: 8pt;
+    line-height: 10pt;
+    color: #e0f9dc;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0px;
+    padding: 2px 1px 1px 0px;
+}
+
+a.darknode:hover {
+	color: #e0f9dc;
+	background-color: #444f43;
+}
+
+a.darkselnode {
+    font-family:  Arial;
+    font-size: 8pt;
+    line-height: 10pt;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0px;
+    padding: 2px 1px 1px 0px;
+}
+a.darkselprnnode {
+    font-family: Arial;
+    font-size: 8pt;
+    line-height: 10pt;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0px;
+    padding: 2px 1px 1px 0px;
+}
+
+div.darkrow {
+    color: #e0f9dc;
+    text-decoration: none;
+    cursor: pointer;
+	height: 18px;
+}
+div.darkrow:hover,
+div.darkrow_hover {
+    background-color: #3d473c;
+}
+div.darkselrow,
+div.darkselrow:hover {
+    cursor: pointer;
+}
+
+div.darkrow.noclick,
+div.darkselrow.noclick,
+div.darkrow.noclick a,
+div.darkselrow.noclick a {
+    cursor: default !important;
+}
+
+/* Workflow marker */
+a.darkwf,
+a.darkselwf,
+a.darkprnwf, 
+a.darkselprnwf {
+    font-family: Arial;
+    font-size: 8pt;
+    line-height: 10pt;
+    color: #4f574d;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0px;
+    padding: 2px 17px 1px 0px;
+    background-image: url(../img/icons/ico_page_wf.png);
+    background-repeat: no-repeat;
+    background-position: right 3px;
+}
+a.darkselwf,
+a.darkselprnwf {
+	color: #ffffff;
+}
+a.darkwf:hover,
+a.darkselwf:hover,
+a.darkprnwf:hover,
+a.darkselprnwf:hover {
+		color: #4f574d;
+}
+a.darkselwf:hover,
+a.darkselprnwf:hover {
+	color: #ffffff;
+}
+
+
+/* No rights for writing */
+a.darknowrite,
+a.darkselnowrite,
+a.darkprnnowrite,
+a.darkselprnnowrite {
+    font-family: Arial;
+    font-size: 8pt;
+    font-style: italic;
+    line-height: 10pt;
+    color: #9bb397;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0px;
+    padding: 2px 1px 1px 0px;
+}
+a.darkselnowrite,
+a.darkselprnnowrite {
+	color: #ffffff;
+}
+a.darknowrite:hover,
+a.darkselnowrite:hover,
+a.darkprnnowrite:hover,
+a.darkselprnnowrite:hover {
+    font-style: italic;
+		color: #9bb397;
+}
+a.darkselnowrite:hover,
+a.darkselprnnowrite:hover {
+	color: #ffffff;
+}
+
+/* Broken link */
+a.darkbrokenlink,
+a.darkselbrokenlink,
+a.darkprnbrokenlink,
+a.darkselprnbrokenlink {
+    font-family: Arial;
+    font-size: 8pt;
+    line-height: 10pt;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 2px 0px 0px 0px;
+    padding: 0px 3px 1px 3px;
+    background-color: #ed3612;
+    margin-left: -3px;
+}
+
+/* Changed */
+a.darkchanged,
+a.darkselchanged,
+a.darkprnchanged,
+a.darkselprnchanged,
+.changed a, 
+.darkselrow a.selchanged {
+    font-family: Arial;
+    font-size: 8pt;
+    line-height: 10pt;
+    color: #242824 !important;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 2px 0px 0px 0px;
+    padding: 0px 3px 1px 3px;
+    background-color: #e1ff85 !important;
+    margin-left: -3px;
+}
+
+a.darkchanged:hover,
+a.darkselchanged:hover,
+a.darkprnchanged:hover,
+a.darkselprnchanged:hover {
+	color: #242824;
+	background-color: #e1ff85;
+}
+
+/* Root node */
+.ywindow .selrow a.selroot,
+.ywindow .darkselrow a.selroot,
+.ywindow .row a.root,
+.ywindow .darkrow a.root {
+	font-family: Arial;
+	font-size: 10px;
+	font-weight: bold;
+	text-transform: uppercase;
+	text-decoration: none;
+	/* color: #242824; */
+	letter-spacing: 0.15em;
+	line-height: 18px;
+	margin: 0px;
+	margin-left: 3px;
+	padding: 0px;
+}
+.darkrow a.selroot,
+.darkrow a.root {
+	font-family: Arial;
+	font-size: 10px;
+	font-weight: bold;
+	text-transform: uppercase;
+	text-decoration: none;
+	color: #e0f9dc;
+	line-height: 18px;
+	margin-left: 3px;
+}
+.dialog_bg {
+	background-color: #343c33 !important;
+}
+.darknlstree > div:first-child a {
+	font-family: Arial;
+	font-size: 10px;
+	font-weight: bold;
+	text-transform: uppercase;
+	text-decoration: none;
+	color: #e0f9dc;
+	line-height: 18px;
+	margin-left: 3px;
+	letter-spacing: 0.15em;
+	line-height: 18px;
+	margin: 0 0 0 3px;
+	padding: 0;
+}
+
+.nlstree > div:first-child img,
+.darknlstree > div:first-child img {
+	width: 0px;
+	height: 0px;
+}
+
+/* Changed */
+a.changed,
+a.selchanged,
+.selrow a.selchanged,
+a.prnchanged,
+a.selprnchanged,
+.changed a {
+    font-family: Arial;
+    font-size: 8pt;
+    line-height: 10pt;
+    color: #242824;
+    text-decoration: none;
+    cursor: pointer;
+    margin-top: 2px !important;
+    margin-left: -3px !important; 
+    padding: 0px 3px 1px 3px !important;
+    background-color: #e1ff85 !important;
+    margin-left: -3px;
+}
+
+
+/* Tree icon handling */
+img.tree_ico {
+	position: relative;
+	left: -2px;
+}
+
+.wdgt_tree {
+	padding-top: 2px;
+}
+
+/* Definitions for Drag'n'Drop (disables hover-style while dragging) */
+.drag a.node:hover,
+.drag a.darknode:hover,
+.drag a.prnnode:hover,
+.drag a.darkprnnode:hover,
+.drag div.row:hover,
+.drag div.darkrow:hover {
+	background-color: transparent !important;
+}
+
+/* Definitions for tree-needle */
+.needle {
+	position: absolute;
+	border-bottom: solid 1px #585956;
+	background-color: transparent;
+	cursor: pointer;
+	height: 0px;
+}
+.needle_dialog {
+	border-bottom: solid 1px #E0F9DC;
+}
+
+.darkselrow a:hover,
+.darkselrow a {
+	position: relative;
+	top: 0px !important;
+}
+

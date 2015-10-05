@@ -1,0 +1,122 @@
+<div id="mainnav">
+	<table width="100%" cellspacing="0" cellpadding="0">
+		<tr>
+			<td>
+				<div class="collapsed" id="navcollapsed" onmouseover="$K.yg_navTimer('start');" onmouseout="$K.yg_navTimer('stop');">
+					<table cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="left">&nbsp;</td>
+							<td class="mid" align="center"><div class="navfile"></div></td>
+							<td class="rightinner">&nbsp;</td>
+						</tr>
+					</table>
+				</div>
+				<div class="extended" id="navextended" onmouseover="$K.yg_navTimer('stopoff');" onmouseout="$K.yg_navTimer('startoff');">
+					<table width="100%" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="left"><div class="bborderin"></div></td>
+							<td class="mid">
+								<table cellspacing="0" cellpadding="0">
+									<tr>
+										<td class="innerleft"><div class="yglogolink" onclick="$K.switchAdmin('start');"></div></td>
+										<td align="center">
+											<div class="meta">
+												<a onclick="new $K.yg_wndobj({literal}{{/literal} config: 'USER_SETTINGS' {literal}}{/literal});">{$itext.TXT_PROFILE|default:'$itext.TXT_PROFILE'} &nbsp; <span class="user" yg_type="user" yg_id="{$userid}-user" yg_property="name">{$username}</span></a>
+												<a class="manual" href="http://docs.yeager.cm/manual" target="_blank">User manual</a>
+											</div>
+											<div class="logout"><a onclick="$K.yg_userLogout();">Logout</a></div>
+											<div class="settitles">
+												<div id="settitles">
+													{if $RPAGES || $RCONTENTBLOCKS || $RFILES || $RTAGS || $RCOMMENTS || $RMAILINGS}
+														{assign var="menu_editing" value="1"}
+														<div id="settitle_editing" class="settitle" style="display: block;">{$itext.TXT_EDITING|default:'$itext.TXT_EDITING'}</div>
+													{/if}
+													{if $RTEMPLATES || $RENTRYMASKS || $RPROPERTIES || $RVIEWS || $RFILETYPES || $RCOMMENTCONFIG || $RMAILINGCONFIG || $RIMPORT || $REXPORT || $REXTENSIONS_PAGE || $REXTENSIONS_MAILING || $REXTENSIONS_FILE || $REXTENSIONS_CBLOCK || $RDATA || $RSITES || $RUPDATER}
+														{assign var="menu_system" value="1"}
+														<div id="settitle_systemconfig" class="settitle {if $RCOMMENTCONFIG}mk_rcommentconfig{/if} {if $RMAILINGCONFIG}mk_remailingconfig{/if} {if $RPROPERTIES}mk_rproperties{/if} {if $RFILETYPES}mk_rfiletypes{/if} {if $RVIEWS}mk_rviews{/if}" style="display:{if $menu_editing!="1"}block{else}none{/if};">{$itext.TXT_SYSTEM|default:'$itext.TXT_SYSTEM'}</div>
+													{/if}
+													{if $RUSERS || $RUSERGROUPS}
+														{assign var="menu_usersgroups" value="1"}
+														<div id="settitle_usersgroups" class="settitle" style="display:{if (($menu_editing!="1") && ($menu_system!="1"))}block{else}none{/if};">{$itext.TXT_USERS_AND_GROUPS|default:'$itext.TXT_USERS_AND_GROUPS'}</div>
+													{/if}
+												</div>
+												<div class="navfiler"></div>
+												<div id="icondesc"></div>
+												<div id="sets">
+													{if $menu_editing=="1"}
+														<a class="sel" onclick="$K.yg_changeSet('editing', this);">{$itext.TXT_EDITING|default:'$itext.TXT_EDITING'}</a><br/>
+													{/if}
+													{if $menu_system=="1"}
+														<a onclick="$K.yg_changeSet('systemconfig', this);">{$itext.TXT_SYSTEM|default:'$itext.TXT_SYSTEM'}</a><br/>
+													{/if}
+													{if $menu_usersgroups=="1"}
+														<a onclick="$K.yg_changeSet('usersgroups', this);">{$itext.TXT_USERS_AND_GROUPS|default:'$itext.TXT_USERS_AND_GROUPS'}</a><br/>
+													{/if}
+												</div>
+											</div>
+											<br />
+											<div id="navsets">
+												{if $menu_editing=="1"}
+												<div id="set_editing" class="set" style="display:block;">
+													{if $RPAGES}<a onclick="$K.switchAdmin('pages');" onmouseover="$K.yg_navHover('{$itext.TXT_PAGES|default:'$itext.TXT_PAGES'}')" onmouseout="$K.yg_navHover('')" class="pages"></a>{/if}
+													{if $RCONTENTBLOCKS}<a onclick="$K.switchAdmin('contentblocks');" onmouseover="$K.yg_navHover('{$itext.TXT_CONTENTBLOCKS|default:'$itext.TXT_CONTENTBLOCKS'}')" onmouseout="$K.yg_navHover('')" class="cblocks"></a>{/if}
+													{if $RFILES}<a onclick="$K.switchAdmin('files');" onmouseover="$K.yg_navHover('{$itext.TXT_FILES|default:'$itext.TXT_FILES'}')" onmouseout="$K.yg_navHover('')" class="files"></a>{/if}
+													{if $RTAGS}<a onclick="$K.switchAdmin('tags');" onmouseover="$K.yg_navHover('{$itext.TXT_TAGS|default:'$itext.TXT_TAGS'}')" onmouseout="$K.yg_navHover('')" class="tags"></a>{/if}
+													{if $RCOMMENTS}<a onclick="$K.switchAdmin('comments');" onmouseover="$K.yg_navHover('{$itext.TXT_COMMENTS|default:'$itext.TXT_COMMENTS'}')" onmouseout="$K.yg_navHover('')" class="comments"></a>{/if}
+													{if $RMAILINGS}<a onclick="$K.switchAdmin('mailings');" onmouseover="$K.yg_navHover('{$itext.TXT_MAILINGS|default:'$itext.TXT_MAILINGS'}')" onmouseout="$K.yg_navHover('')" class="mailings"></a>{/if}
+												</div>
+												{/if}
+												{if $menu_system=="1"}
+												<div id="set_systemconfig" class="set" style="display:{if $menu_editing!="1"}block{else}none{/if};">
+													{if $RTEMPLATES}<a onclick="$K.switchAdmin('templates');"  onmouseover="$K.yg_navHover('{$itext.TXT_TEMPLATES|default:'$itext.TXT_TEMPLATES'}')" onmouseout="$K.yg_navHover('')" class="templates"></a>{/if}
+													{if $RENTRYMASKS}<a onclick="$K.switchAdmin('entrymasks');"  onmouseover="$K.yg_navHover('{$itext.TXT_ENTRYMASKS|default:'$itext.TXT_ENTRYMASKS'}')" onmouseout="$K.yg_navHover('')" class="entrymasks"></a>{/if}
+													{if $RSITES}<a onclick="$K.switchAdmin('sites');"  onmouseover="$K.yg_navHover('{$itext.TXT_SITES|default:'$itext.TXT_SITES'}')" onmouseout="$K.yg_navHover('')" class="sites"></a>{/if}
+													{if $RPROPERTIES || $RVIEWS || $RFILETYPES}<a onclick="$K.switchAdmin('systemconfig');"  onmouseover="$K.yg_navHover('{$itext.TXT_SYSTEMCONFIG|default:'$itext.TXT_SYSTEMCONFIG'}')" onmouseout="$K.yg_navHover('')" class="system"></a>{/if}
+													{if $RIMPORT || $REXPORT || $REXTENSIONS_PAGE || $REXTENSIONS_MAILING || $REXTENSIONS_FILE || $REXTENSIONS_CBLOCK || $REXTENSIONS_CBLISTVIEW}<a onclick="$K.switchAdmin('extensions');"  onmouseover="$K.yg_navHover('{$itext.TXT_EXTENSIONS|default:'$itext.TXT_EXTENSIONS'}')" onmouseout="$K.yg_navHover('')" class="extensions"></a>{/if}
+													{if $RDATA}<a onclick="$K.switchAdmin('data');"  onmouseover="$K.yg_navHover('{$itext.TXT_DATA|default:'$itext.TXT_DATA'}')" onmouseout="$K.yg_navHover('')" class="data"></a>{/if}
+													{if $RUPDATER}<a onclick="$K.switchAdmin('updates');"  onmouseover="$K.yg_navHover('{$itext.TXT_UPDATES|default:'$itext.TXT_UPDATES'}')" onmouseout="$K.yg_navHover('')" class="updates"></a>{/if}
+												</div>
+												{/if}
+												{if $menu_usersgroups=="1"}
+												<div id="set_usersgroups" class="set" style="display:{if (($menu_editing!="1") && ($menu_system!="1"))}block{else}none{/if};">
+													{if $RUSERS}<a onclick="$K.switchAdmin('users');" onmouseover="$K.yg_navHover('{$itext.TXT_USERS|default:'$itext.TXT_USERS'}')" onmouseout="$K.yg_navHover('')" class="users"></a>{/if}
+													{if $RUSERGROUPS}<a onclick="$K.switchAdmin('usergroups');" onmouseover="$K.yg_navHover('{$itext.TXT_USERGROUPS|default:'$itext.TXT_USERGROUPS'}')" onmouseout="$K.yg_navHover('')" class="usergroups"></a>{/if}
+												</div>
+												{/if}
+											</div>
+										</td>
+									</tr>
+								</table>
+							</td>
+							<td class="rightinner"><div class="bborderin"></div></td>
+						</tr>
+					</table>
+				</div>
+			</td>
+			<td width="125">
+				<div class="collapsed" id="navtoolbarcollapsed" onmouseover="$K.yg_navTimer('start','toolbar');" onmouseout="$K.yg_navTimer('stop','toolbar');">
+					<table cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="leftinner">&nbsp;</td>
+							<td class="mid"><div class="navtoolbaricon"></div></td>
+							<td class="right">&nbsp;</td>
+						</tr>
+					</table>
+				</div>
+				<div class="extended" id="navtoolbarextended" onmouseover="$K.yg_navTimer('stopoff','toolbar');" onmouseout="$K.yg_navTimer('startoff','toolbar');">
+					<table cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="leftinner">&nbsp;</td>
+							<td class="mid expanded">
+								<div class="label">{$itext.TXT_TOOLBAR|default:'$itext.TXT_TOOLBAR'}</div>
+								<a class="toolbarshow" onclick="$K.yg_toggleToolbar();">{$itext.TXT_SHOW|default:'$itext.TXT_SHOW'}</a>
+								<a class="toolbarhide" onclick="$K.yg_toggleToolbar();">{$itext.TXT_HIDE|default:'$itext.TXT_HIDE'}</a>
+							</td>
+							<td class="right">&nbsp;</td>
+						</tr>
+					</table>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>

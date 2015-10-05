@@ -1,0 +1,48 @@
+<li id="item_{$item_index}" yg_id="{$item_id}-view" yg_type="view" class="mk_view listitem {if ($object_permissions.READONLY) || ($item_id === 0)}mk_nowrite{/if}">
+	<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+		<!-- actions //-->
+		{if $object_permissions.RWRITE}
+		<div class="actions">
+			<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+			<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+				<div class="singleselect">
+					<div class="actionborder"></div>
+					{if $item_identifier != "YGSOURCE"}
+						<a onclick="$K.yg_fireAction($K.yg_deleteElement,this.up(3),event);" class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_VIEW_DEL}');" title="{$itext.TXT_VIEW_DEL}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					{/if}
+					{if $objecttype != "filefolder"}
+						{if ($item_viewtype == $smarty.const.FILE_TYPE_WEBIMAGE)}<a onclick="Event.stop(event);$K.yg_preview({literal}{{/literal}objecttype: 'file', id: {$object}, view: '{$item_identifier}', fullscreen: true, crop: true{literal}}{/literal});" class="edit" onmouseover="$K.yg_showHelp('{$itext.TXT_FILE_CROP}');" title="{$itext.TXT_FILE_CROP}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>{/if}
+						<a href="{$internalprefix}?preview=1&objecttype=file&id={$object}&view={$item_identifier}" onclick="Event.stop(event);$K.yg_preview({literal}{{/literal}objecttype: 'file', id: {$object}, view: '{$item_identifier}', fullscreen: true{literal}}{/literal});" class="preview mk_preview_view_btn" onmouseover="$K.yg_showHelp('{$itext.TXT_VIEW_PREVIEW_FULLSCREEN}');" title="{$itext.TXT_VIEW_PREVIEW_FULLSCREEN}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+						<a onclick="Event.stop(event);$K.yg_preview({literal}{{/literal}objecttype: 'file', id: {$object}, view: '{$item_identifier}'{literal}}{/literal});" class="previewwin mk_preview_view_btn" onmouseover="$K.yg_showHelp('{$itext.TXT_VIEW_PREVIEW}');" title="{$itext.TXT_VIEW_PREVIEW}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					{/if}
+					<div class="actionborder"></div>
+				</div>
+				<div class="multiselect">
+					<div class="actionborder"></div>
+					<a onclick="$K.yg_fireAction($K.yg_deleteElement,this.up(3));" class="del" onmouseover="$K.yg_showHelp('{$itext.TXT_VIEWS_DEL}');" title="{$itext.TXT_VIEWS_DEL}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<div class="actionborder"></div>
+				</div>
+			</div>
+		</div>
+		{/if}
+		<!-- end actions //-->	   	
+		<div id="item_{$item_index}_selector" class="listitempage" yg_selectable="{if $item_identifier == ""}false{else}true{/if}">
+			<table class="listable">
+				<tr>
+					<td class="object">
+						<table class="objectable">
+							<tr>
+								<td class="title txt">
+									<span class="label" id="item_{$item_index}_txt">{if ($item_identifier == "YGSOURCE")}{$itext.TXT_SOURCEFILE}{else}{$item_name|default:'no title'}{/if}</span>
+									<span class="size">
+										{$item_width} x {$item_height}
+									</span>
+								</td>																								
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>	
+		</div>						   		   	
+	</div>		
+</li>

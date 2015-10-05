@@ -1,0 +1,157 @@
+<form name="wid_{$win_no}_linkForm" onsubmit="return false;">
+<div class="dialogcontent">
+	<div class="cntblock">
+		<table class="gridfixedspecial" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="col">
+					<span class="label">{$itext.TXT_COLS|default:'$TXT_COLS'}</span>
+				</td>
+				<td class="col">
+					<div class="textbox chars12" yg_form="textbox">
+						<input tabindex="1" yg_onchange="" type="text" name="cols" value="2" />
+					</div>
+				</td>
+				<td class="col"></td>
+			</tr>
+			<tr>
+				<td class="col">
+					<span class="label">{$itext.TXT_ROWS|default:'$TXT_ROWS'}</span>
+				</td>
+				<td class="col">
+					<div class="textbox chars12" yg_form="textbox">
+						<input tabindex="1" yg_onchange="" type="text" name="rows" value="2" />
+					</div>
+				</td>
+				<td class="col"></td>
+			</tr>
+			<tr>
+				<td class="col">
+					<span class="label">{$itext.TXT_CELLSPACING|default:'$TXT_CELLSPACING'}</span>
+				</td>
+				<td class="col">
+					<div class="textbox chars12" yg_form="textbox">
+						<input tabindex="1" yg_onchange="" type="text" name="cellspacing" value="0" />
+					</div>
+				</td>
+				<td class="col"></td>
+			</tr>
+			<tr>
+				<td class="col">
+					<span class="label">{$itext.TXT_CELLPADDING|default:'$TXT_CELLPADDING'}</span>
+				</td>
+				<td class="col">
+					<div class="textbox chars12" yg_form="textbox">
+						<input tabindex="1" yg_onchange="" type="text" name="cellpadding" value="0" />
+					</div>
+				</td>
+				<td class="col"></td>
+			</tr>
+			<tr>
+				<td class="col">
+					<span class="label">{$itext.TXT_BORDER|default:'$TXT_BORDER'}</span>
+				</td>
+				<td class="col">
+					<div class="textbox chars12" yg_form="textbox">
+						<input tabindex="1" yg_onchange="" type="text" name="border" value="0" />
+					</div>
+				</td>
+				<td class="col"></td>
+			</tr>
+			<tr>
+				<td class="col">
+					<span class="label">{$itext.TXT_ALIGNMENT|default:'$TXT_ALIGNMENT'}</span>
+				</td>
+				<td class="col">
+					<div id="dd_alignment" yg_form="dropdown" class="dropdownbox">
+						<div class="dropdown">
+							<div class="dropdowninner">
+								<input tabindex="1" id="dd_align" yg_seq="" yg_onchange="" yg_previous="" type="text"  value="" />
+							</div>
+						</div>
+						<div class="dropdownlistcontainer">
+							<div class="dropdownlist">
+								<div value="" class="selected">{$itext.TXT_NOT_SET|default:'$TXT_NOT_SET'}</div>
+								<div value="center">{$itext.TXT_CENTER|default:'$TXT_CENTER'}</div>
+								<div value="left">{$itext.TXT_LEFT|default:'$TXT_LEFT'}</div>
+								<div value="right">{$itext.TXT_RIGHT|default:'$TXT_RIGHT'}</div>
+							</div>
+							<div class="mk_scrollbars"></div>
+						</div>
+						<input name="dd_alignment" type="hidden" />
+					</div>
+				</td>
+				<td class="col"></td>
+			</tr>
+			<tr>
+				<td class="col">
+					<span class="label">{$itext.TXT_CLASS|default:'$TXT_CLASS'}</span>
+				</td>
+				<td class="col">
+					<div id="dd_class" yg_form="dropdown" class="dropdownbox">
+						<div class="dropdown">
+							<div class="dropdowninner">
+								<input tabindex="1" yg_seq="" yg_onchange="" yg_previous="" type="text"  value="">
+							</div>
+						</div>
+						<div class="dropdownlistcontainer">
+							<div class="dropdownlist">
+								<div value="" class="selected">{$itext.TXT_NOT_SET|default:'$TXT_NOT_SET'}</div>
+							</div>
+							<div class="mk_scrollbars"></div>
+						</div>
+						<input name="dd_class" type="hidden" />
+					</div>
+				</td>
+				<td class="col"></td>
+			</tr>
+			<tr>
+				<td class="col">
+					<span class="label">{$itext.TXT_WIDTH_PX|default:'$TXT_WIDTH_PX'}</span>
+				</td>
+				<td class="col">
+					<div class="textbox chars12" yg_form="textbox">
+						<input tabindex="1" yg_onchange="" type="text" name="width" value="" />
+					</div>
+				</td>
+				<td class="col"></td>
+			</tr>
+			<tr>
+				<td class="col">
+					<span class="label">{$itext.TXT_HEIGHT_PX|default:'$TXT_HEIGHT_PX'}</span>
+				</td>
+				<td class="col">
+					<div class="textbox chars12" yg_form="textbox">
+						<input tabindex="1" yg_onchange="" type="text" name="height" value="" />
+					</div>
+				</td>
+				<td class="col"></td>
+			</tr>
+		</table>		
+		
+		<table class="gridfixedspecial" cellspacing="0" cellpadding="0">
+
+		</table>		
+				
+		
+	</div>
+</div>
+</form>
+
+<!-- bottom //-->
+<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_midbottom">
+			<table class="buttontable" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="rightbutton">
+						<div class="button" tabindex="1"><a id="wid_{$win_no}_okbutton" onclick="$K.windows['wid_{$win_no}'].submit();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CONFIRM|default:'$TXT_CONFIRM'}</nobr></div></a></div>
+						<div class="button cancel" tabindex="1"><a id="wid_{$win_no}_cancelbutton" onclick="$K.windows['wid_{$win_no}'].remove();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</nobr></div></a></div>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td class="ywindow_rightbt"></td>
+	</tr>
+</table>
+<!-- end bottom //-->

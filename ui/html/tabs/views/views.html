@@ -1,0 +1,64 @@
+<div class="panelcontent">
+	<div class="mk_contentgroup" yg_multiselect="true">
+
+		<div id="wid_{$win_no}_{$page}">
+			<div id="wid_{$win_no}_{$page}_inner">
+
+				<ul yg_widget="type:sortable;accepts:view;objecttype:{if $object_permissions.RWRITE}view{else}nodrop_views{/if};callbacks:viewsSortCallbacks;" id="wid_{$win_no}_{$page}_viewlist" yg_type="{if $object_permissions.RWRITE}file{/if}" yg_property="viewlist" yg_id="{$object}-file" class="view_list objectlist" {if $object_permissions.RWRITE}yg_accepts="view" yg_reordering="false" onmouseup="$K.yg_customSortableOnDrop(this.id);"{/if}>
+					{section name=i loop=$views}
+						{if $views[i].HIDDEN==0}
+							{if $views[i].WIDTH==0}
+								{capture assign='item_width'}<span class="bracket">[</span> - <span class="bracket">]</span>{/capture}
+							{else}
+								{assign var='item_width' value=$views[i].WIDTH}
+							{/if}
+							{if $views[i].HEIGHT==0}
+								{capture assign='item_height'}<span class="bracket">[</span> - <span class="bracket">]</span>{/capture}
+							{else}
+								{assign var='item_height' value=$views[i].HEIGHT}
+							{/if}
+
+							{capture assign='item_index'}{$win_no}_{$smarty.section.i.index}{/capture}
+
+							{include file="$approot/ui/html/tabs/views/views.inc.html" object=$object item_index=$item_index item_id=$views[i].ID item_name=$views[i].NAME item_width=$item_width item_height=$item_height item_identifier=$views[i].IDENTIFIER item_viewtype=$views[i].VIEWTYPE}
+						{/if}
+					{/section}
+				</ul>
+
+			</div>
+		</div>
+		{if $object_permissions.RWRITE}
+			<div id="wid_{$win_no}_{$page}_addmarker" yg_id="{$object}-file" onmousedown="Event.stop(event);" yg_accepts="view" yg_reordering="false" yg_type="file" class="cntblockadd mk_fillcontentspace" onmouseup="$K.yg_customSortableOnDrop( 'wid_{$win_no}_{$page}_viewlist' );">
+				<div class="cntblockadd" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'VIEW_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} opener_reference: 'wid_{$win_no}_{$page}_viewlist' {literal}} }{/literal} );">
+					<div class="selectionmarker">{$itext.TXT_VIEW_ADD}</div>
+				</div>
+			</div>
+		{/if}
+	</div>
+</div>
+
+{if $refresh != 1}
+	<!-- FIXED HEADER VIEWS //-->
+	<div class="tabhead_small hoverable ywindowhead" style="display:none" onmouseover="$K.yg_showActions(this);$K.yg_ipanelHighlight($('wid_{$win_no}_ywindowinner'),'over');" onmouseout="$K.yg_ipanelHighlight($('wid_{$win_no}_ywindowinner'),'out');">
+		{if $object_permissions.RWRITE}
+			<!-- actions //-->
+			<div class="actions">
+				<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+				<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+					<div class="actionborder"></div>
+					<a onclick="$K.yg_openAddViewWindow( 'wid_{$win_no}_{$page}_viewlist', '{$page_id}-{$site_id}' );" class="add" onmouseover="$K.yg_showHelp('{$itext.TXT_VIEW_ADD}');" title="{$itext.TXT_VIEW_ADD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<div class="actionborder"></div>
+				</div>
+			</div>
+			<!-- end actions //-->
+		{/if}
+		<div class="headline1">{$itext.TXT_VIEWS|default:'$TXT_VIEWS'}</div>
+	</div>
+	<!-- END FIXED HEADER VIEWS //-->
+{/if}
+
+<script type="text/javascript" language="javascript">
+	// Prepare Prototype/Smarty Template
+	{include assign="js_template" file="$approot/ui/html/tabs/views/views.inc.html" item_index='#<<item_index>>' item_id='#<<item_id>>' item_name='#<<item_name>>' item_width='#<<item_width>>' item_height='#<<item_height>>' item_identifier='#<<item_identifier>>' item_viewtype=$smarty.const.FILE_TYPE_WEBIMAGE}
+	$K.windows['wid_{$win_no}'].jsTemplate = '{$js_template|strip|addslashes}';
+</script>

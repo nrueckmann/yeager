@@ -1,0 +1,19 @@
+<div class="mk_contentgroup" yg_multiselect="false">
+	<div id="wid_{$win_no}_{$page}">
+		<div id="wid_{$win_no}_{$page}_inner">
+			<ul id="wid_{$win_no}_{$page}_list" yg_type="site" yg_id="{$ygid}" yg_property="sitelist" class="site_list objectlist">
+				{section name=i loop=$sites}
+					{include file="$approot/ui/html/tabs/site_list/site.inc.html" item_index=$smarty.section.i.index item_id=$sites[i].ID item_name=$sites[i].NAME}
+				{/section}
+			</ul>
+		</div>
+	</div>
+</div>
+
+<!-- TAB AUTOSTART //-->
+<script language="javascript">
+	// Prepare Prototype/Smarty Templates
+	{include assign="js_template" file="$approot/ui/html/tabs/site_list/site.inc.html" item_id='#<<new_id>>' item_name='#<<new_name>>'}
+	$K.windows['wid_{$win_no}'].jsTemplate = '{$js_template|strip|addslashes}';
+</script>
+<!-- END TAB AUTOSTART //-->

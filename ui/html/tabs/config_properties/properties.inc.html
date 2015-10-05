@@ -1,0 +1,403 @@
+{if $item_index==''}{assign var='item_index' value='0'}{/if}
+	
+<li id="wid_{$win_no}_formfield_{$item_index}" class="mk_property {if $noscript}opened{else}closed{/if}" yg_type="property" yg_id="{$item_index}-property">
+	<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+		<!-- actions //-->
+		<div class="actions">
+			<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+			<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+				<div class="singleselect">
+					<div class="actionborder"></div>
+					<a class="del" onclick="Event.stop(event);$K.yg_fireAction($K.yg_deleteElement,this.up(3),event);" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_DELETE}');" title="{$itext.TXT_FORMFIELD_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<a class="up" onclick="Event.stop(event);$K.yg_sortEntry(this.up('li'),-1);" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_UP}');" title="{$itext.TXT_FORMFIELD_UP}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<a class="down" onclick="Event.stop(event);$K.yg_sortEntry(this.up('li'),1);" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_DOWN}');" title="{$itext.TXT_FORMFIELD_DOWN}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<div class="actionborder"></div>
+				</div>
+				<div class="multiselect">
+					<div class="actionborder"></div>
+					<a class="del" onclick="Event.stop(event);$K.yg_deleteElement(this.up(3));" onmouseover="$K.yg_showHelp('{$itext.TXT_FORMFIELD_DELETE}');" title="{$itext.TXT_FORMFIELD_DELETE}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+					<div class="actionborder"></div>
+				</div>
+			</div>
+		</div>	
+		<!-- end actions //-->
+		<div class="cntblock listcollaps" yg_selectable="true">
+			<a class="handler" onclick="$K.yg_listCollapsSwap(this.up(2),event);{if $item_info.TYPE=='LIST'}$K.yg_initSortable('sortlist_{$win_no}_{$item_index}');{/if}">
+				{if $item_info.TYPE == 'TEXT'}
+					{$itext.TXT_FORMFIELD_SINGLELINE|default:'$TXT_FORMFIELD_SINGLELINE'}
+				{elseif $item_info.TYPE == 'TEXTAREA'}
+					{$itext.TXT_FORMFIELD_MULTILINE|default:'$TXT_FORMFIELD_MULTILINE'}
+				{elseif $item_info.TYPE == 'LIST'}
+					{$itext.TXT_FORMFIELD_LIST|default:'$TXT_FORMFIELD_LIST'}
+				{elseif $item_info.TYPE == 'CHECKBOX'}
+					{$itext.TXT_FORMFIELD_CHECKBOX|default:'$TXT_FORMFIELD_CHECKBOX'}
+				{elseif $item_info.TYPE == 'FILE'}
+					<div class="iconfile icn"></div>{$itext.TXT_FILE|default:'$TXT_FILE'}
+				{elseif $item_info.TYPE == 'RICHTEXT'}
+					{$itext.TXT_FORMFIELD_RICHTEXT|default:'$TXT_FORMFIELD_RICHTEXT'}
+				{elseif $item_info.TYPE == 'LINK'}
+					{$itext.TXT_FORMFIELD_LINK|default:'$TXT_FORMFIELD_LINK'}
+				{elseif $item_info.TYPE == 'TAG'}
+					{$itext.TXT_TAG|default:'$TXT_TAG'}
+				{elseif $item_info.TYPE == 'CBLOCK'}
+					{$itext.TXT_CONTENTBLOCK|default:'TXT_CONTENTBLOCK'}
+							{elseif $item_info.TYPE == 'PAGE'}
+								{$itext.TXT_PAGE|default:'$TXT_PAGE'}
+							{elseif $item_info.TYPE == 'DATE'}
+								{$itext.TXT_FORMFIELD_DATE|default:'$TXT_FORMFIELD_DATE'}
+							{elseif $item_info.TYPE == 'DATETIME'}
+								{$itext.TXT_FORMFIELD_DATETIME|default:'$TXT_FORMFIELD_DATETIME'}
+							{elseif $item_info.TYPE == 'HEADLINE'}
+								{$itext.TXT_FORMFIELD_HEADLINE|default:'$TXT_FORMFIELD_HEADLINE'}
+							{elseif $item_info.TYPE == 'PASSWORD'}
+								{$itext.TXT_FORMFIELD_PASSWORD|default:'$TXT_FORMFIELD_PASSWORD'}
+				{/if}
+			</a>
+			<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_type" type="hidden" value="{$item_info.TYPE}" />
+			<div class="desc" id="wid_{$win_no}_formfield_{$item_index}_txt">{$item_info.NAME}</div>
+			<div class="collapscontent">
+				{if $item_info.TYPE=='TEXT'}
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_name" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_tsuffix" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_oldtsuffix" type="hidden" value="{$item_info.IDENTIFIER}" class="mk_tsuffix" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info.TYPE=='TEXTAREA'}
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_name" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_tsuffix" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_oldtsuffix" type="hidden" value="{$item_info.IDENTIFIER}" class="mk_tsuffix" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info.TYPE=='LIST'}
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_name" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_tsuffix" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_oldtsuffix" type="hidden" value="{$item_info.IDENTIFIER}" class="mk_tsuffix" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="col1" colspan="2">
+								<span class="label">{$itext.TXT_ENTRIES|default:'$TXT_ENTRIES'}</span>
+								<div class="textbox">
+									<div class="sortlistouter" style="height:110px;">
+										<div id="sortlist_{$win_no}_{$item_index}" class="sortlist" style="width:448px;height:110px;">										
+	
+											<div class="sortablelistcontainer" id="wid_{$win_no}_element{$item_index}_entries">
+												<div class="sortablelist" id="wid_{$win_no}_element{$item_index}_entries_inner" onmouseup="$K.yg_customSortableOnDrop(this.parentNode.id);">
+	
+													<ul yg_widget="type:sortable;accepts:entry;objecttype:entry;callbacks:formFieldListSortCallbacks;" id="wid_{$win_no}_element{$item_index}_entries_list" class="entries_list" yg_accepts="entry">
+													
+														{section name='l' loop=$item_info.LVALUES}
+															<!-- LISTELEMENT START -->														
+															<li class="entries_list_item" yg_id="{$smarty.section.l.iteration}-entry" yg_type="entry">
+																<div class="cntblockcontainersortable entries" onmouseover="$K.yg_showActions(this);">
+																	<!-- actions //-->
+																	<div class="actions">
+																		<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+																		<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+																			<div class="actionborder"></div>
+																			<a class="up" onclick="Event.stop(event);$K.yg_sortEntryUp(this.up(3));" onmouseover="$K.yg_showHelp('{$itext.TXT_ENTRY_MOVEUP}');" title="{$itext.TXT_ENTRY_MOVEUP}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																			<a class="down" onclick="Event.stop(event);$K.yg_sortEntryDown(this.up(3));" onmouseover="$K.yg_showHelp('{$itext.TXT_ENTRY_MOVEDOWN}');" title="{$itext.TXT_ENTRY_MOVEDOWN}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																			<a class="del" onclick="Event.stop(event);$K.yg_removeListEntry(this.up(3));" onmouseover="$K.yg_showHelp('{$itext.TXT_ENTRY_DEL}');" title="{$itext.TXT_ENTRY_DEL}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																			<div class="actionborder"></div>
+																		</div>
+																	</div>
+																	<!-- end actions //-->
+																	<div class="listitempage" yg_selectable="true" onclick="$K.yg_blockSelect(this,event);if(event)Event.stop(event);">
+																		<div class="title"><div id="wid_{$win_no}_listelement_{$smarty.section.l.iteration}_txt" class="mk_txt">{$item_info.LVALUES[l].VALUE}</div></div>
+																		<div style="clear:both;"></div>
+																		<input type="hidden" name="wid_{$win_no}_fld_{$item_info.ID}-ENTRIES[]" value="{$item_info.LVALUES[l].VALUE}" />
+																		<input type="hidden" name="wid_{$win_no}_fld_{$item_info.ID}-ENTRY_IDS[]" value="{$item_info.LVALUES[l].ID}" />
+																	</div>				
+																</div>
+															</li>
+															<!-- LISTELEMENT END -->														
+														{/section}
+														
+													</ul>
+
+													<ul id="wid_{$win_no}_element{$item_index}_entries_list_template" style="display:none;" class="entry_template">
+														<!-- LISTTEMPLATE START -->														
+														<li class="entries_list_item" yg_id="__ID__-entry">
+															<div class="cntblockcontainersortable entries" onmouseover="$K.yg_showActions(this);">
+																<!-- actions //-->
+																<div class="actions">
+																	<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+																	<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+																		<div class="actionborder"></div>
+																		<a class="up" onclick="$K.yg_sortEntryUp(this.up(3));" onmouseover="$K.yg_showHelp('{$itext.TXT_ENTRY_MOVEUP}');" title="{$itext.TXT_ENTRY_MOVEUP}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																		<a class="down" onclick="$K.yg_sortEntryDown(this.up(3));" onmouseover="$K.yg_showHelp('{$itext.TXT_ENTRY_MOVEDOWN}');" title="{$itext.TXT_ENTRY_MOVEDOWN}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																		<a class="del" onclick="$K.yg_removeListEntry(this.up(3));" onmouseover="$K.yg_showHelp('{$itext.TXT_ENTRY_DEL}');" title="{$itext.TXT_ENTRY_DEL}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																		<div class="actionborder"></div>
+																	</div>
+																</div>
+																<!-- end actions //-->
+																<div class="listitempage" yg_selectable="true" onclick="$K.yg_blockSelect(this,event);if(event)Event.stop(event);">
+																	<div class="title"><div id="wid_{$win_no}_listelement___ID___txt" class="mk_txt">__TITLE__</div></div>
+																	<div style="clear:both;"></div>
+																	<input type="hidden" name="wid_{$win_no}_fld_{$item_info.ID}-ENTRIES[]" value="__TITLE__" />
+																	<input type="hidden" name="wid_{$win_no}_fld_{$item_info.ID}-ENTRY_IDS[]" value="__ENTRY_ID__" />
+																</div>				
+															</div>
+														</li>
+														<!-- LISTTEMPLATE END -->														
+													</ul>
+
+												</div>
+											</div>
+											<div class="mk_scrollbars"></div>
+										</div>
+												
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="col1" colspan="2">
+								<div class="textbox" yg_form="textbox">
+									<input tabindex="1" type="text" value="{$itext.TXT_NEW_ENTRY|default:'$TXT_NEW_ENTRY'}" />
+								</div>
+								<div align="right">
+									<a class="sstdbutton" onclick="Event.stop(event);$K.yg_addEntryToEntryList(this);">{$itext.TXT_ADD_TO_LIST|default:'$TXT_ADD_TO_LIST'}</a>
+								</div>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info.TYPE=='CHECKBOX'}
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_name" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_tsuffix" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_oldtsuffix" type="hidden" value="{$item_info.IDENTIFIER}" class="mk_tsuffix" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info.TYPE=='FILE'}
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_name" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_tsuffix" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_oldtsuffix" type="hidden" value="{$item_info.IDENTIFIER}" class="mk_tsuffix" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info.TYPE=='RICHTEXT'}
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_name" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_tsuffix" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_oldtsuffix" type="hidden" value="{$item_info.IDENTIFIER}" class="mk_tsuffix" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info.TYPE=='LINK'}
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_name" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_tsuffix" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_oldtsuffix" type="hidden" value="{$item_info.IDENTIFIER}" class="mk_tsuffix" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info.TYPE=='TAG'}
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_name" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_tsuffix" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_oldtsuffix" type="hidden" value="{$item_info.IDENTIFIER}" class="mk_tsuffix" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				{elseif $item_info.TYPE=='CBLOCK'}
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_name" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_tsuffix" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+									<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_oldtsuffix" type="hidden" value="{$item_info.IDENTIFIER}" class="mk_tsuffix" />
+								</div>
+							</td>
+						</tr>
+					</table>
+							{elseif $item_info.TYPE=='PAGE'}
+								<table class="gridfixed" cellspacing="0" cellpadding="0">
+									<tr>
+										<td class="col2">
+											<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_name" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+											</div>
+										</td>
+										<td class="col2">
+											<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_tsuffix" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+												<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_oldtsuffix" type="hidden" value="{$item_info.IDENTIFIER}" class="mk_tsuffix" />
+											</div>
+										</td>
+									</tr>
+								</table>
+							{elseif $item_info.TYPE=='DATE'}
+								<table class="gridfixed" cellspacing="0" cellpadding="0">
+									<tr>
+										<td class="col2">
+											<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_name" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+											</div>
+										</td>
+										<td class="col2">
+											<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_tsuffix" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+												<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_oldtsuffix" type="hidden" value="{$item_info.IDENTIFIER}" class="mk_tsuffix" />
+											</div>
+										</td>
+									</tr>
+								</table>
+							{elseif $item_info.TYPE=='DATETIME'}
+								<table class="gridfixed" cellspacing="0" cellpadding="0">
+									<tr>
+										<td class="col2">
+											<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_name" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+											</div>
+										</td>
+										<td class="col2">
+											<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_tsuffix" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+												<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_oldtsuffix" type="hidden" value="{$item_info.IDENTIFIER}" class="mk_tsuffix" />
+											</div>
+										</td>
+									</tr>
+								</table>
+							{elseif $item_info.TYPE=='HEADLINE'}
+								<table class="gridfixed" cellspacing="0" cellpadding="0">
+									<tr>
+										<td class="col2">
+											<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_name" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+											</div>
+										</td>
+										<td class="col2">
+											<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_tsuffix" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+												<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_oldtsuffix" type="hidden" value="{$item_info.IDENTIFIER}" class="mk_tsuffix" />
+											</div>
+										</td>
+									</tr>
+								</table>
+							{elseif $item_info.TYPE=='PASSWORD'}
+								<table class="gridfixed" cellspacing="0" cellpadding="0">
+									<tr>
+										<td class="col2">
+											<span class="label">{$itext.TXT_TITLE|default:'$TXT_TITLE'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_name" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');$K.yg_updateTitle(this);" type="text" value="{$item_info.NAME}" mandatory="mandatory" />
+											</div>
+										</td>
+										<td class="col2">
+											<span class="label">{$itext.TXT_IDENTIFIER|default:'$TXT_IDENTIFIER'}</span>
+											<div class="textbox" yg_form="textbox">
+												<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_tsuffix" tabindex="1" onchange="$K.yg_setEdited(this);$K.yg_hilite('page', '{$entrymaskInfo.OBJECTID}-entrymask', 'name');" type="text" value="{$item_info.IDENTIFIER}" mandatory="mandatory" unique="unique" />
+												<input name="wid_{$win_no}_prop_{$object_type}_{$item_info.ID}_oldtsuffix" type="hidden" value="{$item_info.IDENTIFIER}" class="mk_tsuffix" />
+											</div>
+										</td>
+									</tr>
+								</table>
+				{/if}
+			</div>
+		</div>
+	</div>
+	<input name="wid_{$win_no}_properties_{$object_type}_ids[]" type="hidden" value="{$item_info.ID}" />
+</li>

@@ -1,0 +1,63 @@
+<div class="panelcontent">
+
+	<div class="mk_contentgroup usergroupgeneral" yg_multiselect="true">
+		<!-- TEXT (NAME) //-->
+		<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+			<div class="cntblock">
+				<table class="gridfixed" cellspacing="0" cellpadding="0">
+					<tr>
+						<td colspan="8" class="col1">
+							<div class="headline1">{$itext.TXT_GENERAL|default:'$TXT_GENERAL'}</div>
+							<span class="label">{$itext.TXT_PAGE_NAME|default:'$TXT_PAGE_NAME'}</span>
+							<div class="textbox" yg_form="textbox">
+								<input tabindex="1" {if !$object_permissions.RWRITE}disabled="disabled"{/if} yg_id="{$page}-usergroup" yg_type="usergroup" yg_property="name" onchange="$K.yg_setEdited(this);" type="text" name="objectname" value="{$objectInfo.NAME|escape:'html':'UTF-8'}" maxlength="64" />
+							</div>
+						</td>
+					</tr>
+				</table>
+
+
+		
+		<div id="wid_{$win_no}">
+			<div id="wid_{$win_no}_inner">
+				
+				<div id="wid_{$win_no}_list" yg_type="{if $object_permissions.RWRITE}usergroup{/if}" yg_id="{$ygid}" yg_property="yg_usergrouplist" class="usergroup_list">
+
+					<!--  HEADER -->
+					<div class="perm_line perm_line_header">
+						<div class="perm_subtitle"><span class="label">{$itext.TXT_ADMINISTRATION_PANELS|default:'$TXT_ADMINISTRATION_PANELS'}</span></div>
+						{strip}
+							<div class="perm_chkboxes">
+								<div class="mk_rread_head {if $isRORole}opacity_50{/if}">{$itext.TXT_PERM_VIEW|default:'$TXT_PERM_VIEW'}</div>
+							</div>
+						{/strip}
+					</div>
+					<!--  HEADER END -->
+					<div class="mk_innertable_container" id="wid_{$win_no}_{$page}_innertable">
+						{include file="$approot/ui/html/tabs/usergroups/usergroups_inner.inc.html"}
+					</div>
+
+				</div>
+		
+			</div>
+		</div>
+	</div>
+</div>
+			</div>
+	</div>			
+
+{if ($refresh != 1) && ($object_permissions.RWRITE)}		
+	<!-- BOTTOMLINE PERMISSIONS //-->
+	<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+		<tr>
+			<td class="ywindow_leftbt"></td>
+			<td class="ywindow_midbottom"><div class="button" tabindex="1"><a class="stdbutton"><div onclick="$K.savePermissions(this);" class="wrapper"><nobr>{$itext.TXT_SAVE|default:'$TXT_SAVE'}</nobr></div></a></div></td>
+			<td class="ywindow_rightbt"></td>			
+		</tr>
+	</table>
+	<!-- END BOTTOMLINE PERMISSIONS //-->
+{/if}
+
+<script type="text/javascript" language="javascript">
+	$K.yg_initUserPermissionsTab( '{$page}', '{$win_no}', '{if !$object_permissions.RWRITE}true{/if}', '{$maxlevels}' );
+</script>

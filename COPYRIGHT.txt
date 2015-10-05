@@ -1,0 +1,38 @@
+yeager CMS  is a Content Management System developed by Next Tuesday GmbH,
+Copyright (C) 2004-2015 Next Tuesday GmbH
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public
+License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+Attribution requirement
+
+This license does not grant any license or rights to use the trademarks
+"yeager", any "yeager" logos, or any other trademarks of Next Tuesday GmbH. You
+are not authorized to use the name yeager or the names of any author or
+contributor for publicity purposes, without written authorization.
+However, in addition to the other notice obligations of this License, all
+copies of any covered work conveyed by you must include on each user
+interface screen and in the Appropriate Legal Notices the following text:
+"Powered by yeager CMS". On user interface screens, this text must be visibly
+and clearly displayed in the title bar, status bar, or otherwise directly
+in the view that is in focus.
+
+
+Additional permission under GNU Affero GPL version 3 section 7:
+
+If you modify this Program (yeager CMS), or any covered work, by
+linking or combining it with NLSTREE Professional (or a modified
+version of that library), containing parts covered by the terms of
+the NLSTREE END USER LICENSE AGREEMENT, the licensors of this Program
+grant you additional permission to convey the resulting work.

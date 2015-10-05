@@ -1,0 +1,17 @@
+{assign var='old_level' value=-1}
+{section name='x' loop=$xml_tree}
+	{assign var='cur_level' value=$xml_tree[x].PROPS.TREE_LEVEL}
+	{if $cur_level == $old_level}
+		</node>
+	{elseif $cur_level < $old_level}
+		{assign var='rest' value=$old_level-$cur_level}
+		{section name='r' loop=$rest+1 step=-1}
+			</node>
+		{/section}
+	{/if}
+	<node id="{$xml_tree[x].PROPS.ID|escape}" caption="{$xml_tree[x].PROPS.CAPTION|escape}" url="{$xml_tree[x].PROPS.URL|escape}" ic="{$xml_tree[x].PROPS.IC|escape}" exp="{$xml_tree[x].PROPS.EXP|escape}" chk="{$xml_tree[x].PROPS.CHK|escape}" cststyle="{$xml_tree[x].PROPS.CSTSTYLE|escape}" target="{$xml_tree[x].PROPS.TARGET|escape}" title="{$xml_tree[x].PROPS.TITLE|escape}" yg_id="{$xml_tree[x].PROPS.YG_ID|escape}" yg_type="{$xml_tree[x].PROPS.YG_TYPE|escape}" yg_property="{$xml_tree[x].PROPS.YG_PROPERTY|escape}" pname="{$xml_tree[x].PROPS.PNAME|escape}" xtra="{$xml_tree[x].PROPS.XTRA|escape}" svrload="{$xml_tree[x].PROPS.SVRLOAD|escape}" dnd="{$xml_tree[x].PROPS.DND|escape}">
+	{assign var='old_level' value=$cur_level}
+{/section}
+{section name='r' loop=$cur_level+1 step=-1}
+	</node>
+{/section}

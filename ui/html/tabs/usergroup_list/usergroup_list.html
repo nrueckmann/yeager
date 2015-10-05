@@ -1,0 +1,79 @@
+{if $mode == 'details'}
+	<div class="panelcontent mk_usersgroups">
+{/if}
+
+<div class="mk_contentgroup" {if ($selectiondialog) || ($mode == 'details')}yg_multiselect="true"{/if}>
+	{if ($selectiondialog) || ($mode == 'details')}
+		<div id="wid_{$win_no}_{$page}_usergroups">
+			<div id="wid_{$win_no}_{$page}_inner" {if $object_permissions.RWRITE}onmouseup="$K.yg_customSortableOnDrop(this.parentNode.id);"{/if}>
+	{/if}
+				<ul yg_widget="type:sortable;accepts:{if (($mode == 'details') && ($object_permissions.RWRITE)) }usergroup{else}none{/if};objecttype:{if $object_permissions.RWRITE}usergroup{else}nodrop_usergroups{/if};callbacks:usergrouplistSortCallbacks;" id="wid_{$win_no}_{$page}_usergrouplist" class="{if $object_permissions.RWRITE}perm_RWRITE{/if}" yg_type="{$objecttype}" style="position: relative;" {if (($mode == 'details') && ($object_permissions.RWRITE)) }yg_accepts="usergroup"{/if} yg_id="{$yg_id}">
+					{section name='ext' loop=$usergroups}
+						{assign var='item' value=$usergroups[ext]} 
+						{include file="$approot/ui/html/tabs/usergroup_list/usergroup.inc.html"}
+					{/section}
+				</ul>
+	{if ($selectiondialog) || ($mode == 'details')}
+			</div>
+		</div>
+	{/if}
+	
+	{if ($mode == 'details') && ($object_permissions.RWRITE)}
+		<div id="wid_{$win_no}_{$page}_addmarker" yg_type="usergroup" yg_accepts="usergroup" onmousedown="Event.stop(event);" class="cntblockadd mk_nodrag mk_fillcontentspace" onmouseup="$K.yg_customSortableOnDrop('wid_{$win_no}_{$page}_usergroups');">
+			<div class="cntblockadd" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'USERGROUP_SELECT', loadparams: {literal}{{/literal} opener_reference: 'wid_{$win_no}_{$page}_usergrouplist' {literal}} }{/literal});">
+				<div class="selectionmarker">{$itext.TXT_CHOOSE_USERGROUP}</div>
+			</div>
+		</div>
+	{/if}
+	
+</div>
+
+{if $mode == 'details'}
+	</div>
+	{if $refresh != 1}
+		<!-- FIXED HEADER  //-->
+		<div class="tabhead_small hoverable ywindowhead" style="display:none" onmouseover="$K.yg_showActions(this);$K.yg_ipanelHighlight($('wid_{$win_no}_ywindowinner'),'over');" onmouseout="$K.yg_ipanelHighlight($('wid_{$win_no}_ywindowinner'),'out');">
+			{if $object_permissions.RWRITE}	  
+				<!-- actions //-->
+				<div class="actions">
+					<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+					<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+						<div class="actionborder"></div>
+						<a onclick="new $K.yg_wndobj({literal}{{/literal} config: 'USERGROUP_SELECT', loadparams: {literal}{{/literal} opener_reference: 'wid_{$win_no}_{$page}_usergrouplist' {literal}} }{/literal});" class="add" onmouseover="$K.yg_showHelp('{$itext.TXT_CHOOSE_USERGROUP}');" title="{$itext.TXT_CHOOSE_USERGROUP}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+						<div class="actionborder"></div>
+					</div>
+				</div>	
+				<!-- end actions //-->
+			{/if}	
+			<div class="headline1">{$itext.TXT_ASSIGNED_USERGROUPS|default:'$TXT_ASSIGNED_USERGROUPS'}</div>
+		</div>
+		<!-- END FIXED HEADER  //-->
+	{/if}
+{/if}
+
+{if $action == 'addrole'}
+	<!-- bottom //-->
+	<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+		<tr>
+			<td class="ywindow_leftbt"></td>
+			<td class="ywindow_midbottom">
+				<table class="buttontable" cellspacing="0" cellpadding="0">
+					<tr>
+						<td class="rightbutton">
+							<div class="button" tabindex="1"><a id="wid_{$win_no}_okbutton" onclick="$K.windows['wid_{$win_no}'].submit();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_ASSIGN|default:'$TXT_ASSIGN'}</nobr></div></a></div>
+							<div class="button cancel" tabindex="1"><a id="wid_{$win_no}_cancelbutton" onclick="$K.windows['wid_{$win_no}'].remove();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</nobr></div></a></div>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td class="ywindow_rightbt"></td>
+		</tr>
+	</table>
+	<!-- end bottom //-->
+{/if}
+
+<script type="text/javascript" language="javascript">
+	// Prepare Prototype/Smarty Template
+	{include assign="js_template" file="$approot/ui/html/tabs/usergroup_list/usergroup.inc.html" mode=$mode item=$empty_item}
+	$K.windows['wid_{$win_no}'].jsTemplate = '{$js_template|strip|addslashes}';
+</script>

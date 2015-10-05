@@ -1,0 +1,210 @@
+<div class="ipanel" yg_panel="true">
+	<div class="panelheader headline1">
+		<a class="opened">{$itext.TXT_FILES|default:'$TXT_FILES'}</a>
+		<!-- actions //-->
+		<div class="actions">
+		</div>
+		<!-- end actions //-->
+	</div>
+	<div class="panelcontent">
+		<div class="mk_contentgroup contentgroup_minheight" yg_multiselect="false">
+			{if $incoming_files|@count > 0}
+				{section name=i loop=$incoming_files}
+					{if $incoming_files[i].FOLDER}
+						<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+							<div class="actions">
+							</div>
+							<div class="listitempage">
+								<table class="listable">
+									<tr>
+										<td class="object">
+											<table class="objectable">
+												<tr>
+													<td class="iconcol"><div class="iconfolder"></div></td>
+													<td class="title">{$incoming_files[i].NAME}</td>
+												</tr>
+											</table>
+										</td>
+										<td class="trace">{section name="pi" loop=$incoming_files[i].PARENTS step=-1}{$incoming_files[i].PARENTS[pi][0].NAME}{if $smarty.section.pi.index != 0}<span class="traceicon"></span>{/if}{/section}</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					{/if}
+				{/section}
+				{section name=i loop=$incoming_files}
+					{if !$incoming_files[i].FOLDER}
+						<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+							<div class="actions">
+							</div>
+							<div class="listitempage">
+								<table class="listable">
+									<tr>
+										<td class="object">
+											<table class="objectable clickable">
+												<tr>
+													<td class="title">
+														<span  onmouseover="$K.yg_hoverFileHint('{$incoming_files[i].ID}', event);" class="filetype {$incoming_files[i].COLOR}">{$incoming_files[i].CODE}</span>
+														<span  onmouseover="$K.yg_hoverFileHint('{$incoming_files[i].ID}', event);" onclick="$K.yg_openObjectDetails('{$incoming_files[i].ID}', 'file', '{$incoming_files[i].NAME}', {literal}{{/literal}color:'{$incoming_files[i].COLOR}',typecode:'{$incoming_files[i].CODE}'{literal}}{/literal});">{$incoming_files[i].NAME}</span>
+													</td>
+												</tr>
+											</table>
+										</td>
+										<td class="trace">{section name="pi" loop=$incoming_files[i].PARENTS step=-1}{$incoming_files[i].PARENTS[pi][0].NAME}{if $smarty.section.pi.index != 0}<span class="traceicon"></span>{/if}{/section}</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					{/if}
+				{/section}
+			{else}
+				<div class="cntblockcontainernohover">
+					<div class="cntblock" onmouseup="$K.yg_customSortableOnDrop(this.up(3).id);">
+						<span class="noselection"><span class="bracketleft"></span>{$itext.TXT_NO_INCOMING_LINKS|default:'$TXT_NO_INCOMING_LINKS'}<span class="bracketright"></span></span>
+					</div>
+				</div>
+			{/if}
+		</div>
+	</div>
+</div>
+
+<div class="ipanel" yg_panel="true">
+	<div class="panelheader headline1">
+		<a class="opened">{$itext.TXT_CONTENTBLOCKS|default:'$TXT_CONTENTBLOCKS'}</a>
+		<!-- actions //-->
+		<div class="actions">
+		</div>
+		<!-- end actions //-->
+	</div>
+	<div class="panelcontent">
+		<div class="mk_contentgroup contentgroup_minheight" yg_multiselect="false">
+			{if $incoming_cos|@count > 0}
+				{section name=i loop=$incoming_cos}
+					<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+						<div class="actions">
+						</div>
+						<div class="listitempage">
+							<table class="listable">
+								<tr>
+									<td class="object">
+										<table class="objectable clickable">
+											<tr>
+												<td class="iconcol">
+													{if $incoming_cos[i].FOLDER}
+														<div class="iconfolder"></div>
+													{else}
+														<div class="iconcblock"></div>
+													{/if}
+												</td>
+												<td class="title">
+													<span onclick="$K.yg_openObjectDetails('{$incoming_cos[i].ID}', 'cblock', '{$incoming_cos[i].NAME}', 'cblock', '{$incoming_cos[i].STYLE}');">{$incoming_cos[i].NAME}</span>
+												</td>
+											</tr>
+										</table>
+									</td>
+									<td class="trace">{section name="pi" loop=$incoming_cos[i].PARENTS step=-1}{$incoming_cos[i].PARENTS[pi][0].NAME}{if $smarty.section.pi.index != 0}<span class="traceicon"></span>{/if}{/section}</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				{/section}
+			{else}
+				<div class="cntblockcontainernohover">
+					<div class="cntblock" onmouseup="$K.yg_customSortableOnDrop(this.up(3).id);">
+						<span class="noselection"><span class="bracketleft"></span>{$itext.TXT_NO_INCOMING_LINKS|default:'$TXT_NO_INCOMING_LINKS'}<span class="bracketright"></span></span>
+					</div>
+				</div>
+			{/if}
+		</div>
+	</div>
+</div>
+
+<div class="ipanel" yg_panel="true">
+	<div class="panelheader headline1">
+		<a class="opened">{$itext.TXT_PAGES|default:'$TXT_PAGES'}</a>
+		<!-- actions //-->
+		<div class="actions">
+		</div>
+		<!-- end actions //-->
+	</div>
+	<div class="panelcontent">
+		<div class="mk_contentgroup contentgroup_minheight" yg_multiselect="false">
+			{if $incoming_pages|@count > 0}
+				{section name=i loop=$incoming_pages}
+					<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+						<div class="actions">
+						</div>
+						<div class="listitempage">
+							<table class="listable">
+								<tr>
+									<td class="object">
+										<table class="objectable clickable">
+											<tr>
+												<td class="iconcol"><div class="icon{$incoming_pages[i].ICON}"></div></td>
+												<td class="title">
+													<span onclick="$K.yg_openObjectDetails('{$incoming_pages[i].ID}-{$incoming_pages[i].SITEID}', 'page', '{$incoming_pages[i].NAME}', '{$incoming_pages[i].ICON}', '{$incoming_pages[i].STYLE}');">{$incoming_pages[i].NAME}</span>
+												</td>
+											</tr>
+										</table>
+									</td>
+									<td class="trace">{$incoming_pages[i].SITENAME}{section name="pi" loop=$incoming_pages[i].PARENTS step=-1}{if $smarty.section.pi.first && ($incoming_pages[i].PARENTS|@count > 1)}: {/if}{$incoming_pages[i].PARENTS[pi][0].NAME}{if $smarty.section.pi.index != 0}<span class="traceicon"></span>{/if}{/section}</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				{/section}
+			{else}
+				<div class="cntblockcontainernohover">
+					<div class="cntblock" onmouseup="$K.yg_customSortableOnDrop(this.up(3).id);">
+						<span class="noselection"><span class="bracketleft"></span>{$itext.TXT_NO_INCOMING_LINKS|default:'$TXT_NO_INCOMING_LINKS'}<span class="bracketright"></span></span>
+					</div>
+				</div>
+			{/if}
+		</div>
+	</div>
+</div>
+
+<div class="ipanel" yg_panel="true">
+	<div class="panelheader headline1">
+		<a class="opened">{$itext.TXT_MAILINGS|default:'$TXT_MAILINGS'}</a>
+		<!-- actions //-->
+		<div class="actions">
+		</div>
+		<!-- end actions //-->
+	</div>
+	<div class="panelcontent">
+		<div class="mk_contentgroup contentgroup_minheight" yg_multiselect="false">
+			{if $incoming_mailings|@count > 0}
+				{section name=i loop=$incoming_mailings}
+					<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+						<div class="actions">
+						</div>
+						<div class="listitempage">
+							<table class="listable">
+								<tr>
+									<td class="object">
+										<table class="objectable clickable">
+											<tr>
+												<td class="iconcol"><div class="iconmailing"></div></td>
+												<td class="title">
+													<span onclick="$K.yg_openObjectDetails('{$incoming_mailings[i].ID}', 'mailing', '{$incoming_mailings[i].NAME}', 'mailing', '{$incoming_mailings[i].STYLE}');">{$incoming_mailings[i].NAME}</span>
+												</td>
+											</tr>
+										</table>
+									</td>
+									<td class="trace">{section name="pi" loop=$incoming_mailings[i].PARENTS step=-1}{$incoming_mailings[i].PARENTS[pi][0].NAME}{if $smarty.section.pi.index != 0}<span class="traceicon"></span>{/if}{/section}</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				{/section}
+			{else}
+				<div class="cntblockcontainernohover">
+					<div class="cntblock" onmouseup="$K.yg_customSortableOnDrop(this.up(3).id);">
+						<span class="noselection"><span class="bracketleft"></span>{$itext.TXT_NO_INCOMING_LINKS|default:'$TXT_NO_INCOMING_LINKS'}<span class="bracketright"></span></span>
+					</div>
+				</div>
+			{/if}
+		</div>
+	</div>
+</div>

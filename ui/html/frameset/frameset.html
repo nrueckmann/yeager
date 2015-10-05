@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<title>yeager</title>
+<link rel="icon" href="{$docabsolut}ui/img/icons/favicon.ico" type="image/png">
+{if $devmode == 'true'}
+	<link rel="stylesheet" href="{$docabsolut}ui/css/onthefly.css" type="text/css">
+	<link rel="stylesheet" href="{$docabsolut}ui/css/tabs.css" type="text/css">
+	<link rel="stylesheet" href="{$docabsolut}ui/css/main.css" type="text/css">
+	<link rel="stylesheet" href="{$docabsolut}ui/css/tabcontent.css" type="text/css">
+	<link rel="stylesheet" href="{$docabsolut}ui/css/contentblocks.css" type="text/css">
+	<link rel="stylesheet" href="{$docabsolut}ui/css/scroll.css" type="text/css">
+	<link rel="stylesheet" href="{$docabsolut}ui/css/files.css" type="text/css">
+	<link rel="stylesheet" href="{$docabsolut}ui/css/actions.css" type="text/css">
+	<link rel="stylesheet" href="{$docabsolut}ui/css/nlstree.css" type="text/css">
+	<link rel="stylesheet" href="{$docabsolut}ui/css/nlsctxmenu.css" type="text/css">
+	<link rel="stylesheet" href="{$docabsolut}ui/css/calendar.css" type="text/css">
+	<link rel="stylesheet" href="{$docabsolut}ui/css/window.css" type="text/css">
+	<link rel="stylesheet" href="{$docabsolut}ui/css/dialog.css" type="text/css">
+	<link rel="stylesheet" href="{$docabsolut}ui/css/cropper.css" type="text/css">
+{else}
+	<link rel="stylesheet" href="{$docabsolut}ui/css/styles1.min.css?r={$yeager_revision}" type="text/css">
+	<link rel="stylesheet" href="{$docabsolut}ui/css/styles2.min.css?r={$yeager_revision}" type="text/css">
+{/if}
+<script type="text/javascript" src="{$base}yeager.js"></script>
+{if $devmode != 'true'}
+	<script type="text/javascript" src="{$docabsolut}ui/js/scripts.min.js?r={$yeager_revision}"></script>
+{/if}
+</head>
+<body id="sess_{$user_session}" class="{if $browser == "firefox"}MOZ {elseif (($browser == "safari") || ($browser == "chrome"))}WEBKIT {elseif ($browser == "msie")}IE8 {/if}{if $platform == "windows"}WIN{elseif $platform == "mac"}MAC{/if}{if !$is_authenticated} unauthorized{/if}">
+	<div id="authcontainer">{include file="$approot/ui/html/frameset/authcontent.html"}</div>
+	<div id="maincontainer"></div>
+	<div id="dialogcontainer"></div>
+	<div id="logincontainer">{include file="$approot/ui/html/windows/login.html"}</div>
+	<div id="php_response"></div>
+<script>
+
+{*
+// for dev
+{literal}
+$K.yg_launchFuncs = function() {
+	$K.switchAdmin('mailings');
+}
+{/literal}
+*}
+
+{if ($preview == 1)}
+	$K.yg_launchFuncs = function() {literal}{
+		$K.yg_preview({{/literal}
+			objecttype: '{$objecttype}',
+			id: {$objectid},
+			{if ($objectsite)}site: {$objectsite},{/if}
+			{if ($objectview)}view: '{$objectview}',{/if}
+			{if ($previewversion)}version: '{$previewversion}',{/if}
+			onload: true
+		{literal}});
+	}{/literal}
+{/if}
+
+$K.currentGuiSyncHistoryId = '{$queueid}';
+
+{include assign="windowtemplate" file="$approot/ui/html/windows/window.html" win_no='#<<win_no>>' windowtype='detail' }
+{include assign="prompttemplate" file="$approot/ui/html/windows/prompt.html" win_no='#<<win_no>>' txtheadline='#<<txtheadline>>' txtcopy='#<<txtcopy>>' funcid='#<<funcid>>' prompttype='#<<prompttype>>' acknowledgetext='#<<acknowledgetext>>' canceltext='#<<canceltext>>'}
+
+$K.yg_templates["window"] = $K.yg_makeTemplate( '{$windowtemplate|strip|addslashes}' );
+$K.yg_templates["prompt"] = $K.yg_makeTemplate( '{$prompttemplate|strip|addslashes}' );
+
+</script>
+</body>
+</html>

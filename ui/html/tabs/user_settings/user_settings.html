@@ -1,0 +1,278 @@
+<form name="wid_{$win_no}_form" onsubmit="return false;">
+	<div class="dialogcontent">
+
+		<div class="ipanel" yg_panel="true">
+			<div class="panelheader headline1">
+				<a class="opened">{$itext.TXT_PROFILE|default:'$TXT_PROFILE'}</a>
+			</div>
+			<div class="panelcontent">
+					<div class="cntblockcontainernohover">
+						<div class="cntblock">
+							<table class="gridfixed" cellspacing="0" cellpadding="0">
+								<tr>
+									<td class="col2">
+										<span class="label">{$itext.TXT_COMPANY|default:'$TXT_COMPANY'}</span>
+										<div class="textbox" yg_form="textbox">
+											<input tabindex="1" onchange="$K.yg_setEdited(this);" type="text" name="wid_{$win_no}_company" id="wid_{$win_no}_company" value="{$userinfo.PROPS.COMPANY}" yg_type="user" yg_id="{$userinfo.ID}-user" yg_property="company" />
+										</div>
+									</td>
+									<td class="col2">
+										<span class="label">{$itext.TXT_DEPARTMENT|default:'$TXT_DEPARTMENT'}</span>
+										<div class="textbox" yg_form="textbox">
+											<input tabindex="1" onchange="$K.yg_setEdited(this);" type="text" name="wid_{$win_no}_department" id="wid_{$win_no}_department" value="{$userinfo.PROPS.DEPARTMENT}" yg_type="user" yg_id="{$userinfo.ID}-user" yg_property="department" />
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="col2">
+										<span class="label">{$itext.TXT_FIRSTNAME|default:'$TXT_FIRSTNAME'}</span>
+										<div class="textbox" yg_form="textbox">
+											<input tabindex="1" onchange="$K.yg_setEdited(this);" type="text" name="wid_{$win_no}_firstname" id="wid_{$win_no}_firstname" value="{$userinfo.PROPS.FIRSTNAME}" yg_type="user" yg_id="{$userinfo.ID}-user" yg_property="firstname" />
+										</div>
+									</td>
+									<td class="col2">
+										<span class="label">{$itext.TXT_LASTNAME|default:'$TXT_LASTNAME'}</span>
+										<div class="textbox" yg_form="textbox">
+											<input tabindex="1" onchange="$K.yg_setEdited(this);" type="text" name="wid_{$win_no}_lastname" id="wid_{$win_no}_lastname" value="{$userinfo.PROPS.LASTNAME}" yg_type="user" yg_id="{$userinfo.ID}-user" yg_property="lastname" />
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="col2">
+										<span class="label">{$itext.TXT_PHONE|default:'$TXT_PHONE'}</span>
+										<div class="textbox" yg_form="textbox">
+											<input tabindex="1" onchange="$K.yg_setEdited(this);" type="text" name="wid_{$win_no}_phone" id="wid_{$win_no}_phone" value="{$userinfo.PROPS.PHONE}" yg_type="user" yg_id="{$userinfo.ID}-user" yg_property="phone" />
+										</div>
+									</td>
+									<td class="col2">
+										<span class="label">{$itext.TXT_FAX|default:'$TXT_FAX'}</span>
+										<div class="textbox" yg_form="textbox">
+											<input tabindex="1" onchange="$K.yg_setEdited(this);" type="text" name="wid_{$win_no}_fax" id="wid_{$win_no}_fax" value="{$userinfo.PROPS.FAX}" yg_type="user" yg_id="{$userinfo.ID}-user" yg_property="fax" />
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="col2">
+										<span class="label">{$itext.TXT_MOBILE|default:'$TXT_MOBILE'}</span>
+										<div class="textbox" yg_form="textbox">
+											<input tabindex="1" onchange="$K.yg_setEdited(this);" type="text" name="wid_{$win_no}_mobile" id="wid_{$win_no}_mobile" value="{$userinfo.PROPS.MOBILE}" yg_type="user" yg_id="{$userinfo.ID}-user" yg_property="mobile" />
+										</div>
+									</td>
+									<td class="col2">
+										<span class="label">{$itext.TXT_WEBSITE|default:'$TXT_WEBSITE'}</span>
+										<div class="textbox" yg_form="textbox">
+											<input tabindex="1" onchange="$K.yg_setEdited(this);" type="text" name="wid_{$win_no}_website" id="wid_{$win_no}_website" value="{$userinfo.PROPS.WEBSITE}" yg_type="user" yg_id="{$userinfo.ID}-user" yg_property="website" />
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+
+					<div class="cntblockcontainer" onmouseover="$K.yg_showHelp('{$itext.TXT_UPLOAD_PROFILEPICTURE}');" title="{$itext.TXT_UPLOAD_PROFILEPICTURE}" onmouseout="$K.yg_showHelp(false);" >
+
+						<div class="mk_uploadpanel mk_uploaduserprofilepicture" style="position:absolute;height:70px;width:100%;" yg_property="wid_{$win_no}_profilepicture">
+							<div id="wid_{$win_no}_uploadbutton"></div>
+						</div>
+
+						<div class="cntblock" style="cursor:pointer;">
+							<table class="gridfixed" cellspacing="0" cellpadding="0">
+								<tr>
+									<td colspan="8" class="col1">
+										<img src="{$userpicture}" border="0" class="userpic mk_tempuserpic" />
+										<div class="selectionmarker">
+											<div class="objecthandle" style="float:left;">{$itext.TXT_UPLOAD_PROFILEPICTURE|default:'$TXT_UPLOAD_PROFILEPICTURE'}</div>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+
+			</div>
+		</div>
+
+		<div class="ipanel" yg_panel="true">
+			<div class="panelheader headline1">
+				<a class="opened">{$itext.TXT_ACCOUNT|default:'$TXT_ACCOUNT'}</a>
+			</div>
+			<div class="panelcontent">
+				<div class="cntblockcontainernohover">
+					<div class="cntblock">
+						<table class="gridfixed" cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="col2">
+									<span class="label">{$itext.TXT_EMAIL|default:'$TXT_EMAIL'}</span>
+									<div class="textbox" yg_form="textbox">
+										<input tabindex="1" onchange="$K.yg_setEdited(this);" type="text" name="wid_{$win_no}_email" id="wid_{$win_no}_email" value="{$userinfo.PROPS.EMAIL}" yg_type="user" yg_id="{$userinfo.ID}-user" yg_property="email" />
+										<input type="hidden" name="wid_{$win_no}_oldemail" value="{$userinfo.PROPS.EMAIL}" />
+									</div>
+								</td>
+								<td class="col2">
+									<span class="label">{$itext.TXT_EMAIL_CONFIRM|default:'$TXT_EMAIL_CONFIRM'}</span>
+									<div class="textbox" yg_form="textbox">
+										<input tabindex="1" onchange="$K.yg_setEdited(this);" type="text" name="wid_{$win_no}_emailconfirm" id="wid_{$win_no}_emailconfirm" value="" />
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="col2">
+									<span class="label">{$itext.TXT_PASSWORD|default:'$TXT_PASSWORD'}</span>
+									<div class="textbox" yg_form="textbox">
+										<input onchange="$K.yg_setEdited(this);" type="password" name="wid_{$win_no}_password" id="wid_{$win_no}_password" />
+									</div>
+								</td>
+								<td class="col2">
+									<span class="label">{$itext.TXT_PASSWORD_CONFIRM|default:'$TXT_PASSWORD_CONFIRM'}</span>
+									<div class="textbox" yg_form="textbox">
+										<input onchange="$K.yg_setEdited(this);" type="password" name="wid_{$win_no}_passwordconfirm" id="wid_{$win_no}_passwordconfirm" value="" />
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="ipanel" yg_panel="true" id="wid_{$win_no}_panel3">
+			<div class="panelheader headline1">
+				<a class="opened">{$itext.TXT_INTERFACE|default:'$TXT_INTERFACE'}</a>
+			</div>
+			<div class="panelcontent">
+				<table class="gridfixed" cellspacing="0" cellpadding="0">
+					<tr>
+						<td class="col4" colspan="2">
+							<span class="label">{$itext.TXT_LANGUAGE|default:'$TXT_LANGUAGE'}</span>
+							<div id="wid_{$win_no}_language" yg_form="dropdown" class="dropdownbox">
+								<div class="dropdown">
+									<div class="dropdowninner">
+										<input onchange="$K.yg_setEdited(this);" tabindex="1" type="text" value="{$userinfo.LANGUAGE}" />
+									</div>
+								</div>
+								<div class="dropdownlistcontainer">
+									<div class="dropdownlist">
+										{section name='lang' loop=$languages}
+											<div value="{$languages[lang].ID}" {if $userinfo.LANGUAGE==$languages[lang].ID}class="selected"{/if}>{$languages[lang].NAME}</div>
+										{/section}
+									</div>
+									<div class="mk_scrollbars"></div>
+								</div>
+								<input type="hidden" value="{$userinfo.LANGUAGE}" />
+							</div>
+							<input type="hidden" name="wid_{$win_no}_oldlanguage" value="{$userinfo.LANGUAGE}" />
+						</td>
+						<td class="col4" colspan="2">
+							<span class="label">{$itext.TXT_TIMEZONE|default:'$TXT_TIMEZONE'}</span>
+							<div id="wid_{$win_no}_timezone" yg_form="dropdown" class="dropdownbox">
+								<div class="dropdown">
+									<div class="dropdowninner">
+										<input onchange="$K.yg_setEdited(this);" tabindex="1" type="text" value="{$userinfo.PROPS.TIMEZONE|default:'UTC'}" />
+									</div>
+								</div>
+								<div class="dropdownlistcontainer">
+									<div class="dropdownlist">
+										{section name='tz' loop=$timezones}
+											{capture assign='idtz'}TXT_TZ_{$timezones[tz]}{/capture}
+											<div value="{$timezones[tz]}" {if $userinfo.PROPS.TIMEZONE==$timezones[tz]}class="selected"{/if}>{$itext.$idtz}</div>
+										{/section}
+									</div>
+									<div class="mk_scrollbars"></div>
+								</div>
+								<input type="hidden" value="{$userinfo.PROPS.TIMEZONE|default:'UTC'}" />
+							</div>
+							<input type="hidden" name="wid_{$win_no}_oldtimezone" value="{$userinfo.PROPS.TIMEZONE|default:'UTC'}" />
+						</td>
+					</tr>
+					<tr>
+						<td class="col4">
+							<span class="label">{$itext.TXT_DATEFORMAT|default:'$TXT_DATEFORMAT'}</span>
+							<div id="wid_{$win_no}_dateformat" yg_form="dropdown" class="dropdownbox">
+								<div class="dropdown">
+									<div class="dropdowninner">
+										<input onchange="$K.yg_setEdited(this);" tabindex="1" type="text"  value="{$userinfo.PROPS.DATEFORMAT|default:'23.02.2013'}" />
+									</div>
+								</div>
+								<div class="dropdownlistcontainer">
+									<div class="dropdownlist">
+										<div value="mm/dd/YYYY" {if $userinfo.PROPS.DATEFORMAT=='mm/dd/YYYY'}class="selected"{/if}>mm/dd/yyyy</div>
+										<div value="dd/mm/YYYY" {if $userinfo.PROPS.DATEFORMAT=='dd/mm/YYYY'}class="selected"{/if}>dd/mm/yyyy</div>
+										<div value="dd.mm.YYYY" {if $userinfo.PROPS.DATEFORMAT=='dd.mm.YYYY'}class="selected"{/if}>dd.mm.yyyy</div>
+									</div>
+									<div class="mk_scrollbars"></div>
+								</div>
+								<input type="hidden" value="{$userinfo.PROPS.DATEFORMAT|default:'dd.mm.YYYY'}" />
+							</div>
+							<input type="hidden" name="wid_{$win_no}_olddateformat" value="{$userinfo.PROPS.DATEFORMAT|default:'dd.mm.YYYY'}" />
+						</td>
+						<td class="col4">
+							<span class="label">{$itext.TXT_TIMEFORMAT|default:'$TXT_TIMEFORMAT'}</span>
+							<div id="wid_{$win_no}_timeformat" yg_form="dropdown" class="dropdownbox">
+								<div class="dropdown">
+									<div class="dropdowninner">
+										<input onchange="$K.yg_setEdited(this);" tabindex="1" type="text"  value="{$userinfo.PROPS.TIMEFORMAT|default:'24'}" />
+									</div>
+								</div>
+								<div class="dropdownlistcontainer">
+									<div class="dropdownlist">
+										<div value="24" {if $userinfo.PROPS.TIMEFORMAT=='24'}class="selected"{/if}>24h</div>
+										<div value="12" {if $userinfo.PROPS.TIMEFORMAT=='12'}class="selected"{/if}>12h</div>
+									</div>
+									<div class="mk_scrollbars"></div>
+								</div>
+								<input type="hidden" value="{$userinfo.PROPS.TIMEFORMAT|default:'24'}" />
+							</div>
+							<input type="hidden" name="wid_{$win_no}_oldtimeformat" value="{$userinfo.PROPS.TIMEFORMAT|default:'24'}" />
+						</td>
+						<td class="col4" colspan="2">
+							<span class="label">{$itext.TXT_WEEKSTART|default:'$TXT_WEEKSTART'}</span>
+							<div id="wid_{$win_no}_weekstart" yg_form="dropdown" class="dropdownbox">
+								<div class="dropdown">
+									<div class="dropdowninner">
+										<input onchange="$K.yg_setEdited(this);" tabindex="1" type="text" value="{$userinfo.PROPS.WEEKSTART|default:$itext.TXT_MONDAY}" />
+									</div>
+								</div>
+								<div class="dropdownlistcontainer">
+									<div class="dropdownlist">
+										<div value="1" {if $userinfo.PROPS.WEEKSTART=='1'}class="selected"{/if}>{$itext.TXT_MONDAY|default:'$TXT_MONDAY'}</div>
+										<div value="2" {if $userinfo.PROPS.WEEKSTART=='2'}class="selected"{/if}>{$itext.TXT_TUESDAY|default:'$TXT_TUESDAY'}</div>
+										<div value="3" {if $userinfo.PROPS.WEEKSTART=='3'}class="selected"{/if}>{$itext.TXT_WEDNESDAY|default:'$TXT_WEDNESDAY'}</div>
+										<div value="4" {if $userinfo.PROPS.WEEKSTART=='4'}class="selected"{/if}>{$itext.TXT_THURSDAY|default:'$TXT_THURSDAY'}</div>
+										<div value="5" {if $userinfo.PROPS.WEEKSTART=='5'}class="selected"{/if}>{$itext.TXT_FRIDAY|default:'$TXT_FRIDAY'}</div>
+										<div value="6" {if $userinfo.PROPS.WEEKSTART=='6'}class="selected"{/if}>{$itext.TXT_SATURDAY|default:'$TXT_SATURDAY'}</div>
+										<div value="0" {if $userinfo.PROPS.WEEKSTART=='0'}class="selected"{/if}>{$itext.TXT_SUNDAY|default:'$TXT_SUNDAY'}</div>
+									</div>
+									<div class="mk_scrollbars"></div>
+								</div>
+								<input type="hidden" value="{$userinfo.PROPS.WEEKSTART|default:'1'}" />
+							</div>
+							<input type="hidden" name="wid_{$win_no}_oldweekstart" value="{$userinfo.PROPS.WEEKSTART|default:'1'}" />
+						</td>
+					</tr>
+				</table>
+
+			</div>
+		</div>
+
+
+	</div>
+</form>
+
+<!-- bottom //-->
+<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_midbottom">
+			<table class="buttontable" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="rightbutton">
+						<div class="button" tabindex="1"><a id="wid_{$win_no}_okbutton" onclick="$K.windows['wid_{$win_no}'].submit();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_SAVE|default:'$TXT_SAVE'}</nobr></div></a></div>
+						<div class="button cancel" tabindex="1"><a id="wid_{$win_no}_cancelbutton" onclick="$K.windows['wid_{$win_no}'].remove();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</nobr></div></a></div>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td class="ywindow_rightbt"></td>
+	</tr>
+</table>
+<!-- end bottom //-->

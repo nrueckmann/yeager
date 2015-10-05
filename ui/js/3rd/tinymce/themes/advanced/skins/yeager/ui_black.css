@@ -1,0 +1,8 @@
+/* Black */
+.yeagerSkinBlack .mceToolbar .mceToolbarStart span, .yeagerSkinBlack .mceToolbar .mceToolbarEnd span, .yeagerSkinBlack .mceButton, .yeagerSkinBlack .mceSplitButton, .yeagerSkinBlack .mceSeparator, .yeagerSkinBlack .mceSplitButton a.mceOpen, .yeagerSkinBlack .mceListBox a.mceOpen {background-image:url(img/button_bg_black.png)}
+.yeagerSkinBlack table, .yeagerSkinBlack .mceMenuItemTitle a, .yeagerSkinBlack .mceMenuItemTitle span.mceText, .yeagerSkinBlack .mceStatusbar div, .yeagerSkinBlack .mceStatusbar span, .yeagerSkinBlack .mceStatusbar a {background:#535353; color:#FFF}
+.yeagerSkinBlack table.mceListBoxEnabled .mceText, yeagerSkinBlack .mceListBox .mceText {background:#FFF; border:1px solid #CBCFD4; border-bottom-color:#989FA9; border-right:0}
+.yeagerSkinBlack table.mceListBoxEnabled:hover .mceText, .yeagerSkinBlack .mceListBoxHover .mceText, .yeagerSkinBlack .mceListBoxSelected .mceText {background:#FFF; border:1px solid #FFBD69; border-right:0}
+.yeagerSkinBlack .mceExternalToolbar, .yeagerSkinBlack .mceListBox .mceText, .yeagerSkinBlack div.mceMenu, .yeagerSkinBlack table.mceLayout, .yeagerSkinBlack .mceMenuItemTitle a, .yeagerSkinBlack table.mceLayout tr.mceFirst td, .yeagerSkinBlack table.mceLayout, .yeagerSkinBlack .mceMenuItemTitle a, .yeagerSkinBlack table.mceLayout tr.mceLast td, .yeagerSkinBlack .mceIframeContainer {border-color: #535353;}
+.yeagerSkinBlack table.mceSplitButtonEnabled:hover a.mceAction, .yeagerSkinBlack .mceSplitButtonHover a.mceAction, .yeagerSkinBlack .mceSplitButtonSelected {background-image:url(img/button_bg_black.png)}
+.yeagerSkinBlack .mceMenu .mceMenuItemEnabled a:hover, .yeagerSkinBlack .mceMenu .mceMenuItemActive {background-color:#FFE7A1}

@@ -1,0 +1,86 @@
+<div class="panelcontent">
+
+	<div class="mk_contentgroup" yg_multiselect="true">
+		
+		<div id="wid_{$win_no}_{$page}">
+			<div id="wid_{$win_no}_{$page}_inner">
+				
+				<div id="wid_{$win_no}_{$page}_list" yg_type="{if $object_permissions.RWRITE}usergroup{/if}" yg_id="{$ygid}" yg_property="yg_usergrouplist" class="usergroup_list">
+
+					<!--  HEADER -->
+					<div class="perm_line perm_line_header">
+						{if $objecttype=='pages'}
+							<div class="perm_siteswitcher_container">
+								<div id="wid_{$win_no}_newsite" yg_form="dropdown" class="dropdownbox">
+									<div class="dropdown">
+										<div class="dropdowninner">
+											<input onchange="$K.yg_switchPermissionSite(this);" tabindex="1" type="text" value="{$sitename}" />
+										</div>
+									</div>
+									<div class="dropdownlistcontainer">
+										<div class="dropdownlist">
+											{section name='s' loop=$sites}
+												<div value="{$sites[s].ID}" {if $site==$sites[s].ID}class="selected"{/if}>{$sites[s].NAME}</div>
+											{/section}
+										</div>
+										<div class="mk_scrollbars"></div>
+									</div>
+									<input type="hidden" value="{$site}" />
+								</div>
+							</div>
+						{/if}
+						{strip}
+							<div class="perm_chkboxes">
+								{if $objecttype != 'system'}
+									{if $objecttype != 'usergroups'}
+										{if ($objecttype == 'pages') || ($objecttype == 'cblocks') || ($objecttype == 'mailings')}
+											<div class="mk_rstage_head">{$itext.TXT_PERM_PUBLISH|default:'$TXT_PERM_PUBLISH'}</div>
+										{/if}
+										{if $objecttype != 'mailings'}
+											<div class="mk_rsub_head">{$itext.TXT_PERM_SUB|default:'$TXT_PERM_SUB'}</div>
+										{/if}
+									{/if}
+									<div class="mk_rdelete_head">{$itext.TXT_PERM_DELETE|default:'$TXT_PERM_DELETE'}</div>
+									<div class="mk_rwrite_head">{$itext.TXT_PERM_WRITE|default:'$TXT_PERM_WRITE'}</div>
+								{/if}
+								{if ($objecttype == 'pages') || ($objecttype == 'cblocks') || ($objecttype == 'files')}
+									<div class="mk_rmoderate_head">{$itext.TXT_PERM_MODERATE|default:'$TXT_PERM_MODERATE'}</div>
+									<div class="mk_rcomment_head">{$itext.TXT_PERM_COMMENT|default:'$TXT_PERM_COMMENT'}</div>
+								{/if}
+								{if $objecttype == 'mailings'}
+									<div class="mk_rsend_head">{$itext.TXT_PERM_SEND|default:'$TXT_PERM_SEND'}</div>
+								{/if}
+								<div class="mk_rread_head {if $isRORole}opacity_50{/if}">{$itext.TXT_PERM_VIEW|default:'$TXT_PERM_VIEW'}</div>
+							</div>
+						{/strip}
+					</div>
+					<!--  HEADER END -->
+					
+					<div class="mk_innertable_container" id="wid_{$win_no}_{$page}_innertable">
+						{include file="$approot/ui/html/tabs/usergroups/usergroups_inner.inc.html"}
+					</div>
+
+				</div>
+		
+			</div>
+		</div>
+
+	</div>
+</div>
+			
+
+{if ($refresh != 1) && ($object_permissions.RWRITE)}		
+	<!-- BOTTOMLINE PERMISSIONS //-->
+	<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+		<tr>
+			<td class="ywindow_leftbt"></td>
+			<td class="ywindow_midbottom"><div class="button" tabindex="1"><a class="stdbutton"><div onclick="$K.savePermissions(this);" class="wrapper"><nobr>{$itext.TXT_SAVE|default:'$TXT_SAVE'}</nobr></div></a></div></td>
+			<td class="ywindow_rightbt"></td>			
+		</tr>
+	</table>
+	<!-- END BOTTOMLINE PERMISSIONS //-->
+{/if}
+
+<script type="text/javascript" language="javascript">
+	$K.yg_initUserPermissionsTab( '{$page}', '{$win_no}', '{if !$object_permissions.RWRITE}true{/if}', '{$maxlevels}' );
+</script>

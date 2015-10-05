@@ -1,0 +1,88 @@
+<div class="panelcontent">
+	{if $adminAllowed}
+		<div class="ipanel" yg_panel="true">
+			<div class="panelheader headline1">
+				<a class="opened">{$itext.TXT_CURRENT_VERSION|default:'$TXT_CURRENT_VERSION'}</a>
+			</div>
+			<div class="panelcontent">
+				<div class="mk_contentgroup">
+					<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+						<div class="cntblock mk_update mk_currentversion">
+							<table class="gridflex rightdesc" cellspacing="0" cellpadding="0">
+								<tr>
+									<td class="col6">
+										<span class="versioninfo">v{$current_version}</span>
+										<span class="mk_revision">{$current_revision}</span>
+									</td>
+									<td class="mk_versiondate">{$current_date|date_format_php:$itext.DATE_FORMAT}</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ipanel" yg_panel="true">
+			<div class="panelheader headline1">
+				<a class="opened">{$itext.TXT_AVAILABLE_UPDATES|default:'$TXT_AVAILABLE_UPDATES'}</a>
+			</div>
+			<div class="panelcontent">
+				<div class="mk_contentgroup">
+					{section name='u' loop=$updates}
+						<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+							<div class="cntblock mk_update" update_url="{$updates[u].URL}">
+								<table class="gridflex rightdesc" cellspacing="0" cellpadding="0">
+									<tr>
+										<td class="col6">
+											<span class="versioninfo">v{$updates[u].VERSION}</span>
+											<span class="mk_revision">{$updates[u].REVISION}</span>
+										</td>
+										<td class="col6 mk_versiondate">{* {$updates[u].DATE|date_format_php:$itext.DATE_FORMAT} *}</td>
+										<td>
+											<span class="versioninfo">{$updates[u].TITLE}</span>
+											{$updates[u].DESCRIPTION|nl2br}
+											<!-- stati: cancelled, skipped, inprogress !-->
+											<div class="status_info" yg_type="update" yg_id="22-update" yg_property="statusinfo">
+												<div class="status">
+													<span class="status_text_inprogress">{$itext.TXT_UPDATER_INSTALLING|default:'$TXT_UPDATER_INSTALLING'}</span><span class="mailing_processing"></span>
+													<span class="status_text_cancelled">{$itext.TXT_UPDATER_INSTALLATION_ERROR|default:'$TXT_UPDATER_INSTALLATION_ERROR'}</span>
+													<span class="status_text_installed">{$itext.TXT_UPDATER_SUCCESSFULLY_INSTALLED|default:'$TXT_UPDATER_SUCCESSFULLY_INSTALLED'}</span>
+													<span class="status_text_skipped">{$itext.TXT_UPDATER_SKIPPED|default:'$TXT_UPDATER_SKIPPED'}</span>
+												</div>
+												<div class="progressbar">
+													<div class="progress" style="width:0%;"></div>
+												</div>
+												<span class="status_functions">
+													<div onclick="Event.stop(event);$K.yg_installUpdate(this);" class="bt_install selectionmarker">{$itext.TXT_INSTALL|default:'$TXT_INSTALL'}</div>
+												</span>
+												<iframe style="display:none;" src="about:blank"></iframe>
+											</div>
+
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					{sectionelse}
+						{*
+						<table class="gridflex" cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="col1">
+									<div class="selectionmarker">
+										<div class="titlenoicon"><span class="titlecnt"></span></div>
+									</div>
+								</td>
+							</tr>
+						</table>
+						*}
+						<div class="cntblockcontainernohover">
+							<div class="cntblock">
+								<span class="noselection"><span class="bracketleft"></span>{$itext.TXT_NO_UPDATES_AVAILABLE|default:'$TXT_NO_UPDATES_AVAILABLE'}<span class="bracketright"></span></span>
+							</div>
+						</div>
+					{/section}
+				</div>
+			</div>
+		</div>
+	{/if}
+</div>

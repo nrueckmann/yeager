@@ -1,0 +1,97 @@
+<div class="mk_contentgroup">
+	<ul class="mk_uploadpanel" id="wid_{$win_no}_filestoupload" style="position:relative;"></ul>
+
+	<ul id="wid_{$win_no}_filestoupload_template" style="display:none;">
+		{include file="$approot/ui/html/tabs/upload/upload.inc.html" item_id='__TEMPLATEID__' item_index='__TEMPLATEINDEX__' item_name='__TEMPLATENAME__' presel_id=0}
+	</ul>
+</div>
+<div class="cntblockadd mk_uploadlist">
+	<div class="cntblockadd">
+		<div class="selectionmarker_dummy">{$itext.TXT_FILE_ADD}</div>
+		<div style="position:relative;">
+			<div style="width:100%;position:absolute;left:0px;">
+				<div class="selectionmarker">{$itext.TXT_FILE_ADD}</div>
+			</div>
+			<div id="wid_{$win_no}_addfilebutton" class="cntblockadd"></div>
+		</div>
+		<div id="wid_{$win_no}_addfilebutton_template" style="display:none;">
+			<div class="cntblockadd"></div>
+		</div>
+	</div>
+</div>
+
+<!-- bottom //-->
+<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_midbottom">
+			<table class="buttontable" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="rightbutton">
+						<div class="button" tabindex="1"><a id="wid_{$win_no}_okbutton" onclick="$K.windows['wid_{$win_no}'].submit();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_UPLOAD|default:'$TXT_UPLOAD'}</nobr></div></a></div>
+						<div class="button cancel" tabindex="1"><a id="wid_{$win_no}_cancelbutton" onclick="$K.windows['wid_{$win_no}'].remove();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</nobr></div></a></div>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td class="ywindow_rightbt"></td>
+	</tr>
+</table>
+<!-- end bottom //-->
+
+<!-- DIALOGSPECIAL-BOTTOM //-->
+<div class="ywindowspecialbottom" id="wid_{$win_no}_dialogbottom">
+	<table cellspacing="0" cellpadding="0" class="windowtable" border="0">
+		<tr>
+			<td class="ywindow_leftbt"></td>
+			<td class="ywindow_cutbt"></td>
+			<td class="ywindow_rightbt"></td>
+		</tr>
+		<tr>
+			<td class="ywindow_leftbt"></td>
+			<td class="ywindow_midbt">
+
+					<div class="cntblock">
+						<table class="gridflex" cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="col2" style="width: 60%;">
+									<span class="label">{$itext.TXT_NAME|default:'$TXT_NAME'}</span>
+									<div class="textbox" yg_form="textbox">
+										<input tabindex="1" type="text" value="" maxlength="60" id="wid_{$win_no}_filetitle" />
+									</div>
+								</td>
+								<td class="col2" style="width: 40%;">
+									<span class="label">{$itext.TXT_FILETYPE|default:'$TXT_FILETYPE'}</span>
+									<div id="wid_{$win_no}_filetype" class="dropdownbox" yg_form="dropdown">
+										<div class="filetypeflag" onmousedown="$K.yg_clickindropdown[this.up(0).id]=true;$K.yg_dropdownClick(this.up());$K.yg_formHover(this.next().down(1),'dropdownclick','dropdownbox');"><div class="typewrapper"><span class="filetype black"> </span></div></div>
+										<div class="dropdown">
+											<div class="dropdowninner">
+												<input tabindex="1" yg_seq="{$win_no}" yg_previous="{$dd_selected_value}" type="text"  value="{$itext.TXT_AUTOMATIC|default:'$TXT_AUTOMATIC'}">
+											</div>
+										</div>
+										<div class="dropdownlistcontainer">
+											<div class="dropdownlist">
+												<div value="automatic" class="selected">{$itext.TXT_AUTOMATIC|default:'$TXT_AUTOMATIC'}</div>
+												{section name=id loop=$filetypes}
+													{if $filetypes[id].ID neq "8"}
+														<div value="{$filetypes[id].ID}"><div class="filetypeflag"><div class="typewrapper"><span class="filetype {$filetypes[id].COLOR}">{$filetypes[id].CODE}</span></div></div>{if $filetypes[id].IDENTIFIER == 'DEFAULT'}{$itext.TXT_DEFAULT_FILETYPE|default:'$TXT_DEFAULT_FILETYPE'}{else}{$filetypes[id].NAME}{/if}</div>
+													{/if}
+												{/section}
+											</div>
+
+											<div class="mk_scrollbars"></div>
+										</div>
+										<input type="hidden">
+									</div>
+								</td>
+
+							</tr>
+						</table>
+					</div>
+
+			</td>
+			<td class="ywindow_rightbt"></td>
+		</tr>
+	</table>
+</div>
+<!-- ENDE DIALOGSPECIAL BOTTOM //-->

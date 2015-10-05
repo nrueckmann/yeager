@@ -1,0 +1,61 @@
+	<table cellspacing="0" cellpadding="0" class="ywindowfilter">
+		<tr>
+			<td class="ywindow_left"></td>
+			<td class="ywindow_midborder"><div class="whitecorner"></div></td>
+			<td class="ywindow_right"></td>
+		</tr>
+		<tr>
+			<td class="ywindow_left"></td>
+			<td class="ywindow_mid">
+				<table cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<td width="25%">
+							<div class="filestatus">
+								<span style="display:none;">
+									<strong id="wid_{$win_no}_objcnt_filtered"></strong> /
+								</span>
+								<strong id="wid_{$win_no}_objcnt">{$usercount}</strong> {$itext.TXT_USERS|default:'$TXT_USERS'}
+							</div>
+						</td>
+						<td width="10%"></td>
+						<td width="25%">
+							<div class="dropdownbox searchbox">
+								<input class="preset" id="wid_{$win_no}_search" data-preset="{$itext.TXT_FIND|default:'$TXT_FIND'}" type="text" onkeyup="$K.yg_changeUserSearch(this,event);" onfocus="$K.yg_focusUserSearch(this,event);" onblur="$K.yg_blurUserSearch(this,event);" tabindex="1" value="{$itext.TXT_FIND|default:'$TXT_FIND'}" />
+							</div>
+						</td>
+						<td width="40%">
+							<div id="wid_{$win_no}_userlistfilter" yg_form="dropdown" class="dropdownbox">
+								<div class="dropdown">
+									<div class="dropdowninner">
+										<input yg_seq="{$win_no}" onchange="$K.yg_resetUserSearch($('wid_{$win_no}_search'),event);$K.yg_changeUserFilter(this,event);" type="text" tabindex="1" value="" />
+									</div>
+								</div>
+								<div class="dropdownlistcontainer">
+									<div class="dropdownlist">
+										<div value="0" {if $newRole==0}class="selected"{/if}>{$itext.TXT_ALL_USERS|default:'$TXT_ALL_USERS'}</div>
+										<div value="-1" {if $newRole==-1}class="selected"{/if}>{$itext.TXT_ALL_USERS_WO_GROUPS|default:'$TXT_ALL_USERS_WO_GROUPS'}</div>
+										{section name='r' loop=$roles}
+											<div value="{$roles[r].ID}" {if $newRole==$roles[r].ID}class="selected"{/if}>{$roles[r].NAME}</div>
+										{/section}
+									</div>
+									<div class="mk_scrollbars"></div>
+								</div>
+								<input type="hidden" value="listview">
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td class="ywindow_right"></td>
+		</tr>
+		<tr>
+			<td class="ywindow_leftbt"></td>
+			<td class="ywindow_midborder"><div class="whitecorner"></div></td>
+			<td class="ywindow_rightbt"></td>
+		</tr>
+		<tr>
+			<td class="ywindow_leftbt"></td>
+			<td class="ywindow_spacemid"></td>
+			<td class="ywindow_rightbt"></td>
+		</tr>
+	</table>

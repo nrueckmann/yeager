@@ -1,0 +1,38 @@
+<li id="wid_{$win_no}_item_{$item_index}" yg_id="{$item_id}-tag" yg_property="name" yg_type="tag" ondblclick="$K.yg_openObjectDetails('{$item_id}', 'tag', '{$item_name}');" class="mk_tag listitem {if $object_permissions.READONLY}mk_nowrite{/if}">
+	<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+		{if $object_permissions.RWRITE}
+			<!-- actions //-->
+			<div class="actions">
+				<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+				<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+					<div class="singleselect">
+						<div class="actionborder"></div>
+						<a onmouseover="$K.yg_showHelp('{$itext.TXT_TAG_DELETE}');" title="{$itext.TXT_TAG_DELETE}" onclick="$K.yg_fireAction($K.yg_deleteElement,this.up(4),event);" class="del" onmouseout="$K.yg_showHelp(false);"></a>
+						<div class="actionborder"></div>
+					</div>
+					<div class="multiselect">
+						<div class="actionborder"></div>
+						<a onmouseover="$K.yg_showHelp('{$itext.TXT_TAGS_DELETE}');" title="{$itext.TXT_TAGS_DELETE}" onclick="$K.yg_fireAction($K.yg_deleteElement,this.up(4),event);" class="del" onmouseout="$K.yg_showHelp(false);"></a>
+						<div class="actionborder"></div>
+					</div>
+				</div>
+			</div>
+		{/if}
+		<!-- end actions //-->	   	
+		<div id="wid_{$win_no}_item_{$item_index}_selector" class="listitempage" yg_selectable="true">
+			<table class="listable">
+				<tr>
+					<td class="object">
+						<table class="objectable">
+							<tr>
+								<td class="iconcol"><div id="wid_{$win_no}_item_{$item_index}_icn" class="icontag icn"></div></td>
+								<td id="wid_{$win_no}_item_{$item_index}_txt" class="title txt">{$item_name}</td>																								
+							</tr>
+						</table>
+					</td>
+					<td class="trace">{$item_trace}</td>
+				</tr>
+			</table>	
+		</div>						   		   	
+	</div>		
+</li>

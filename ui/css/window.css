@@ -1,0 +1,1463 @@
+/********************************************************************/
+/* window styles													*/
+/********************************************************************/
+
+.ywindow {
+	position: relative;
+	width: 50px;
+	visibility: hidden;
+}
+.ywindow .noicon .odrag {
+	display: none;
+}
+.ywindow .odrag {
+	width: 40px;
+	height: 40px;
+	margin-left: -40px;
+	margin-top: -11px;
+	position: absolute;
+}
+.windowtable,
+.windowtablecnt,
+.windowtabletree {
+	table-layout: fixed;
+	width: 100%;
+	border-spacing: 0px;
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}
+.mk_horizontal .ywindow {
+	margin-top: 24px;
+}
+.mk_horizontal .ywindow+.klops+.ywindow,
+.mk_horizontal .ywindow+.klops+.ywindow+.klops {
+	clear:both;
+	margin-top: 3px;
+}
+.windowtablecnt {
+	margin-top: -2px;
+}
+.tabscontainer {
+	width: 100%;
+	height: 24px;
+}
+.hidetabs .tabscontainer {
+	visibility: hidden;
+}
+.ydialog.hidetabs .tabscontainer,
+.mk_horizontal .hidetabs .tabscontainer {
+	height: 0px;
+}
+.ywindow.hidetabs .ywindow_tltabs {
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -214px 0px;
+}
+.column2filter .ywindow_left,
+.column2filter .ywindow_right,
+.column2filter .ywindow_leftbt,
+.column2filter .ywindow_rightbt {
+	display: none !important;
+}
+.ywindow .cntmain {
+	display: block;
+	clear: both;
+	width: 100%;
+	background-color: #FFFFFF;
+	text-align: left;
+}
+.ywindow .cntmain .container {
+	background-position: bottom left;
+	background-repeat: repeat-y;
+	color: #3d3d3d;
+}
+.ywindow .cntmain .container .ywindowouter {
+	height: 100%;
+	overflow: hidden;
+	position: relative;
+}
+.ywindow .cntmain .container .ywindowinnerie {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0px;
+}
+.ywindow .cntmain .container .ywindowinner {
+	height: 100%;
+	background-color: #f4f4f0;
+	overflow: hidden;
+	position: relative;
+}
+.ywindow .cntmain .container .innercontent {
+	position: absolute;
+	min-width: 100%;
+	min-height: 100%;
+}
+
+.ywindow_tl {
+	width: 13px;
+	height: 39px;
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -214px 0px;
+}
+.ywindow_tltabs {
+	width: 13px;
+	height: 39px;
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -297px 0px;
+}
+.ywindow_tm,
+.ywindow_bt,
+.ywindow_btl,
+.ywindow_bts,
+.mk_horizontal .klops {
+	cursor: default;
+	height: 39px;
+	font-family: Arial;
+	text-align: left;
+	font-size: 13px;
+	color: #242824;
+	line-height: 16px;
+	background-image: url(../img/window/window_horizontal.png);
+	background-position: 0px -167px;
+
+}
+a.folder {
+	display: none;
+}
+.mk_folder .ywindow_bt a,
+.mk_folder .ywindow_btl a,
+.mk_trashcan .ywindow_bt a,
+.mk_trashcan .ywindow_btl a {
+	display: none !important;
+}
+.mk_folder .ywindow_bt a.upload,
+.mk_folder .ywindow_btl a.upload {
+	display: block !important;
+}
+.boxghost .mk_folder .ywindow_bt a.upload {
+	display: none !important;
+}
+.ywindow_bt {
+	width: 26px;
+}
+.ywindow_btl {
+	width: 46px;
+}
+.ywindow_bts {
+	width: 10px;
+}
+.ywindow_tr {
+	width: 23px;
+	height: 39px;
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -227px 0px;
+}
+.ywindow_tr_clean {
+	width: 23px;
+	height: 39px;
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -155px 0px;
+}
+.ywindow_tr:hover {
+	background-position: -251px 0px;
+}
+.ywindow_tr a.close {
+	display: block;
+	width: 28px;
+	height: 24px;
+	background-image:none;
+}
+.ywindow_tr a.close:hover {
+	cursor: pointer;
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -114px 0px;
+}
+.ywindow_tr a.disabled:hover {
+	background-image: none;
+	cursor: default;
+}
+.ywindow_tr a.min {
+	display: block;
+	width: 28px;
+	height: 21px;
+	background-image:none;
+}
+.ywindow_tr a.min:hover {
+	cursor: pointer;
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -114px -24px;
+}
+.ywindowfilter,
+.ywindowfiltercolumn2 {
+	width: 100%;
+}
+.ywindowfilter .dropdownbox,
+.ywindowfiltercolumn2 .dropdownbox {
+	margin-bottom: 0px;
+	padding: 2px;
+}
+.ywindowfilter .dropdownbox.searchbox,
+.ywindowfiltercolumn2 .dropdownbox.searchbox {
+	padding-right: 6px;
+}
+.ywindowfilter .dropdownbox.searchbox input.preset,
+.ywindowfiltercolumn2 .dropdownbox.searchbox input.preset {
+	font-style: italic;
+	color: #cccccc;
+}
+.ywindowfilter .dropdownbox.searchbox input:focus,
+.ywindowfiltercolumn2 .dropdownbox.searchbox input:focus {
+	background-color: #e6feff;
+	color: #3e686f;
+}
+.WEBKIT .ywindowfilter .dropdownbox.searchbox input,
+.WEBKIT .ywindowfiltercolumn2 .dropdownbox.searchbox input {
+	height: 13px;
+	padding-bottom: 1px;
+}
+.ywindowfilter .dropdown,
+.ywindowfiltercolumn2 .dropdown {
+	padding-bottom: 0px;
+}
+.ywindowfilter .ywindow_mid td,
+.ywindowfiltercolumn2 .ywindow_mid td {
+	padding: 1px;
+	border: none;
+}
+.WEBKIT .ywindowfilter .dropdowninner input,
+.WEBKIT .ywindowfiltercolumn2 .dropdowninner input {
+	padding-right: 0px;
+}
+.klops {
+	display: none;
+	float: left;
+	margin-top: 23px;
+	margin-left: -1px;
+	width: 68px;
+	height: 54px;
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -500px 0px;
+}
+.klops:hover {
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -565px 0px;
+	cursor: pointer;
+}
+.mk_horizontal .klops {
+	height: 54px;
+	padding-right: 30px;
+	background-repeat: no-repeat;
+	background-image: url(../img/window/window_horizontal.png);
+	background-position: right -857px;
+}
+.mk_horizontal .klops:hover {
+	background-position: right -911px;
+}
+.mk_horizontal .klops .wrapperouter {
+	padding-left: 15px;
+	background-repeat: no-repeat;
+	background-image: url(../img/window/window_horizontal.png);
+	background-position: 0px -803px;
+}
+.mk_horizontal .klops .wrapper {
+	background-image: url(../img/window/window_horizontal.png);
+	background-position: 0px -630px;
+	background-repeat: repeat-x;
+	width: 100%;
+	margin-right: 15px;
+	height: 54px;
+}
+.mk_horizontal .klops .wrapper div {
+	padding-top: 15px;
+	padding-left: 1px;
+}
+.mk_horizontal .klops .wrapper div.noicon {
+	font-size: 14px;
+	padding-top: 18px;
+}
+#winmanager {
+	display: none;
+	height: 23px;
+	width: 21px;
+	margin-left: 4px;
+	margin-top: 4px;
+	float: right;
+	background-image: url(../img/bottom/bottom.png);
+	background-position: 0px -54px;
+}
+#winmanager .taskbutton {
+	width: 21px;
+	height: 23px;
+	background-image: url(../img/bottom/bottom.png);
+	background-position: 0px -77px;
+}
+#winmanager .taskbutton:hover {
+	background-position: -21px -77px;
+	cursor: pointer;
+}
+#bottomline .klops {
+	display: block;
+	visibility: hidden;
+	float: right;
+	margin-top: 4px;
+	width: 182px;
+	height: 23px;
+	overflow: hidden;
+	font-family: Arial;
+	margin-left: 4px;
+	font-size: 11px;
+	color: #9bb397;
+	text-align: left;
+	background-image: url(../img/bottom/bottom.png);
+	background-position: 0px -30px;
+}
+#bottomline .klops:hover {
+	color: #c6ffde;
+	cursor: pointer;
+}
+.WEBKIT #bottomline .klops span {
+	display: inline-block;
+
+}
+.ywindow_tm .noicon,
+.ywindow_tm .page,
+.ywindow_tm .extpage,
+.ywindow_tm .extcblock,
+.ywindow_tm .extfile,
+.ywindow_tm .extmailing,
+.ywindow_tm .extimport,
+.ywindow_tm .extexport,
+.ywindow_tm .extcolistview,
+.ywindow_tm .pageinactive,
+.ywindow_tm .pagehidden,
+.ywindow_tm .pagehiddeninactive,
+.ywindow_tm .pagesoftsync,
+.ywindow_tm .file,
+.ywindow_tm .folder,
+.ywindow_tm .trashcan,
+.ywindow_tm .extensions,
+.ywindow_tm .navigator,
+.ywindow_tm .insertcontent,
+.ywindow_tm .contentblock,
+.ywindow_tm .cblock,
+.ywindow_tm .tag,
+.ywindow_tm .data,
+.ywindow_tm .comments,
+.ywindow_tm .mailing,
+.ywindow_tm .template,
+.ywindow_tm .entrymask,
+.ywindow_tm .navigation,
+.ywindow_tm .system,
+.ywindow_tm .user,
+.ywindow_tm .usergroup,
+.ywindow_tm .updates,
+.ywindow_tm .site {
+	margin-left: -2px;
+	margin-top: 10px;
+	padding-left: 32px;
+	padding-top: 7px;
+	min-height: 28px;
+	overflow: hidden;
+	background-repeat: no-repeat;
+	background-position: left top;
+	background-image: url(../img/icons/icons.png);
+}
+.ywindow_tm .extpage,
+.ywindow_tm .extcblock,
+.ywindow_tm .extfile,
+.ywindow_tm .extmailing,
+.ywindow_tm .extimport,
+.ywindow_tm .extexport,
+.ywindow_tm .extcolistview {
+	background-image: none;
+}
+.ywindow_tm .noicon {
+	background-image: none;
+}
+
+.ywindow_tm .extpage,
+.ywindow_tm .extcblock,
+.ywindow_tm .extfile,
+.ywindow_tm .extmailing,
+.ywindow_tm .extimport,
+.ywindow_tm .extexport,
+.ywindow_tm .extcolistview {
+	margin-top: 4px;
+	padding-left: 4px;
+	margin-bottom: 6px;
+}
+.ywindow_tm .iconextension {
+	float: left;
+}
+.ywindow_tm .extpage .title,
+.ywindow_tm .extcblock .title,
+.ywindow_tm .extfile .title,
+.ywindow_tm .extmailing .title,
+.ywindow_tm .extimport .title,
+.ywindow_tm .extexport .title,
+.ywindow_tm .extcolistview .title {
+	float: left;
+	padding-left: 6px;
+	padding-top: 0px;
+	margin-top: 6px;
+}
+.ywindow_tm .file {
+	padding-left: 4px;
+}
+.ywindow_tm .noicon {
+	font-size: 14px;
+	padding-left: 4px;
+	padding-top: 7px;
+}
+.klops .cblock,
+.klops .page,
+.klops .pageinactive,
+.klops .pagehidden,
+.klops .pagehiddeninactive,
+.klops .pagehiddeninactivesoftsync,
+.klops .pagehiddensoftsync,
+.klops .pageinactivesoftsync,
+.klops .pagesoftsync,
+.klops .file,
+.klops .folder,
+.klops .trashcan,
+.klops .extensions,
+.klops .mailing,
+.klops .navigator,
+.klops .insertcontent,
+.klops .tag,
+.klops .data,
+.klops .comments,
+.klops .template,
+.klops .entrymask,
+.klops .navigation,
+.klops .user,
+.klops .usergroup,
+.klops .updates,
+.klops .system,
+.klops .site {
+	margin-left: 12px;
+	margin-top: 11px;
+	width: 28px;
+	height: 28px;
+	background-image: url(../img/icons/icons.png);
+}
+#bottomline .klops div {
+	display: block;
+	overflow: hidden;
+	background-repeat: no-repeat;
+	background-position: left;
+	text-align: left;
+	margin-left: 2px;
+	margin-top: 3px;
+	padding-left: 22px;
+	padding-top: 2px;
+	width: 154px;
+	height: 14px;
+	white-space: nowrap;
+}
+.ywindow_tm .title,
+.ywindow_tm .title.changed,
+.ywindow_tm .title.nowrite {
+	display: inline;
+}
+.lockicon {
+	cursor: pointer;
+	width: 16px;
+	height: 16px;
+	margin-bottom: -3px;
+	margin-left: 7px;
+	display: none;
+	/*background-image: url(../img/window/ywindow_lock.png);*/
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -910px  -57px;
+}
+.mk_lock .lockicon {
+	display: inline-block;
+}
+.ywindow_tm .filetype {
+	display: inline-block;
+	margin-right: 4px;
+	font-size: 12px;
+	width: 40px;
+	line-height: 14px;
+	height: auto;
+}
+.ywindow_tm .typewrapper {
+	display: inline-block;
+}
+.ywindow_tm .title.nowrite,
+.ydialog .ywindow_tm .title.changed.nowrite,
+.mk_lock .ywindow_tm .title,
+.ydialog.mk_lock .ywindow_tm .title.changed {
+	font-style: italic;
+	color: #6c7369;
+}
+.ydialog .ywindow_tm .title.nowrite,
+.ydialog.mk_lock .ywindow_tm .title {
+	color: #c4ddbf;
+}
+.ywindow_tm .title.changed {
+	width: 100%;
+	padding-bottom: 1px;
+	padding-top: 1px;
+	background-color: #e1ff85;
+}
+.ywindow_tm .changed {
+	background-color: #e1ff85;
+}
+.ywindow_left,
+.ywindow_leftbt {
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -175px 0px;
+	width: 15px;
+}
+.ywindow_right,
+.ywindow_rightbt {
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -190px 0px;
+	width: 25px;
+}
+
+.boxghost .scrollbar_v,
+.boxghost .scrollbar_h {
+	display: none !important;
+}
+.ywindow_midborder {
+	background-color: #B8B9B3;
+	background-image: url(../img/window/window_horizontal.png);
+	background-position: -1px -998px;
+	background-repeat: no-repeat;
+	height: 1px;
+}
+.whitecorner {
+	width: 1px;
+	height: 1px;
+	background-color: #fefef7;
+	overflow: hidden;
+}
+.ywindow_mid,
+.ywindow_midbt,
+.ywindow_cutbt,
+.ywindow_column2 {
+	border-left: 1px solid #B8B9B3;
+	border-right: 1px solid #B8B9B3;
+	background-color: #fefef7;
+}
+.ywindow_mid {
+	background-color: #f4f4f0;
+}
+.ywindow_midnoborder {
+	background-color: #fefef7;
+}
+.ywindow_tmid {
+	background-color: #fefef7;
+}
+.ywindow_spacemid {
+	height: 5px;
+	background-color: #fefef7;
+}
+.ydialog .ywindow_spacemid {
+	background-color: #1c241a;
+}
+.ywindow_midbottom {
+	background-color: #fefef7;
+	height: 29px;
+}
+.ywindow_bleft {
+	background-image: url(../img/window/window_vertical.png);
+	width: 15px;
+	height: 16px;
+	background-repeat: no-repeat;
+	background-position: -274px 0px;
+}
+.ywindow_bmid {
+	background-image: url(../img/window/window_horizontal.png);
+	height: 16px;
+	background-position: 0px -150px;
+	background-repeat: repeat-x;
+}
+.ywindow_bright {
+	background-image: url(../img/window/window_vertical.png);
+	width: 25px;
+	height: 16px;
+	background-repeat: no-repeat;
+	background-position: -274px -17px;
+}
+.ywindow a.dragbox {
+	display: block;
+	width: 12px;
+	height: 13px;
+	cursor: w-resize;
+	overflow:hidden;
+}
+.ywindow.ydialog a.dragbox {
+	cursor: se-resize;
+}
+.ywindow .resizeghost {
+	position: absolute;
+	border: dotted #262626 1px;
+	z-index: 100000;
+	left: 0px;
+	top: 0px;
+}
+.ywindow_vertcut {
+	background-color: #fefef7;
+	width: 13px;
+}
+.ywindow_vertcut div {
+	z-index: 200;
+	display: block;
+	cursor: ew-resize;
+	background-image: url(../img/window/window_vertical.png);
+	background-repeat: repeat-y;
+	background-position: -875px 0px;
+	width: 13px;
+	position: relative;
+}
+.ywindow_column2,
+.ywindow_midnoborder {
+	background-color: #fefef7;
+}
+
+
+/********************************************************************/
+/* icons															*/
+/********************************************************************/
+
+.ywindow_tm .page,
+.sectionbox .page,
+.klops .page {
+	background-position: 0px -1080px;
+}
+.ywindow_tm .mailing,
+.sectionbox .mailing,
+.klops .mailing {
+	background-position: 0px -1115px;
+}
+.ywindow_tm .pageinactive,
+.klops .pageinactive {
+	background-position: 0px -1220px;
+}
+
+.ywindow_tm .pagehidden,
+.klops .pagehidden {
+	background-position: 0px -1150px;
+}
+.ywindow_tm .pagehiddeninactive,
+.klops .pagehiddeninactive {
+	background-position: 0px -1290px;
+}
+.ywindow_tm .pagehiddeninactivesoftsync,
+.klops .pagehiddeninactive {
+	background-position: 0px -1325px;
+}
+.ywindow_tm .pagehiddensoftsync,
+.klops .pagehiddeninactive {
+	background-position: 0px -1185px;
+}
+.ywindow_tm .pageinactivesoftsync,
+.klops .pagehiddeninactive {
+	background-position: 0px -1255px;
+}
+.ywindow_tm .pagesoftsync,
+.klops .pagesoftsync {
+	background-position: 0px -1115px;
+}
+.ywindow_tm .file,
+.klops .file {
+	background-image: none;
+}
+.sectionbox .file {
+	background-position: 0px -1395px;
+}
+.ywindow_tm .folder,
+.klops .folder {
+	background-position: 0px -1710px;
+}
+.ywindow_tm .trashcan,
+.klops .trashcan {
+	background-position: 0px -1325px;
+}
+.ywindow_tm .navigator,
+.klops .navigator {
+	background-position: 0px -1675px;
+}
+.ywindow_tm .data,
+.klops .data {
+	background-position: 0px -1605px;
+}
+.ywindow_tm .extensions,
+.klops .extensions {
+	background-position: 0px -1640px;
+}
+.ywindow_tm .insertcontent,
+.klops .insertcontent {
+	background-position: 0px -1675px;
+}
+.ywindow_tm .contentblock,
+.ywindow_tm .cblock,
+.sectionbox .cblock,
+.klops .contentblock,
+.klops .cblock {
+	background-position: 0px -1360px;
+}
+.ywindow_tm .tag,
+.sectionbox .tag,
+.klops .tag {
+	background-position: -0px -1430px;
+}
+.ywindow_tm .comments,
+.sectionbox .comments,
+.klops .comments {
+	background-position: -0px -1186px;
+}
+.ywindow_tm .template,
+.sectionbox .template,
+.klops .template {
+	background-position: 0px -1535px;
+}
+.ywindow_tm .entrymask,
+.sectionbox .entrymask,
+.klops .entrymask {
+	background-position: 0px -1570px;
+}
+.ywindow_tm .system,
+.sectionbox .system,
+.klops .system {
+	background-position: 0px -1465px;
+}
+.ywindow_tm .user,
+.sectionbox .user,
+.klops .user {
+	background-position: 0px -1255px;
+}
+.ywindow_tm .usergroup,
+.sectionbox .usergroup,
+.klops .usergroup {
+	background-position: 0px -1815px;
+}
+.ywindow_tm .updates,
+.sectionbox .updates,
+.klops .updates {
+	background-position: 0px -1850px;
+}
+.ywindow_tm .navigation,
+.klops .navigation {
+	background-position: 0px -1640px;
+}
+.ywindow_tm .site,
+.sectionbox .site,
+.klops .site {
+	background-position: -0px -1500px;
+}
+#bottomline .klops .noicon,
+#bottomline .klops .file {
+	background-image: none;
+	padding-left: 5px;
+	width: 169px;
+}
+#bottomline .klops .page {
+	background-image: url(../img/icons/ico_page_s.png);
+}
+#bottomline .klops .mailing {
+	background-image: url(../img/icons/ico_mailing_s.png);
+}
+#bottomline .klops .pageinactive {
+	background-image: url(../img/icons/ico_page_inactive_s.png);
+}
+#bottomline .klops .pagehidden {
+	background-image: url(../img/icons/ico_page_hidden_s.png);
+}
+#bottomline .klops .pagehiddeninactive {
+	background-image: url(../img/icons/ico_page_inactive_hidden_s.png);
+}
+#bottomline .klops .pagehiddeninactive {
+	background-image: url(../img/icons/ico_page_inactive_hidden_softsync_s.png);
+}
+#bottomline .klops .pagehiddeninactive {
+	background-image: url(../img/icons/ico_page_hidden_softsync_s.png);
+}
+#bottomline .klops .pagehiddeninactive {
+	background-image: url(../img/icons/ico_page_inactive_softsync_s.png);
+}
+#bottomline .klops .pagesoftsync {
+	background-image: url(../img/icons/ico_page_softsync_s.png);
+}
+#bottomline .klops .navigator {
+	background-image: url(../img/icons/ico_navigator_s.png);
+}
+#bottomline .klops .insertcontent {
+	background-image: url(../img/icons/ico_navigator_s.png);
+}
+#bottomline .klops .cblock {
+	background-image: url(../img/icons/ico_cblock_s.png);
+}
+#bottomline .klops .tag {
+	background-image: url(../img/icons/ico_tag_s.png);
+}
+#bottomline .klops .template {
+	background-image: url(../img/icons/ico_template_s.png);
+}
+#bottomline .klops .navigation {
+	background-image: url(../img/icons/ico_navigation_s.png);
+}
+
+
+
+
+
+/********************************************************************/
+/* buttons														  */
+/********************************************************************/
+
+.ywindow_bt a {
+	height: 29px;
+	width: 23px;
+	margin-top: 12px;
+	display: block;
+	cursor: pointer;
+	background: url(../img/buttons/buttons.png) 0 0 no-repeat;
+}
+.ywindow_bt a.preview:hover,
+.ydialog .ywindow_bt a.preview:hover {
+	background-position: -23px 0px;
+}
+.ywindow_bt a.undo:hover,
+.ydialog .ywindow_bt a.undo:hover {
+	background-position: -23px -232px;
+}
+.ywindow_bt a.copy:hover,
+.ydialog .ywindow_bt a.copy:hover {
+	background-position: -23px -58px;
+}
+.ywindow_bt a.compare:hover,
+.ydialog .ywindow_bt a.compare:hover {
+	background-position: -23px -145px;
+}
+.ywindow_bt a.add:hover,
+.ydialog .ywindow_bt a.add:hover {
+	background-position: -23px -290px;
+}
+.ywindow_bt a.addfolder:hover,
+.ydialog .ywindow_bt a.addfolder:hover {
+	background-position: -23px -261px;
+}
+.ywindow_bt a.undo:hover,
+.ydialog .ywindow_bt a.undo:hover {
+	background-position: -23px -319px;
+}
+.ywindow_bt a.redo:hover,
+.ydialog .ywindow_bt a.redo:hover {
+	background-position: -23px -348px;
+}
+.ywindow_bt a.previewwin:hover,
+.ydialog .ywindow_bt a.previewwin:hover {
+	background-position: -23px -377px;
+}
+.ywindow_bt a.edit:hover,
+.ydialog .ywindow_bt a.edit:hover {
+	background-position: -23px -29px;
+}
+.ywindow_bt a.delete:hover,
+.ydialog .ywindow_bt a.delete:hover,
+.ywindow_bt a.multidelete:hover,
+.ydialog .ywindow_bt a.multidelete:hover {
+	background-position: -23px -116px;
+}
+.ywindow_bt a.previewcurrent:hover,
+.ydialog .ywindow_bt a.previewcurrent:hover {
+	background-position: -23px 0px;
+}
+.ywindow_bt a.moveup:hover,
+.ydialog .ywindow_bt a.moveup:hover {
+	background-position: -23px -174px;
+}
+.ywindow_bt a.movedown:hover,
+.ydialog .ywindow_bt a.movedown:hover {
+	background-position: -23px -203px;
+}
+.ywindow_bt a.download:hover,
+.ydialog .ywindow_bt a.download:hover {
+	background-position: -23px -232px;
+}
+.ywindow_bt a.moveto:hover,
+.ydialog .ywindow_bt a.moveto:hover {
+	background-position: -23px -87px;
+}
+.ywindow_bt a.preview.disabled,
+.ywindow_bt a.preview.disabled:hover {
+	background-position: -46px 0px;
+}
+.ywindow_bt a.undo.disabled,
+.ywindow_bt a.undo.disabled:hover {
+	background-position: -46px -232px;
+}
+.ywindow_bt a.copy.disabled,
+.ywindow_bt a.copy.disabled:hover {
+	background-position: -46px -58px;
+}
+.ywindow_bt a.compare.disabled,
+.ywindow_bt a.compare.disabled:hover {
+	background-position: -46px -145px;
+}
+.ywindow_bt a.add.disabled,
+.ywindow_bt a.add.disabled:hover {
+	background-position: -46px -290px;
+}
+.ywindow_bt a.addfolder.disabled,
+.ywindow_bt a.addfolder.disabled:hover {
+	background-position: -46px -261px;
+}
+.ywindow_bt a.undo.disabled,
+.ywindow_bt a.undo.disabled:hover {
+	background-position: -46px -232px;
+}
+.ywindow_bt a.redo.disabled,
+.ywindow_bt a.redo.disabled:hover {
+	background-position: -46px -348px;
+}
+.ywindow_bt a.previewwin.disabled,
+.ywindow_bt a.previewwin.disabled:hover {
+	background-position: -46px -377px;
+}
+.ywindow_bt a.edit.disabled,
+.ywindow_bt a.edit.disabled:hover {
+	background-position: -46px -29px;
+}
+.ywindow_bt a.delete.disabled,
+.ywindow_bt a.delete.disabled:hover,
+.ywindow_bt a.multidelete.disabled,
+.ywindow_bt a.multidelete.disabled:hover {
+	background-position: -46px -116px;
+}
+.ywindow_bt a.previewcurrent.disabled,
+.ywindow_bt a.previewcurrent.disabled:hover {
+	background-position: -46px 0px;
+}
+.ywindow_bt a.moveup.disabled,
+.ywindow_bt a.moveup.disabled:hover {
+	background-position: -46px -174px;
+}
+.ywindow_bt a.movedown.disabled,
+.ywindow_bt a.movedown.disabled:hover {
+	background-position: -46px -203px;
+}
+.ywindow_bt a.download.disabled,
+.ywindow_bt a.download.disabled:hover {
+	background-position: -46px -232px;
+}
+.ywindow_bt a.moveto.disabled,
+.ywindow_bt a.moveto.disabled:hover {
+	background-position: -46px -87px;
+}
+.ywindow_btl a {
+	background: url(../img/buttons/buttons.png) 0 0 no-repeat;
+}
+.ywindow_btl a.clear {
+	height: 29px;
+	width: 42px;
+	margin-top: 12px;
+	display: block;
+	background-position: 0px -406px;
+}
+.ydialog .ywindow_btl a.clear {
+	background-position: -126px -406px;
+}
+.ydialog .ywindow_btl a.clear.disabled,
+.ydialog .ywindow_btl a.clear.disabled:hover {
+	background-position: -168px -406px;
+}
+.ywindow_btl a.clear:hover,
+.ydialog .ywindow_btl a.clear:hover {
+	background-position: -42px -406px;
+	cursor: pointer;
+}
+.ywindow_btl a.clear.disabled,
+.ywindow_btl a.clear.disabled:hover {
+	cursor: default;
+	background-position: -84px -406px;
+}
+.ywindow_bt a.preview {
+	background-position: 0px 0px;
+}
+.ywindow_bt a.undo {
+	background-position: 0px -232px;
+}
+.ywindow_bt a.undo {
+	background-position: 0px -348px;
+}
+.ywindow_bt a.previewwin {
+	background-position: 0px -377px;
+}
+.ywindow_bt a.previewcurrent {
+	background-position: -115px 0px;
+}
+.ywindow_bt a.copy {
+	background-position: 0px -58px;
+}
+.ywindow_bt a.compare {
+	background-position: 0px -145px;
+}
+.ywindow_bt a.add {
+	background-position: 0px -290px;
+}
+.ywindow_bt a.addfolder {
+	background-position: 0px -261px;
+}
+.ywindow_bt a.edit {
+	background-position: 0px -29px;
+}
+.ywindow_bt a.delete {
+	background-position: 0px -116px;
+}
+.ywindow_bt a.moveup {
+	background-position: 0px -174px;
+}
+.ywindow_bt a.movedown {
+	background-position: 0px -203px;
+}
+.ywindow_bt a.download {
+	background-position: 0px -232px;
+}
+.ywindow_bt a.moveto {
+	background-position: 0px -87px;
+}
+.ywindow_bt a.disabled,
+.ywindow_bt a.disabled:hover,
+.ywindow_btl a.disabled,
+.ywindow_btl a.disabled:hover {
+	cursor: default;
+}
+.ywindow_midbottom .button {
+	float: right;
+	display: block;
+	margin-top: 9px;
+}
+a.stdbutton {
+	display: block;
+	font-family: Arial;
+	font-size: 10px;
+	height: 19px;
+	font-weight: bold;
+	line-height: 0em;
+	text-decoration: none;
+	color: #ffffff;
+	background-color: #3d4739;
+	text-transform: uppercase;
+	background-image: url(../img/buttons/buttons.png);
+	background-position: -145px -44px;
+	background-repeat: no-repeat;
+}
+a.stdbutton:hover {
+	cursor: pointer;
+}
+.rightbutton a.stdbutton,
+.pbox_rightbutton a.stdbutton {
+	float: right;
+	margin-left: 6px;
+}
+.stdbutton .wrapper {
+	background-image: url(../img/buttons/buttons.png);
+	background-position: right -82px;
+	background-repeat: no-repeat;
+	padding-top: 9px;
+	padding-left: 13px;
+	padding-right: 13px;
+	min-width:65px;
+	text-align:center;
+	padding-bottom: 10px;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+}
+
+.IE8 .stdbutton .wrapper {
+	padding-top: 10px;
+	padding-bottom: 9px;
+}
+
+/********************************************************************/
+/* treecontrol													  */
+/********************************************************************/
+
+.ywindow .treecontrol {
+	display: block;
+	margin-left: -1px;
+	min-height: 31px;
+	margin-bottom: -3px;
+}
+.ywindow .treecontrol .controlbox,
+.ywindow .treecontrol .controlboxsearch,
+.ywindow .treecontrol .controlboxopen,
+.ywindow .treecontrol .controlboxopenmid,
+.ywindow .treecontrol .controlboxhover,
+.ywindow .treecontrol .controlboxopenhover,
+.ywindow .treecontrol .controlboxopenmidhover {
+	position: absolute;
+	width: 5px;
+	background-color: #f4f4f0;
+	height: 23px;
+	background-image: url(../img/window/tc_bgl.gif);
+	background-position: left top;
+	background-repeat: no-repeat;
+}
+.ywindow .treecontrol .controlboxopen,
+.ywindow .treecontrol .controlboxopenmid,
+.ywindow .treecontrol .controlboxopenhover,
+.ywindow .treecontrol .controlboxopenmidhover {
+	height: 31px;
+	background-image: url(../img/window/tc_bgl-open.gif);
+}
+
+.ywindow .treecontrol .controlboxhover,
+.ywindow .treecontrol .controlboxsearch:hover,
+.ywindow .treecontrol .controlboxopenhover {
+	background-color: #edede9;
+}
+.ywindow .treecontrol .controlboxopenmid {
+	background-color: #dadbd5;
+}
+.ywindow .treecontrol .controlboxopenmidhover {
+	background-color: #c9cbc5;
+}
+.treecontrol .controlboxinner {
+	height: 23px;
+	background-image: url(../img/window/tc_bgr.gif);
+	background-position: right;
+	background-repeat: no-repeat;
+}
+.treecontrol .controlboxinnericon {
+	background-image: url(../img/window/tc_iconbgr.gif);
+	background-position: right top;
+	background-repeat: no-repeat;
+	height: 23px;
+	font-family: Arial;
+	color: #343f34;
+	line-height: 11px;
+	font-size: 11px;
+	cursor: pointer;
+}
+.treecontrol .controlboxopen .controlboxinnericon,
+.treecontrol .controlboxopenhover .controlboxinnericon {
+	background-image: url(../img/window/tc_iconbgr-open.gif);
+	height: 31px;
+}
+.treecontrol .controlboxopenmid .controlboxinnericon,
+.treecontrol .controlboxopenmidhover .controlboxinnericon {
+	background-image: url(../img/window/tc_iconbgr-midopen.gif);
+	height: 31px;
+}
+.ywindow .tcbox,
+.ywindow .tcboxhover {
+	margin-left: 0px;
+	background-image: url(../img/window/treecontrol_border.gif);
+	background-position: left;
+	background-repeat: repeat-y;
+	margin-top: -3px;
+	background-color: #f4f4f0;
+}
+.ywindow .tcboxinner {
+	background-image: url(../img/window/treecontrol_border.gif);
+	background-position: right;
+	background-repeat: repeat-y;
+}
+.tcbox .header,
+.tcboxhover .header {
+	height: 23px;
+	border-bottom: 1px solid #cfd0c9;
+	background-color: #dadbd5;
+	font-family: Verdana;
+	font-size: 9px;
+	font-weight: bold;
+	color: #202920;
+	letter-spacing: 2px;
+	text-decoration: none;
+}
+.tcboxhover .header .desc,
+.tcbox .header .desc {
+	padding-left: 7px;
+	padding-top: 5px;
+}
+.tcboxhover .header {
+	background-color: #c9cbc5;
+}
+.ywindow .tcboxcontent {
+	padding-left: 1px;
+	padding-right: 1px;
+	margin-top: 0px;
+	padding-bottom: 3px;
+}
+
+.ywindow .tcbox .bordertop,
+.ywindow .tcbox .borderbottom,
+.ywindow .tcboxhover .bordertop,
+.ywindow .tcboxhover .borderbottom {
+	height: 1px;
+	width: 100%;
+	background-image: url(../img/window/x_white.gif);
+	background-position: right;
+	background-repeat: no-repeat;
+	background-color: #b8b9b3;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	overflow: hidden;
+}
+.ywindow .tcbox .borderbottom,
+.ywindow .tcboxhover .borderbottom {
+	display: block;
+	margin-top: 5px;
+	margin-bottom: 0px;
+}
+.ywindow .tcboxhover {
+	margin-top: -3px;
+	background-color: #edede9;
+}
+
+.controlboxinnericon div {
+	display: block;
+	padding-left: 8px;
+	padding-top: 5px;
+}
+
+
+/********************************************************************/
+/* prompt box													   */
+/********************************************************************/
+
+.pbox,
+.modalbox {
+	position: absolute;
+	display: block;
+	visibility: hidden;
+}
+.pbox table,
+.modalbox table {
+	width: 100%;
+}
+.pbox_tl, .pbox_tr, .pbox_tm {
+	height: 33px;
+}
+.pbox_tl {
+	width: 21px;
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -792px 0px;
+}
+.pbox_tm {
+	background-image: url(../img/window/window_horizontal.png);
+	background-position: 0px -770px;
+}
+.pbox_tr {
+	width: 21px;
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -813px 0px;
+}
+.pbox_l {
+	width: 21px;
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -750px -0px;
+}
+.pbox_m {
+	background-color: #1a2118;
+}
+.pbox_r {
+	width: 21px;
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -771px -0px;
+}
+.pbox_bl, .pbox_br, .pbox_bm {
+	height: 22px;
+}
+.pbox_bl {
+	width: 21px;
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -834px -22px;
+}
+.pbox_bm {
+	background-image: url(../img/window/window_horizontal.png);
+	background-position: 0px -750px;
+}
+.pbox_br {
+	width: 21px;
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -834px -0px;
+}
+.buttontable {
+	width: 100%;
+}
+.pbox_leftbutton .button,
+.leftbutton .button {
+	float: left;
+	display: block;
+	margin-top: 24px;
+}
+.leftbutton .button {
+	margin-top: 9px;
+}
+.pbox_rightbutton .button,
+.rightbutton .button {
+	float: right;
+	display: block;
+	margin-top: 24px;
+}
+.rightbutton .button {
+	margin-top: 9px;
+}
+
+
+
+
+/********************************************************************/
+/* ghost															*/
+/********************************************************************/
+
+.boxghost .tabs,
+.boxghost .innercontent,
+.boxghost .tabheaders,
+.boxghost .tabpagedirs,
+.boxghost .ywindowbottom,
+.boxghost .ywindowfilter,
+.boxghost .ywindowfiltercolumn2,
+.boxghost .ywindow_tr a.close,
+.boxghost .ywindow_tr a.min,
+.boxghost .whitecorner,
+.boxghost .ywindow_bt a,
+.boxghost .ywindow_btl a {
+	display: none;
+}
+.boxghost .ywindow_tr,
+.boxghost .ywindow_tr:hover {
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -402px 0px;
+}
+.boxghost .ywindow_tm,
+.boxghost .ywindow_bts,
+.boxghost .ywindow_bt,
+.boxghost .ywindow_btl  {
+	background-image: url(../img/window/window_horizontal.png);
+	background-position: 0px -367px;
+}
+.boxghost .ywindow_tltabs,
+.boxghost.hidetabs .ywindow_tltabs,
+.boxghost .ywindow_tl {
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -389px 0px;
+}
+.boxghost .ywindow_right {
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -365px 0px;
+}
+.boxghost .ywindow_left {
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -350px 0px;
+}
+.boxghost .ywindow_bleft {
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -426px 0px;
+}
+.boxghost .ywindow_bmid {
+	background-image: url(../img/window/window_horizontal.png);
+	background-position: 0px -350px;
+}
+.boxghost .ywindow_bright {
+	background-image: url(../img/window/window_vertical.png);
+	background-position: -426px -17px;
+}
+.boxghost .tab_loading {
+	background-image: none;
+}
+.boxghost .head {
+	visibility: hidden;
+}
+.boxghost .ywindow_mid {
+	border-left: 1px solid #80857d;
+	border-right: 1px solid #80857d;
+}
+.boxghost .cntmain .container .ywindowinner {
+	background-color: #80857d;
+}
+.boxghost .ywindow_midborder {
+	background-image: none;
+	background-color: #80857d;
+}
+
+
+
+/********************************************************************/
+/* modal background												 */
+/********************************************************************/
+.modalbg {
+	display: block;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	cursor: not-allowed;
+	background-color: #000000;
+	opacity: 0.3;
+	filter: alpha(opacity=50);
+}
+
+
+/********************************************************************/
+/* plupload														 */
+/********************************************************************/
+.plupload.html5 input,
+.plupload.html4 input {
+	width: inherit;
+	height: inherit;
+	cursor: pointer;
+	line-height: 48px;
+	font-size: 48px;
+}
+.ywindow_bt .plupload.html5 a,
+.ywindow_bt .plupload.html4 a {
+	margin-top: 0px;
+}
+
+.ywindow.pbox div.remove_w_options {
+	display: none;
+}
+
+.ywindow.pbox.remove_w_options div.remove_w_options {
+	display: block;
+}
+
+.mk_comments_closed .mk_commentactions,
+.mk_comments_closed .mk_commentactions .actionhover a.add {
+	display: none;
+}
+.mk_comments_closed .cntblockadd,
+td.mk_onlyfolder {
+	display: none;
+}
+td.mk_onlytrashcan {
+	display: none;
+}
+
+.mk_folder td.mk_onlyfolder {
+	display: table-cell;
+}
+.mk_trashcan td.mk_onlytrashcan {
+	display: table-cell;
+}
+
+.mk_folder td.ywindow_bt.mk_onlyfolder a,
+.mk_trashcan td.ywindow_bt.mk_onlytrashcan a {
+	display: block !important;
+}
+.boxghost .mk_folder td.ywindow_bt.mk_onlyfolder a,
+.boxghost .mk_trashcan td.ywindow_bt.mk_onlytrashcan a {
+	display: none !important;
+}
+
+
+div.ywindow.ydialog.plupload li.uploading div.actions {
+	display: none;
+}
+
+.mk_richtextcnt img:-moz-broken {
+	-moz-force-broken-image-icon:1;
+	width:24px;
+	height:24px
+}

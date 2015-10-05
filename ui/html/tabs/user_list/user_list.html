@@ -1,0 +1,42 @@
+	<!-- TABLE //-->
+	<div id="wid_{$win_no}_listcontainer" class="mk_contentgroup" yg_multiselect="true">
+	<div class="tableborder mk_userlist smallheader">
+		<table id="wid_{$win_no}_tablecontent" class="gridflex ytable" cellspacing="0" cellpadding="0">
+			<thead>
+				<tr class="filefirstrow">
+					<td class="fcol_name" yg_colindex="lastname" id="wid_{$win_no}_name"></td>
+					<td class="fcol_company" yg_colindex="company" id="wid_{$win_no}_company"></td>
+					<td class="fcol_email" yg_colindex="email" id="wid_{$win_no}_email"></td>
+				</tr>
+			</thead>
+			<tbody id="wid_{$win_no}_userlist_table" yg_type="user" onmouseover="$K.yg_currentHover=this;" count="{$usercount}" count_filtered="{$usercountfiltered}">
+				{section name="u" loop=$userlist}
+					{include file="$approot/ui/html/tabs/user_list/user.inc.html" item_objectid=$userlist[u].ID item_userpicture=$userlist[u].USERPICTURE item_firstname=$userlist[u].PROPS.FIRSTNAME item_lastname=$userlist[u].PROPS.LASTNAME item_company=$userlist[u].PROPS.COMPANY item_email=$userlist[u].PROPS.EMAIL}
+				{/section}
+			</tbody>
+		</table>
+	</div>
+
+	<!-- TABLE END //-->
+	</div>
+</div>
+
+{if $initload=='true'}
+	<!-- FILTER //-->
+	{include file="$approot/ui/html/tabs/user_list/user_list_filter.inc.html"}
+
+	<!-- FIXED HEADER CNT //-->
+	{include file="$approot/ui/html/tabs/user_list/user_list_fixedheader.inc.html"}
+
+{/if}
+
+<!-- PAGEDIR //-->
+{include file="$approot/ui/html/tabs/common/pagedir.inc.html"}
+
+<!-- TAB AUTOSTART //-->
+<script language="javascript">
+	// Prepare Prototype/Smarty Templates
+	{include assign="js_template" file="$approot/ui/html/tabs/user_list/user.inc.html" item_objectid='#<<new_id>>' item_firstname='#<<new_name>>' item_lastname='' item_userpicture='' item_company='' item_email=''}
+	$K.windows['wid_{$win_no}'].jsTemplate = '{$js_template|strip|addslashes}';
+</script>
+<!-- END TAB AUTOSTART //-->

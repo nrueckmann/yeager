@@ -1,0 +1,726 @@
+/********************************************************************/
+/* contentblocks and entrymasks                                     */
+/********************************************************************/
+
+.emcontainer,
+.emcontainerfocus,
+.cbcontainer,
+.cbcontainerfocus {
+	min-width: 450px;
+	padding-left: 8px;
+	padding-right: 8px;
+	margin-top: 9px;
+}
+.cbcontainer,
+.cbcontainerfocus {
+	margin-top: 0px;
+}
+.emborder {
+	min-width: 458px;
+	max-width: 1050px;
+	position: static;
+}
+.embordertb {
+	padding-left: 1px;
+	padding-right: 1px;
+	height: 1px;
+}
+.embordertbc {
+	background-color: #b1b4ac;
+	height: 1px;
+}
+.cbcontainerfocus .emcontainer .embordertbc,
+.ydialog .cbcontainerfocus .emcontainer .embordertbc {
+	background-color: white;
+}
+.cbcontainerfocus .emcontent {
+	border-left: 1px solid white;
+	border-right: 1px solid white;
+}
+.cbcontent,
+.emcontent {
+	border-left: 1px solid #b1b4ac;
+	border-right: 1px solid #b1b4ac;
+	background-color: #e6e7e2;
+}
+.cbcontent:hover,
+.emcontent:hover,
+.emcontent:hover .maskspacer {
+	background-color: #d7d8d3;
+}
+.emcontent .maskspacer {
+	background-color: #e6e7e2;
+}	
+.emheader,
+.cbheader {
+	padding-top: 6px;
+	padding-bottom: 8px;
+	cursor: pointer;
+	min-height:11px;
+}
+.emerror .emcontent,
+.cberror .cbcontent {
+	background-color: #fcdcd2;
+}
+.emerror .emcontent:hover,
+.cberror .cbcontent:hover {
+	background-color: #f8cec1;
+}
+.emheader a.opened,
+.emheader a.closed,
+.emheader a.notextendable,
+.cbheader a.opened,
+.cbheader a.closed {
+	float: left;
+	color: #202920;
+	text-decoration: none;
+	font-family: Arial;
+	font-weight: bold;
+	overflow: hidden;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	font-size: 10px;
+	padding-right: 10px;
+	padding-left: 9px;
+	line-height: 10px;
+	max-width: 90%;
+	line-height: 12px;
+	height: 13px;
+	margin-top: 0px;
+}
+.WEBKIT .emheader a.opened,
+.WEBKIT .emheader a.closed,
+.WEBKIT .emheader a.notextendable,
+.WEBKIT .cbheader a.opened,
+.WEBKIT .cbheader a.closed {
+	line-height: 13px;
+}
+.mk_extension .emheader a.opened,
+.mk_extension .emheader a.closed,
+.mk_extension .emheader a.notextendable {
+	color: #272a25;
+	text-transform: none;	
+	font-size: 12px;
+	font-weight: normal;
+	padding-top: 2px;
+	line-height: 10px;
+}
+.mk_extension .emheader {
+	line-height: 16px;
+}
+.emheader .iconextension {
+	float: left;
+	margin-left: 7px;
+	margin-top: 2px;
+	display: block;
+}
+.mk_extension .emheader .versioninfo {
+	font-weight: normal; 
+	margin-left: 9px;
+	display: inline-block;
+	line-height: 12px;
+	color: #4f5a54;
+}
+.emheader a.opened,
+.emheader a.closed {
+	max-width: 60%;
+	background: url(../img/content/entrymasks/emfile_closed.gif) right 1px no-repeat;
+}
+.emheader a.opened {
+	background: url(../img/content/entrymasks/emfile_opened.gif) right 1px no-repeat;
+}
+.cbheader a.opened,
+.cbheader a.closed {
+	margin-bottom: -2px;
+	padding-left: 5px;
+	background: url(../img/content/entrymasks/emfile_closed.gif) right 1px no-repeat;
+}
+.cbheader a.opened {
+	background: url(../img/content/entrymasks/emfile_opened.gif) right 1px no-repeat;
+}
+.emheader a.opened:hover,
+.cbheader a.opened:hover {
+	background-image: url(../img/content/entrymasks/emfile_opened_mo.gif);
+	color: #696f69;
+}
+.cbheader a.opened:hover {
+	background-image: url(../img/content/entrymasks/emfile_opened_mo.gif);
+}
+.emheader a.closed:hover,
+.cbheader a.closed:hover {
+	background-image: url(../img/content/entrymasks/emfile_closed_mo.gif);
+	color: #696f69;
+}
+
+.cbcontentinner {
+	padding-bottom: 9px;
+	margin-top: -6px;
+}
+.cbheader a.opened .iconcblock,
+.cbheader a.closed .iconcblock {
+	margin-right: 2px;
+	margin-top: -3px;
+}
+.cbcontainerfocus .cbheader {
+	cursor: default;
+}
+.cbcontainerfocus .cbheader a.opened,
+.cbcontainerfocus .cbheader a.closed {
+	background-image: url(../img/content/entrymasks/emfile_closed_sel.gif);
+}
+.cbcontainerfocus .cbheader a.opened {
+	background-image: url(../img/content/entrymasks/emfile_opened_sel.gif);
+}
+.emcontainerfocus .emheader a.opened:hover,
+.cbcontainerfocus .cbheader a.opened:hover,
+.cbcontainerfocus .emheader a.opened:hover {
+	background-image: url(../img/content/entrymasks/emfile_opened_mo_sel.gif);
+	color: #aae6f4 !important;
+}
+.cbcontainerfocus .emheader .emviewcontrol:hover,
+.emcontainerfocus .emheader .emviewcontrol:hover {
+	color: #aae6f4 !important;
+}
+.emcontainerfocus .emheader a.closed:hover,
+.cbcontainerfocus .emheader a.closed:hover, 
+.cbcontainerfocus .cbheader a.closed:hover {
+	background-image: url(../img/content/entrymasks/emfile_closed_mo_sel.gif);
+	color: #aae6f4 !important;
+}
+.emheader a.opened {
+	background-image: url(../img/content/entrymasks/emfile_opened.gif);
+}
+.emcontainerfocus .emcontent,
+.emcontainerfocus .emcontent:hover,
+.cbcontainerfocus .emcontent,
+.cbcontainerfocus .emcontent:hover {
+	cursor: default;
+}
+.emcontainerfocus .emheader a.opened,
+.emcontainerfocus .emheader a.closed,
+.cbcontainerfocus .emheader a.opened,
+.cbcontainerfocus .emheader a.closed {
+	background-image: url(../img/content/entrymasks/emfile_closed_sel.gif); 
+}
+.emcontainerfocus .emheader a.opened,
+.cbcontainerfocus .emheader a.opened {
+	background-image: url(../img/content/entrymasks/emfile_opened_sel.gif); 
+}
+.errortext,
+.cberrortext {
+	display: none;
+	clear: both;
+}
+.emerror .errortext,
+.cberror .cberrortext {
+	display: block;
+	padding-left:8px;
+	line-height: 9px;
+	padding-top: 7px;
+	margin-bottom: 0px;
+	font-family: Arial;
+	font-size: 11px;
+	line-height: 9px;
+}
+.errortext span,
+.cberrortext span,
+.emerror .emheader a.opened span, 
+.emerror .emheader a.closed span, 
+.cberror .cbheader a.opened span,
+.cberror .cbheader a.closed span {
+	color: white;
+	background-color: #fe3f19;
+	padding: 1px 2px 1px 2px;
+}
+.errortext span,
+.cberrortext span {
+	margin-left: 1px;
+}
+.closed .errortext,
+.closed .cberrortext,
+.cbcontent .errortext {
+	display: none;
+}
+.cberror .cberrortext {
+	padding-left: 26px;
+	padding-top: 9px;
+}
+.emeditmode .emheader .checkarray {
+	visibility: hidden;
+}
+.emcontainer .checkarray {
+	visibility: visible;
+}
+.emeditmode .checkarray {
+	visibility: hidden;
+}
+.emcontentouter {
+	padding-left: 8px;
+	padding-right: 8px;
+	padding-bottom: 8px;
+}
+.emcontentinner {
+	background-color: white;
+/*	border-top: 1px solid #b1b4ac; */
+	border-bottom: 1px solid #b1b4ac; 
+	overflow: hidden;
+}
+.emcontentinner .maskdisplay,
+.emcontentinner .maskedit {
+	border-top: 1px solid #b1b4ac;
+	border-left: 1px solid #b1b4ac;
+	border-right: 1px solid #b1b4ac;
+}
+.emcontentinner .maskedit + .maskdisplay + .maskedit,
+.emcontentinner .maskdisplay + .maskedit + .maskdisplay {
+	border-top: 1px solid #d3d4cd; 
+}
+.maskspacer {
+	margin-top: -1px;
+	height: 8px;
+	background-color: #e8fbfe;
+	border-top: 1px solid #b1b4ac;
+	/* border-bottom: 1px solid #b1b4ac; */
+}
+.maskspacer.subhead {
+	height: 28px;
+}
+.noelemtitles .maskspacer.subhead {
+	height: 8px;
+}
+.maskspacer.subhead .label {
+	margin-top: 11px;
+	padding-left: 1px;
+}
+.noelemtitles .maskspacer.subhead .label {
+	display: none;
+}
+.maskelements {
+	margin-bottom: -1px;
+}
+.maskedit .datetable,
+.gridfixed .datetable {
+	min-width: 225px;
+	width: 225px;
+	
+}
+.emcontentinnerhover {
+	background-color: #efefec;
+}
+.emheader .emviewcontrol {
+	float: right;
+	padding: 0px 0px 0px 0px;
+	margin: 0px 0px 0px 0px;
+	margin-right: 9px;
+	height: 10px;
+	display: block;
+	font-family: Arial;
+	font-size: 10px;
+	font-weight: bold;
+	color: #ff20d8;
+}
+.emviewcontrol:hover {
+	color: #fc7be5;
+}
+.WEBKIT .emheader .emviewcontrol {
+	padding-top: 1px;
+}
+.funchidetitles {
+	display: block;
+}
+.noelemtitles .funcshowtitles {
+	display: block;
+}
+.emeditmode .funcshowtitles,
+.emeditmode .funchidetitles,
+.noelemtitles .funchidetitles,
+.funcendeditmode,
+.funcshowtitles {
+	display: none;
+}
+.emeditmode .funcendeditmode {
+	display: block;
+}
+.elemtitles {
+	float: left;
+	overflow-x: hidden;
+	display: block;
+	width: 100px;
+	vertical-align: top;
+	padding: 6px 6px 6px 6px;
+	padding-top: 8px;
+	padding-bottom: 5px;
+}
+.ydialog .maskedit .textbox.elemcontent,
+.elemcontent {
+	vertical-align: top;
+	padding-top: 8px;
+	padding-bottom: 9px;
+	padding-left: 6px;
+	padding-right: 6px;
+	padding-left: 4px;
+	font-family: Arial;
+	font-size: 11px;
+	line-height: 12px;
+	color:  #242824;
+	width: 100%;
+}
+.elemtitles,
+.elemtitle {
+	display: block;
+}
+.elemtitle.label {
+	color: #939590;
+    margin-top: 4px;
+    padding-left: 3px;
+}
+.elemtitles .label,
+.ydialog .maskedit .elemtitle.label,
+.maskedit .label,
+.ydialog .maskedit .checkbox .label {
+	color: #939590;
+	margin-top: 0px;
+	line-height: 13px;
+	cursor: default;
+	padding-bottom: 0px;
+	padding-left: 0px;
+}
+
+.emeditmode .elemcontent,
+.tabcontent .emeditmode .title,
+.tabcontent .emeditmode .titlenoicon,
+.panelcontent .emeditmode .title, 
+.panelcontent .emeditmode .titlenoicon, 
+.ydialog .ywindowwrapper .emeditmode .title, 
+.ydialog .ywindowwrapper .emeditmode .titlenoicon,
+.ydialog .ywindowwrapper .emeditmode .titlecnt {
+	/*color: #0f4871;*/
+}
+
+.maskedit .label {
+	/*color: #6f9dac !important;*/
+}
+.maskedit .elemtitle {
+	padding-left: 0px;
+	padding-top: 8px;
+}
+.maskedit .checkbox, 
+.maskedit .checkboxfocus {
+	padding-left: 0px;
+}
+.noelemtitles .elemtitles {
+	display: none;
+	padding: 0px 0px 0px 0px;
+	white-space: nowrap;
+}
+.emcontainer .maskdisplay {
+	clear: both;
+	/*border-bottom: 1px solid #d3d4cd;*/	
+	display: block;
+}
+.maskedit {
+	clear: both;
+	padding-left: 6px;
+	display: block;
+}
+.maskedit .gridfixed,
+.maskedit .gridflex {
+	margin-left: 0px;
+}
+.maskedit,
+.maskdisplay {
+	display: none;
+/*	border-bottom: 1px solid #d3d4cd; */
+}
+.maskedit {
+	display: none;
+}
+.maskdisplay {
+	display: block;
+}
+.emeditmode .maskedit {
+	display: block;
+}
+.emeditmode .maskdisplay {
+	display: none;
+}
+.maskdisplay:hover {
+	background-color: #f4f4f2;
+	cursor: pointer;
+}
+.cbcontent .maskdisplay:hover {
+	background-color: inherit;
+}
+.emeditmode .hoverable:hover {
+/*	background-color: #def3f7;*/
+	cursor: pointer;
+}
+.emeditmode .maskedit.hoverable:hover,
+.maskedit.hoverable .elemtitle, 
+.maskdisplayedited:hover {
+	cursor: pointer;
+}
+.emcontainerfocus .textbox,
+.emcontainer .textbox,
+.ydialog .emcontainerfocus .maskedit .textbox,
+.ydialog .emcontainer .maskedit .textbox {
+	padding-left: 1px;	
+}
+.emcontainer .gridfixed
+.emcontainerfocus .gridfixed {
+	width: 448px;
+	min-width: 448px;
+}
+.emcontainer .gridflex,
+.emcontainerfocus .gridflex {
+	min-width: 448px;
+}
+.maskedit .title,
+.maskdisplay .title {
+	margin-top: -1px;
+	margin-left: -2px;
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+	width: auto;
+}
+.IE8 .maskedit .title {
+	float: none;
+}
+.maskdisplay .title.file {
+	margin-left: 0px;
+	padding-left: 0px !important;
+}
+.IE8 .panelcontent .maskdisplay .title {
+	overflow: visible;
+}
+.maskedit .title,
+.ydialog .emeditmode .maskedit .title {
+	margin-top: 3px;
+	margin-left: 0px;
+	padding-bottom: 6px;
+}
+.editlink {
+	cursor: pointer;
+}
+.maskdisplay .noselect {
+	font-style: italic;
+}
+.maskedit .noselect {
+	font-style: italic;
+	font-family: Arial;
+	font-size: 11px;
+	line-height: 12px;
+	padding-bottom: 4px;
+}
+.maskdisplay h1,
+.maskdisplay h2,
+.maskdisplay h3,
+.maskdisplay h4,
+.maskdisplay h5,
+.maskdisplay h6 {
+	font-family: Arial;
+	font-size: 18px;
+	line-height: 18px;
+	padding-top: 0px;
+	margin-top: 4px;
+	margin-bottom: 0px;
+	padding-bottom: 3px;
+	font-weight: bold;
+}
+.maskdisplay h2 {
+	font-size: 15px;
+	line-height: 15px;
+}
+.maskdisplay h3 {
+	font-size: 13px;
+	line-height: 13px;
+}
+.maskdisplay h4 {
+	font-size: 11px;
+	line-height: 11px;
+}
+.maskdisplay h5 {
+	font-size: 10px;
+	line-height: 10px;
+}
+.maskdisplay h6 {
+	font-size: 10px;
+	line-height: 10px;
+}
+.closed .emviewcontrol {
+	visibility: hidden;
+}
+.maskedit .checkbox {
+	margin-bottom: 2px;
+}
+.maskdisplay p {
+	margin-top: 0px;
+}
+.maskdisplay .elemcontent a,
+.maskedit .elemcontent a {
+	color: #4f595a;
+}
+span.bracket {
+	font-weight: normal !important;
+	color: #8d908b;
+}
+.emeditmode span.bracket {
+	color: #6fa2ac;
+}
+input.magicfocus {
+	border: 0px;
+	background-color: transparent;
+	color: transparent;
+	font-size: 0px;
+	line-height: 0px;
+}
+
+
+/********************************************************************/
+/* dark contentblocks                                               */
+/********************************************************************/
+
+.ydialog .emborder {
+	min-width: 250px !important;
+}
+
+.ydialog .maskedit {
+	display: none;
+}
+.ydialog .emeditmode .maskedit {
+	display: block;
+}
+
+.ydialog .embordertbc {
+	background-color: #1e231e !important;
+}
+
+
+.ydialog .emcontent,
+.ydialog .cbcontent {
+	border-left: 1px solid #1e231e;
+	border-right: 1px solid #1e231e;
+	background-color: #4b5449;
+}
+.ydialog .emcontent .maskspacer {
+	background-color: #4b5449;
+}
+.ydialog .emcontent:hover,
+.ydialog .cbcontent:hover,
+.ydialog .emcontent:hover .maskspacer {
+	background-color: #606b5e;
+}
+.ydialog .emcontainerfocus .emcontent,
+.ydialog .emcontainerfocus .emcontent:hover {
+	cursor: default;
+}
+
+.ydialog .emheader a.opened {
+	background: url(../img/content/entrymasks/emfile_opened_dark.gif) right top no-repeat;
+	color: #e0f9dc;
+}
+.ydialog .emcontent .maskspacer .label {
+	color: #E0F9DC;
+}
+.ydialog .emheader a.closed {
+	background: url(../img/content/entrymasks/emfile_closed_dark.gif) right top no-repeat;
+	color: #e0f9dc;
+}
+
+.ydialog .emheader a.opened:hover {
+	background: url(../img/content/entrymasks/emfile_opened_mo_dark.gif) right top no-repeat;
+	color: #a1b49d;
+}
+
+.ydialog .emheader a.closed:hover {
+	background: url(../img/content/entrymasks/emfile_closed_mo_dark.gif) right top no-repeat;
+	color: #a1b49d;
+}
+.ydialog .mk_extension .emheader .versioninfo {
+	color: #a1b49d;
+}
+
+.ydialog .emcontainerfocus .emheader a.opened,
+.ydialog .emcontainerfocus .emheader a.notextendable,
+.ydialog .cbcontainerfocus .emheader a.opened {
+	background: url(../img/content/entrymasks/emfile_opened_sel.gif) right top no-repeat;
+	color: #dffafb;
+}
+
+.ydialog .emcontainerfocus .emheader a.closed,
+.ydialog .mk_extension.emcontainerfocus .emheader a.notextendable,
+.ydialog .cbcontainerfocus .emheader a.closed {
+	background: url(../img/content/entrymasks/emfile_closed_sel.gif) right top no-repeat;
+	color: #dffafb;
+}
+.ydialog .mk_extension.emcontainerfocus .emheader a.notextendable,
+.ydialog .mk_extension.emcontainer .emheader a.notextendable {
+	background: none;
+}
+.ydialog .mk_extension.emcontainer .emheader a.notextendable {
+	color: #C4DDBF;
+}
+
+.ydialog .emcontainerfocus .emheader a.opened:hover,
+.ydialog .cbcontainerfocus .emheader a.opened:hover {
+	background: url(../img/content/entrymasks/emfile_opened_mo_sel.gif) right top no-repeat !important;
+	color: #a3e5f5 !important;
+}
+
+.ydialog .emcontainerfocus .emheader a.closed:hover,
+.ydialog .cbcontainerfocus .emheader a.closed:hover {
+	background: url(../img/content/entrymasks/emfile_closed_mo_sel.gif) right top no-repeat !important;
+	color: #a3e5f5 !important;
+}
+
+.ydialog .cbheader a.closed {
+	background: url(../img/content/entrymasks/emfile_closed_dark.gif) right top no-repeat;
+	color: #bfd8ba;
+}
+
+.ydialog .cbheader a.opened {
+	background: url(../img/content/entrymasks/emfile_opened_dark.gif) right top no-repeat;
+	color: #bfd8ba;
+}
+
+.ydialog .cbheader a.closed:hover {
+	background: url(../img/content/entrymasks/emfile_closed_mo_dark.gif) right top no-repeat;
+	color: #a1b49d;
+}
+
+.ydialog .cbheader a.opened:hover {
+	background: url(../img/content/entrymasks/emfile_opened_mo_dark.gif) right top no-repeat;
+	color: #a1b49d;
+}
+
+.ydialog .cbcontainerfocus .cbheader a.closed {
+	background: url(../img/content/entrymasks/emfile_closed_sel.gif) right top no-repeat;
+	color: #dffafb;
+}
+
+.ydialog .cbcontainerfocus  .cbheader a.opened {
+	background: url(../img/content/entrymasks/emfile_opened_sel.gif) right top no-repeat;
+	color: #dffafb;
+}
+
+.ydialog .cbcontainerfocus  .cbheader a.closed:hover {
+	background: url(../img/content/entrymasks/emfile_closed_mo_sel.gif) right top no-repeat;
+	color: #a3e5f5;
+}
+
+.ydialog .cbcontainerfocus .cbheader a.opened:hover {
+	background: url(../img/content/entrymasks/emfile_opened_mo_sel.gif) right top no-repeat;
+	color: #a3e5f5;
+}
+
+.ydialog .cbcontainerfocus .cbcontent,
+.ydialog .cbcontainerfocus .cbcontent:hover {
+	cursor: default;
+}
+
+.mk_extension .emheader a.notextendable,
+.mk_extension .emheader a.notextendable:hover {
+	color: #272a25;
+	background-image: none;
+}
+

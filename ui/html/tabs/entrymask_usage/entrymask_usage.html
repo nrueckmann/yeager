@@ -1,0 +1,205 @@
+<div class="panelcontent">
+
+	<div class="mk_contentgroup" yg_multiselect="true">
+
+		<div>
+			<div>
+
+				{if ($contentblocks|@count == 0) && ($contentblocks_blind|@count == 0)}
+					<div class="cntblock">
+						<span class="noselection mk_verticalcenter">
+							<span class="bracketleft"></span>{$itext.TXT_ENTRYMASK_UNUSED|default:'$TXT_ENTRYMASK_UNUSED'}<span class="bracketright"></span>
+						</span>
+					</div>
+				{else}
+					<ul class="objectlist">
+						{section name='p' loop=$contentblocks_blind}
+							<li class="listitem mk_nowrite">
+								<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+									<div class="listitempage">
+										<table class="listable">
+											<tr>
+												<td class="object">
+													<table class="objectable clickable">
+														<tr>
+															{if $contentblocks_blind[p].PAGES|@count > 0}
+																<td class="iconcol"><div class="icon{$contentblocks_blind[p].PAGES[0].ICON} icn"></div></td>
+																<td class="title txt">
+																	<span yg_property="name" yg_type="page" yg_id="{$contentblocks_blind[p].PAGES[0].PAGEID}-{$contentblocks_blind[p].PAGES[0].SITEID}" class="{$contentblocks_blind[p].PAGES[0].STYLE}" onclick="$K.yg_openObjectDetails('{$contentblocks_blind[p].PAGES[0].PAGEID}-{$contentblocks_blind[p].PAGES[0].SITEID}', 'page', '{$contentblocks_blind[p].PAGES[0].PAGENAME}', '{$contentblocks_blind[p].PAGES[0].ICON}', '{$contentblocks_blind[p].PAGES[0].STYLE}');">
+																		{$contentblocks_blind[p].PAGES[0].PAGENAME}
+																	</span>
+																</td>
+															{/if}
+															{if $contentblocks_blind[p].MAILINGS|@count > 0}
+																<td class="iconcol"><div class="icon{$contentblocks_blind[p].MAILINGS[0].ICON} icn"></div></td>
+																<td class="title txt">
+																	<span yg_property="name" yg_type="mailing" yg_id="{$contentblocks_blind[p].MAILINGS[0].MAILINGID}-mailing" class="{$contentblocks_blind[p].MAILINGS[0].STYLE}" onclick="$K.yg_openObjectDetails('{$contentblocks_blind[p].MAILINGS[0].MAILINGID}-mailing', 'mailing', '{$contentblocks_blind[p].MAILINGS[0].MAILINGNAME}', '{$contentblocks_blind[p].MAILINGS[0].ICON}', '{$contentblocks_blind[p].MAILINGS[0].STYLE}');">
+																		{$contentblocks_blind[p].MAILINGS[0].MAILINGNAME}
+																	</span>
+																</td>
+															{/if}
+														</tr>
+													</table>
+												</td>
+												<td class="trace">
+													{$contentblocks_blind[p].SITENAME}{if $contentblocks_blind[p].PAGES[0].PARENTS|@count > 0}:&nbsp;{/if}
+													{section name='r' loop=$contentblocks_blind[p].PAGES[0].PARENTS step=-1}
+														<nobr>{$contentblocks_blind[p].PAGES[0].PARENTS[r][0].NAME}
+														{if !$smarty.section.r.last}<span class="traceicon"></span>{/if}</nobr>
+													{/section}
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</li>
+						{/section}
+						{section name='p' loop=$contentblocks}
+							<li class="listitem mk_nowrite">
+
+								{if $contentblocks[p].PAGES|@count > 0}<div class="cntblockcontainergroup" onmouseover="$K.yg_showActions(this);">{/if}
+
+								<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+									<div class="listitempage">
+										<table class="listable">
+											<tr>
+												<td class="object">
+													<table class="objectable clickable">
+														<tr>
+															<td class="iconcol"><div class="iconcblock icn"></div></td>
+															<td class="title txt">
+																<span yg_property="name" yg_type="cblock" yg_id="{$contentblocks[p].OBJECTID}-cblock" class="{$contentblocks[p].STYLE}" onclick="$K.yg_openObjectDetails('{$contentblocks[p].OBJECTID}', 'cblock', '{$contentblocks[p].NAME}', 'cblock', '{$contentblocks[p].STYLE}');">
+																	{$contentblocks[p].NAME}
+																</span>
+															</td>
+														</tr>
+													</table>
+												</td>
+												<td class="trace">
+													{section name='r' loop=$contentblocks[p].PARENTS step=-1}
+														<nobr>{$contentblocks[p].PARENTS[r][0].NAME}
+														{if !$smarty.section.r.last}<span class="traceicon"></span>{/if}</nobr>
+													{/section}
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+
+
+								<!--  {$contentblocks_blind[p].PAGES[0].PAGENAME} -->
+
+								{section name='r' loop=$contentblocks[p].PAGES}
+									<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+										<div class="actions"></div>
+										<div class="listitempagesub{if $smarty.section.r.last} last{/if}">
+											<table class="listable">
+												<tr>
+													<td class="object">
+														<table class="objectable{if $outgoing[i].VIATARGETS[t].BAD == 0} clickable{/if}">
+															<tr>
+																<td class="iconcol"><div class="icon{$contentblocks[p].PAGES[r].ICON}"></div></td>
+																<td class="title">
+																	<span yg_property="name" yg_type="page" yg_id="{$contentblocks[p].PAGES[r].PAGEID}-{$contentblocks[p].PAGES[r].SITEID}" class="{$contentblocks[p].PAGES[r].STYLE}" onclick="$K.yg_openObjectDetails('{$contentblocks[p].PAGES[r].PAGEID}-{$contentblocks[p].PAGES[r].SITEID}', 'page', '{$contentblocks[p].PAGES[r].PAGENAME}', '{$contentblocks[p].PAGES[r].ICON}', '{$contentblocks[p].PAGES[r].STYLE}');">
+																		{$contentblocks[p].PAGES[r].PAGENAME}
+																	</span>
+																</td>
+															</tr>
+														</table>
+													</td>
+													<td class="trace">
+														{$contentblocks[p].SITENAME}{if $contentblocks[p].PAGES[0].PARENTS|@count > 0}:&nbsp;{/if}
+														{section name='s' loop=$contentblocks[p].PAGES[0].PARENTS step=-1}
+															<nobr>
+																{$contentblocks[p].PAGES[0].PARENTS[s][0].NAME}
+																{if !$smarty.section.s.last}<span class="traceicon"></span>{/if}
+															</nobr>
+														{/section}
+													</td>
+												</tr>
+											</table>
+										</div>
+									</div>
+								{/section}
+
+								{if $contentblocks[p].PAGES|@count > 0}</div>{/if}
+
+								{if $contentblocks[p].MAILINGS|@count > 0}
+									<div class="cntblockcontainergroup" onmouseover="$K.yg_showActions(this);">
+
+									<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+										<div class="listitempage">
+											<table class="listable">
+												<tr>
+													<td class="object">
+														<table class="objectable clickable">
+															<tr>
+																<td class="iconcol"><div class="iconcblock icn"></div></td>
+																<td class="title txt">
+																	<span yg_property="name" yg_type="cblock" yg_id="{$contentblocks[p].ID}-cblock" class="{$contentblocks[p].STYLE}" onclick="$K.yg_openObjectDetails('{$contentblocks[p].ID}', 'cblock', '{$contentblocks[p].NAME}', 'cblock', '{$contentblocks[p].STYLE}');">
+																		{$contentblocks[p].NAME}
+																	</span>
+																</td>
+															</tr>
+														</table>
+													</td>
+													<td class="trace">
+														{section name='r' loop=$contentblocks[p].PARENTS step=-1}
+															<nobr>{$contentblocks[p].PARENTS[r][0].NAME}
+															{if !$smarty.section.r.last}<span class="traceicon"></span>{/if}</nobr>
+														{/section}
+													</td>
+												</tr>
+											</table>
+										</div>
+									</div>
+
+
+									<!--  {$contentblocks_blind[p].MAILINGS[0].PAGENAME} -->
+
+									{section name='r' loop=$contentblocks[p].MAILINGS}
+										<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+											<div class="actions"></div>
+											<div class="listitempagesub{if $smarty.section.r.last} last{/if}">
+												<table class="listable">
+													<tr>
+														<td class="object">
+															<table class="objectable{if $outgoing[i].VIATARGETS[t].BAD == 0} clickable{/if}">
+																<tr>
+																	<td class="iconcol"><div class="icon{$contentblocks[p].MAILINGS[r].ICON}"></div></td>
+																	<td class="title">
+																		<span yg_property="name" yg_type="mailing" yg_id="{$contentblocks[p].MAILINGS[r].PAGEID}-mailing" class="{$contentblocks[p].MAILINGS[r].STYLE}" onclick="$K.yg_openObjectDetails('{$contentblocks[p].MAILINGS[r].MAILINGID}-mailing', 'mailing', '{$contentblocks[p].MAILINGS[r].MAILINGNAME}', '{$contentblocks[p].MAILINGS[r].ICON}', '{$contentblocks[p].MAILINGS[r].STYLE}');">
+																			{$contentblocks[p].MAILINGS[r].MAILINGNAME}
+																		</span>
+																	</td>
+																</tr>
+															</table>
+														</td>
+														<td class="trace"></td>
+													</tr>
+												</table>
+											</div>
+										</div>
+									{/section}
+
+									</div>
+								{/if}
+
+							</li>
+						{/section}
+
+					</ul>
+				{/if}
+
+			</div>
+		</div>
+	</div>
+</div>
+
+{if $refresh != 1}
+	<!-- FIXED HEADER TAGS //-->
+	<div class="tabhead_small ywindowhead" style="display:none" onmouseover="$K.yg_showActions(this);">
+		<div class="headline1">{$itext.TXT_USAGE|default:'$TXT_USAGE'}</div>
+	</div>
+	<!-- END FIXED HEADER TAGS //-->
+{/if}

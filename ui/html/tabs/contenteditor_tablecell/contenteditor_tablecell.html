@@ -1,0 +1,176 @@
+<form name="wid_{$win_no}_linkForm" onsubmit="return false;">
+<div class="dialogcontent">
+	<div class="cntblock">
+		
+		<table class="gridfixedspecial" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="col">
+					<span class="label">{$itext.TXT_CELL_TYPE|default:'$TXT_CELL_TYPE'}</span>
+				</td>
+				<td class="col">
+					<div id="dd_celltypes" yg_form="dropdown" class="dropdownbox">
+						<div class="dropdown">
+							<div class="dropdowninner">
+								<input tabindex="1" name="dd_celltype" yg_seq="" yg_onchange="" yg_previous="" type="text"  value="">
+							</div>
+						</div>
+						<div class="dropdownlistcontainer" id="dd_celltypes_ddlist">
+							<div class="dropdownlist">
+								<div value="td" class="selected">{$itext.TXT_CELL_TYPE_DATA|default:'$TXT_CELL_TYPE_DATA'}</div>
+								<div value="th">{$itext.TXT_CELL_TYPE_HEADER|default:'$TXT_CELL_TYPE_HEADER'}</div>
+							</div>
+							<div class="mk_scrollbars"></div>
+						</div>
+						<input name="dd_celltypes" type="hidden">
+					</div>
+				</td>
+				<td class="col"></td>
+			</tr>
+			<tr>
+				<td class="col">
+					<span class="label">{$itext.TXT_ALIGNMENT|default:'$TXT_ALIGNMENT'}</span>
+				</td>
+				<td class="col">
+					<div id="dd_aligns" yg_form="dropdown" class="dropdownbox">
+						<div class="dropdown">
+							<div class="dropdowninner">
+								<input tabindex="1" name="dd_align" yg_seq="" yg_onchange="" yg_previous="" type="text"  value="">
+							</div>
+						</div>
+						<div class="dropdownlistcontainer">
+							<div class="dropdownlist">
+								<div value="" class="selected">{$itext.TXT_NOT_SET|default:'$TXT_NOT_SET'}</div>
+								<div value="center">{$itext.TXT_CENTER|default:'$TXT_CENTER'}</div>
+								<div value="left">{$itext.TXT_LEFT|default:'$TXT_LEFT'}</div>
+								<div value="right">{$itext.TXT_RIGHT|default:'$TXT_RIGHT'}</div>
+							</div>
+							<div class="mk_scrollbars"></div>
+						</div>
+						<input name="dd_aligns" type="hidden" />
+					</div>
+				</td>
+				<td class="col"></td>
+			</tr>
+			<tr>
+				<td class="col">
+					<span class="label">{$itext.TXT_VERTICAL_ALIGNMENT|default:'$TXT_VERTICAL_ALIGNMENT'}</span>
+				</td>
+				<td class="col">
+					<div id="dd_valigns" yg_form="dropdown" class="dropdownbox">
+						<div class="dropdown">
+							<div class="dropdowninner">
+								<input tabindex="1" name="dd_valign" yg_seq="" yg_onchange="" yg_previous="" type="text"  value="">
+							</div>
+						</div>
+						<div class="dropdownlistcontainer">
+							<div class="dropdownlist">
+								<div value="" class="selected">{$itext.TXT_NOT_SET|default:'$TXT_NOT_SET'}</div>
+								<div value="top">{$itext.TXT_TOP|default:'$TXT_TOP'}</div>
+								<div value="center">{$itext.TXT_CENTER|default:'$TXT_CENTER'}</div>
+								<div value="bottom">{$itext.TXT_BOTTOM|default:'$TXT_BOTTOM'}</div>
+							</div>
+							<div class="mk_scrollbars"></div>
+						</div>
+						<input name="dd_valigns" type="hidden" />
+					</div>
+				</td>
+				<td class="col"></td>
+			</tr>
+			<tr>
+				<td class="col">
+					<span class="label">{$itext.TXT_CLASS|default:'$TXT_CLASS'}</span>
+				</td>
+				<td class="col">
+					<div id="dd_classes" yg_form="dropdown" class="dropdownbox">
+						<div class="dropdown">
+							<div class="dropdowninner">
+								<input tabindex="1" name="dd_class" yg_seq="" yg_onchange="" yg_previous="" type="text"  value="">
+							</div>
+						</div>
+						<div class="dropdownlistcontainer">
+							<div class="dropdownlist">
+								<div value="" class="selected">{$itext.TXT_NOT_SET|default:'$TXT_NOT_SET'}</div>
+							</div>
+							<div class="mk_scrollbars"></div>
+						</div>
+						<input name="dd_classes" type="hidden" />
+					</div>
+				</td>
+				<td class="col"></td>
+			</tr>
+			<tr>
+				<td class="col">
+					<span class="label">{$itext.TXT_WIDTH_PX|default:'$TXT_WIDTH_PX'}</span>
+				</td>
+				<td class="col">
+					<div class="textbox chars12" onclick="$K.yg_formHover(this,'click','textbox');">
+						<input tabindex="1" yg_onchange="" type="text" name="width" value="" />
+					</div>
+				</td>
+				<td class="col"></td>
+			</tr>
+			<tr>
+				<td class="col">
+					<span class="label">{$itext.TXT_HEIGHT_PX|default:'$TXT_HEIGHT_PX'}</span>
+				</td>
+				<td class="col">
+					<div class="textbox chars12" onclick="$K.yg_formHover(this,'click','textbox');">
+						<input tabindex="1" yg_onchange="" type="text" name="height" value="" />
+					</div>
+				</td>
+				<td class="col"></td>
+			</tr>
+			<tr>
+				<td class="col">
+					<span class="label">{$itext.TXT_UPDATE|default:'$TXT_UPDATE'}</span>
+				</td>
+				<td class="col">
+					<div id="dd_actions" yg_form="dropdown" class="dropdownbox">
+						<div class="dropdown">
+							<div class="dropdowninner">
+								<input tabindex="1" name="dd_action" yg_seq="" yg_onchange="" yg_previous="" type="text"  value="cell">
+							</div>
+						</div>
+						<div class="dropdownlistcontainer">
+							<div class="dropdownlist">
+								<div value="cell" class="selected">{$itext.TXT_CURRENT_CELL|default:'$TXT_CURRENT_CELL'}</div>
+								<div value="row">{$itext.TXT_ALL_CELLS_IN_ROW|default:'$TXT_ALL_CELLS_IN_ROW'}</div>
+								<div value="all">{$itext.TXT_ALL_CELLS|default:'$TXT_ALL_CELLS'}</div>
+							</div>
+							<div class="mk_scrollbars"></div>
+						</div>
+						<input name="dd_actions" type="hidden" value="cell" />
+					</div>
+				</td>
+				<td class="col"></td>
+			</tr>
+
+		</table>		
+		
+		<table class="gridfixedspecial" cellspacing="0" cellpadding="0">
+
+		</table>		
+				
+		
+	</div>
+</div>
+</form>
+
+<!-- bottom //-->
+<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_midbottom">
+			<table class="buttontable" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="rightbutton">
+						<div class="button" tabindex="1"><a id="wid_{$win_no}_okbutton" onclick="$K.windows['wid_{$win_no}'].submit();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_EDIT|default:'$TXT_EDIT'}</nobr></div></a></div>
+						<div class="button cancel" tabindex="1"><a id="wid_{$win_no}_cancelbutton" onclick="$K.windows['wid_{$win_no}'].remove();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</nobr></div></a></div>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td class="ywindow_rightbt"></td>
+	</tr>
+</table>
+<!-- end bottom //-->

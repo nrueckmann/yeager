@@ -1,0 +1,59 @@
+<table cellspacing="0" cellpadding="0" class="{if ($action != 'choose')}ywindowfilter{else}ywindowfiltercolumn2{/if}">
+	<tr>
+		<td class="ywindow_left"></td>
+		<td class="ywindow_midborder"><div class="whitecorner"></div></td>
+		<td class="ywindow_right"></td>
+	</tr>
+	<tr>
+		<td class="ywindow_left"></td>
+		<td class="ywindow_mid">
+			<table cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<td width="160">
+						<div class="filestatus"><strong id="wid_{$win_no}_objcnt">0</strong> {$itext.TXT_FILES|default:'$TXT_FILES'}</div>
+					</td>
+					<td></td>
+					<td class="sliderdesc_l" onclick="$K.yg_fileSlideClick('wid_{$win_no}',-1);"> </td>
+					<td width="222" align="center">
+						<div id="wid_{$win_no}_slider" class="fileslider mk_sliderlist" align="left">
+								<div id="wid_{$win_no}_sliderhandle" class="filesliderhandle_big"></div>
+						</div> 
+						<div id="wid_{$win_no}_sliderpreview" class="fileslider mk_sliderpreview" align="left">
+								<div id="wid_{$win_no}_sliderhandlepreview" class="filesliderhandle"></div>
+						</div> 
+					</td>
+					<td class="sliderdesc_r" onclick="$K.yg_fileSlideClick('wid_{$win_no}',1);"> </td>
+					<td></td>
+					<td width="160">
+						<div id="wid_{$win_no}_fileview" yg_form="dropdown" class="dropdownbox">
+							<div class="dropdown">
+								<div class="dropdowninner">
+									<input yg_seq="{$win_no}" yg_onchange="$K.yg_switchFileView('wid_{$win_no}',$('wid_{$win_no}_fileview_ddlist').down('.selected').readAttribute('value'));" type="text" tabindex="1">
+								</div>
+							</div>
+							<div class="dropdownlistcontainer">
+								<div class="dropdownlist">
+									<div value="listview" class="selected">{$itext.TXT_LIST_VIEW|default:'$TXT_LIST_VIEW'}</div>
+									<div value="thumbview">{$itext.TXT_THUMB_VIEW|default:'$TXT_THUMB_VIEW'}</div>
+								</div>
+								<div class="mk_scrollbars"></div>
+							</div>
+							<input type="hidden" value="listview">
+						</div>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td class="ywindow_right"></td>			
+	</tr>
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_midborder"><div class="whitecorner"></div></td>
+		<td class="ywindow_rightbt"></td>
+	</tr>
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_spacemid"></td>
+		<td class="ywindow_rightbt"></td>			
+	</tr>
+</table>

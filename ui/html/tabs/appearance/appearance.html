@@ -1,0 +1,208 @@
+<div class="panelcontent {if !$pageInfo.RWRITE}mk_readonly{/if}">
+	<div class="ipanel" yg_panel="true">
+		<div class="panelheader headline1">
+			<a class="opened">{$itext.TXT_TEMPLATE|default:'$TXT_TEMPLATE'}</a>
+			{if $pageInfo.RWRITE}
+				<!-- actions //-->
+				<div class="actions">
+					<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+					<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+						<div class="actionborder"></div>
+						<a class="edit" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'TEMPLATE_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} site: {$site}, action: 'choose', page: {$page}, opener_reference: 'wid_{$win_no}' {literal} } } {/literal});$K.actionhover=true;" onmouseover="$K.yg_showHelp('{$itext.TXT_TEMPLATE_EDIT}');" title="{$itext.TXT_TEMPLATE_EDIT}" title="{$itext.TXT_TEMPLATE_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+						<div class="actionborder"></div>
+					</div>
+				</div>
+				<!-- end actions //-->
+			{/if}
+		</div>
+		<div class="panelcontent">
+			<div class="mk_contentgroup">
+	
+				<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);" id="wid_{$win_no}_{$page}_templates">
+					{if $pageInfo.RWRITE}
+						<!-- actions //-->
+						<div class="actions">
+							<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+							<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+								<div class="actionborder"></div>
+								<a  class="edit" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'TEMPLATE_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} site: {$site}, action: 'choose', page: {$page}, opener_reference: 'wid_{$win_no}' {literal} } } {/literal});" onclick="$K.actionhover=true;" onmouseover="$K.yg_showHelp('{$itext.TXT_TEMPLATE_EDIT}');" title="{$itext.TXT_TEMPLATE_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+								<div class="actionborder"></div>
+							</div>
+						</div>
+						<!-- end actions //-->
+					{/if}
+					
+					<div yg_preselected="{$templateInfo.ID}" class="cntblockselection" {if $pageInfo.RWRITE}yg_accepts="template"{/if} yg_type="page" yg_property="template" {if $pageInfo.RWRITE}onclick="new $K.yg_wndobj({literal}{{/literal} config: 'TEMPLATE_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} site: {$site}, action: 'choose', page: {$page}, opener_reference: 'wid_{$win_no}' {literal} } } {/literal});"{/if} id="wid_{$win_no}_templatepanel" {if $pageInfo.RWRITE}onmouseup="$K.yg_customSortableOnDrop(this.id);"{/if}>	
+						{if $templateInfo.ID==0}
+							<table id="navipanel_inner" class="gridflex" cellspacing="0" cellpadding="0">
+								<tr>
+									<td class="col1">
+										<div class="selectionmarker">
+											<div class="titlenoicon"><span class="titlecnt">{if $pageInfo.RWRITE}{$itext.TXT_SELECTOR_TEMPLATE|default:'$TXT_SELECTOR_TEMPLATE'}{else}{$itext.TXT_SELECTOR_TEMPLATE_READONLY|default:'$TXT_SELECTOR_TEMPLATE_READONLY'}{/if}</span></div>
+										</div>
+									</td>
+								</tr>
+							</table>
+						{else}
+							{include file="$approot/ui/html/tabs/template_info/template_info.html"}
+						{/if}
+					</div>	
+				</div>
+				
+			</div>
+		</div>
+	</div>	
+	
+	
+	
+	<div class="ipanel" yg_panel="true">	
+		<div class="panelheader headline1">
+			<a class="opened">{$itext.TXT_NAVIGATION|default:'$TXT_NAVIGATION'}</a>
+			<!--
+			<div>
+				<a onmouseover="$K.inherithover=true;" onmouseout="$K.inherithover=false;" onclick="$K.yg_ipanelInherit(this);" onfocus="this.blur();" class="inherit"><div class="inherit"><nobr>{$itext.TXT_INHERITANCE_ACTIVE|default:'$TXT_INHERITANCE_ACTIVE'}</nobr></div><div class="noinherit"><nobr>{$itext.TXT_INHERITANCE_INACTIVE|default:'$TXT_INHERITANCE_INACTIVE'}</nobr></div></a>
+			</div>
+			//--> 
+			{if $pageInfo.RWRITE}
+				<!-- actions //-->
+				<div class="actions">
+					<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+					<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+						<div class="actionborder"></div>
+						<a class="edit" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'NAVIGATION_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} site: {$site}, page: {$page}, opener_reference: 'wid_{$win_no}' {literal} } } {/literal});" onmouseover="$K.yg_showHelp('{$itext.TXT_NAVIGATION_EDIT}');" title="{$itext.TXT_NAVIGATION_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+						<div class="actionborder"></div>
+					</div>
+				</div>
+				<!-- end actions //-->
+			{/if}	
+		</div>
+		<div class="panelcontent">
+			<div class="mk_contentgroup">
+				<!--
+				naviinfo: '{$naviinfo.ID}'
+				-->
+				<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);" id="wid_{$win_no}_{$page}_navigations" {if $pageInfo.RWRITE}yg_accepts="navigation"{/if}>
+					{if $pageInfo.RWRITE}
+						<!-- actions //-->
+						<div class="actions">
+							<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+							<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+								<div class="actionborder"></div>
+								<a  class="edit" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'NAVIGATION_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} site: {$site}, page: {$page}, opener_reference: 'wid_{$win_no}' {literal} } } {/literal});" onmouseover="$K.yg_showHelp('{$itext.TXT_NAVIGATION_EDIT}');" title="{$itext.TXT_NAVIGATION_EDIT}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+								<div class="actionborder"></div>
+							</div>
+						</div>
+						<!-- end actions //-->
+					{/if}	
+			
+					<div yg_preselected="{$pageInfo.NAVIGATIONID}" class="cntblockselection navipanel" yg_type="page" yg_property="navigation" {if $pageInfo.RWRITE}onclick="new $K.yg_wndobj({literal}{{/literal} config: 'NAVIGATION_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal}site: {$site}, page: {$page}, opener_reference: 'wid_{$win_no}', preselected: this.readAttribute('yg_preselected') {literal} } } {/literal});"{/if} id="wid_{$win_no}_navigationpanel" {if $pageInfo.RWRITE}onmouseup="$K.yg_customSortableOnDrop(this.id);"{/if}>
+						
+						{include file="$approot/ui/html/tabs/appearance/navigation.inc.html"}
+	
+					</div>							
+				</div>		
+				
+			</div>
+		</div>
+	</div>	
+	
+	
+	
+	<div class="ipanel" yg_panel="true">	
+		<div class="panelheader headline1">
+			<a class="opened">{$itext.TXT_STATUS|default:'$TXT_STATUS'}</a>
+		</div>
+		<div class="panelcontent">
+			<div class="mk_contentgroup">
+				<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+					<div class="cntblock">
+						<table class="gridfixed" cellspacing="0" cellpadding="0">
+							<tr>
+								<td colspan="8" class="col1">
+									<div class="checkarray">
+										<span class="label">{$itext.TXT_ACTIVITY_STATE|default:'$TXT_ACTIVITY_STATE'}</span>
+										<div class="checkbox" {if !$pageInfo.RWRITE}disabled="disabled"{/if} yg_form="checkbox" tabindex="1" {if $pageInfo.RWRITE}onchange="$K.yg_setPageState(this);"{/if} yg_id="{$page}-{$site}" yg_type="page" yg_property="active" ><div class="checkboxicon{if $pageInfo.ACTIVE==1}sel{/if}"><input type="hidden" name="active" value="{if $pageInfo.ACTIVE==1}1{else}0{/if}"><span class="label">{$itext.TXT_PAGE_ACTIVE|default:'$TXT_PAGE_ACTIVE'}</span></div></div>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>	
+	
+	
+	
+	
+	
+	{if $children|count > 0}
+	{if $pageInfo.RWRITE}
+	<div class="ipanel" yg_panel="true">	
+		<div class="panelheader headline1">
+			<a class="opened">{$itext.TXT_ORDER_OF_SUBPAGES|default:'$TXT_ORDER_OF_SUBPAGES'}</a>
+	
+		</div>
+		<div class="panelcontent">
+			<div class="mk_contentgroup">
+	
+	
+				<div class="cntblockcontainernohover">
+					<div class="cntblock">
+						<table class="gridfixed" cellspacing="0" cellpadding="0">
+							<tr>
+								<td colspan="8" class="col1">
+									<span class="label">{$itext.TXT_SORTING|default:'$TXT_SORTING'}</span>
+	
+									<div class="textbox">
+										
+										<div class="sortlistouter" style="height:110px;">
+										<div id="sortlist{$win_no}" class="sortlist">										
+	
+											<div class="sortablelistcontainer" id="wid_{$win_no}_{$page}_appearance">
+												<div class="sortablelist" id="wid_{$win_no}_{$page}_appearance_inner" onmouseup="$K.yg_customSortableOnDrop(this.parentNode.id);">
+	
+													<ul yg_widget="type:sortable;accepts:subpage;objecttype:subpage;callbacks:subpagesSortCallbacks;" id="wid_{$win_no}_{$page}_appearance_list" class="entries_list" yg_accepts="subpage" yg_type="subpage">
+														{section name="i" loop=$children}
+															<li id="wid_{$win_no}_subpage_{$children[i].ID}" yg_id="{$children[i].ID}-{$site}" yg_type="subpage">
+																<div class="{if $children[i].HASCHANGED==1}editblocksortable{else}cntblockcontainersortable{/if} entries" onmouseover="$K.yg_showActions(this);">
+																	<!-- actions //-->
+																	<div class="actions">
+																		<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+																		<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+																			<div class="actionborder"></div>
+																			<a class="up" onclick="$K.yg_sortSubPageUp(this.up(3));" onmouseover="$K.yg_showHelp('{$itext.TXT_PAGE_MOVEUP}');" title="{$itext.TXT_PAGE_MOVEUP}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																			<a class="down" onclick="$K.yg_sortSubPageDown(this.up(3));" onmouseover="$K.yg_showHelp('{$itext.TXT_PAGE_MOVEDOWN}');" title="{$itext.TXT_PAGE_MOVEDOWN}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+																			<div class="actionborder"></div>
+																		</div>
+																	</div>
+																	<!-- end actions //-->
+																	<div class="listitempage" yg_selectable="true" yg_id="{$children[i].ID}-{$site}" yg_type="page">
+																		<div class="iconpage"></div>
+																		<div class="title"><div id="wid_{$win_no}_subpage_{$children[i].ID}_txt">{$children[i].NAME}</div></div>
+																		<div style="clear:both;"></div>
+																	</div>				
+																</div>
+															</li>
+														{/section}
+													</ul>
+	
+												</div>
+											</div>
+	
+											<div class="mk_scrollbars"></div>
+										</div>		
+										</div>
+								
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>			
+			</div>
+		</div>
+	</div>	
+	{/if}
+{/if}
+</div>

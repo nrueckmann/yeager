@@ -1,0 +1,26 @@
+<div id="toolbar" class="expanded">
+	<div class="outer">
+		<div class="right">
+			<div class="cnt">
+				<div onclick="$K.switchAdmin('start');"><div>{$itext.TXT_HOMEPAGE|default:'$TXT_HOMEPAGE'}</div></div>
+				<div style="display:none"><div onclick="$K.switchAdmin(this.up().readAttribute('value'))"><div></div><span></span></div></div>
+				<div style="display:none"><div onclick="$K.switchAdmin(this.up().readAttribute('value'))"><div></div><span></span></div></div>
+				<div style="display:none"><div onclick="$K.switchAdmin(this.up().readAttribute('value'))"><div></div><span></span></div></div>
+				<div class="tools">
+					<div><span onclick="$K.yg_showFilterContext(this, event);">{$itext.TXT_TOOLS|default:'$TXT_TOOLS'}</span></div>
+					<div class="filtercontext" onmouseup="this.hide();">
+						<a onclick="$K.yg_openUploadProgress(true);">{$itext.TXT_UPLOAD_STATUS|default:'$TXT_UPLOAD_STATUS'}</a>
+						<a onclick="$K.yg_openDropStack();">{$itext.TXT_DROPSTACK|default:'$TXT_DROPSTACK'}</a>				
+						<div class="filtercut"></div>
+						<a onclick="new $K.yg_wndobj({literal}{ config: 'TOOLS_PAGES' }{/literal});">{$itext.TXT_PAGES|default:'$TXT_PAGES'}</a>
+						<a onclick="new $K.yg_wndobj({literal}{ config: 'TOOLS_CBLOCKS' }{/literal});">{$itext.TXT_CONTENTBLOCKS|default:'$TXT_CONTENTBLOCKS'}</a>
+						<a onclick="new $K.yg_wndobj({literal}{ config: 'TOOLS_FILES' }{/literal});">{$itext.TXT_FILES|default:'$TXT_FILES'}</a>
+						<a onclick="new $K.yg_wndobj({literal}{ config: 'TOOLS_TAGS' }{/literal});">{$itext.TXT_TAGS|default:'$TXT_TAGS'}</a>
+						<a onclick="new $K.yg_wndobj({literal}{ config: 'TOOLS_TEMPLATES' }{/literal});">{$itext.TXT_TEMPLATES|default:'$TXT_TEMPLATES'}</a>
+						<a onclick="new $K.yg_wndobj({literal}{ config: 'TOOLS_ENTRYMASKS' }{/literal});">{$itext.TXT_ENTRYMASKS|default:'$TXT_ENTRYMASKS'}</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

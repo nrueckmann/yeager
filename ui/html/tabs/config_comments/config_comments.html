@@ -1,0 +1,77 @@
+<div class="panelcontent">
+	{if $adminAllowed}
+		<div class="mk_contentgroup">
+			<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+				<div class="cntblock">
+					<table class="gridfixed" cellspacing="0" cellpadding="0">
+						<tr>
+							<td colspan="2" class="col2">
+								<span class="label">{$itext.TXT_SPAM_PROTECTION|default:'$TXT_SPAM_PROTECTION'}</span>
+								<div class="checkarray">
+									<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon{if $commentsSettings.ALLOW_HTML}sel{/if}"><input type="hidden" name="allow_html" value="{if $commentsSettings.ALLOW_HTML}1{else}0{/if}" /><span class="label">{$itext.TXT_ALLOW_HTML|default:'$TXT_ALLOW_HTML'}</span></div></div>
+								</div>
+								<div class="checkarray">
+									<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon{if $commentsSettings.FORCE_APPROVAL}sel{/if}"><input type="hidden" name="force_approval" value="{if $commentsSettings.FORCE_APPROVAL}1{else}0{/if}" /><span class="label">{$itext.TXT_APPROVE_COMMENTS|default:'$TXT_APPROVE_COMMENTS'}</span></div></div>
+								</div>
+								<div class="checkarray">
+									<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon{if $commentsSettings.FORCE_AUTHENTICATION}sel{/if}"><input type="hidden" name="force_authentication" value="{if $commentsSettings.FORCE_AUTHENTICATION}1{else}0{/if}" /><span class="label">{$itext.TXT_ONLY_AUTH_USERS|default:'$TXT_ONLY_AUTH_USERS'}</span></div></div>
+								</div>
+								<div class="checkarray">
+									<div class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon{if $commentsSettings.SE_RANK_DENIAL}sel{/if}"><input type="hidden" name="se_rank_denial" value="{if $commentsSettings.SE_RANK_DENIAL}1{else}0{/if}" /><span class="label">{$itext.TXT_RANK_DENIAL|default:'$TXT_RANK_DENIAL'}</span></div></div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="col2">
+								<span class="label">{$itext.TXT_BLACKLISTED_WORDS|default:'$TXT_BLACKLISTED_WORDS'}</span>
+								<div class="textbox" yg_form="textbox">
+									<textarea tabindex="1" onchange="$K.yg_setEdited(this);" type="text" name="blacklist">{$commentsSettings.BLACKLIST}</textarea>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="col2">
+								<span class="label">{$itext.TXT_SPAM_WORDS|default:'$TXT_SPAM_WORDS'}</span>
+								<div class="textbox" yg_form="textbox">
+									<textarea tabindex="1" onchange="$K.yg_setEdited(this);" type="text" name="spamlist">{$commentsSettings.SPAMLIST}</textarea>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="col2">
+								<span class="label">{$itext.TXT_AUTO_CLOSE_RESPONSES_DAYS|default:'$TXT_AUTO_CLOSE_RESPONSES_DAYS'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input type="text" tabindex="1" onchange="$K.yg_setEdited(this);" type="text" name="autoclose_after_days" value="{$commentsSettings.AUTOCLOSE_AFTER_DAYS}" />
+								</div>
+							</td>
+							<td class="col2">
+								<span class="label">{$itext.TXT_COMMENT_TIME_INTERVAL_SECONDS|default:'$TXT_COMMENT_TIME_INTERVAL_SECONDS'}</span>
+								<div class="textbox" yg_form="textbox">
+									<input type="text" tabindex="1" onchange="$K.yg_setEdited(this);" type="text" name="minimum_interval" value="{$commentsSettings.MINIMUM_INTERVAL}" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	{/if}
+</div>
+
+<!-- BOTTOMLINE //-->
+<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_midbottom">{if $adminAllowed}<div class="button" tabindex="1"><a  class="stdbutton"><div onclick="$K.yg_saveCommentsSettings(this);" class="wrapper"><nobr>{$itext.TXT_SAVE|default:'$TXT_SAVE'}</nobr></div></a></div>{/if}</td>
+		<td class="ywindow_rightbt"></td>
+	</tr>
+</table>
+<!-- END BOTTOMLINE //-->
+
+{if $refresh != 1}
+	<!-- FIXED HEADER TAGS //-->
+	<div class="tabhead_small hoverable ywindowhead" style="display:none" onmouseover="$K.yg_showActions(this);$K.yg_ipanelHighlight($('wid_{$win_no}_ywindowinner'),'over');" onmouseout="$K.yg_ipanelHighlight($('wid_{$win_no}_ywindowinner'),'out');">
+		<div class="headline1">{$itext.TXT_COMMENTS|default:'$TXT_COMMENTS'}</div>
+	</div>
+	<!-- END FIXED HEADER TAGS //-->
+{/if}

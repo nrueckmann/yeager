@@ -1,0 +1,169 @@
+<!-- Inhaltsbereich //-->
+{if $objecttype == 'mailing'}
+<div class="ipanel" yg_panel="true">
+	<div class="panelheader headline1">
+		<a class="opened">{$itext.TXT_GENERAL|default:'$TXT_GENERAL'}</a>
+	</div>
+	<div class="panelcontent {if !$pageInfo.RWRITE}mk_readonly{/if}">
+		<div class="cntblockcontainernohover">
+			<div class="cntblock">									
+				<table class="gridfixed" cellspacing="0" cellpadding="0">
+					<tr>
+						<td>
+							<!-- FROM EMAIL -->
+							<span class="label">{$itext.TXT_SENDER_EMAIL|default:'$TXT_SENDER_EMAIL'}</span>
+							<div class="textbox" yg_form="textbox">
+								<input tabindex="1" {if !$pageInfo.RWRITE}disabled="disabled"{/if} yg_onchange="setObjectProperty" yg_id="{$page_id}-{$site}" yg_type="{$objecttype}" yg_property="from_email" onchange="$K.yg_setEdited(this);" type="text" name="from_email" value="{$mailingInfo.FROM_EMAIL|escape:'html':'UTF-8'}" />
+							</div>
+						</td>
+						<td>
+							<!-- FROM NAME -->
+							<span class="label">{$itext.TXT_SENDER_NAME|default:'$TXT_SENDER_NAME'}</span>
+							<div class="textbox" yg_form="textbox">
+								<input tabindex="1" {if !$pageInfo.RWRITE}disabled="disabled"{/if} yg_onchange="setObjectProperty" yg_id="{$page_id}-{$site}" yg_type="{$objecttype}" yg_property="from_name" onchange="$K.yg_setEdited(this);" type="text" name="from_name" value="{$mailingInfo.FROM_NAME|escape:'html':'UTF-8'}" />
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<!-- REPLY TO REPLYTO-->
+							<span class="label">{$itext.TXT_SENDER_REPLYTO|default:'TXT_SENDER_REPLYTO'}</span>
+							<div class="textbox" yg_form="textbox">
+								<input tabindex="1" {if !$pageInfo.RWRITE}disabled="disabled"{/if} yg_onchange="setObjectProperty" yg_id="{$page_id}-{$site}" yg_type="{$objecttype}" yg_property="from_replyto" onchange="$K.yg_setEdited(this);" type="text" name="from_replyto" value="{$mailingInfo.FROM_REPLYTO|escape:'html':'UTF-8'}" />
+							</div>
+						</td>
+						<td>
+							<!-- SENDER -->
+							<span class="label">{$itext.TXT_SENDER_SENDER|default:'$TXT_SENDER_SENDER'}</span>
+							<div class="textbox" yg_form="textbox">
+								<input tabindex="1" {if !$pageInfo.RWRITE}disabled="disabled"{/if} yg_onchange="setObjectProperty" yg_id="{$page_id}-{$site}" yg_type="{$objecttype}" yg_property="from_sender" onchange="$K.yg_setEdited(this);" type="text" name="from_sender" value="{$mailingInfo.FROM_SENDER|escape:'html':'UTF-8'}" />
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<!-- SUBJECT -->
+							<span class="label">{$itext.TXT_EMAIL_SUBJECT|default:'$TXT_EMAIL_SUBJECT'}</span>
+							<div class="textbox" yg_form="textbox">
+								<input tabindex="1" {if !$pageInfo.RWRITE}disabled="disabled"{/if} yg_onchange="setObjectProperty" yg_id="{$page_id}-{$site}" yg_type="{$objecttype}" yg_property="subject" onchange="$K.yg_setEdited(this);" type="text" name="subject" value="{$mailingInfo.SUBJECT|escape:'html':'UTF-8'}" />
+							</div>						
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<!-- FALLBACK PLAINTEXT -->
+							<span class="label">{$itext.TXT_EMAIL_PLAINTEXT_FALLBACK|default:'$TXT_EMAIL_PLAINTEXT_FALLBACK'}</span>
+							<div class="textbox" yg_form="textbox">
+								<textarea tabindex="1" {if !$pageInfo.RWRITE}disabled="disabled"{/if} yg_onchange="setObjectProperty" yg_id="{$page_id}-{$site}" yg_type="{$objecttype}" yg_property="fallback_text" onchange="$K.yg_setEdited(this);" type="text" name="fallback_text">{$mailingInfo.FALLBACK_TEXT|replace:'\n':"\n"|replace:'\\':''}</textarea>
+							</div>						
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{/if}
+
+{if $contentareas|@count eq 0}
+	<div id="wid_{$win_no}_nocontentareas" class="nocontentareas {if ($displaymode!='dialog')}mk_fillcontentspace{else}mk_verticalcenter{/if}" style="display:none;"><div class="cntspacer"></div><span class="bracketleft"></span>{$itext.TXT_NO_CONTENTAREAS_ON_THIS_PAGE|default:'$TXT_NO_CONTENTAREAS_ON_THIS_PAGE'}<span class="bracketright"></span></div></div>
+{/if}
+
+<div class="mk_contentgroup {if !$pageInfo.RWRITE}mk_readonly{/if}" yg_multiselect="{if $displaymode=='dialog'}false{else}true{/if}">
+{section name=scopi loop=$contentareas}
+	<div class="ipanel" style="display:none;" id="wid_{$win_no}_panel{$contentareas[scopi].ID}" yg_type="contentarea" yg_panel="true">
+		<div class="panelheader headline1">
+			<a id="wid_{$win_no}_panel{$contentareas[scopi].ID}_ipanellnk" onfocus="this.blur();" class="opened">{$contentareas[scopi].NAME}</a>
+			{if ($displaymode!='dialog') && $pageInfo.RWRITE}
+				<!-- actions //-->
+				<div class="actions">
+					<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+					<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+						<div class="actionborder"></div>
+						{if $objecttype=='page'}
+							<a class="add" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'PAGE_INSERT_CONTENT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} opener_reference: 'wid_{$win_no}_scp_{$contentareas[scopi].ID}_list' {literal} } } {/literal});" onmouseover="$K.yg_showHelp('{$itext.TXT_CONTENT_ADD}');" title="{$itext.TXT_CONTENT_ADD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+						{elseif $objecttype=='cblock'}
+							<a class="add" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'CBLOCK_INSERT_CONTENT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} opener_reference: 'wid_{$win_no}_scp_{$contentareas[scopi].ID}_list' {literal} } } {/literal});" onmouseover="$K.yg_showHelp('{$itext.TXT_CONTENT_ADD}');" title="{$itext.TXT_CONTENT_ADD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+						{elseif $objecttype=='extpage'}
+							<a class="add" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'PAGE_EXTENSION_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} opener_reference: 'wid_{$win_no}' {literal} } } {/literal});" onmouseover="$K.yg_showHelp('{$itext.TXT_EXTENSION_ADD}');" title="{$itext.TXT_EXTENSION_ADD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+						{elseif $objecttype=='extcblock'}
+							<a class="add" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'CBLOCK_EXTENSION_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} opener_reference: 'wid_{$win_no}' {literal} } } {/literal});" onmouseover="$K.yg_showHelp('{$itext.TXT_EXTENSION_ADD}');" title="{$itext.TXT_EXTENSION_ADD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+						{elseif $objecttype=='extfile'}
+							<a class="add" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'FILE_EXTENSION_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} opener_reference: 'wid_{$win_no}' {literal} } } {/literal});" onmouseover="$K.yg_showHelp('{$itext.TXT_EXTENSION_ADD}');" title="{$itext.TXT_EXTENSION_ADD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+						{elseif $objecttype=='extmailing'}
+							<a class="add" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'MAILING_EXTENSION_SELECT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} opener_reference: 'wid_{$win_no}' {literal} } } {/literal});" onmouseover="$K.yg_showHelp('{$itext.TXT_EXTENSION_ADD}');" title="{$itext.TXT_EXTENSION_ADD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+						{elseif $objecttype=='mailing'}
+							<a class="add" onclick="new $K.yg_wndobj({literal}{{/literal} config: 'MAILING_INSERT_CONTENT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} opener_reference: 'wid_{$win_no}_scp_{$contentareas[scopi].ID}_list' {literal} } } {/literal});" onmouseover="$K.yg_showHelp('{$itext.TXT_CONTENT_ADD}');" title="{$itext.TXT_CONTENT_ADD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+						{/if}
+						<div class="actionborder"></div>
+					</div>
+				</div>
+				<!-- end actions //-->
+			{/if}
+		</div>
+		<div id="wid_{$win_no}_panel{$contentareas[scopi].ID}_ipanelcontent" class="panelcontent" style="height:100%;">
+			<div class="mk_contentarea" id="wid_{$win_no}_ca_{$contentareas[scopi].CODE}">
+		  	<div class="contentcontainer" id="wid_{$win_no}_scp_{$contentareas[scopi].ID}_inner" style="z-index:1;height:100%;" {if ($displaymode!='dialog') && $pageInfo.RWRITE}onmouseup="$K.yg_customSortableOnDrop(this.up(2).id);"{/if}>
+				<ul class="page_contentarea {if $displaymode=='dialog'}dialog_lst{/if}{if !$pageInfo.RWRITE} mk_nowrite{/if}" id="wid_{$win_no}_scp_{$contentareas[scopi].ID}_list" {if ($displaymode!='dialog') && $pageInfo.RWRITE}yg_accepts="{if (($objecttype=='page') || ($objecttype=='mailing'))}cblock,entrymask{elseif $objecttype=='cblock'}entrymask{else}{$objecttype}{/if}"{/if}>
+
+				</ul>
+			</div>
+			<div id="wid_{$win_no}_scp_{$contentareas[scopi].ID}_addmarker" onmousedown="Event.stop(event);" class="cntblockadd mk_cnt mk_nodrag" yg_id="{$ygid}" yg_accepts="{if (($objecttype=='page') || ($objecttype=='mailing'))}cblock,entrymask{elseif $objecttype=='cblock'}entrymask{else}{$objecttype}{/if}" yg_type="page" onmouseup="$K.yg_customSortableOnDrop({if (($objecttype=='page') || ($objecttype=='mailing') || ($objecttype=='cblock'))}'wid_{$win_no}_scp_{$contentareas[scopi].ID}_list'{else}'wid_{$win_no}'{/if});">
+				<div class="cntblockadd" {if ($displaymode!='dialog') && $pageInfo.RWRITE}onclick="{strip}
+				{if $objecttype=='page'}new $K.yg_wndobj({literal}{{/literal} config: 'PAGE_INSERT_CONTENT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} opener_reference: 'wid_{$win_no}_scp_{$contentareas[scopi].ID}_list' {literal} } } {/literal});{/if}
+				{if $objecttype=='cblock'}new $K.yg_wndobj({literal}{{/literal} config: 'CBLOCK_INSERT_CONTENT', loadparams: {literal}{{/literal} opener_reference: 'wid_{$win_no}_scp_{$contentareas[scopi].ID}_list' {literal} } } {/literal});{/if}
+				{if $objecttype=='extpage'}new $K.yg_wndobj({literal}{{/literal} config: 'PAGE_EXTENSION_SELECT', loadparams: {literal}{{/literal} opener_reference: 'wid_{$win_no}' {literal} } } {/literal});{/if}
+				{if $objecttype=='extcblock'}new $K.yg_wndobj({literal}{{/literal} config: 'CBLOCK_EXTENSION_SELECT', loadparams: {literal}{{/literal} opener_reference: 'wid_{$win_no}' {literal} } } {/literal});{/if}
+				{if $objecttype=='extfile'}new $K.yg_wndobj({literal}{{/literal} config: 'FILE_EXTENSION_SELECT', loadparams: {literal}{{/literal} opener_reference: 'wid_{$win_no}' {literal} } } {/literal});{/if}
+				{if $objecttype=='extmailing'}new $K.yg_wndobj({literal}{{/literal} config: 'MAILING_EXTENSION_SELECT', loadparams: {literal}{{/literal} opener_reference: 'wid_{$win_no}' {literal} } } {/literal});{/if}
+				{if $objecttype=='mailing'}new $K.yg_wndobj({literal}{{/literal} config: 'MAILING_INSERT_CONTENT', openerYgId: '{$page_id}-{$site_id}', loadparams: {literal}{{/literal} opener_reference: 'wid_{$win_no}_scp_{$contentareas[scopi].ID}_list' {literal} } } {/literal});{/if}
+				{/strip}" onmouseup="$K.yg_customSortableOnDrop(this.up(3).id);"{/if}>
+					<div class="selectionmarker">{if ($objecttype|strpos:'ext' === 0)}{$itext.TXT_EXTENSION_ADD|default:'$TXT_EXTENSION_ADD'}{else}{$itext.TXT_CONTENT_ADD|default:'$TXT_CONTENT_ADD'}{/if}</div>
+				</div>
+			</div>
+
+			</div>
+		</div>
+	</div>
+{/section}
+</div>
+
+<script>
+	var contentareaIDList = new Array();
+	var contentareaIDListExt = new Array();
+	
+	{section name=scopi loop=$contentareas}
+		contentareaIDList.push( '{$contentareas[scopi].ID}' );
+	{/section}
+	
+	var id, code, name, list, listId, listLnkId, listName;
+
+	{section name=scopi loop=$contentareas}
+		id = '{$contentareas[scopi].ID}';
+		code = '{$contentareas[scopi].CODE}';
+		name = '{$contentareas[scopi].NAME}';
+		list = new Array();
+
+		{section name=ci loop=$contentareas[scopi].LIST}
+			listId = '{$contentareas[scopi].LIST[ci].OBJECTID}';
+			listLnkId = '{$contentareas[scopi].LIST[ci].LINKID}';
+			listName = '{$contentareas[scopi].LIST[ci].NAME}';
+			list.push({literal}{{/literal}
+				id: listId,
+				linkid: listLnkId,
+				name: listName
+			{literal}}{/literal});
+	  	{/section}
+
+	  	contentareaIDListExt.push({literal}{{/literal}
+	  		id: id,
+	  		code: code,
+	  		name: name,
+	  		list: list
+	  	{literal}}{/literal});
+	{/section}
+
+	$K.windows['wid_{$win_no}'].url = '{$page_url}';
+	$K.windows['wid_{$win_no}'].contentareaIDList = contentareaIDList;
+	$K.windows['wid_{$win_no}'].contentareaIDListExt = contentareaIDListExt;
+</script>

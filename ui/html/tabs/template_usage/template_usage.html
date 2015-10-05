@@ -1,0 +1,88 @@
+<div class="panelcontent">
+
+	<div class="mk_contentgroup" yg_multiselect="true">
+		
+		<div>
+			<div>
+			
+				{if ($all_pages|@count == 0) && ($all_mailings|@count == 0)}
+					<div class="cntblock"> 
+						<span class="noselection mk_verticalcenter">
+							<span class="bracketleft"></span>{$itext.TXT_TEMPLATE_UNUSED|default:'$TXT_TEMPLATE_UNUSED'}<span class="bracketright"></span>
+						</span>
+					</div>
+				{else}
+					<ul class="objectlist">
+						{section name='p' loop=$all_pages}
+							<!-- SEITE oder einzelner CONTENTBLOCK (dann statt iconpage  iconcblock) //--> 
+							<li class="listitem mk_nowrite">
+								<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+									<div class="listitempage">
+										<table class="listable">
+											<tr>
+												<td class="object">
+													<table class="objectable clickable">
+														<tr>
+															<td class="iconcol"><div class="icon{$all_pages[p].ICON} icn"></div></td>
+															<td class="title txt">
+																<span yg_property="name" yg_type="page" yg_id="{$all_pages[p].ID}-{$all_pages[p].SITE}" class="{$all_pages[p].STYLE}" onclick="$K.yg_openObjectDetails('{$all_pages[p].ID}-{$all_pages[p].SITE}', 'page', '{$all_pages[p].NAME}', '{$all_pages[p].ICON}', '{$all_pages[p].STYLE}');">
+																	{$all_pages[p].NAME}
+																</span>
+															</td>																								
+														</tr>
+													</table>
+												</td>
+												<td class="trace">
+													{$all_pages[p].SITENAME}{if $all_pages[p].PARENTS|@count > 0}:{/if}
+													{section name='r' loop=$all_pages[p].PARENTS step=-1}
+														<nobr>{$all_pages[p].PARENTS[r][0].NAME}
+														{if !$smarty.section.r.last}<span class="traceicon"></span>{/if}</nobr>
+													{/section}
+												</td>
+											</tr>
+										</table>	
+									</div>						   		   	
+								</div>		
+							</li>
+							<!-- CONTENTBLOCK der auf live SEITEN verlinkt ist //-->
+						{/section}
+						{section name='p' loop=$all_mailings}
+							<li class="listitem mk_nowrite">
+								<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+									<div class="listitempage">
+										<table class="listable">
+											<tr>
+												<td class="object">
+													<table class="objectable clickable">
+														<tr>
+															<td class="iconcol"><div class="icon{$all_mailings[p].ICON} icn"></div></td>
+															<td class="title txt">
+																<span yg_property="name" yg_type="mailing" yg_id="{$all_mailings[p].ID}-mailing" class="{$all_mailings[p].STYLE}" onclick="$K.yg_openObjectDetails('{$all_mailings[p].ID}-mailing', 'mailing', '{$all_mailings[p].NAME}', 'mailing', '{$all_mailings[p].STYLE}');">
+																	{$all_mailings[p].NAME}
+																</span>
+															</td>
+														</tr>
+													</table>
+												</td>
+												<td class="trace"></td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</li>
+						{/section}
+					</ul>
+				{/if}
+			
+			</div>
+		</div>
+   	</div>
+</div>
+			
+{if $refresh != 1}		
+	<!-- FIXED HEADER TAGS //-->
+	<div class="tabhead_small ywindowhead" style="display:none" onmouseover="$K.yg_showActions(this);">
+		<div class="headline1">{$itext.TXT_USAGE|default:'$TXT_USAGE'}</div>
+	</div>
+	<!-- END FIXED HEADER TAGS //-->
+{/if}

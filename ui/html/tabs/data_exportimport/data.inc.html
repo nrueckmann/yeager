@@ -1,0 +1,65 @@
+{if $mode=='export'}
+	<!-- exportierte Datei //-->
+	<li id="item_{$win_no}_{$item_index}" yg_id="{$item_id}-file" yg_type="file" class="mk_file listitem uploaddone">
+		<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+			{if !$showProgress}
+				<!-- actions //-->
+				<div class="actions">
+					<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+					<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+						<div class="actionborder"></div>
+						<a onmouseout="$K.yg_showHelp(false);" onmouseover="$K.yg_showHelp('{$itext.TXT_DOWNLOAD}');" title="{$itext.TXT_DOWNLOAD}" class="download" onfocus="this.blur();"></a>
+						<div class="actionborder"></div>
+					</div>
+				</div>
+				<!-- end actions //-->
+			{/if}	   	
+			<div id="item_{$win_no}_{$item_index}_selector" class="listitempage">
+				<table class="uploadlist">
+					<tr>
+						<td id="item_{$win_no}_{$item_index}_txt" class="title txt noicon">{$item_name}</td>
+						{if $showProgress}
+							<td id="item_{$win_no}_{$item_index}_percent" class="title txt noicon uploadpercent"><div class="uploadprocessing"><!-- //--></div></td>
+						{/if}			
+					</tr>
+				</table>	
+			</div>						   		   	
+		</div>		
+	</li>
+{/if}
+
+{if $mode=='import'}
+	<!-- Upload //-->
+	<li id="item_{$win_no}_{$item_index}" yg_id="{$item_id}-file" yg_type="file" class="mk_file listitem">
+		<div class="cntblockcontainer" onmouseover="$K.yg_showActions(this);">
+			{*
+			<!-- actions //-->
+			<div class="actions">
+				<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+				<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+					<div class="actionborder"></div>
+					<a onmouseout="$K.yg_showHelp(false);" onmouseover="$K.yg_showHelp('{$itext.TXT_FILE_EDIT}');" title="{$itext.TXT_FILE_EDIT}" style="display:none;" class="edit" onfocus="this.blur();"></a>
+					<a onmouseout="$K.yg_showHelp(false);" onmouseover="$K.yg_showHelp('{$itext.TXT_UPLOAD_REMOVE}');" title="{$itext.TXT_UPLOAD_REMOVE}" onclick="$K.yg_removeUploadItem(this);" class="del" onfocus="this.blur();"></a>
+					<div class="actionborder"></div>
+				</div>
+			</div>
+			<!-- end actions //-->
+			*}	   	
+			<div id="item_{$win_no}_{$item_index}_selector" class="listitempage">
+				<table class="uploadlist">
+					<tr>
+						<td id="item_{$win_no}_{$item_index}_txt" class="title txt noicon">{$item_name}</td>
+						<td id="item_{$win_no}_{$item_index}_percent" class="title txt noicon uploadpercent">0%</td>							
+					</tr>
+				</table>	
+			</div>	
+			<table class="uploadstatusbar" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="usborder"><div><!-- //--></div></td>
+					<td class="uploadstatusbg"><div style="width:0%;"><!-- //--></div></td>
+					<td class="usborder"><div><!-- //--></div></td>
+				</tr>
+			</table>							   		   	
+		</div>		
+	</li>
+{/if}

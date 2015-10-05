@@ -1,0 +1,56 @@
+<div class="mk_contentgroup" yg_multiselect="true">
+
+	<ul yg_widget="type:sortable;accepts:none;objecttype:{if $displaymode != 'properties'}formfield{else}property{/if};yg_clone:false;callbacks:formFieldsSortCallbacks;" id="wid_{$win_no}_formfieldlist" style="position: relative;" yg_type="{if $displaymode != 'properties'}formfield{else}property{/if}">
+		{if $displaymode == 'properties'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='property' item_index='0' item_id='1' icon='' item_name=$itext.TXT_FORMFIELD_SINGLELINE|default:'$TXT_FORMFIELD_SINGLELINE'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='property' item_index='1' item_id='2' icon='' item_name=$itext.TXT_FORMFIELD_MULTILINE|default:'$TXT_FORMFIELD_MULTILINE'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='property' item_index='2' item_id='3' icon='' item_name=$itext.TXT_FORMFIELD_RICHTEXT|default:'$TXT_FORMFIELD_RICHTEXT'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='property' item_index='3' item_id='9' icon='' item_name=$itext.TXT_FORMFIELD_LIST|default:'$TXT_FORMFIELD_LIST'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='property' item_index='4' item_id='4' icon='' item_name=$itext.TXT_FORMFIELD_CHECKBOX|default:'$TXT_FORMFIELD_CHECKBOX'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='property' item_index='5' item_id='5' icon='' item_name=$itext.TXT_FORMFIELD_LINK|default:'$TXT_FORMFIELD_LINK'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='property' item_index='6' item_id='6' icon='iconfile' item_name=$itext.TXT_FILE|default:'$TXT_FILE'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='property' item_index='7' item_id='7' icon='icontag' item_name=$itext.TXT_TAG|default:'$TXT_TAG'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='property' item_index='8' item_id='8' icon='iconcblock' item_name=$itext.TXT_CONTENTBLOCK|default:'$TXT_CONTENTBLOCK'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='property' item_index='9' item_id='10' icon='iconpage' item_name=$itext.TXT_PAGE|default:'$TXT_PAGE'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='property' item_index='10' item_id='11' icon='' item_name=$itext.TXT_FORMFIELD_DATE|default:'$TXT_FORMFIELD_DATE'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='property' item_index='11' item_id='12' icon='' item_name=$itext.TXT_FORMFIELD_DATETIME|default:'$TXT_FORMFIELD_DATETIME'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='property' item_index='12' item_id='13' icon='' item_name=$itext.TXT_FORMFIELD_HEADLINE|default:'$TXT_FORMFIELD_HEADLINE'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='property' item_index='13' item_id='14' icon='' item_name=$itext.TXT_FORMFIELD_PASSWORD|default:'$TXT_FORMFIELD_PASSWORD'}
+		{else}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='formfield' item_index='0' item_id='1' icon='' item_name=$itext.TXT_FORMFIELD_SINGLELINE|default:'$TXT_FORMFIELD_SINGLELINE'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='formfield' item_index='1' item_id='2' icon='' item_name=$itext.TXT_FORMFIELD_MULTILINE|default:'$TXT_FORMFIELD_MULTILINE'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='formfield' item_index='2' item_id='3' icon='' item_name=$itext.TXT_FORMFIELD_RICHTEXT|default:'$TXT_FORMFIELD_RICHTEXT'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='formfield' item_index='3' item_id='9' icon='' item_name=$itext.TXT_FORMFIELD_LIST|default:'$TXT_FORMFIELD_LIST'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='formfield' item_index='4' item_id='4' icon='' item_name=$itext.TXT_FORMFIELD_CHECKBOX|default:'$TXT_FORMFIELD_CHECKBOX'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='formfield' item_index='5' item_id='5' icon='' item_name=$itext.TXT_FORMFIELD_LINK|default:'$TXT_FORMFIELD_LINK'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='formfield' item_index='7' item_id='8' icon='icontag' item_name=$itext.TXT_TAG|default:'$TXT_TAG'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='formfield' item_index='8' item_id='7' icon='iconcblock' item_name=$itext.TXT_CONTENTBLOCK|default:'$TXT_CONTENTBLOCK'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='formfield' item_index='14' item_id='15' icon='iconpage' item_name=$itext.TXT_PAGE|default:'$TXT_PAGE'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='formfield' item_index='6' item_id='6' icon='iconfile' item_name=$itext.TXT_FILE|default:'$TXT_FILE'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='formfield' item_index='15' item_id='16' icon='iconfolder' item_name=$itext.TXT_FOLDER|default:'TXT_FOLDER'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='formfield' item_index='9' item_id='10' icon='' item_name=$itext.TXT_FORMFIELD_PASSWORD|default:'$TXT_FORMFIELD_PASSWORD'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='formfield' item_index='10' item_id='11' icon='' item_name=$itext.TXT_FORMFIELD_DATE|default:'$TXT_FORMFIELD_DATE'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='formfield' item_index='11' item_id='12' icon='' item_name=$itext.TXT_FORMFIELD_DATETIME|default:'$TXT_FORMFIELD_DATETIME'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='formfield' item_index='12' item_id='13' icon='' item_name=$itext.TXT_FORMFIELD_HEADLINE|default:'$TXT_FORMFIELD_HEADLINE'}
+			{include file="$approot/ui/html/tabs/formfields/formfield.inc.html" objecttype='formfield' item_index='13' item_id='14' icon='' item_name=$itext.TXT_FORMFIELD_CUTLINE|default:'$TXT_FORMFIELD_CUTLINE'}
+		{/if}
+	</ul>
+</div>
+<!-- bottom //-->
+<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_midbottom">
+			<table class="buttontable" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="rightbutton">
+						<div class="button" tabindex="1"><a id="wid_{$win_no}_okbutton" onclick="$K.windows['wid_{$win_no}'].submit();" class="stdbutton"><div class="wrapper"><nobr>{if $displaymode == 'properties'}{$itext.TXT_PROPERTYFIELD_ADD|default:'$TXT_PROPERTYFIELD_ADD'}{else}{$itext.TXT_FORMFIELD_ADD|default:'$TXT_FORMFIELD_ADD'}{/if}</nobr></div></a></div>
+						<div class="button cancel" tabindex="1"><a id="wid_{$win_no}_cancelbutton" onclick="$K.windows['wid_{$win_no}'].remove();" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</nobr></div></a></div>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td class="ywindow_rightbt"></td>
+	</tr>
+</table>
+<!-- end bottom //-->

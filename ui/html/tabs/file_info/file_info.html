@@ -1,0 +1,103 @@
+<div class="panelcontent">
+	<div class="mk_contentgroup">
+
+		<div class="cntblockcontainer" onmouseover="$K.yg_showHelp('{$itext.TXT_FILE_REPLACE}');" title="{$itext.TXT_FILE_REPLACE}" onmouseout="$K.yg_showHelp(false);" >
+		
+			{if $fileinfo.RWRITE}
+				<div class="mk_uploadpanel" style="position:absolute;height:48px;width:100%;">
+					<div id="wid_{$win_no}_reuploadpanel"></div>
+				</div>
+			{/if}
+		
+			<div class="cntblock" style="cursor:pointer;">
+				<table class="gridfixed" cellspacing="0" cellpadding="0">
+					<tr>
+						<td colspan="8" class="col1">
+							<span class="label">{$itext.TXT_SOURCEFILE|default:'$TXT_SOURCEFILE'}</span>
+							<div class="selectionmarker">
+								<div class="objecthandle">{$fileinfo.FILENAME}</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		
+		<div class="cntblockcontainernohover" onmouseover="$K.yg_showActions(this);">
+			<div class="cntblock">
+				<table class="gridflex" cellspacing="0" cellpadding="0">
+					<tr>
+						<td class="col2">
+							<span class="label">{$itext.TXT_FILETYPE|default:'$TXT_FILETYPE'}</span>
+							<div id="wid_{$win_no}_filetype" style="width:229px;" yg_form="dropdown" class="dropdownbox">
+								<div class="filetypeflag" onmousedown="$K.yg_clickindropdown[this.up(0).id]=true;$K.yg_dropdownClick(this.up());$K.yg_formHover(this.next().down(1),'dropdownclick','dropdownbox');"><div class="typewrapper"><span class="filetype {$fileinfo.COLOR}" yg_type="file" yg_id="{$fileinfo.OBJECTID}-file" yg_property="type">{$fileinfo.CODE|strtoupper}</span></div></div>
+								<div class="dropdown">
+									<div class="dropdowninner">
+										<input tabindex="1" {if !$fileinfo.RWRITE}disabled{/if} yg_type="file" yg_id="{$fileinfo.OBJECTID}-file" yg_property="typedesc" yg_seq="{$win_no}" yg_onchange="$K.yg_changeFileType" yg_previous="{$dd_selected_value}" type="text"  value="{$fileinfo.FILETYPE_TXT}">
+									</div>
+								</div>
+								<div class="dropdownlistcontainer">
+									<div class="dropdownlist">
+							          	{section name=id loop=$filetypes}
+							          		{if $filetypes[id].ID neq "8"}
+												<div value="{$filetypes[id].ID}" {if $filetypes[id].ID == $fileinfo.FILETYPE}class="selected"{/if}><div class="filetypeflag"><div class="typewrapper"><span class="filetype {$filetypes[id].COLOR}">{$filetypes[id].CODE}</span></div></div>{if $filetypes[id].IDENTIFIER == 'DEFAULT'}{$itext.TXT_DEFAULT_FILETYPE|default:'$TXT_DEFAULT_FILETYPE'}{else}{$filetypes[id].NAME}{/if}</div>
+							          		{/if}
+							          	{/section}
+									</div>
+									<div class="mk_scrollbars"></div>
+								</div>
+								<input type="hidden">
+							</div>
+						</td>
+						<td class="col2" align="right">
+							{if ($fileinfo.WIDTH)}
+								{if ($fileinfo.WIDTH) >= ($fileinfo.HEIGHT)}
+									{assign var='alignment' value=''}
+								{else}
+									{assign var='alignment' value='vimg'}
+								{/if}
+							{/if}
+							<div yg_type="file" yg_id="{$fileinfo.OBJECTID}-file" class="previewborder{$alignment}">
+								{if $fileinfo.THUMB}
+									<img style="display:none;" onload="$K.windows['wid_{$win_no}'].refresh();$(this).show();" src="{$base}image/{$fileinfo.OBJECTID}/yg-preview/?rnd={math equation='rand()'}" real_src="{$base}image/{$fileinfo.OBJECTID}/yg-preview/?rnd={math equation='rand()'}" />
+								{/if}
+							</div>
+						</td>
+					</tr>
+				</table>
+				<table class="gridfixed" cellspacing="0" cellpadding="0">
+					<tr>
+						<td class="col4">
+							<span class="label">{$itext.TXT_FILESIZE|default:'$TXT_FILESIZE'}</span>
+							<span class="txt">{$fileinfo.FILESIZE|filesize}</span>
+						</td>
+						{if $fileinfo.WIDTH}
+						<td class="col4">
+							<span class="label">{$itext.TXT_DIMENSION|default:'$TXT_DIMENSION'}</span>
+							<span class="txt">{$fileinfo.WIDTH} x {$fileinfo.HEIGHT}</span>
+						</td>
+						{/if}
+						
+						<td class="col4">
+							<span class="label"><!-- {$itext.TXT_DURATION|default:'$TXT_DURATION'} //--></span>
+							<span class="txt"><!-- 00:03:02  //--></span>
+						</td>
+						<td class="col4">
+							<span class="label"><!-- whatever //--></span>
+							<span class="txt"><!-- &lt; //--></span>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>					
+
+	</div>
+</div>
+
+{if $refresh != 1}	
+	<!-- FIXED HEADER EIGENSCHAFTEN //-->
+	<div class="tabhead_small ywindowhead" style="display:none" onmouseover="$K.yg_showActions(this);">	  
+		<div class="headline1">{$itext.TXT_FILEINFO|default:'$TXT_FILEINFO'}</div>					
+	</div>
+	<!-- END FIXED HEADER EIGENSCHAFTEN //-->
+{/if}

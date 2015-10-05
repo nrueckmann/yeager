@@ -1,0 +1,76 @@
+body {
+	background-color: #4e534c;
+	background-image: url(../img/background/background.jpg);
+	background-position: top;
+	background-repeat: repeat-x;
+}
+.login_subline,
+.login_subline a {
+	width: 371px;
+	color: #98a493;
+	line-height: 11px;
+	font-family: Arial;
+	font-size: 10px;
+	text-align: right;
+	margin-top: 13px;
+}
+.login_subline a {
+	font-size: 11px;
+}
+.login_subline a:hover {
+	text-decoration: none;
+}
+.login_subline .linkcut {
+	display: inline-block;
+	font-size: 11px;
+	margin-right: 6px;
+	margin-left: 6px;
+}
+.login_subline .crightbt {
+	display: block;
+	margin-top: 4px;
+}
+.window {
+	margin-top: 126px;
+	width: 400px;
+	height: 352px;
+	background-image: url(../img/window/deprecated_browser.jpg);
+}
+.content {
+	text-align: left;
+	font-family: Arial;
+	font-size: 11px;
+	line-height: 15px;
+	color: #9bb497;
+	padding-left: 32px;
+	padding-top: 90px;
+	padding-right: 32px;
+}
+.headline1 {
+	color: #bfd8ba;
+	font-family: Arial;
+	font-size: 10px;
+	font-weight: bold;
+	text-transform: uppercase;
+	text-decoration: none;
+	letter-spacing: 2px;
+	line-height: 10px;
+	display: inline-block;
+	margin-bottom: 6px;
+}
+.content strong {
+	color: #bfd8ba;
+	font-weight: normal;
+}
+.content .list {
+	line-height: 17px;
+	margin-top: 20px;
+	margin-left: 30px;
+}
+.content a {
+	color: #bfd8ba;
+	text-decoration: underline;
+}
+.content a:hover {
+	text-decoration: none;
+}

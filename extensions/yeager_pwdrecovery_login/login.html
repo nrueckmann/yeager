@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>{$pageinfo.NAME}</title>
+	<script type="text/javascript">
+		{literal}
+		function emptyThis (el, text) {
+			if(el.value==text){ el.value=''; el.className = ''; }
+		}
+		function fillThis (el, text) {
+			if(el.value==''){ el.value=text; el.className = 'desc'; }
+		}
+		{/literal}
+	</script>
+	<style type="text/css" media=screen>
+		{literal}
+		html, body {
+			margin: 0;
+			padding: 0;
+			color: #58645F;
+			font-size: 12px;
+			font-family: "HelveticaNeue", "Helvetica Neue", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
+			font-weight:200;
+		    -webkit-font-smoothing: antialiased;
+			line-height: 18px;
+		    background-color: #f5f6f3;
+		}
+		#cnt {
+			padding-left: 50%;
+            width: 644px;
+		    margin-left: -322px;
+		    min-height: 100%;
+		}
+		h1 {
+			font-family: "HelveticaNeueMedium", "HelveticaNeue-Medium", "Helvetica Neue Medium", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
+			font-weight: 400;
+			font-stretch:normal;
+			padding: 0;
+			margin: 0;
+		    font-size: 30px;
+		    line-height: 32px;
+		    display: inline-block;
+		    width: 100%;
+		    color: #102925;
+		}
+		#loginpage .lpage a {
+			text-decoration: none;
+		    color: #3598b5;
+		    border-bottom: 1px solid rgb(204, 229, 236);
+		    -webkit-background-clip: padding-box;
+		    background-clip: padding-box;
+		    margin-left: 1px;
+		    margin-right: 1px;
+		    padding-left: 0px;
+		    padding-right: 0px;
+		    padding-bottom: 0px;
+		}
+		#loginpage .lpage a:hover {
+		    margin-left: -2px;
+		    margin-right: -2px;
+		    padding-left: 3px;
+		    padding-right: 3px;
+		    padding-bottom: 1px;
+		    margin-bottom: -1px;
+		    background-color: #3598b5;
+		    color: white;
+		}
+		#cnt .lpage {
+		    width: 392px;
+		    background-color: white;
+		    margin-bottom: 50px;
+		    padding-left: 126px;
+		    padding-right: 126px;
+		    margin-top: 46px;
+		    padding-bottom: 82px;
+		    padding-top: 126px;
+		}
+		#loginpage input[type=text],
+		#loginpage input[type=password] {
+		    border: none;
+		    background-color: #edeeec;
+		    font-family: "HelveticaNeue", "Helvetica Neue", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
+		    padding: 7px;
+		    width: 378px;
+		    font-size: 15px;
+		    color: #303e37;
+		    font-weight: 400;
+		    margin-bottom: 20px;
+		}
+		#loginpage input[type=submit] {
+		    visibility: hidden;
+		    width: 1px;
+		    height: 1px;
+		    margin: 0;
+		    padding: 0;
+		}
+		#loginpage input.desc {
+		    font-style: italic;
+		    color: #65716b;
+		}
+		#loginpage .message {
+		    font-size: 15px;
+		    line-height: 20px;
+		    color: #58645f;
+		    margin-top: 38px;
+		    margin-bottom: 50px;
+		}
+		#loginpage .message.error {
+		    color: #ed523c;
+		}
+		#loginpage .lpage a.formsubmit {
+		    float: right;
+		    display: block;
+		    font-size: 30px;
+		    line-height: 32px;
+		}
+		#loginpage .lpage a.formsubmit:hover {
+		    padding-bottom: 2px;
+		}
+		#loginpage .furthertext {
+		    text-align: right;
+		    margin-top: 110px;
+		}
+		{/literal}
+	</style>
+</head>
+<body id="loginpage">
+	<div id="cnt">
+		<div class="lpage">
+			{if $action == 'pwd_step1'}
+				<h1>{if $action == "pwd_step1" && ($recovery_mail_sent || $error_step1)}Request sent{else}You lost your password{/if}</h1>
+				{if $action == "pwd_step1" && ($recovery_mail_sent || $error_step1)}
+					<div class="message">You will receive a mail with instructions on how to reset your password shortly</div>
+				{else}
+					<div class="message">You know the deal. </div>
+					<form id="pwForm" name="passwordForm" action="" method="post">
+						<input type="hidden" name="action" value="pwd_step1" />
+						<input type="text" name="user_email" class="desc"  value="Email address" onfocus="emptyThis(this, 'Email address');" onblur="fillThis(this, 'Email address');" /><br />
+						<input type="submit" value="submit" />
+						<a class="formsubmit" href="javascript:document.forms.pwForm.submit();">Go</a>
+					</form>
+				{/if}
+				<div class="furthertext">
+					Back to <a href="?action=">Login</a>
+				</div>
+			{elseif $action == 'pwd_step2'}
+				<h1>{if !$error_step2 && $form_send}Done{else}Reset your password{/if}</h1>
+				{if !$error_step2 && $form_send}
+					<div class="message">The password for your account has been changed.</div>
+				{else}
+					{if !$error_token}
+						<div class="message">
+						{if $error_step2}
+							{if $error_repeat}
+								Your entry didn't pass the confirmation. Both entries have to be the same.<br><br>
+							{/if}
+							{if $error_chars}
+								For security reasons, your password has to be at least 6 characters long and must contain at least one number. Thank you.
+							{/if}
+						{else}
+						Enter a new password for your account.<br><br>
+						The password has to be at least 6 characters long and needs to contain at least one number.
+						{/if}
+						</div>
+						<form id="pwForm" name="passwordForm" action="" method="post">
+							<input type="hidden" name="action" value="pwd_step2" />
+							<input type="hidden" name="form_send" value="true" />
+							<input type="hidden" name="user_token" value="{$user_token}" />
+							<input type="password" class="desc" name="user_password" value="!!!" onfocus="emptyThis(this, '!!!');" onblur="fillThis(this, '!!!');" /><br />
+							<input type="password" class="desc" name="user_password_repeat" value="!!!" onfocus="emptyThis(this, '!!!');" onblur="fillThis(this, '!!!');" /><br />
+							<input type="submit" value="submit" />
+							<a class="formsubmit" href="javascript:document.forms.pwForm.submit();">Submit</a>
+						</form>
+					{else}
+						<div class="message">The provided token is not valid anymore. Please request a new token <a href="?action=pwd_step1">here</a>.</div>
+					{/if}
+					<div class="furthertext">
+						Back to <a href="?action=">Login</a>
+					</div>
+				{/if}
+			{else}
+				<h1>Login</h1>
+				<form action="" name="loginForm" method="post">
+					<input type="hidden" id="action" name="action" value="login">
+					<input type="hidden" id="yg_login_referrer" name="yg_login_referrer" value="{$yg_login_referrer}">
+					<div class="message {if $yg_login_error_code}error{/if}">{if $yg_login_error_code}Account not recognized.{else}Please provide your credentials.{/if}</div>
+					<div>
+						<input class="text{if $yg_login_error_code && $yg_login_error_message} text_error{/if} {if ($email == "")}desc{/if}" type="text" name="email" value="{if ($email == "")}E-mail{else}{$email}{/if}" onfocus="emptyThis(this, 'E-mail');" onblur="fillThis(this, 'E-mail');" />
+					</div>
+					<div>
+						<input class="text{if $yg_login_error_code && $yg_login_error_message} text_error{/if} desc" type="password" id="pwd" name="password" value="!!!" onfocus="emptyThis(this, '!!!');" onblur="fillThis(this, '!!!');" />
+					</div>
+					<input type="submit" value="submit" />
+					<a class="formsubmit" href="javascript:document.forms.loginForm.submit();">Submit</a>
+				</form>
+				<div class="furthertext">
+					Forgot your password? <a href="?action=pwd_step1">Recover your password</a>
+				</div>
+			{/if}
+		</div>
+	</div>
+</body>
+</html>

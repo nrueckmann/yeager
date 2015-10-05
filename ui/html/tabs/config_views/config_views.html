@@ -1,0 +1,63 @@
+{if $RVIEWS}
+	<form name="wid_{$win_no}_form">
+		<div class="panelcontent">
+			<div class="mk_contentgroup entrymaskcontent" yg_multiselect="true">
+	
+				<div id="wid_{$win_no}_views">
+					<div id="wid_{$win_no}_views_inner" onmouseup="$K.yg_customSortableOnDrop(this.parentNode.id);">
+	
+						<ul id="wid_{$win_no}_views_list">
+							{section name='views' loop=$views}
+								{if $views[views].FOLDER != 1}
+									{assign var='item_info' value=$views[views]}
+									{assign var='item_index' value=$smarty.section.views.iteration}
+									{include file="$approot/ui/html/tabs/config_views/view.inc.html"}
+								{/if}
+							{/section}
+						</ul>
+	
+					</div>
+				</div>
+				<div class="cntblockadd" onclick="$K.yg_addNewView(this);">
+					<div class="cntblockadd">		
+						<div class="selectionmarker">{$itext.TXT_VIEW_ADD|default:'$TXT_VIEW_ADD'}</div>
+					</div>
+				</div>
+	
+			</div>
+		</div>
+	</form>
+	
+	<!-- BOTTOMLINE //-->
+	<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+		<tr>
+			<td class="ywindow_leftbt"></td>
+			<td class="ywindow_midbottom"><div class="button" tabindex="1"><a  class="stdbutton"><div onclick="$K.yg_saveFileViews(this, '{$win_no}');" class="wrapper"><nobr>{$itext.TXT_SAVE|default:'$TXT_SAVE'}</nobr></div></a></div></td>
+			<td class="ywindow_rightbt"></td>			
+		</tr>
+	</table>
+	<!-- END BOTTOMLINE //-->
+	
+	{if $refresh != 1}	
+	<!-- FIXED HEADER EIGENSCHAFTEN //-->
+	<div class="tabhead_small ywindowhead" style="display:none" onmouseover="$K.yg_showActions(this);">	  
+		<!-- actions //-->
+		<div class="actions">
+			<div class="actionbutton" onmouseover="$K.yg_hoverActions(this);"></div>
+			<div class="actionhover" onmouseover="$K.actionhover=true;" onmouseout="$K.actionhover=false;">
+				<div class="actionborder"></div>
+				<a onclick="$K.yg_addNewView(this);" class="add" onmouseover="$K.yg_showHelp('{$itext.TXT_TAG_ADD}');" title="{$itext.TXT_TAG_ADD}" onmouseout="$K.yg_showHelp(false);" onfocus="this.blur();"></a>
+				<div class="actionborder"></div>
+			</div>
+		</div>	
+		<!-- end actions //-->
+		<div class="headline1">{$itext.TXT_VIEWS|default:'$TXT_VIEWS'}</div>					
+	</div>
+	<!-- END FIXED HEADER EIGENSCHAFTEN //-->
+	{/if}
+	
+	<script language="javascript">
+		{include assign="js_template" file="$approot/ui/html/tabs/config_views/view.inc.html" item_info=$empty_info item_index='__NEW__' noscript=true}
+		$K.windows['wid_{$win_no}'].jsTemplate = '{$js_template|strip|addslashes}';
+	</script>
+{/if}

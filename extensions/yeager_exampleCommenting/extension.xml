@@ -1,0 +1,5 @@
+<extension>
+	<namespace>com\yg</namespace>
+	<class>ExampleCommenting</class>
+    <api>1.0</api>
+</extension>

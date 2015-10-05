@@ -1,0 +1,58 @@
+<form name="wid_{$win_no}_linkForm_CONTENTEDITOR_FIND" onsubmit="return false;">
+	<div class="dialogcontent">
+		<div class="cntblockcontainernohover">
+			<div class="cntblock">
+				<table class="gridfixed" cellspacing="0" cellpadding="0">
+					<tr>
+						<td colspan="4" class="col1">
+							<span class="label">{$itext.TXT_FIND|default:'$TXT_FIND'}</span>
+							<div class="textbox" yg_form="textbox">
+								<input tabindex="1" yg_onchange="" type="text" name="CONTENTEDITOR_FIND_panel_searchstring" value="" />
+							</div>
+						</td>
+					</tr>
+				</table>		
+			</div>
+		</div>
+		<div class="cntblock">
+		
+			<table class="gridfixed" cellspacing="0" cellpadding="0">
+				<tr>
+					<td colspan="4" class="col1">
+						<span class="label">{$itext.TXT_PROPERTIES|default:'$TXT_PROPERTIES'}</span>
+						<div class="radiogroup" value="CONTENTEDITOR_FIND_panel_backwards">
+							<div class="radioarray">	
+								<div class="radiobox" yg_form="radiobox" tabindex="1" id="CONTENTEDITOR_FIND_panel_backwardsu"><div class="radioboxicon"><div class="label">{$itext.TXT_FIND_UP|default:'$TXT_FIND_UP'}</div></div></div>
+								<div class="radiobox" yg_form="radiobox" tabindex="1" id="CONTENTEDITOR_FIND_panel_backwardsd"><div class="radioboxiconsel"><div class="label">{$itext.TXT_FIND_DOWN|default:'$TXT_FIND_DOWN'}</div></div></div>
+								<input type="hidden" name="CONTENTEDITOR_FIND_panel_backwards" id="CONTENTEDITOR_FIND_panel_backwards" value="CONTENTEDITOR_FIND_panel_backwardsd">
+							</div>
+						</div>
+						<div class="checkarray">
+							<div id="chk_CONTENTEDITOR_FIND_panel_casesensitivebox" class="checkbox" yg_form="checkbox" tabindex="1"><div class="checkboxicon"><input type="hidden" name="CONTENTEDITOR_FIND_panel_casesensitivebox" value="0"><span class="label">{$itext.TXT_MATCH_CASE|default:'$TXT_MATCH_CASE'}</span></div></div>
+						</div>
+					</td>
+				</tr>
+			</table>		
+		
+		</div>
+	</div>
+</form>
+
+<!-- bottom //-->
+<table cellspacing="0" cellpadding="0" class="windowtable ywindowbottom">
+	<tr>
+		<td class="ywindow_leftbt"></td>
+		<td class="ywindow_midbottom">
+			<table class="buttontable" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="rightbutton">
+						<div class="button" tabindex="1"><a onclick="yeagerCE_searchNext('none', '{$win_no}');" id="find" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_FIND_NEXT|default:'$TXT_FIND_NEXT'}</nobr></div></a></div>
+						<div class="button cancel" tabindex="1"><a onclick="$K.windows['wid_{$win_no}'].remove();" id="wid_{$win_no}_cancelbutton" class="stdbutton"><div class="wrapper"><nobr>{$itext.TXT_CANCEL|default:'$TXT_CANCEL'}</nobr></div></a></div>
+					</td>
+				</tr>	
+			</table>
+		</td>
+		<td class="ywindow_rightbt"></td>
+	</tr>
+</table>
+<!-- end bottom //-->
