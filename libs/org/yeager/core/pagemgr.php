@@ -13,6 +13,8 @@
  * @param int $siteId Site Id
  * @return object PageMgr object
  */
+include("../adodb/adodb-errorhandler.inc.php");
+
 function sPageMgr($siteId) {
 	$signature = "PageMGR-" . $siteId;
 	if (!Singleton::$instances[$signature]) {
@@ -157,8 +159,11 @@ class PageMgr extends \framework\Error {
 	 * @return array|bool Result of SQL query or FALSE in case of an error
 	 * @throws Exception
 	 */
+
+	
 	function cacheExecuteGetArray($sql) {
 		$dbr = sYDB()->Execute($sql);
+
 		if ($dbr === false) {
 			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
 		}
@@ -916,8 +921,12 @@ class PageMgr extends \framework\Error {
 	function getPageIdByPname($PName) {
 		$PName = mysql_real_escape_string(sanitize($PName));
 		$sql = "SELECT ID FROM yg_site_" . $this->_site . "_tree as t WHERE (t.PNAME = '$PName');";
-		$ra = $this->cacheExecuteGetArray($sql);
-		return $ra[0]['ID'];
+		try {
+			$ra = $this->cacheExecuteGetArray($sql);
+			return $ra[0]['ID'];
+		} catch (Exception $e) {
+			return false;
+		}
 	}
 
 	/**
