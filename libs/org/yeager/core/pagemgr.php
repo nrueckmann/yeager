@@ -13,7 +13,6 @@
  * @param int $siteId Site Id
  * @return object PageMgr object
  */
-include("../adodb/adodb-errorhandler.inc.php");
 
 function sPageMgr($siteId) {
 	$signature = "PageMGR-" . $siteId;
