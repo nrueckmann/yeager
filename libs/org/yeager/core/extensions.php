@@ -182,7 +182,7 @@ class Extension extends \framework\Error {
 		$sql = "CREATE TABLE IF NOT EXISTS " . $tablePrefix . "_propslv (
 		`ID` int(11) NOT NULL AUTO_INCREMENT,
 		`PID` int(11) NOT NULL,
-		`VALUE` varchar(50) NOT NULL,
+		`VALUE` varchar(200) NOT NULL,
 		`LISTORDER` int(11) NOT NULL DEFAULT '9999',
 		PRIMARY KEY (`ID`),
 		KEY `LISTORDER` (`LISTORDER`,`PID`)
