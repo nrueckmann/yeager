@@ -632,52 +632,15 @@
 
 									$idmap[$oldpage] = $newPageID;
 
-									/*// Inherit permissions of the parent of the newly created copy
-									$allPerms = $sourcePage->permissions->getPermissions();
+									// Inherit permissions of the parent of the newly created copy
+									/*$allPerms = $sourcePage->permissions->getPermissions();
 									foreach($allPerms as $permIdx => $permItem) {
 										$allPerms[$permIdx]['OID'] = $newPageID;
 									}
 									$newPage->permissions->clear();
-									$newPage->permissions->setPermissions($allPerms);
-									*/
-									// Check for extensions to copy
-									/*$all_page_extensions = $extensionMgr->getList( EXTENSION_PAGE, true );
-									$used_extensions = array();
-									$used_extensions_info = array();
-									foreach($all_page_extensions as $all_page_extension) {
-										$extension = $extensionMgr->getExtension($all_page_extension["CODE"]);
-										if( $extension && $extension->usedByPage($source, $oldPageInfo['VERSION'], $sourcesite) === true ) {
-											$tmpExtension = $extensionMgr->getExtension($all_page_extension["CODE"], $source, $oldPageInfo['VERSION'], $sourcesite);
-											if ($tmpExtension) {
-												array_push($used_extensions_info, $all_page_extension);
-												array_push($used_extensions, $tmpExtension);
-											}
-										}
-									}
-									foreach($used_extensions as $used_extension_idx => $used_extension) {
-										if ($used_extension->properties) {
-											$used_extensions_info[$used_extension_idx]['PROPERTIES'] = $used_extension->properties->getList();
-										}
-									}
-									$newPageInfo = $newPage->get();
-									foreach($used_extensions_info as $used_extensions_info_item) {
-										$srcExtension = $extensionMgr->getExtension($used_extensions_info_item["CODE"], $source, $oldPageInfo['VERSION'], $sourcesite);
-										$trgtExtension = $extensionMgr->getExtension($used_extensions_info_item["CODE"]);
-										if ($srcExtension && $trgtExtension) {
-											$tmpOId = $trgtExtension->addToPage($newPageID,$newPageInfo['VERSION'], $targetsite);
-											$props = $srcExtension->properties->getList('LISTORDER');
+									$newPage->permissions->setPermissions($allPerms);*/
 
-											foreach($props as $prop_idx => $prop) {
-												foreach($used_extensions_info_item['PROPERTIES'] as $trgtProp) {
-													$value = $srcExtension->properties->getValueInternal($trgtProp['IDENTIFIER'] );
-													$tmpTrgtExtension = $extensionMgr->getExtension($used_extensions_info_item["CODE"], $newPageID, $newPageInfo['VERSION'], $targetsite);
-													if ($tmpTrgtExtension && $tmpTrgtExtension->properties) {
-														$tmpTrgtExtension->properties->setValue($trgtProp['IDENTIFIER'], $value);
-													}
-												}
-											}
-										}
-									}*/
+									// copy Extensions
 									$newPage->copyExtensionsFrom($sourcePage);
 									$newPage->newVersion();
 									$newPage->markAsChanged();
