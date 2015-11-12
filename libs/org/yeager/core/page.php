@@ -704,6 +704,7 @@ class Page extends Versionable {
 								// Add new contentblock to folder
 								$contentblockID = $this->addCblockEmbedded($contentareas[$i]['CODE']);
 								$newcb = sCblockMgr()->getCblock($contentblockID);
+								$newcb->setPagePermissions($sourcePage);
 								$newcb->properties->setValue("NAME", $src_entrymask_item['ENTRYMASKNAME']);
 
 								// Get the Link Id of the newly created contentblock (and save it)
@@ -1053,28 +1054,14 @@ class Page extends Versionable {
 			$embeddedCblockId = sCblockMgr()->add($embeddedCblockFolder);
 			$newEmbeddedCblock = sCblockMgr()->getCblock($embeddedCblockId);
 
+			$newEmbeddedCblock->setPagePermissions($this);
+
 			// Set it to "embedded"
 			$newEmbeddedCblock->setEmbedded();
 
 			// Add this Cblock to this page
 			$this->addCblockLink($embeddedCblockId, $contentarea);
 
-			// Get an instance of this new embedded Cblock and inherit rights from this page to embedded contentblock
-			$usergroups = sUsergroups()->getList();
-			foreach ($usergroups as $usergroupItem) {
-				$usergroupId = $usergroupItem['ID'];
-				$objectPermissions = $this->permissions->getByUsergroup($usergroupId, $pageId);
-				if ($objectPermissions) {
-					$permissionsArray = array('RREAD', 'RWRITE', 'RDELETE', 'RSUB', 'RSTAGE');
-					foreach ($permissionsArray as $permissionsItem) {
-						if ($objectPermissions[$permissionsItem]) {
-							$newEmbeddedCblock->permissions->setByUsergroup($usergroupId, $permissionsItem, $embeddedCblockId, 1);
-						} else {
-							$newEmbeddedCblock->permissions->setByUsergroup($usergroupId, $permissionsItem, $embeddedCblockId, 0);
-						}
-					}
-				}
-			}
 
 			// Set the first version of the embedded cblock to "published"
 			$newEmbeddedCblock->publishVersion();

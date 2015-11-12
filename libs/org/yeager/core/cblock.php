@@ -1328,6 +1328,30 @@ class Cblock extends Versionable {
 	}
 
 	/**
+	 * Sets the permission of an embedded Entrymasks to the same permissions a page has
+	 *
+	 * @param object $page Page object
+	 */
+	function setPagePermissions($page) {
+		// Get an instance of this new embedded Cblock and inherit rights from this page to embedded contentblock
+		$usergroups = sUsergroups()->getList();
+		foreach ($usergroups as $usergroupItem) {
+			$usergroupId = $usergroupItem['ID'];
+			$objectPermissions = $page->permissions->getByUsergroup($usergroupId, $page->getID());
+			if ($objectPermissions) {
+				$permissionsArray = array('RREAD', 'RWRITE', 'RDELETE', 'RSUB', 'RSTAGE');
+				foreach ($permissionsArray as $permissionsItem) {
+					if ($objectPermissions[$permissionsItem]) {
+						$this->permissions->setByUsergroup($usergroupId, $permissionsItem, $this->getID(), 1);
+					} else {
+						$this->permissions->setByUsergroup($usergroupId, $permissionsItem, $this->getID(), 0);
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * Sets the order of Entrymasks in this Cblock
 	 *
 	 * @param array $entrymaskOrder
@@ -1617,7 +1641,7 @@ class Cblock extends Versionable {
 
 			$checkpinfo = sCblockMgr()->getCblockIdByPName($pname);
 			if (($checkpinfo["ID"] != $cbId) && ($checkpinfo["ID"] > 0)) {
-				$pname = $pname . $page;
+				$pname = $pname . $cbId;
 			} else {
 				if (($checkpinfo["ID"] > 0) && ($checkpinfo["ID"] == $cbId)) {
 				} else {
