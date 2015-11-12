@@ -47,6 +47,7 @@
 	</SESSION>
 	<CACHE>
 		<FRONTEND>false</FRONTEND>
+		<SMARTY_FORCECOMPILE>false</SMARTY_FORCECOMPILE>
 	</CACHE>
 	<DB>
 		<DSN id="yeager" driver="mysql" host="127.0.0.1:3306" user="root" password="" db="db_yeager" />
