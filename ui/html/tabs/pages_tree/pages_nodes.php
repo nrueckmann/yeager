@@ -121,7 +121,7 @@ function gen_tree ($current, $site=1, $icons, $imgpath, &$xml_tree, &$tree_id, &
 				$urlprefix = "";
 				$pi = count($pnames);
 				while ($pi > 0) {
-					$urlprefix .= $pnames[$pi-1][0]["PNAME"]."/";
+					if ($pnames[$pi-1][0]["PNAME"] != "") $urlprefix .= $pnames[$pi-1][0]["PNAME"]."/";
 					$pi--;
 				}
 			}
