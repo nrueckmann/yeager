@@ -389,8 +389,10 @@
 					@mkdir($this->tmpdir.'templates_cache', 0700);
 					$smarty->compile_dir = $this->tmpdir.'templates_compile';
 					$smarty->cache_dir = $this->tmpdir.'templates_cache';
+					$smarty->force_compile = (string)$this->config->getVar('CONFIG/CACHE/SMARTY_FORCECOMPILE');
 					$smarty->caching = 0;
 					$smarty->load_filter('output','trimwhitespace');
+
 					$smarty->assign("yeager_version",$this->yeager_version);
 					$smarty->assign("yeager_revision",$this->yeager_revision);
 					//$smarty->assign("yeager_date",$this->yeager_date);
