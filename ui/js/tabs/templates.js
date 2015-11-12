@@ -76,7 +76,7 @@ $K.yg_initTemplateUploadButtons = function(winID, objectID) {
 			upload_url: $K.appdir + 'responder?handler=uploadTemplate',
 			flash_url: $K.jsdir + '3rd/swfupload/swfupload.swf',
 			button_placeholder_id: 'wid_'+winID+'_addtemplatebutton',
-			file_types: "*.htm;*.html",
+			file_types: "*",
 			file_types_description: "Templates",
 			custom_settings: {
 				uploadButtonId: 'wid_'+winID+'_okbutton',
