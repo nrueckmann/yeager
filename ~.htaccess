@@ -4,9 +4,12 @@ RewriteEngine on
 
 ####### BEGIN YEAGER GENERATED - DO NOT EDIT #######
 # Block access and execution of certain filetypes in frontend folder
-RewriteCond %{REQUEST_URI}	^[__CFG_WEB_ROOT__][__CFG_FRONTEND_DIR__]/
+RewriteCond %{REQUEST_URI}	^[__CFG_WEB_ROOT__][__CFG_FRONTEND_DIR__]/ [OR]
+RewriteCond %{REQUEST_URI}	^[__CFG_WEB_ROOT__]yeager/libs/ [OR]
+RewriteCond %{REQUEST_URI}	^[__CFG_WEB_ROOT__]yeager/ui/js/3rd/
 RewriteRule \.(htaccess|htpasswd|phps|php|php3|php4|php5|exe|pl|jsp|asp|aspx|sh|cgi|py)$ /$1 [F]
 ############### END YEAGER GENERATED ###############
+
 
 ####### BEGIN YEAGER GENERATED - DO NOT EDIT #######
 # For Root

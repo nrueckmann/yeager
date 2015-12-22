@@ -61,13 +61,14 @@ class Comments extends \framework\Error {
 	 * @return array|bool Result of SQL query or FALSE in case of an error
 	 * @throws Exception
 	 */
-	function cacheExecuteGetArray($sql) {
-		$dbr = sYDB()->Execute($sql);
-		if ($dbr === false) {
-			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
-		}
-		$blaetter = $dbr->GetArray();
-		return $blaetter;
+	function cacheExecuteGetArray() {
+        $args = func_get_args();
+        $dbr = call_user_func_array(array(sYDB(), 'Execute'), $args);
+        if ($dbr === false) {
+            throw new Exception(sYDB()->ErrorMsg() . ':: ' . $sql);
+        }
+        $blaetter = $dbr->GetArray();
+        return $blaetter;
 	}
 
 /// @endcond
@@ -245,6 +246,7 @@ class Comments extends \framework\Error {
 	function setStatus($status = false, $autostatus = false) {
 		$oid = (int)$this->_object->getID();
 		$status = (int)$status;
+		$autostatus = (int)$autostatus;
 		$autoStatusSQL = '';
 		$autoStatusWhereSQL = '';
 
@@ -260,9 +262,9 @@ class Comments extends \framework\Error {
 			$sql = "UPDATE `" . $this->_objectpropertytable . "`
 						SET COMMENTSTATUS = $status $autoStatusSQL
 					WHERE
-						(OBJECTID = " . $oid . ") AND (VERSION = " . $objectVersion . ") $autoStatusWhereSQL;";
+						(OBJECTID = ?) AND (VERSION = ?) $autoStatusWhereSQL;";
 
-			$result = sYDB()->Execute($sql);
+			$result = sYDB()->Execute($sql, $oid, $objectVersion);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -289,8 +291,8 @@ class Comments extends \framework\Error {
 
 		// Check permissions (RMODERATE is required)
 		if (($commentId > 0) && $this->permissions->checkInternal($this->_uid, $oid, 'RMODERATE')) {
-			$sql = "UPDATE yg_comments SET SPAM = 1, CHANGEDTS = $currentTS WHERE (ID = $commentId);";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_comments SET SPAM = 1, CHANGEDTS = ? WHERE (ID = ?);";
+			$result = sYDB()->Execute($sql, $currentTS, $commentId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -316,8 +318,8 @@ class Comments extends \framework\Error {
 
 		// Check permissions (RMODERATE is required)
 		if (($commentId > 0) && $this->permissions->checkInternal($this->_uid, $oid, 'RMODERATE')) {
-			$sql = "UPDATE yg_comments SET SPAM = 0, CHANGEDTS = $currentTS WHERE (ID = $commentId);";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_comments SET SPAM = 0, CHANGEDTS = ? WHERE (ID = ?);";
+			$result = sYDB()->Execute($sql, $currentTS, $commentId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -343,8 +345,8 @@ class Comments extends \framework\Error {
 
 		// Check permissions (RMODERATE is required)
 		if (($commentId > 0) && $this->permissions->checkInternal($this->_uid, $oid, 'RMODERATE')) {
-			$sql = "UPDATE yg_comments SET APPROVED = 1, CHANGEDTS = $currentTS WHERE (ID = $commentId);";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_comments SET APPROVED = 1, CHANGEDTS = ? WHERE (ID = ?);";
+			$result = sYDB()->Execute($sql, $currentTS, $commentId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -370,8 +372,8 @@ class Comments extends \framework\Error {
 
 		// Check permissions (RMODERATE is required)
 		if (($commentId > 0) && $this->permissions->checkInternal($this->_uid, $oid, 'RMODERATE')) {
-			$sql = "UPDATE yg_comments SET APPROVED = 0, CHANGEDTS = $currentTS WHERE (ID = $commentId);";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_comments SET APPROVED = 0, CHANGEDTS = ? WHERE (ID = ?);";
+			$result = sYDB()->Execute($sql, $currentTS, $commentId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -394,7 +396,6 @@ class Comments extends \framework\Error {
 	function setComment($commentId = 0, $commentText) {
 		$objectId = (int)$this->_object->getID();
 		$commentId = (int)$commentId;
-		$commentText = mysql_real_escape_string($commentText);
 		$currentTS = time();
 		$currentSettings = $this->getSettings();
 		$blacklistWordsArray = explode("\n", $currentSettings['BLACKLIST']);
@@ -454,8 +455,8 @@ class Comments extends \framework\Error {
 		}
 
 		if (($commentId > 0) && $editAllowed) {
-			$sql = "UPDATE yg_comments SET COMMENT = '$commentText', CHANGEDTS = $currentTS WHERE (ID = $commentId);";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_comments SET COMMENT = ?, CHANGEDTS = ? WHERE (ID = ?);";
+			$result = sYDB()->Execute($sql, $commentText, $currentTS, $commentId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -481,21 +482,20 @@ class Comments extends \framework\Error {
 	function add($commentText = '', $parentCommentId = 0, $userName = '', $userEmail = '') {
 		$objectId = (int)$this->_object->getID();
 		$parentCommentId = (int)$parentCommentId;
-		$commentText = mysql_real_escape_string($commentText);
-		$userName = mysql_real_escape_string($userName);
-		$userEmail = mysql_real_escape_string($userEmail);
+		$commentText = sYDB()->escape_string($commentText);
+		$userName = sYDB()->escape_string($userName);
+		$userEmail = sYDB()->escape_string($userEmail);
 		$currentTS = time();
 		$currentSettings = $this->getSettings();
 		$spamWordsArray = explode("\n", $currentSettings['SPAMLIST']);
 		$blacklistWordsArray = explode("\n", $currentSettings['BLACKLIST']);
-		$regexpHref = '<a\s[^>]*href=("??)([^" >]*?)\\1[^>]*>(.*)<\/a>';
 
 		if ((int)$objectId == 0) {
 			$objectId = (int)$this->_object->getID();
 		}
 
 		// Check UserID vs. UserName/UserEmail
-		$userID = $this->_uid;
+		$userID = (int)$this->_uid;
 
 		// Check if approval is needed
 		if ($currentSettings['FORCE_APPROVAL']) {
@@ -582,12 +582,13 @@ class Comments extends \framework\Error {
 
 			if (($commentStatus != 0) || ($this->permissions->checkInternal($this->_uid, $objectId, 'RMODERATE'))) {
 				// Insert into comments-table
+				$commentText = sYDB()->escape_string($commentText);
 				$sql = "INSERT INTO `yg_comments`
 					( `ID` , `COMMENT`, `PARENT`, `USERID`, `USERNAME`, `USEREMAIL`, `APPROVED`, `SPAM`, `CREATEDTS`, `CHANGEDTS`)
 					VALUES
-					( NULL, '$commentText', '$parentCommentId', '$userID', '$userName', '$userEmail', '$approved', '$isSpam', '$currentTS', '$currentTS');";
+					( NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
-				$result = sYDB()->Execute($sql);
+				$result = sYDB()->Execute($sql, $commentText, $parentCommentId, $userID, $userName, $userEmail, $approved, $isSpam, $currentTS, $currentTS);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -597,8 +598,8 @@ class Comments extends \framework\Error {
 				$sql = "INSERT INTO `" . $this->_object->getCommentsLinkTable() . "`
 					( `ID` , `OID`, `COMMENTID`, `ORDERPROD`)
 					VALUES
-					( NULL, '$objectId', '$newCommentID', '9999');";
-				$result = sYDB()->Execute($sql);
+					( NULL, ?, ?, '9999');";
+				$result = sYDB()->Execute($sql, $objectId, $newCommentID);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -636,13 +637,13 @@ class Comments extends \framework\Error {
 
 		// Check permissions (RCOMMENT is required)
 		if (($commentId > 0) && $this->permissions->checkInternal(sUserMgr()->getCurrentUserID(), $objectId, 'RMODERATE')) {
-			$sql = "DELETE FROM yg_comments WHERE (ID = $commentId);";
-			$result = sYDB()->Execute($sql);
+			$sql = "DELETE FROM yg_comments WHERE (ID = ?);";
+			$result = sYDB()->Execute($sql, $commentId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
-			$sql = "DELETE FROM " . $this->_object->getCommentsLinkTable() . " WHERE (COMMENTID = $commentId);";
-			$result = sYDB()->Execute($sql);
+			$sql = "DELETE FROM " . $this->_object->getCommentsLinkTable() . " WHERE (COMMENTID = ?);";
+			$result = sYDB()->Execute($sql, $commentId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -788,7 +789,6 @@ class Comments extends \framework\Error {
 			ORDER BY
 			c.CREATEDTS $filterOrder $filterLimit;";
 		$resultarray = $this->cacheExecuteGetArray($sql);
-
 		if ($resultarray === false) {
 			return ERROR_COMMENTS_UNKNOWN;
 		}
@@ -822,17 +822,17 @@ class Comments extends \framework\Error {
 		$sql = "UPDATE
 					yg_comments_settings
 				SET
-					ALLOW_HTML = '" . (int)$settingsArray['ALLOW_HTML'] . "',
-					AUTOCLOSE_AFTER_DAYS = '" . (int)$settingsArray['AUTOCLOSE_AFTER_DAYS'] . "',
-					FORCE_APPROVAL = '" . (int)$settingsArray['FORCE_APPROVAL'] . "',
-					FORCE_AUTHENTICATION = '" . (int)$settingsArray['FORCE_AUTHENTICATION'] . "',
-					MINIMUM_INTERVAL = '" . (int)$settingsArray['MINIMUM_INTERVAL'] . "',
-					SE_RANK_DENIAL = '" . (int)$settingsArray['SE_RANK_DENIAL'] . "',
-					BLACKLIST = '" . mysql_real_escape_string($settingsArray['BLACKLIST']) . "',
-					SPAMLIST = '" . mysql_real_escape_string($settingsArray['SPAMLIST']) . "'
+					ALLOW_HTML = ?,
+					AUTOCLOSE_AFTER_DAYS = ?,
+					FORCE_APPROVAL = ?,
+					FORCE_AUTHENTICATION = ?,
+					MINIMUM_INTERVAL = ?,
+					SE_RANK_DENIAL = ?,
+					BLACKLIST = ?,
+					SPAMLIST = ?
 				WHERE 1;";
 
-		$result = sYDB()->Execute($sql);
+		$result = sYDB()->Execute($sql, $settingsArray['ALLOW_HTML'], $settingsArray['AUTOCLOSE_AFTER_DAYS'], $settingsArray['FORCE_APPROVAL'], $settingsArray['FORCE_AUTHENTICATION'], $settingsArray['MINIMUM_INTERVAL'], $settingsArray['SE_RANK_DENIAL'], $settingsArray['BLACKLIST'], $settingsArray['SPAMLIST']);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		} else {
@@ -899,6 +899,7 @@ function CommentsFilterCB(&$list, $type, $operator, $value1 = 0, $value2 = 0) {
 			break;
 
 		case "OBJECTTYPE":
+			if (!in_array($value1, array("FILE", "CO", "PAGE", "MAILING"))) break;
 			$list["HAVING"][] = "OBJECTTYPE " . $op . " '" . $value1 . "'";
 			break;
 
@@ -908,8 +909,11 @@ function CommentsFilterCB(&$list, $type, $operator, $value1 = 0, $value2 = 0) {
 			}
 			break;
 
-		case "ORDER":
-			$list["ORDER"][] = "ORDER BY " . $value1 . " " . $value2;
+		case 'ORDER':
+			$colarr = explode(".", sYDB()->escape_string(sanitize($value1)));
+			$value1 = "`".implode("`.`", $colarr)."`";
+			if ($value2 != "DESC") $value2 = "ASC";
+			$list['ORDER'][] = 'ORDER BY ' . $value1 . ' ' . $value2;
 			break;
 	}
 }

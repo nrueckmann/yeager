@@ -61,7 +61,7 @@
 								<td>
 									<div class="textbox" yg_form="textbox">
 
-										<input tabindex="1" onchange="{literal}if($K.yg_checkField(this,{type:'date',format:'{/literal}{$userinfo.PROPS.DATEFORMAT}{literal}',nodatesinpast:true})){ alert('BLA'); }{/literal}" type="text" value="{if ($item_timestamp != "")}{$item_timestamp|date_format_php:$itext.DATE_FORMAT}{/if}" maxlength="10" id="wid_{$parent_win_no}_autopublish_date_{$item_index}" xonclick="Event.stop(event);" />
+										<input tabindex="1" type="text" value="{if ($item_timestamp != "")}{$item_timestamp|date_format_php:$itext.DATE_FORMAT}{/if}" maxlength="10" id="wid_{$parent_win_no}_autopublish_date_{$item_index}" xonclick="Event.stop(event);" />
 
 									</div>
 								</td>
@@ -87,7 +87,7 @@
 								<td>
 									<div class="textbox" yg_form="textbox">
 
-										<input tabindex="1" onchange="{literal} if ($K.yg_checkField(this,{type:'time',format:'{/literal}{$userinfo.PROPS.TIMEFORMAT}{literal}'})) { alert('BLA'); } {/literal}" type="text" value="{if ($item_timestamp != "")}{$item_timestamp|date_format_php:$itext.TIME_FORMAT}{/if}" maxlength="10" id="wid_{$parent_win_no}_autopublish_time_{$item_index}" onclick="this.focus();Event.stop(event);" />
+										<input tabindex="1" type="text" value="{if ($item_timestamp != "")}{$item_timestamp|date_format_php:$itext.TIME_FORMAT}{/if}" maxlength="10" id="wid_{$parent_win_no}_autopublish_time_{$item_index}" onclick="this.focus();Event.stop(event);" />
 
 										<a id="wid_{$parent_win_no}_autopublish_anchor_{$item_index}" name="wid_{$parent_win_no}_autopublish_anchor_{$item_index}"></a>
 									</div>

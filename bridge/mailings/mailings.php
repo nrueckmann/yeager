@@ -278,9 +278,10 @@
 						$userIds = array_unique($userIds);
 						$receipients = count($userIds);
 
-						$queuedJobs = $mailingMgr->scheduler->getQueuedJobsForObject($mailingId, true, 'SCH_EMAILSEND');
+						$queuedJobs = $mailingMgr->scheduler->getQueuedJobsForObject($mailingId, true, true, 'SCH_EMAILSEND');
+
 						if (count($queuedJobs) > 0) {
-							// There are scheduled jobs for this mailing
+							// There are scheduled or running jobs for this mailing
 							$jobCount = count($queuedJobs);
 						} else {
 							// No jobs scheduled
@@ -311,7 +312,7 @@
 			$mailing = $mailingMgr->getMailing($mailingId);
 
 			// Get # of pending jobs
-			$queuedJobs = $mailingMgr->scheduler->getQueuedJobsForObject($mailingId, true, 'SCH_EMAILSEND');
+			$queuedJobs = $mailingMgr->scheduler->getQueuedJobsForObject($mailingId, true, true, 'SCH_EMAILSEND');
 
 			// Get # of receipients for this mailing
 			$mailing = $mailingMgr->getMailing($mailingId);
@@ -348,7 +349,7 @@
 			$mailing = $mailingMgr->getMailing($mailingId);
 
 			// Get # of pending jobs
-			$queuedJobs = $mailingMgr->scheduler->getQueuedJobsForObject($mailingId, true, 'SCH_EMAILSEND');
+			$queuedJobs = $mailingMgr->scheduler->getQueuedJobsForObject($mailingId, true, true, 'SCH_EMAILSEND');
 
 			// Get # of receipients for this mailing
 			$mailing = $mailingMgr->getMailing($mailingId);
@@ -385,7 +386,7 @@
 			$mailing = $mailingMgr->getMailing($mailingId);
 
 			// Get # of pending jobs
-			$queuedJobs = $mailingMgr->scheduler->getQueuedJobsForObject($mailingId, true, 'SCH_EMAILSEND');
+			$queuedJobs = $mailingMgr->scheduler->getQueuedJobsForObject($mailingId, true, false, 'SCH_EMAILSEND');
 
 			// Get # of receipients for this mailing
 			$mailing = $mailingMgr->getMailing($mailingId);
@@ -546,7 +547,6 @@
 								);
 								$mailingData = array('USERINFO' => $userInfo, 'DATA' => $emailData);
 								$mailingData = sMailingMgr()->callExtensionHook('beforeSend', $mailingId, $latestFinalVersion, $mailingData);
-
 								$scheduleId = $mailingMgr->scheduler->schedule($mailingId, 'SCH_EMAILSEND', time(), $mailingData['DATA']);
 							}
 							$scheduleId = $mailingMgr->scheduler->schedule($mailingId, 'SCH_EMAILCHECKFINISH', time(), array('MAILING_ID' => $mailingId));
@@ -555,7 +555,7 @@
 							$mailing->setStatus('INPROGRESS');
 
 							// Set status in gui
-							$jsQueue->add($mailingId, HISTORYTYPE_MAILING, 'OBJECT_CHANGECLASS', sGuiUS(), 'mailing', NULL, NULL, $mailingId.'-mailing', 'statusinfo', 'status_info inprogress justchanged');
+							$jsQueue->add($mailingId, HISTORYTYPE_MAILING, 'OBJECT_CHANGECLASS', sGuiUS(), 'mailing', NULL, NULL, $mailingId.'-mailing', 'statusinfo', 'status_info inprogress');
 
 							// Trigger locking of the current mailing
 							$jsQueue->add($mailingId, HISTORYTYPE_MAILING, 'OBJECT_CHANGE_LOCK_STATE', sGuiUS(), 'mailing', NULL, NULL, $mailingId.'-mailing', 'true');

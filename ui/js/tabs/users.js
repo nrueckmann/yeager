@@ -830,7 +830,6 @@ $K.yg_changeUserFilter = function(which, e) {
 	$K.windows[winID].loadparams.newRole = newRole;
 	$K.windows[winID].loadparams.newSearchText = newSearchText;
 	$K.windows[winID].loadparams.pagedir_page = 1;
-
 	$K.yg_pageDir($(winID + '_pagedir_USERLIST'));
 }
 

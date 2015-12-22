@@ -61,48 +61,51 @@ class Request {
 		// detect protocol - static for now
 		$this->protocol = "HTTP";
 
-		// handle http parameters
-		if ($this->protocol = "HTTP") {
-			$this->client_ip = $_SERVER['REMOTE_ADDR'];
-			$this->http_host = $_SERVER['HTTP_HOST'];
-			$this->http_hostname = $_SERVER['SERVER_NAME'];
-			$this->script_name = $_SERVER['SCRIPT_NAME'];
-            if(isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'){
-                $_SERVER['HTTPS']='on';
-            }
-			if($_SERVER['HTTPS']=='on'){ $this->prefix = "https"; } else { $this->prefix = "http"; }
+		if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ||
+        (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on')) {
+            $this->protocol = "HTTPS";
+		}
 
-			// parse path info
+		$this->client_ip = $_SERVER['REMOTE_ADDR'];
+		$this->http_host = $_SERVER['HTTP_HOST'];
+		$this->http_hostname = $_SERVER['SERVER_NAME'];
+		$this->script_name = $_SERVER['SCRIPT_NAME'];
+        if(isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'){
+            $_SERVER['HTTPS']='on';
+        }
+		if($_SERVER['HTTPS']=='on'){ $this->prefix = "https"; } else { $this->prefix = "http"; }
 
-			if (strlen($_SERVER['PATH_INFO']) < 1) {
-				$path_info = $_SERVER["ORIG_PATH_INFO"];
-				$path_info = str_replace( $_SERVER['SCRIPT_NAME'], '', $path_info);
-			} else {
-				$path_info = $_SERVER['PATH_INFO'];
-			}
+		// parse path info
 
-			if (!empty($path_info)) {
-				$params = explode('/',$path_info);
-				for ($i=1; $i<sizeof($params); $i++) {
-					$variable_name = $params[$i];
-					if (isset($variable_name)) {
-						$this->path[] = $variable_name;
-					}
-				}
-			}
+		if (strlen($_SERVER['PATH_INFO']) < 1) {
+			$path_info = $_SERVER["ORIG_PATH_INFO"];
+			$path_info = str_replace( $_SERVER['SCRIPT_NAME'], '', $path_info);
+		} else {
+			$path_info = $_SERVER['PATH_INFO'];
+		}
 
-			if ($_GET) {
-				while (list ($variable_name, $variable_value) = each ($_GET)) {
-					$this->_addVariable($variable_name, $variable_value);
-				}
-			}
-
-			if ($_POST) {
-				while (list ($variable_name, $variable_value) = each ($_POST)) {
-					$this->_addVariable($variable_name, $variable_value);
+		if (!empty($path_info)) {
+			$params = explode('/',$path_info);
+			for ($i=1; $i<sizeof($params); $i++) {
+				$variable_name = $params[$i];
+				if (isset($variable_name)) {
+					$this->path[] = $variable_name;
 				}
 			}
 		}
+
+		if ($_GET) {
+			while (list ($variable_name, $variable_value) = each ($_GET)) {
+				$this->_addVariable($variable_name, $variable_value);
+			}
+		}
+
+		if ($_POST) {
+			while (list ($variable_name, $variable_value) = each ($_POST)) {
+				$this->_addVariable($variable_name, $variable_value);
+			}
+		}
+
 	}
 
 	function getParam ($param) {
@@ -116,15 +119,11 @@ class Request {
 	}
 
 	function getHost () {
-		if ($this->protocol = "HTTP") {
-			return $this->http_host;
-		}
+		return $this->http_host;
 	}
 
 	function getHostname () {
-		if ($this->protocol = "HTTP") {
-			return $this->http_hostname;
-		}
+		return $this->http_hostname;
 	}
 
 	function _addVariable(&$variable_name,&$variable_value){

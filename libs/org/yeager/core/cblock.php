@@ -199,20 +199,17 @@ class Cblock extends Versionable {
 	 * Helper method for querying the database
 	 *
 	 * @param string $sql SQL query
-	 * @param bool $returnArray TRUE if an array should be returned, FALSE if status should be returned
 	 * @return array|bool Result of SQL query or FALSE in case of an error
 	 * @throws Exception
 	 */
-	function cacheExecuteGetArray($sql, $returnArray = true) {
-		$dbr = sYDB()->Execute($sql);
-		if ($dbr === false) {
-			throw new Exception(sYDB()->ErrorMsg() . "<br>" . $sql);
-		}
-		if ($returnArray == false) {
-			return true;
-		}
-		$blaetter = $dbr->GetArray();
-		return $blaetter;
+	function cacheExecuteGetArray() {
+        $args = func_get_args();
+        $dbr = call_user_func_array(array(sYDB(), 'Execute'), $args);
+        if ($dbr === false) {
+            throw new Exception(sYDB()->ErrorMsg() . ':: ' . $sql);
+        }
+        $blaetter = $dbr->GetArray();
+        return $blaetter;
 	}
 
 /// @endcond
@@ -355,9 +352,9 @@ class Cblock extends Versionable {
 						yg_contentblocks_propsv AS pv ON pv.OID = p.ID
 					WHERE
 						p.OBJECTID = t.ID AND
-						OBJECTID = $cbId AND
-						VERSION = $version;";
-			$ra = $this->cacheExecuteGetArray($sql);
+						OBJECTID = ? AND
+						VERSION = ?;";
+			$ra = $this->cacheExecuteGetArray($sql, $cbId, $version);
 			return $ra[0];
 		} else {
 			return false;
@@ -376,8 +373,8 @@ class Cblock extends Versionable {
 						FROM
 						yg_contentblocks_properties AS prop
 						LEFT JOIN yg_contentblocks_propsv AS pv ON pv.OID = prop.ID
-						WHERE OBJECTID = $cbId AND prop.VERSION > 0 ORDER BY VERSION DESC";
-			$ra = $this->cacheExecuteGetArray($sql);
+						WHERE OBJECTID = ? AND prop.VERSION > 0 ORDER BY VERSION DESC";
+			$ra = $this->cacheExecuteGetArray($sql, $cbId);
 			return $ra;
 		} else {
 			return false;
@@ -497,44 +494,44 @@ class Cblock extends Versionable {
 				$historyIdentifier = 'TXT_CBLOCK_H_NEWVERSION_FROM';
 				$historySourceVersion = $sourceVersion;
 			}
-			$newVersion = parent::newVersion();
+			$newVersion = (int)parent::newVersion();
 			$this->properties = new Properties($this->_table_properties, $this->getPropertyId(), $this);
 			$this->tags->copyTo($cbId, $sourceVersion, $cbId, $newVersion);
 			$this->copyExtensionsFrom($sourceObject);
 			if ($sourceVersionLinks > 0) {
-				$sql = "SELECT * FROM yg_contentblocks_lnk_entrymasks WHERE CBID = $cbId AND CBVERSION = $sourceVersion";
-				$dbr = sYDB()->Execute($sql);
+				$sql = "SELECT * FROM yg_contentblocks_lnk_entrymasks WHERE CBID = ? AND CBVERSION = ?";
+				$dbr = sYDB()->Execute($sql, $cbId, $sourceVersion);
 				$links = $dbr->GetArray();
 				for ($l = 0; $l < count($links); $l++) {
 					$sql = "INSERT INTO yg_contentblocks_lnk_entrymasks (ENTRYMASK, CBID, CBVERSION, ORDERPROD)
-						VALUES (" . $links[$l]["ENTRYMASK"] . ", " . $links[$l]["CBID"] . ", " . $newVersion . ", " . $links[$l]["ORDERPROD"] . ")";
-					sYDB()->Execute($sql);
-					$linkId = sYDB()->Insert_ID();
+						VALUES (?, ?, ?, ?)";
+					sYDB()->Execute($sql, $links[$l]["ENTRYMASK"], $links[$l]["CBID"], $newVersion, $links[$l]["ORDERPROD"]);
+					$linkId = (int)sYDB()->Insert_ID();
 
 					$sql = "INSERT INTO `yg_contentblocks_lnk_entrymasks_c`
 								(FORMFIELD, ENTRYMASKFORMFIELD, LNK, VALUE01, VALUE02, VALUE03, VALUE04, VALUE05, VALUE06, VALUE07, VALUE08)
 							SELECT FORMFIELD, ENTRYMASKFORMFIELD, $linkId, VALUE01, VALUE02, VALUE03, VALUE04, VALUE05, VALUE06, VALUE07, VALUE08
-							FROM yg_contentblocks_lnk_entrymasks_c WHERE (LNK = " . $links[$l]["ID"] . ");";
-					sYDB()->Execute($sql);
+							FROM yg_contentblocks_lnk_entrymasks_c WHERE (LNK = ?);";
+					sYDB()->Execute($sql, $links[$l]["ID"]);
 
-					$sql = "SELECT * FROM yg_contentblocks_lnk_entrymasks_c AS c WHERE c.LNK = " . $linkId;
-					$dbr = sYDB()->Execute($sql);
+					$sql = "SELECT * FROM yg_contentblocks_lnk_entrymasks_c AS c WHERE c.LNK = ?";
+					$dbr = sYDB()->Execute($sql, $linkId);
 					$newcs = $dbr->GetArray();
 
-					$sql = "SELECT * FROM yg_contentblocks_lnk_entrymasks_c AS c WHERE c.LNK = " . $links[$l]["ID"];
-					$dbr = sYDB()->Execute($sql);
+					$sql = "SELECT * FROM yg_contentblocks_lnk_entrymasks_c AS c WHERE c.LNK = ?";
+					$dbr = sYDB()->Execute($sql, $links[$l]["ID"]);
 					$oldcs = $dbr->GetArray();
 
 					for ($r = 0; $r < count($oldcs); $r++) {
 						$sql = "INSERT INTO yg_references (SRCTYPE, SRCOID, SRCVER, TGTTYPE, TGTOID, TGTAID)
-								SELECT SRCTYPE, " . $newcs[$r]["ID"] . ", " . $newVersion . ", TGTTYPE, TGTOID, TGTAID
-								FROM yg_references WHERE (SRCOID = " . $oldcs[$r]["ID"] . ");";
-						sYDB()->Execute($sql);
+								SELECT SRCTYPE, " . (int)$newcs[$r]["ID"] . ", " . $newVersion . ", TGTTYPE, TGTOID, TGTAID
+								FROM yg_references WHERE (SRCOID =  ?);";
+						sYDB()->Execute($sql, $oldcs[$r]["ID"]);
 					}
 				}
 			} else {
-				$sql = "SELECT * FROM yg_contentblocks_lnk_entrymasks WHERE CBID = $cbId AND CBVERSION = $sourceVersion";
-				$dbr = sYDB()->Execute($sql);
+				$sql = "SELECT * FROM yg_contentblocks_lnk_entrymasks WHERE CBID = ? AND CBVERSION = ?";
+				$dbr = sYDB()->Execute($sql, $cbId, $sourceVersion);
 				if (!$dbr) {
 					return;
 				}
@@ -542,29 +539,29 @@ class Cblock extends Versionable {
 				for ($l = 0; $l < count($links); $l++) {
 					$sql = "INSERT INTO yg_contentblocks_lnk_entrymasks (ENTRYMASK, CBID, CBVERSION, ORDERPROD)
 							VALUES
-							(" . $links[$l]["ENTRYMASK"] . ", " . $links[$l]["CBID"] . ", " . $newVersion . ", " . $links[$l]["ORDERPROD"] . ")";
-					sYDB()->Execute($sql);
-					$linkId = sYDB()->Insert_ID();
+							(?, ?, ?, ?)";
+					sYDB()->Execute($sql, $links[$l]["ENTRYMASK"], $links[$l]["CBID"], $newVersion, $links[$l]["ORDERPROD"]);
+					$linkId = (int)sYDB()->Insert_ID();
 
 					$sql = "INSERT INTO `yg_contentblocks_lnk_entrymasks_c`
 								(FORMFIELD, ENTRYMASKFORMFIELD, LNK, VALUE01, VALUE02, VALUE03, VALUE04, VALUE05, VALUE06, VALUE07, VALUE08)
 							SELECT FORMFIELD, ENTRYMASKFORMFIELD, $linkId, VALUE01, VALUE02, VALUE03, VALUE04, VALUE05, VALUE06, VALUE07, VALUE08
-							FROM yg_contentblocks_lnk_entrymasks_c WHERE (LNK = " . $links[$l]["ID"] . ");";
-					sYDB()->Execute($sql);
+							FROM yg_contentblocks_lnk_entrymasks_c WHERE (LNK = ?);";
+					sYDB()->Execute($sql, $links[$l]["ID"]);
 
-					$sql = "SELECT * FROM yg_contentblocks_lnk_entrymasks_c AS c WHERE c.LNK = " . $linkId;
-					$dbr = sYDB()->Execute($sql);
+					$sql = "SELECT * FROM yg_contentblocks_lnk_entrymasks_c AS c WHERE c.LNK = ?";
+					$dbr = sYDB()->Execute($sql, $linkId);
 					$newcs = $dbr->GetArray();
 
-					$sql = "SELECT * FROM yg_contentblocks_lnk_entrymasks_c AS c WHERE c.LNK = " . $links[$l]["ID"];
-					$dbr = sYDB()->Execute($sql);
+					$sql = "SELECT * FROM yg_contentblocks_lnk_entrymasks_c AS c WHERE c.LNK = ?";
+					$dbr = sYDB()->Execute($sql, $links[$l]["ID"]);
 					$oldcs = $dbr->GetArray();
 
 					for ($r = 0; $r < count($oldcs); $r++) {
 						$sql = "INSERT INTO yg_references (SRCTYPE, SRCOID, SRCVER, TGTTYPE, TGTOID, TGTAID)
-								SELECT SRCTYPE, " . $newcs[$r]["ID"] . ", " . $newVersion . ", TGTTYPE, TGTOID, TGTAID
-								FROM yg_references WHERE (SRCOID = " . $oldcs[$r]["ID"] . ");";
-						sYDB()->Execute($sql);
+								SELECT SRCTYPE, " . (int)$newcs[$r]["ID"] . ", " . $newVersion . ", TGTTYPE, TGTOID, TGTAID
+								FROM yg_references WHERE (SRCOID = ?);";
+						sYDB()->Execute($sql, $oldcs[$r]["ID"]);
 					}
 				}
 			}
@@ -575,7 +572,7 @@ class Cblock extends Versionable {
 				$extension = $extensions->getExtension($all_cblock_extension['CODE']);
 				if ($extension && ($extension->usedByCblock($cbId, $sourceVersion) === true)) {
 					if ($extension->usedByCblock($cbId, $newVersion) !== true) {
-						$newCbId = $extension->addToCBlockInternal($cbId, $newVersion);
+						$extension->addToCBlockInternal($cbId, $newVersion);
 					}
 					$extension = $extensions->getExtension($all_cblock_extension['CODE'], $cbId, $newVersion);
 					$sourceext = $extensions->getExtension($all_cblock_extension['CODE'], $cbId, $sourceVersion);
@@ -598,6 +595,151 @@ class Cblock extends Versionable {
 		}
 	}
 
+
+
+	/**
+	 * Gets Formfields of this Cblock including content, optionally of one specific Entrymask
+	 *
+	 * @param array $codes (optional) Array of Entrymask Codes
+	 * @return array Array of Formfields
+	 */
+	function getFormfieldsByEntrymaskCode($codes) {
+		$version = (int)$this->getVersion();
+		$cbId = (int)$this->_id;
+
+		if ($this->permissions->checkInternal($this->_uid, $cbId, "RREAD")) {
+			if ($cbId > 0) {
+				$sql_where = "CBID = $cbId AND CBVERSION = $version";
+			}
+
+			$webroot = (string)Singleton::config()->getVar('CONFIG/DIRECTORIES/WEBROOT');
+			$sql = "SELECT
+					l.ID AS LINKID,
+					l.ENTRYMASK AS ENTRYMASKID,
+					p.CODE AS CODE,
+					p.NAME AS ENTRYMASKNAME,
+					w.IDENTIFIER AS IDENTIFIER,
+					f.TYPE AS TYPE,
+					c.ID,
+					c.FORMFIELD,
+					c.ENTRYMASKFORMFIELD,
+					c.VALUE01,
+					c.VALUE02,
+					c.VALUE03,
+					c.VALUE04,
+					c.VALUE05,
+					c.VALUE06,
+					c.VALUE07,
+					c.VALUE08,
+					w.NAME AS NAME,
+					l.CBID AS CBLOCKID,
+					w.PRESET AS PRESET,
+					w.WIDTH AS WIDTH,
+					w.MAXLENGTH AS MAXLENGTH,
+					w.CONFIG AS CONFIG,
+					w.CUSTOM AS CUSTOM
+				FROM
+					yg_contentblocks_lnk_entrymasks_c AS c,
+					yg_contentblocks_lnk_entrymasks AS l,
+					yg_entrymasks_lnk_formfields as w,
+					yg_entrymasks_properties AS p,
+					yg_formfields as f
+				WHERE
+					(c.LNK IN (
+						SELECT * FROM
+						(
+						SELECT lnk.ID as LINKID
+						FROM	yg_contentblocks_lnk_entrymasks as lnk,
+							yg_entrymasks_properties as ctrl
+						WHERE	(CBID = " . $cbId . " AND CBVERSION = " . $version . ") AND
+							(lnk.ENTRYMASK = ctrl.OBJECTID) AND";
+			for ($i = 0; $i < count($codes); $i++) {
+				if ($i == 0) $sql .= "(";
+				$sql .= "CODE = '" . $codes[$i] . "'";
+				if ($i == (count($codes)-1)) {
+					$sql .= ")";
+				} else {
+					$sql .= " OR ";
+				}
+			}
+				$sql .= "ORDER BY ORDERPROD
+						) AS subquery )git
+					) AND
+					(c.LNK = l.ID) AND
+					(c.ENTRYMASKFORMFIELD = w.ID) AND
+					(w.ENTRYMASK = p.OBJECTID) AND
+					(l.ENTRYMASK = p.OBJECTID) AND
+					(c.FORMFIELD = f.ID)
+				ORDER BY w.ORDER ASC;";
+				$wc = $this->cacheExecuteGetArray($sql);
+				for ($w = 0; $w < count($wc); $w++) {
+					switch ($wc[$w]['TYPE']) {
+						case 'TEXT':
+						case 'CHECKBOX':
+						case 'PASSWORD':
+						case 'DATE':
+						case 'DATETIME':
+						case 'HEADLINE':
+							$wc[$w]['VALUE'] = $wc[$w]['VALUE01'];
+							break;
+						case 'TEXTAREA':
+						case 'WYSIWYG':
+							$wc[$w]['VALUE'] = replaceSpecialURLs($wc[$w]['VALUE01']);
+							break;
+						case 'LINK':
+							$resolvedUrl = resolveSpecialURL($wc[$w]['VALUE01']);
+							if ($resolvedUrl) {
+								$wc[$w]['URL'] = $resolvedUrl;
+							} else {
+								$wc[$w]['URL'] = $wc[$w]['VALUE01'];
+							}
+							break;
+						case 'PAGE':
+							$wc[$w]['PAGE_ID'] = $wc[$w]['VALUE01'];
+							$wc[$w]['SITE_ID'] = $wc[$w]['VALUE02'];
+							$wc[$w]['URL'] = $wc[$w]['VALUE03'];
+							$wc[$w]['PNAME'] = $wc[$w]['VALUE04'];
+							$wc[$w]['SITE_PNAME'] = $wc[$w]['VALUE05'];
+							break;
+						case 'FILE':
+						case 'FILEFOLDER':
+							$wc[$w]['FILE_ID'] = $wc[$w]['VALUE01'];
+							$pname = '';
+							if ($wc[$w]['FILE_ID'] ) {
+								$pname = sFileMgr()->getPNameByFileId($wc[$w]['FILE_ID']);
+							}
+							$wc[$w]['URL'] = '';
+							if ($pname != "") {
+								$wc[$w]['URL'] = $webroot . 'download/' . $pname;
+								$wc[$w]['IMAGE_URL'] = $webroot . 'image/' . $pname;
+								$wc[$w]['PNAME'] = $pname;
+							}
+							break;
+						case 'CO':
+							$wc[$w]['CBLOCK_ID'] = $wc[$w]['VALUE01'];
+							break;
+						case 'TAG':
+							$wc[$w]['TAG_ID'] = $wc[$w]['VALUE01'];
+							break;
+						case 'LIST':
+							$wc[$w]['VALUE'] = $wc[$w]['VALUE01'];
+							break;
+					}
+					$cleanArray = array();
+					foreach ($wc[$w] as $arrKey => $arrValue) {
+						if (!is_numeric($arrKey) && (substr($arrKey, 0, 6) != 'VALUE0')) {
+							$cleanArray[$arrKey] = $arrValue;
+						}
+					}
+					$wc[$w] = $cleanArray;
+				}
+			return $wc;
+		} else {
+			return false;
+		}
+	}
+
+
 	/**
 	 * Gets Formfields of this Cblock including content, optionally of one specific Entrymask
 	 *
@@ -614,7 +756,7 @@ class Cblock extends Versionable {
 				$sql_where = "CBID = $cbId AND CBVERSION = $version ";
 			}
 			if ($linkId > 0) {
-				$linksql = "AND lnk.ID = $linkId";
+				$linksql = "AND lnk.ID = ?";
 			}
 			$sql = "SELECT
 				lnk.ID AS LINKID,
@@ -630,7 +772,7 @@ class Cblock extends Versionable {
 				($sql_where $linksql) AND
 				(lnk.ENTRYMASK = ctrl.OBJECTID)
 			ORDER BY ORDERPROD;";
-			$ra = $this->cacheExecuteGetArray($sql);
+			$ra = $this->cacheExecuteGetArray($sql, $linkId);
 
 			$webroot = (string)Singleton::config()->getVar('CONFIG/DIRECTORIES/WEBROOT');
 			for ($l = 0; $l < count($ra); $l++) {
@@ -666,14 +808,14 @@ class Cblock extends Versionable {
 							yg_entrymasks_properties AS p,
 							yg_formfields as f
 						WHERE
-							(c.LNK = " . $ra[$l]["LINKID"] . ") AND
+							(c.LNK = ?) AND
 							(c.LNK = l.ID) AND
 							(c.ENTRYMASKFORMFIELD = w.ID) AND
 							(w.ENTRYMASK = p.OBJECTID) AND
 							(l.ENTRYMASK = p.OBJECTID) AND
 							(c.FORMFIELD = f.ID)
 						ORDER BY w.ORDER ASC;";
-				$wc = $this->cacheExecuteGetArray($sql);
+				$wc = $this->cacheExecuteGetArray($sql, $ra[$l]["LINKID"]);
 				for ($w = 0; $w < count($wc); $w++) {
 					switch ($wc[$w]['TYPE']) {
 						case 'TEXT':
@@ -813,14 +955,14 @@ class Cblock extends Versionable {
 							yg_entrymasks_properties AS p,
 							yg_formfields as f
 						WHERE
-							(c.LNK = " . $ra[$l]["LINKID"] . ") AND
+							(c.LNK = ?) AND
 							(c.LNK = l.ID) AND
 							(c.ENTRYMASKFORMFIELD = w.ID) AND
 							(w.ENTRYMASK = p.OBJECTID) AND
 							(l.ENTRYMASK = p.OBJECTID) AND
 							(c.FORMFIELD = f.ID)
 						ORDER BY w.ORDER ASC;";
-				$wc = $this->cacheExecuteGetArray($sql);
+				$wc = $this->cacheExecuteGetArray($sql, $ra[$l]["LINKID"]);
 				for ($w = 0; $w < count($wc); $w++) {
 					switch ($wc[$w]['TYPE']) {
 						case 'TEXT':
@@ -886,10 +1028,9 @@ class Cblock extends Versionable {
 	/**
 	 * Gets all Entrymasks of this Cblock
 	 *
-	 * @param int $version (optional) Cblock version
 	 * @return array|false or FALSE in case of an error
 	 */
-	function getEntrymasks($version = 0) {
+	function getEntrymasks() {
 		$cbId = (int)$this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $cbId, "RREAD")) {
 			$version = (int)$this->getVersion();
@@ -902,10 +1043,10 @@ class Cblock extends Versionable {
 						`yg_contentblocks_lnk_entrymasks` as lnk,
 						yg_entrymasks_properties as ctrl
 					WHERE
-						(CBID = $cbId AND CBVERSION = $version) AND
+						(CBID = ? AND CBVERSION = ?) AND
 						(lnk.ENTRYMASK = ctrl.OBJECTID)
 					ORDER BY ORDERPROD;";
-			$ra = $this->cacheExecuteGetArray($sql);
+			$ra = $this->cacheExecuteGetArray($sql, $cbId, $version);
 			return $ra;
 		} else {
 			return false;
@@ -1191,8 +1332,8 @@ class Cblock extends Versionable {
 			sCblockMgr()->tree->moveTo($cbId, $rootNode);
 
 			// Set to "DELETED"
-			$sql = "UPDATE yg_contentblocks_properties SET DELETED = 1 WHERE OBJECTID = $cbId;";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_contentblocks_properties SET DELETED = 1 WHERE OBJECTID = ?;";
+			$result = sYDB()->Execute($sql, $cbId);
 			$successNodes[] = $cbId;
 
 			sCblockMgr()->callExtensionHook('onDelete', (int)$this->_id, (int)$this->_version);
@@ -1214,8 +1355,8 @@ class Cblock extends Versionable {
 		$cbId = (int)$this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $cbId, "RDELETE")) {
 			// restore from trashcan
-			$sql = "UPDATE yg_contentblocks_properties SET DELETED = 0 WHERE OBJECTID = $cbId";
-			sYDB()->Execute($sql);
+			$sql = "UPDATE yg_contentblocks_properties SET DELETED = 0 WHERE OBJECTID = ?";
+			sYDB()->Execute($sql, $cbId);
 			return true;
 		} else {
 			return false;
@@ -1277,21 +1418,20 @@ class Cblock extends Versionable {
 		parent::copyFrom($sourceObject);
 
 		if ($sourceInfo["FOLDER"] == 0) {
-			$sql = "DELETE FROM yg_contentblocks_lnk_entrymasks WHERE CBID = $targetID AND CBVERSION = $targetVersion;";
-			sYDB()->Execute($sql);
-			$sql = "SELECT * FROM yg_contentblocks_lnk_entrymasks WHERE CBID = $sourceID AND CBVERSION = $sourceVersion;";
-			$dbr = sYDB()->Execute($sql);
+			$sql = "DELETE FROM yg_contentblocks_lnk_entrymasks WHERE CBID = ? AND CBVERSION = ?;";
+			sYDB()->Execute($sql, $targetID, $targetVersion);
+			$sql = "SELECT * FROM yg_contentblocks_lnk_entrymasks WHERE CBID = ? AND CBVERSION = ?;";
+			$dbr = sYDB()->Execute($sql, $sourceID, $sourceVersion);
 			$links = $dbr->GetArray();
 			for ($l = 0; $l < count($links); $l++) {
-				$sql = "INSERT INTO yg_contentblocks_lnk_entrymasks (ENTRYMASK, CBID, CBVERSION, ORDERPROD)
-					VALUES (" . $links[$l]["ENTRYMASK"] . ", " . $targetID . ", " . $targetVersion . ", " . $links[$l]["ORDERPROD"] . ")";
-				$this->cacheExecuteGetArray($sql, false);
-				$linkId = sYDB()->Insert_ID();
+				$sql = "INSERT INTO yg_contentblocks_lnk_entrymasks (ENTRYMASK, CBID, CBVERSION, ORDERPROD) VALUES (?, ?, ?, ?)";
+				sYDB()->Execute($sql, $links[$l]["ENTRYMASK"], $targetID, $targetVersion, $links[$l]["ORDERPROD"]);
+				$linkId = (int)sYDB()->Insert_ID();
 				$sql = "INSERT INTO `yg_contentblocks_lnk_entrymasks_c`
 							(FORMFIELD, ENTRYMASKFORMFIELD, LNK, VALUE01, VALUE02, VALUE03, VALUE04, VALUE05, VALUE06, VALUE07, VALUE08)
 						SELECT FORMFIELD, ENTRYMASKFORMFIELD, $linkId, VALUE01, VALUE02, VALUE03, VALUE04, VALUE05, VALUE06, VALUE07, VALUE08
-						FROM yg_contentblocks_lnk_entrymasks_c WHERE (LNK = " . $links[$l]["ID"] . ");";
-				$this->cacheExecuteGetArray($sql, false);
+						FROM yg_contentblocks_lnk_entrymasks_c WHERE (LNK = ?);";
+				sYDB()->Execute($sql, $links[$l]["ID"]);
 			}
 		}
 		$this->copyExtensionsFrom($sourceObject);
@@ -1365,8 +1505,8 @@ class Cblock extends Versionable {
 		if ($this->permissions->checkInternal($this->_uid, $cbId, "RWRITE")) {
 			for ($i = 0; $i < count($entrymaskOrder); $i++) {
 				$sql = "UPDATE `yg_contentblocks_lnk_entrymasks`
-				SET ORDERPROD = $i WHERE (CBID = $cbId) AND (ID = $entrymaskOrder[$i]) AND (CBVERSION = $version);";
-				$result = sYDB()->Execute($sql);
+				SET ORDERPROD = ? WHERE (CBID = ?) AND (ID = ?) AND (CBVERSION = ?);";
+				$result = sYDB()->Execute($sql, $i, $cbId, $entrymaskOrder[$i], $version);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -1389,8 +1529,8 @@ class Cblock extends Versionable {
 		$cbId = $this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $cbId, "RWRITE")) {
 			$value = (int)$value;
-			$sql = "UPDATE yg_contentblocks_properties SET EMBEDDED = $value WHERE (OBJECTID = $cbId);";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_contentblocks_properties SET EMBEDDED = ? WHERE (OBJECTID = ?);";
+			$result = sYDB()->Execute($sql, $value, $cbId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1430,8 +1570,8 @@ class Cblock extends Versionable {
 			$sql = "INSERT INTO `yg_contentblocks_lnk_entrymasks`
 						(`CBID`, `CBVERSION`, `ENTRYMASK`, `ORDERPROD`)
 					VALUES
-						('$cbId', '$version', '$entrymaskId', 9999);";
-			$result = sYDB()->Execute($sql);
+						(?, ?, ?, 9999);";
+			$result = sYDB()->Execute($sql, $cbId, $version, $entrymaskId);
 			$insertid = sYDB()->Insert_ID();
 
 			$controlFormfields = $this->control->getEntrymaskFormfields($entrymaskId);
@@ -1439,8 +1579,8 @@ class Cblock extends Versionable {
 				$sql = "INSERT INTO `yg_contentblocks_lnk_entrymasks_c`
 							(FORMFIELD, ENTRYMASKFORMFIELD, LNK, VALUE01)
 						VALUES
-							(" . $controlFormfields[$cw]["FORMFIELD"] . ", " . $controlFormfields[$cw]["ID"] . ", $insertid, '" . $controlFormfields[$cw]["PRESET"] . "')";
-				$result = sYDB()->Execute($sql);
+							(?, ?, ?, ?)";
+				$result = sYDB()->Execute($sql, $controlFormfields[$cw]["FORMFIELD"], $controlFormfields[$cw]["ID"], $insertid, $controlFormfields[$cw]["PRESET"]);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -1466,18 +1606,18 @@ class Cblock extends Versionable {
 		$version = $this->getVersion();
 
 		if ($this->permissions->checkInternal($this->_uid, $cbId, "RWRITE")) {
-			$sql = "SELECT p.*,w.* FROM yg_entrymasks_properties AS p, yg_contentblocks_lnk_entrymasks AS w WHERE (w.ID = $linkId) AND (w.ENTRYMASK = p.OBJECTID);";
-			$dbr = sYDB()->Execute($sql);
+			$sql = "SELECT p.*,w.* FROM yg_entrymasks_properties AS p, yg_contentblocks_lnk_entrymasks AS w WHERE (w.ID = ?) AND (w.ENTRYMASK = p.OBJECTID);";
+			$dbr = sYDB()->Execute($sql, $linkId);
 			if ($dbr === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
-			$sql = "DELETE FROM `yg_contentblocks_lnk_entrymasks` WHERE (CBID = $cbId AND CBVERSION = $version AND ID = $linkId);";
-			$dbr = sYDB()->Execute($sql);
+			$sql = "DELETE FROM `yg_contentblocks_lnk_entrymasks` WHERE (CBID = ? AND CBVERSION = ? AND ID = ?);";
+			$dbr = sYDB()->Execute($sql, $cbId, $version, $linkId);
 			if ($dbr === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
-			$sql = "DELETE FROM `yg_contentblocks_lnk_entrymasks_c` WHERE (LNK = $linkId);";
-			$dbr = sYDB()->Execute($sql);
+			$sql = "DELETE FROM `yg_contentblocks_lnk_entrymasks_c` WHERE (LNK = ?);";
+			$dbr = sYDB()->Execute($sql, $linkId);
 			if ($dbr === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1508,14 +1648,14 @@ class Cblock extends Versionable {
 		$linkId = (int)$linkId;
 
 		if ($this->permissions->checkInternal($this->_uid, $cbId, "RWRITE")) {
-			$value01 = mysql_real_escape_string($value01);
-			$value02 = mysql_real_escape_string($value02);
-			$value03 = mysql_real_escape_string($value03);
-			$value04 = mysql_real_escape_string($value04);
-			$value05 = mysql_real_escape_string($value05);
-			$value06 = mysql_real_escape_string($value06);
-			$value07 = mysql_real_escape_string($value07);
-			$value08 = mysql_real_escape_string($value08);
+			$value01 = sYDB()->escape_string($value01);
+			$value02 = sYDB()->escape_string($value02);
+			$value03 = sYDB()->escape_string($value03);
+			$value04 = sYDB()->escape_string($value04);
+			$value05 = sYDB()->escape_string($value05);
+			$value06 = sYDB()->escape_string($value06);
+			$value07 = sYDB()->escape_string($value07);
+			$value08 = sYDB()->escape_string($value08);
 
 			// Check if an URL needs to be generated
 			$sql = "SELECT
@@ -1525,9 +1665,8 @@ class Cblock extends Versionable {
 						`yg_formfields` AS t
 					WHERE
 						(c.FORMFIELD = t.ID) AND
-						(c.ID = $linkId);";
-			$result = sYDB()->Execute($sql);
-			$ra = $this->cacheExecuteGetArray($sql);
+						(c.ID = ?);";
+			$ra = $this->cacheExecuteGetArray($sql, $linkId);
 			$webRoot = (string)sConfig()->getVar("CONFIG/DIRECTORIES/WEBROOT");
 			switch ($ra[0]['TYPE']) {
 				case 'PAGE':
@@ -1560,17 +1699,17 @@ class Cblock extends Versionable {
 			}
 
 			$sql = "UPDATE `yg_contentblocks_lnk_entrymasks_c` SET
-						VALUE01 = '$value01',
-						VALUE02 = '$value02',
-						VALUE03 = '$value03',
-						VALUE04 = '$value04',
-						VALUE05 = '$value05',
-						VALUE06 = '$value06',
-						VALUE07 = '$value07',
-						VALUE08 = '$value08'
+						VALUE01 = ?,
+						VALUE02 = ?,
+						VALUE03 = ?,
+						VALUE04 = ?,
+						VALUE05 = ?,
+						VALUE06 = ?,
+						VALUE07 = ?,
+						VALUE08 = ?
 					WHERE
-						(ID = $linkId);";
-			$result = sYDB()->Execute($sql);
+						(ID = ?);";
+			$result = sYDB()->Execute($sql, $value01, $value02, $value03, $value04, $value05, $value06, $value07, $value08, $linkId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1581,7 +1720,6 @@ class Cblock extends Versionable {
 			// Check if it is an embedded entrymask
 			if ($CblockInfo['EMBEDDED']) {
 				$sql = "SELECT PID, PVERSION FROM yg_mailing_lnk_cb WHERE CBID = " . $CblockInfo['OBJECTID'] . " AND CBVERSION = " . $CblockInfo['VERSION'] . ";";
-				$result = sYDB()->Execute($sql);
 				$linkedMailings = $this->cacheExecuteGetArray($sql);
 
 				if (count($linkedMailings) > 0) {
@@ -1597,8 +1735,7 @@ class Cblock extends Versionable {
 					// Check if it is related to a Page
 					$sites = sSites()->getList(true, false);
 					for ($i = 0; $i < count($sites); $i++) {
-						$sql = "SELECT PID, PVERSION FROM yg_site_" . $sites[$i]['ID'] . "_lnk_cb WHERE CBID = " . $CblockInfo['OBJECTID'] . " AND CBVERSION = " . $CblockInfo['VERSION'] . ";";
-						$result = sYDB()->Execute($sql);
+						$sql = "SELECT PID, PVERSION FROM yg_site_" . (int)$sites[$i]['ID'] . "_lnk_cb WHERE CBID = " . (int)$CblockInfo['OBJECTID'] . " AND CBVERSION = " . (int)$CblockInfo['VERSION'] . ";";
 						$linkedPages = $this->cacheExecuteGetArray($sql);
 						if (count($linkedPages) > 0) {
 							// Yes, it links to a Pages
@@ -1631,6 +1768,7 @@ class Cblock extends Versionable {
 	 */
 	public function setPName($pname) {
 		$cbId = $this->_id;
+		$pname = sYDB()->escape_string(sanitize($pname));
 
 		if ($this->permissions->checkInternal($this->_uid, $cbId, "RWRITE")) {
 			$pname = $this->filterPName($pname);
@@ -1648,14 +1786,14 @@ class Cblock extends Versionable {
 				}
 			}
 
-			$sql = "SELECT PNAME AS STATE FROM yg_contentblocks_tree WHERE (ID = $cbId);";
-			$result = sYDB()->Execute($sql);
+			$sql = "SELECT PNAME AS STATE FROM yg_contentblocks_tree WHERE (ID = ?);";
+			$result = sYDB()->Execute($sql, $cbId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
 
-			$sql = "UPDATE yg_contentblocks_tree SET PNAME = '$pname' WHERE (ID = $cbId);";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_contentblocks_tree SET PNAME = '$pname' WHERE (ID = ?);";
+			$result = sYDB()->Execute($sql, $cbId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}

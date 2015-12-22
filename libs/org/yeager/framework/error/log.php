@@ -33,21 +33,18 @@
 
     class EchoLog extends Logger {
         public function __construct ($uri = "") {
-            $this->fb = \FirePHP::getInstance(true);
-            $this->fb->setEnabled(true);
-            $this->fb->registerExceptionHandler();
         }
         public function log ($level = 0, $message = "") {
             switch ($level) {
                 case 1:
-                    echo ($message);
+                    echo ($message."\n");
                     break;
                 case 2:
-                    echo ($message);
+                    echo ($message."\n");
                 case 3:
-                    echo ($message);
+                    echo ($message."\n");
                 case 4:
-                    echo ($message);
+                    echo ($message."\n");
                 default:
                     break;
             }

@@ -25,7 +25,7 @@ class Extension extends \framework\Error {
 	 * @param string $code Extension code
 	 */
 	public function __construct($code) {
-		$code = mysql_real_escape_string($code);
+		$code = sYDB()->escape_string($code);
 		$this->_code = $code;
 		$this->_uid = &sUserMgr()->getCurrentUserID();
 		$this->extensionProperties = new Properties("yg_ext_" . $this->_code . "_props", 1);
@@ -62,8 +62,8 @@ class Extension extends \framework\Error {
 	 * @throws Exception
 	 */
 	function getPath() {
-		$sql = "SELECT PATH FROM yg_extensions WHERE (CODE = '" . $this->_code . "');";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT PATH FROM yg_extensions WHERE (CODE = ?);";
+		$result = sYDB()->Execute($sql, $this->_code);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -90,8 +90,8 @@ class Extension extends \framework\Error {
 	 * @throws Exception
 	 */
 	function setInstalled() {
-		$sql = "UPDATE `yg_extensions` SET INSTALLED = '1' WHERE CODE = '" . $this->_code . "';";
-		$result = sYDB()->Execute($sql);
+		$sql = "UPDATE `yg_extensions` SET INSTALLED = '1' WHERE CODE = ?;";
+		$result = sYDB()->Execute($sql, $this->_code);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -105,8 +105,8 @@ class Extension extends \framework\Error {
 	 * @throws Exception
 	 */
 	function setUnInstalled() {
-		$sql = "UPDATE `yg_extensions` SET INSTALLED = '0' WHERE CODE = '" . $this->_code . "';";
-		$result = sYDB()->Execute($sql);
+		$sql = "UPDATE `yg_extensions` SET INSTALLED = '0' WHERE CODE = ?;";
+		$result = sYDB()->Execute($sql, $this->_code);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -392,7 +392,7 @@ class CblockListviewExtension extends Extension {
 	 * @param string $code Extension code
 	 */
 	public function __construct($code) {
-		$code = mysql_real_escape_string($code);
+		$code = sYDB()->escape_string($code);
 		$this->_code = $code;
 		parent::__construct($code);
 	}
@@ -471,7 +471,7 @@ class ImportExtension extends Extension {
 	 * @param string $code ImportExtension code
 	 */
 	public function __construct($code) {
-		$code = mysql_real_escape_string($code);
+		$code = sYDB()->escape_string($code);
 		$this->_code = $code;
 		parent::__construct($code);
 		$this->extensionProperties = new Properties("yg_ext_" . $this->_code . "_props", 1);
@@ -550,7 +550,7 @@ class ExportExtension extends Extension {
 	 * @param string $code ExportExtension code
 	 */
 	public function __construct($code) {
-		$code = mysql_real_escape_string($code);
+		$code = sYDB()->escape_string($code);
 		$this->_code = $code;
 		parent::__construct($code);
 		$this->extensionProperties = new Properties("yg_ext_" . $this->_code . "_props", 1);
@@ -674,7 +674,7 @@ class PageExtension extends Extension {
 	 * @param string $siteId Site Id (optional)
 	 */
 	public function __construct($code, $pageId = NULL, $pageVersion = NULL, $siteId = NULL) {
-		$code = mysql_real_escape_string($code);
+		$code = sYDB()->escape_string($code);
 		$this->_code = $code;
 		parent::__construct($code);
 		$uid = NULL;
@@ -707,8 +707,8 @@ class PageExtension extends Extension {
 		$pageID = $page->getID();
 		$version = $page->getVersion();
 
-		$sql = "SELECT ID FROM yg_extensions_lnk_pages WHERE CODE = '" . $this->_code . "' AND SITEID = $siteID AND PAGEID = $pageID AND PAGEVERSION = $version;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT ID FROM yg_extensions_lnk_pages WHERE CODE = ? AND SITEID = ? AND PAGEID = ? AND PAGEVERSION = ?;";
+		$result = sYDB()->Execute($sql, $this->_code, $siteID, $pageID, $version);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -778,8 +778,8 @@ class PageExtension extends Extension {
 		$sql = "INSERT INTO yg_extensions_lnk_pages
 		(ID, CODE, SITEID, PAGEID, PAGEVERSION)
 		VALUES
-		(NULL, '" . $this->_code . "', '$siteID', '$pageID', $version);";
-		$result = sYDB()->execute($sql);
+		(NULL, ?, ?, ?, ?);";
+		$result = sYDB()->Execute($sql, $this->_code, $siteID, $pageID, $version);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -800,8 +800,8 @@ class PageExtension extends Extension {
 		$siteID = (int)$siteID;
 		$pageID = (int)$pageID;
 		$version = (int)$version;
-		$sql = "DELETE FROM yg_extensions_lnk_pages WHERE CODE = '" . $this->_code . "' AND SITEID = $siteID AND PAGEID = $pageID AND PAGEVERSION = $version;";
-		$result = sYDB()->execute($sql);
+		$sql = "DELETE FROM yg_extensions_lnk_pages WHERE CODE = ? AND SITEID = ? AND PAGEID = ? AND PAGEVERSION = ?;";
+		$result = sYDB()->Execute($sql, $this->_code, $siteID, $pageID, $version);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -850,11 +850,11 @@ class PageExtension extends Extension {
 						yg_extensions_lnk_pages,
 						yg_site_" . $siteID . "_tree AS pagestree
 					WHERE
-						CODE = '" . $this->_code . "' AND
-						SITEID = $siteID AND
-						PAGEID = $pageID
+						CODE = ? AND
+						SITEID = ? AND
+						PAGEID = ?
 						$versionSQL;";
-			$result = sYDB()->Execute($sql);
+			$result = sYDB()->Execute($sql, $this->_code, $siteID, $pageID);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -887,8 +887,8 @@ class PageExtension extends Extension {
 	public function uninstall() {
 		if (parent::uninstall()) {
 			if ($this->uninstallPropertyTables("yg_ext_" . $this->_code . "_pages")) {
-				$sql = "DELETE FROM yg_extensions_lnk_pages WHERE CODE = '" . $this->_code . "'";
-				$result = sYDB()->execute($sql);
+				$sql = "DELETE FROM yg_extensions_lnk_pages WHERE CODE = ?";
+				$result = sYDB()->Execute($sql, $this->_code);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -1075,7 +1075,7 @@ class MailingExtension extends Extension {
 	 * @param string $mailingVersion Mailing version (optional)
 	 */
 	public function __construct($code, $mailingId = NULL, $mailingVersion = NULL) {
-		$code = mysql_real_escape_string($code);
+		$code = sYDB()->escape_string($code);
 		$this->_code = $code;
 		parent::__construct($code);
 		$uid = NULL;
@@ -1107,8 +1107,8 @@ class MailingExtension extends Extension {
 		$mailingID = $mailing->getID();
 		$version = $mailing->getVersion();
 
-		$sql = "SELECT ID FROM yg_extensions_lnk_mailings WHERE CODE = '" . $this->_code . "' AND MAILINGID = $mailingID AND MAILINGVERSION = $version;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT ID FROM yg_extensions_lnk_mailings WHERE CODE = ? AND MAILINGID = ? AND MAILINGVERSION = ?;";
+		$result = sYDB()->Execute($sql, $this->_code, $mailingID, $version);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -1170,8 +1170,8 @@ class MailingExtension extends Extension {
 		$mailingID = (int)$mailingID;
 		$version = (int)$version;
 
-		$sql = "INSERT INTO yg_extensions_lnk_mailings (ID, CODE, MAILINGID, MAILINGVERSION) VALUES (NULL, '" . $this->_code . "', '$mailingID', $version);";
-		$result = sYDB()->execute($sql);
+		$sql = "INSERT INTO yg_extensions_lnk_mailings (ID, CODE, MAILINGID, MAILINGVERSION) VALUES (NULL, ?, ?, ?);";
+		$result = sYDB()->Execute($sql, $this->_code, $mailingID, $version);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -1190,8 +1190,8 @@ class MailingExtension extends Extension {
 	public function removeFromMailing($mailingID, $version) {
 		$mailingID = (int)$mailingID;
 		$version = (int)$version;
-		$sql = "DELETE FROM yg_extensions_lnk_mailings WHERE CODE = '" . $this->_code . "' AND MAILINGID = $mailingID AND MAILINGVERSION = $version;";
-		$result = sYDB()->execute($sql);
+		$sql = "DELETE FROM yg_extensions_lnk_mailings WHERE CODE = ? AND MAILINGID = ? AND MAILINGVERSION = ?;";
+		$result = sYDB()->Execute($sql, $this->_code, $mailingID, $version);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -1211,6 +1211,7 @@ class MailingExtension extends Extension {
 	 * @throws Exception
 	 */
 	public function usedByMailing($mailingID, $version) {
+
 		if ($this->info['ASSIGNMENT'] == EXTENSION_ASSIGNMENT_EXT_CONTROLLED) {
 			return true;
 		} else {
@@ -1221,10 +1222,10 @@ class MailingExtension extends Extension {
 					FROM
 						yg_extensions_lnk_mailings
 					WHERE
-						CODE = '" . $this->_code . "' AND
-						MAILINGID = $mailingID AND
-						MAILINGVERSION = $version";
-			$result = sYDB()->Execute($sql);
+						CODE = ? AND
+						MAILINGID = ? AND
+						MAILINGVERSION = ?";
+			$result = sYDB()->Execute($sql, $this->_code, $mailingID, $version);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1257,8 +1258,8 @@ class MailingExtension extends Extension {
 	public function uninstall() {
 		if (parent::uninstall()) {
 			if ($this->uninstallPropertyTables("yg_ext_" . $this->_code . "_mailings")) {
-				$sql = "DELETE FROM yg_extensions_lnk_mailings WHERE CODE = '" . $this->_code . "'";
-				$result = sYDB()->execute($sql);
+				$sql = "DELETE FROM yg_extensions_lnk_mailings WHERE CODE = ?";
+				$result = sYDB()->Execute($sql, $this->_code);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -1471,7 +1472,7 @@ class FileExtension extends Extension {
 	 * @param string $fileVersion File version (optional)
 	 */
 	public function __construct($code, $fileId = NULL, $fileVersion = NULL) {
-		$code = mysql_real_escape_string($code);
+		$code = sYDB()->escape_string($code);
 		$this->_code = $code;
 		parent::__construct($code);
 		$uid = NULL;
@@ -1503,8 +1504,8 @@ class FileExtension extends Extension {
 		$fileID = $file->getID();
 		$version = $file->getVersion();
 
-		$sql = "SELECT ID FROM yg_extensions_lnk_files WHERE CODE = '" . $this->_code . "' AND FILEID = $fileID AND FILEVERSION = $version";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT ID FROM yg_extensions_lnk_files WHERE CODE = ? AND FILEID = ? AND FILEVERSION = ?";
+		$result = sYDB()->Execute($sql, $this->_code, $fileID, $version);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -1566,8 +1567,8 @@ class FileExtension extends Extension {
 		$fileID = (int)$fileID;
 		$version = (int)$version;
 
-		$sql = "INSERT INTO yg_extensions_lnk_files (ID, CODE, FILEID, FILEVERSION) VALUES (NULL, '" . $this->_code . "', '$fileID', $version);";
-		$result = sYDB()->execute($sql);
+		$sql = "INSERT INTO yg_extensions_lnk_files (ID, CODE, FILEID, FILEVERSION) VALUES (NULL, ?, ?, ?);";
+		$result = sYDB()->Execute($sql, $this->_code, $fileID, $version);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -1586,8 +1587,8 @@ class FileExtension extends Extension {
 	public function removeFromFile($fileID, $version) {
 		$fileID = (int)$fileID;
 		$version = (int)$version;
-		$sql = "DELETE FROM yg_extensions_lnk_files WHERE CODE = '" . $this->_code . "' AND FILEID = $fileID AND FILEVERSION = $version;";
-		$result = sYDB()->execute($sql);
+		$sql = "DELETE FROM yg_extensions_lnk_files WHERE CODE = ? AND FILEID = ? AND FILEVERSION = ?;";
+		$result = sYDB()->Execute($sql, $this->_code, $fileID, $version);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -1617,10 +1618,10 @@ class FileExtension extends Extension {
 					FROM
 						yg_extensions_lnk_files
 					WHERE
-						CODE = '" . $this->_code . "' AND
-						FILEID = $fileID AND
-						FILEVERSION = $version";
-			$result = sYDB()->Execute($sql);
+						CODE = ? AND
+						FILEID = ? AND
+						FILEVERSION = ?";
+			$result = sYDB()->Execute($sql, $this->_code, $fileID, $version);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1653,8 +1654,8 @@ class FileExtension extends Extension {
 	public function uninstall() {
 		if (parent::uninstall()) {
 			if ($this->uninstallPropertyTables("yg_ext_" . $this->_code . "_files")) {
-				$sql = "DELETE FROM yg_extensions_lnk_files WHERE CODE = '" . $this->_code . "'";
-				$result = sYDB()->execute($sql);
+				$sql = "DELETE FROM yg_extensions_lnk_files WHERE CODE = ?";
+				$result = sYDB()->Execute($sql, $this->_code);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -1865,7 +1866,7 @@ class CblockExtension extends Extension {
 	 * @param string $cblockVersion Cblock version (optional)
 	 */
 	public function __construct($code, $cbId = NULL, $cblockVersion = NULL) {
-		$code = mysql_real_escape_string($code);
+		$code = sYDB()->escape_string($code);
 		$this->_code = $code;
 		parent::__construct($code);
 		$uid = NULL;
@@ -1897,8 +1898,8 @@ class CblockExtension extends Extension {
 		$cbId = $cb->getID();
 		$version = $cb->getVersion();
 
-		$sql = "SELECT ID FROM yg_extensions_lnk_cblocks WHERE CODE = '" . $this->_code . "' AND CBID = $cbId AND CBVERSION = $version";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT ID FROM yg_extensions_lnk_cblocks WHERE CODE = ? AND CBID = ? AND CBVERSION = ?";
+		$result = sYDB()->Execute($sql, $this->_code, $cbId, $version);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -1960,8 +1961,8 @@ class CblockExtension extends Extension {
 		$cbId = (int)$cbId;
 		$version = (int)$version;
 
-		$sql = "INSERT INTO yg_extensions_lnk_cblocks (ID, CODE, CBID, CBVERSION) VALUES (NULL, '" . $this->_code . "', '$cbId', $version);";
-		$result = sYDB()->execute($sql);
+		$sql = "INSERT INTO yg_extensions_lnk_cblocks (ID, CODE, CBID, CBVERSION) VALUES (NULL, ?, ?, ?);";
+		$result = sYDB()->Execute($sql, $this->_code, $cbId, $version);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -1980,8 +1981,8 @@ class CblockExtension extends Extension {
 	public function removeFromCBlock($cbId, $version) {
 		$cbId = (int)$cbId;
 		$version = (int)$version;
-		$sql = "DELETE FROM yg_extensions_lnk_cblocks WHERE CODE = '" . $this->_code . "' AND CBID = $cbId AND CBVERSION = $version;";
-		$result = sYDB()->execute($sql);
+		$sql = "DELETE FROM yg_extensions_lnk_cblocks WHERE CODE = ? AND CBID = ? AND CBVERSION = ?;";
+		$result = sYDB()->Execute($sql, $this->_code, $cbId, $version);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -2012,10 +2013,10 @@ class CblockExtension extends Extension {
 					FROM
 						yg_extensions_lnk_cblocks
 					WHERE
-						CODE = '" . $this->_code . "' AND
-						CBID = $cbId AND
-						CBVERSION = $version";
-			$result = sYDB()->Execute($sql);
+						CODE = ? AND
+						CBID = ? AND
+						CBVERSION = ?";
+			$result = sYDB()->Execute($sql, $this->_code, $cbId, $version);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -2052,8 +2053,8 @@ class CblockExtension extends Extension {
 	public function uninstall() {
 		if (parent::uninstall()) {
 			if ($this->uninstallPropertyTables("yg_ext_" . $this->_code . "_cblocks")) {
-				$sql = "DELETE FROM yg_extensions_lnk_cblocks WHERE CODE = '" . $this->_code . "'";
-				$result = sYDB()->execute($sql);
+				$sql = "DELETE FROM yg_extensions_lnk_cblocks WHERE CODE = ?";
+				$result = sYDB()->Execute($sql, $this->_code);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}

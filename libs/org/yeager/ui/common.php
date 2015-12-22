@@ -319,10 +319,9 @@
 	function calcPageDir ($dataCount, $defaultSortCol, $defaultSortOrder = 'ASC') {
 		$pageDirPage = (int)sRequest()->parameters['pagedir_page'];
 		$pageDirPerPage = sRequest()->parameters['pagedir_perpage'];
-
 		$pageDirOrderBy = sRequest()->parameters['pagedir_orderby'];
-		$pageDirOrderDir = sRequest()->parameters['pagedir_orderdir'];
-		$pageDirFrom = sRequest()->parameters['pagedir_from'];
+		$pageDirOrderDir = (int)sRequest()->parameters['pagedir_orderdir'];
+		$pageDirFrom = (int)sRequest()->parameters['pagedir_from'];
 
 		if (!$pageDirFrom) $pageDirFrom = 1;
 
@@ -330,7 +329,10 @@
 			$pageDirPerPage = -1;
 		} else if (!$pageDirPerPage) {
 			$pageDirPerPage = (int)sConfig()->getVar('CONFIG/PAGEDIR/DEFAULT_PER_PAGE');
+		} else {
+			$pageDirPerPage = (int)$pageDirPerPage;
 		}
+
 		$pageDirMaxPages = 1;
 		if (!$pageDirPage) $pageDirPage = 1;
 
@@ -980,7 +982,6 @@
 		if (count($fl["HAVING"]) > 0) {
 			$having .= $fl["HAVING"][0];
 		}
-
 	}
 
 	function downloadFromURL($sourceURL, $targetFile) {

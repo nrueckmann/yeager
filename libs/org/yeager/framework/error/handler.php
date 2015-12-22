@@ -43,8 +43,10 @@
 				}
 				if ($bucket["TYPE"] == "PLUGIN") {
 					if ($bucket["URI"] == "FireBug") {
-						$this->buckets[$b]["INSTANCE"] = new Firelog($bucket["URI"]);
-						$this->buckets[$b]["LEVEL"] = $bucket["LEVEL"];
+                        if ($bucket["LEVEL"] > 0) {
+                            $this->buckets[$b]["INSTANCE"] = new Firelog($bucket["URI"]);
+                            $this->buckets[$b]["LEVEL"] = $bucket["LEVEL"];
+                        }
 					}
 					if ($bucket["URI"] == "Echo") {
 						$this->buckets[$b]["INSTANCE"] = new EchoLog($bucket["URI"]);

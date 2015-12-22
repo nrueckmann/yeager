@@ -14,11 +14,9 @@
 			// Check if job is finished and set status accordingly
 			$mailingMgr = new MailingMgr();
 			$mailing = $mailingMgr->getMailing($params['MAILING_ID']);
-
-			$queuedJobs = $mailingMgr->scheduler->getQueuedJobsForObject($params['MAILING_ID'], true, 'SCH_EMAILSEND');
+			$queuedJobs = $mailingMgr->scheduler->getQueuedJobsForObject($params['MAILING_ID'], true, true, 'SCH_EMAILSEND');
 			if (count($queuedJobs) == 0) {
 				// No more jobs scheduled
-				$jobCount = 0;
 				if ($params['IS_TEST']) {
 					$mailing->setStatus('UNSENT');
 				} else {
@@ -31,7 +29,6 @@
 
 		public function sendEmail ($emailData) {
 			$mail = new PHPMailer();
-
 			if ((bool)sConfig()->getVar('CONFIG/MAILINGS/DISABLE')) {
 				return true;
 			}

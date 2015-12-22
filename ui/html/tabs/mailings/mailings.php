@@ -84,7 +84,7 @@ foreach ($mailings as $mailingsIdx => $mailingsItem) {
 
 		// Get status of mailing
 		$mailingStatus = $currMailing->getStatus();
-		$scheduledJobs = $mailingMgr->scheduler->getQueuedJobsForObject($mailingsItem['ID'], true, 'SCH_EMAILSEND');
+		$scheduledJobs = $mailingMgr->scheduler->getQueuedJobsForObject($mailingsItem['ID'], true, true, 'SCH_EMAILSEND');
 		if (count($scheduledJobs) > 0) {
 			// There are scheduled jobs for this mailing
 			$jobCount = count($scheduledJobs);

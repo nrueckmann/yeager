@@ -55,15 +55,15 @@
 		public function onRender() {
 			$action = sApp()->request->parameters['action'];
 			if ($action == "insert") {
-				$title = mysql_real_escape_string(sApp()->request->parameters['title']);
-				$author = mysql_real_escape_string(sApp()->request->parameters['author']);
+				$title = sYDB()->escape_string(sApp()->request->parameters['title']);
+				$author = sYDB()->escape_string(sApp()->request->parameters['author']);
 				$date = time();
 
 				$tablename = "yg_ext_".$this->_code."_exampletable";
 				$sql = "INSERT INTO $tablename 
 					(title, author, creation) VALUES 
-					('$title', '$author', $date);";
-				$dbr = sYDB()->Execute($sql);
+					(?, ?, ?);";
+				$dbr = sYDB()->Execute($sql, $title, $author, $date);
 				if ($dbr === false) {
 					throw new \Exception(sYDB()->ErrorMsg());
 					return false;

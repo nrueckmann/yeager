@@ -84,9 +84,9 @@ class Views extends \framework\Error {
 	function setCode($viewId, $value) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RVIEWS')) {
 			$viewId = (int)$viewId;
-			$value = mysql_real_escape_string(sanitize($value));
-			$sql = "UPDATE `yg_views_properties` SET CODE = '$value' WHERE OBJECTID = $viewId;";
-			$result = sYDB()->Execute($sql);
+			$value = sYDB()->escape_string(sanitize($value));
+			$sql = "UPDATE `yg_views_properties` SET CODE = ? WHERE OBJECTID = ?;";
+			$result = sYDB()->Execute($sql, $value, $viewId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -107,9 +107,9 @@ class Views extends \framework\Error {
 	function setName($viewId, $value) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RVIEWS')) {
 			$viewId = (int)$viewId;
-			$value = mysql_real_escape_string(sanitize($value));
-			$sql = "UPDATE `yg_views_properties` SET NAME = '$value' WHERE OBJECTID = $viewId;";
-			$result = sYDB()->Execute($sql);
+			$value = sYDB()->escape_string(sanitize($value));
+			$sql = "UPDATE `yg_views_properties` SET NAME = ? WHERE OBJECTID = ?;";
+			$result = sYDB()->Execute($sql, $value, $viewId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -130,9 +130,9 @@ class Views extends \framework\Error {
 	function setIdentifier($viewId, $value) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RVIEWS')) {
 			$viewId = (int)$viewId;
-			$value = mysql_real_escape_string(sanitize($value));
-			$sql = "UPDATE `yg_views_properties` SET IDENTIFIER = '$value' WHERE OBJECTID = $viewId;";
-			$result = sYDB()->Execute($sql);
+			$value = sYDB()->escape_string(sanitize($value));
+			$sql = "UPDATE `yg_views_properties` SET IDENTIFIER = ? WHERE OBJECTID = ?;";
+			$result = sYDB()->Execute($sql, $value, $viewId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -154,8 +154,8 @@ class Views extends \framework\Error {
 		if (sUsergroups()->permissions->check($this->_uid, 'RVIEWS')) {
 			$viewId = (int)$viewId;
 			$value = (int)$value;
-			$sql = "UPDATE `yg_views_properties` SET WIDTH = '$value' WHERE OBJECTID = $viewId;";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE `yg_views_properties` SET WIDTH = ? WHERE OBJECTID = ?;";
+			$result = sYDB()->Execute($sql, $value, $viewId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -177,8 +177,8 @@ class Views extends \framework\Error {
 		if (sUsergroups()->permissions->check($this->_uid, 'RVIEWS')) {
 			$viewId = (int)$viewId;
 			$value = (int)$value;
-			$sql = "UPDATE `yg_views_properties` SET WIDTHCROP = '$value' WHERE OBJECTID = $viewId;";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE `yg_views_properties` SET WIDTHCROP = ? WHERE OBJECTID = ?;";
+			$result = sYDB()->Execute($sql, $value, $viewId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -200,8 +200,8 @@ class Views extends \framework\Error {
 		if (sUsergroups()->permissions->check($this->_uid, 'RVIEWS')) {
 			$viewId = (int)$viewId;
 			$value = (int)$value;
-			$sql = "UPDATE `yg_views_properties` SET CONSTRAINWIDTH = '$value' WHERE OBJECTID = $viewId;";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE `yg_views_properties` SET CONSTRAINWIDTH = ? WHERE OBJECTID = ?;";
+			$result = sYDB()->Execute($sql, $value, $viewId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -223,8 +223,8 @@ class Views extends \framework\Error {
 		if (sUsergroups()->permissions->check($this->_uid, 'RVIEWS')) {
 			$viewId = (int)$viewId;
 			$value = (int)$value;
-			$sql = "UPDATE `yg_views_properties` SET HEIGHT = '$value' WHERE OBJECTID = $viewId;";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE `yg_views_properties` SET HEIGHT = ? WHERE OBJECTID = ?;";
+			$result = sYDB()->Execute($sql, $value, $viewId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -246,8 +246,8 @@ class Views extends \framework\Error {
 		if (sUsergroups()->permissions->check($this->_uid, 'RVIEWS')) {
 			$viewId = (int)$viewId;
 			$value = (int)$value;
-			$sql = "UPDATE `yg_views_properties` SET HEIGHTCROP = '$value' WHERE OBJECTID = $viewId;";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE `yg_views_properties` SET HEIGHTCROP = ? WHERE OBJECTID = ?;";
+			$result = sYDB()->Execute($sql, $value, $viewId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -269,8 +269,8 @@ class Views extends \framework\Error {
 		if (sUsergroups()->permissions->check($this->_uid, 'RVIEWS')) {
 			$viewId = (int)$viewId;
 			$value = (int)$value;
-			$sql = "UPDATE `yg_views_properties` SET CONSTRAINHEIGHT = '$value' WHERE OBJECTID = $viewId;";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE `yg_views_properties` SET CONSTRAINHEIGHT = ? WHERE OBJECTID = ?;";
+			$result = sYDB()->Execute($sql, $value, $viewId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -294,11 +294,9 @@ class Views extends \framework\Error {
 		$folder = (int)$folder;
 		$rread = $this->permissions->checkInternal($this->_uid, $parentViewId, "RSUB");
 		if ($rread && sUsergroups()->permissions->check($this->_uid, 'RVIEWS')) {
-			$viewId = $this->tree->add($parentViewId);
-			$sql = "INSERT INTO `yg_views_properties` (`OBJECTID`, `FOLDER`, `HIDDEN`, `NAME`)
-			VALUES
-			('$viewId', '$folder', '$hidden', 'New Type');";
-			$result = sYDB()->Execute($sql);
+			$viewId = (int)$this->tree->add($parentViewId);
+			$sql = "INSERT INTO `yg_views_properties` (`OBJECTID`, `FOLDER`, `HIDDEN`, `NAME`) VALUES (?, ?, ?, 'New Type');";
+			$result = sYDB()->Execute($sql, $viewId, $folder, $hidden);
 
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
@@ -320,8 +318,8 @@ class Views extends \framework\Error {
 		if (sUsergroups()->permissions->check($this->_uid, 'RVIEWS')) {
 			$viewId = (int)$viewId;
 
-			$sql = "SELECT DISTINCT FILEID FROM `yg_views_lnk_files` WHERE VIEWID = $viewId;";
-			$result = sYDB()->Execute($sql);
+			$sql = "SELECT DISTINCT FILEID FROM `yg_views_lnk_files` WHERE VIEWID = ?;";
+			$result = sYDB()->Execute($sql, $viewId);
 			$resultarray = $result->GetArray();
 
 			$viewInfo = $this->get($viewId);
@@ -336,11 +334,11 @@ class Views extends \framework\Error {
 
 			$this->tree->remove($viewId);
 
-			$sql = "DELETE FROM `yg_views_lnk_files` WHERE VIEWID = $viewId;";
-			$result = sYDB()->Execute($sql);
+			$sql = "DELETE FROM `yg_views_lnk_files` WHERE VIEWID = ?;";
+			sYDB()->Execute($sql, $viewId);
 
-			$sql = "DELETE FROM `yg_views_properties` WHERE OBJECTID = $viewId;";
-			$result = sYDB()->Execute($sql);
+			$sql = "DELETE FROM `yg_views_properties` WHERE OBJECTID = ?;";
+			sYDB()->Execute($sql, $viewId);
 
 			return true;
 		} else {
@@ -358,8 +356,8 @@ class Views extends \framework\Error {
 	function get($viewId) {
 		$viewId = (int)$viewId;
 		if (strlen($viewId) > 0) {
-			$sql = "SELECT * FROM yg_views_properties WHERE (OBJECTID = $viewId);";
-			$result = sYDB()->Execute($sql);
+			$sql = "SELECT * FROM yg_views_properties WHERE (OBJECTID = ?);";
+			$result = sYDB()->Execute($sql, $viewId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -376,9 +374,9 @@ class Views extends \framework\Error {
 	 * @throws Exception
 	 */
 	function getByIdentifier($value) {
-		$value = mysql_real_escape_string(sanitize($value));
-		$sql = "SELECT * FROM `yg_views_properties` WHERE IDENTIFIER = '" . $value . "'";
-		$result = sYDB()->Execute($sql);
+		$value = sYDB()->escape_string(sanitize($value));
+		$sql = "SELECT * FROM `yg_views_properties` WHERE IDENTIFIER = ?";
+		$result = sYDB()->Execute($sql, $value);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -397,7 +395,7 @@ class Views extends \framework\Error {
 		$perm_sql_where = " AND (";
 		$roles = $this->permissions->getUsergroups();
 		for ($r = 0; $r < count($roles); $r++) {
-			$perm_sql_where .= "(perm.USERGROUPID = " . $roles[$r]["ID"] . ") ";
+			$perm_sql_where .= "(perm.USERGROUPID = " . (int)$roles[$r]["ID"] . ") ";
 			if ((count($roles) - $r) > 1) {
 				$perm_sql_where .= " OR ";
 			}
@@ -437,7 +435,7 @@ class Views extends \framework\Error {
 		$perm_sql_where = " AND (";
 		$roles = $this->permissions->getUsergroups();
 		for ($r = 0; $r < count($roles); $r++) {
-			$perm_sql_where .= "(perm.USERGROUPID = " . $roles[$r]["ID"] . ") ";
+			$perm_sql_where .= "(perm.USERGROUPID = " . (int)$roles[$r]["ID"] . ") ";
 			if ((count($roles) - $r) > 1) {
 				$perm_sql_where .= " OR ";
 			}
@@ -490,7 +488,6 @@ class Views extends \framework\Error {
 			$fileId = (int)$this->file->getID();
 			if ($this->file->permissions->checkInternal($this->_uid, $fileId, 'RWRITE')) {
 				$fileVersion = (int)$this->file->getVersion();
-				$fileInfo = $this->file->get();
 				$viewId = (int)$viewId;
 				$views = $this->getAssigned($fileId, $fileVersion);
 				for ($v = 0; $v < count($views); $v++) {
@@ -498,8 +495,8 @@ class Views extends \framework\Error {
 						return true;
 					}
 				}
-				$sql = "INSERT INTO yg_views_lnk_files SET FILEID = $fileId, FILEVERSION = $fileVersion, VIEWID = $viewId;";
-				$result = sYDB()->Execute($sql);
+				$sql = "INSERT INTO yg_views_lnk_files SET FILEID = ?, FILEVERSION = ?, VIEWID = ?;";
+				$result = sYDB()->Execute($sql, $fileId, $fileVersion, $viewId);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -570,8 +567,8 @@ class Views extends \framework\Error {
 			if ($this->file->permissions->checkInternal($this->_uid, $fileId, 'RWRITE')) {
 				$fileVersion = (int)$this->file->getVersion();
 				$viewId = (int)$viewId;
-				$sql = "DELETE FROM yg_views_lnk_files WHERE FILEID = $fileId AND FILEVERSION = $fileVersion AND VIEWID = $viewId";
-				$result = sYDB()->Execute($sql);
+				$sql = "DELETE FROM yg_views_lnk_files WHERE FILEID = ? AND FILEVERSION = ? AND VIEWID = ?";
+				$result = sYDB()->Execute($sql, $fileId, $fileVersion, $viewId);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -638,8 +635,8 @@ class Views extends \framework\Error {
 		if ($this->file != '') {
 			$fileId = (int)$this->file->getID();
 			if ($this->file->permissions->checkInternal($this->_uid, $fileId, 'RWRITE')) {
-				$sql = "DELETE FROM yg_views_lnk_files WHERE FILEID = $fileId;";
-				$result = sYDB()->Execute($sql);
+				$sql = "DELETE FROM yg_views_lnk_files WHERE FILEID = ?;";
+				$result = sYDB()->Execute($sql, $fileId);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -668,9 +665,9 @@ class Views extends \framework\Error {
 			$sql = "SELECT lnk.VIEWID, lnk.VIEWID AS ID, prop.*
 			FROM yg_views_lnk_files AS lnk
 			LEFT JOIN yg_views_properties AS prop ON prop.OBJECTID = lnk.VIEWID
-			WHERE lnk.FILEID = $fileId AND lnk.FILEVERSION = $fileVersion AND prop.HIDDEN = 0 ORDER BY prop.NAME";
+			WHERE lnk.FILEID = ? AND lnk.FILEVERSION = ? AND prop.HIDDEN = 0 ORDER BY prop.NAME";
 
-			$result = sYDB()->Execute($sql);
+			$result = sYDB()->Execute($sql, $fileId, $fileVersion);
 
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
@@ -749,10 +746,10 @@ class Views extends \framework\Error {
 			$targetFileInfo = $this->file->get();
 			if ($targetFileInfo['OBJECTID']) {
 				$sql = "INSERT INTO `yg_views_generated`
-				SELECT NULL, " . $targetFileInfo['OBJECTID'] . ", " . $toFileVersion . ", VIEWID, WIDTH, HEIGHT, TYPE
+				SELECT NULL, " . (int)$targetFileInfo['OBJECTID'] . ", " . (int)$toFileVersion . ", VIEWID, WIDTH, HEIGHT, TYPE
 				FROM `yg_views_generated`
-				WHERE FILEID = " . $sourceFileInfo['OBJECTID'] . " AND FILEVERSION = " . $fromFileVersion . ";";
-				$result = sYDB()->Execute($sql);
+				WHERE FILEID = ? AND FILEVERSION = ?;";
+				$result = sYDB()->Execute($sql, $sourceFileInfo['OBJECTID'], $fromFileVersion);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -773,6 +770,7 @@ class Views extends \framework\Error {
 	public function updateViews($hidden = false) {
 		if ($this->file != '') {
 			$fileId = (int)$this->file->getID();
+
 			if ($this->file->permissions->checkInternal($this->_uid, $fileId, 'RWRITE')) {
 				if ($hidden === true) {
 					$views = $this->getHiddenViews();
@@ -839,10 +837,24 @@ class Views extends \framework\Error {
 			$fileId = (int)$this->file->getID();
 			if ($this->file->permissions->checkInternal($this->_uid, $fileId, 'RWRITE')) {
 				$views = $this->getAssigned();
+
 				if ($hidden) {
 					$hiddenviews = $this->getHiddenViews();
-					$views = array_merge($views, $hiddenviews);
+
+					for ($i = 0; $i < count($hiddenviews); $i++) {
+						$dupe = false;
+						for ($x = 0; $x < count($views); $x++) {
+							if ($views[$x]['IDENTIFIER'] == $hiddenviews[$i]['IDENTIFIER']) {
+								$dupe = true;
+								break;
+							}
+						}
+						if ($dupe == false) {
+							array_push($views, $hiddenviews[$i]);
+						}
+					}
 				}
+
 				$fileinfo = $this->file->get();
 				$procs = sApp()->files_procs;
 				$fileproc = $this->file->filetypes->getProcessor($fileinfo['FILETYPE']);
@@ -850,12 +862,23 @@ class Views extends \framework\Error {
 				for ($p = 0; $p < count($procs); $p++) {
 					if ($procs[$p]['name'] == $fileproc) {
 						for ($v = 0; $v < count($views); $v++) {
-							if (($viewId && ($views[$v]["ID"] != $viewId)) || ($views[$v]["IDENTIFIER"] == "YGSOURCE")) continue;
+							if (($viewId && ($views[$v]["ID"] != $viewId))) continue;
 							$params = array(
 								'FILEINFO' => $fileinfo,
 								'VIEW' => $views[$v]
 							);
 							$this->file->scheduler->schedule($this->file->getID(), $procs[$p]['dir'], time(), $params);
+						}
+					}
+					if ($procs[$p]['name'] == 'YGSOURCE') {
+						for ($v = 0; $v < count($views); $v++) {
+							$params = array(
+								'FILEINFO' => $fileinfo,
+								'VIEW' => $views[$v]
+							);
+							if ($views[$v]["IDENTIFIER"] == 'YGSOURCE') {
+								$this->file->scheduler->schedule($this->file->getID(), $procs[$p]['dir'], time(), $params);
+							}
 						}
 					}
 				}
@@ -884,7 +907,7 @@ class Views extends \framework\Error {
 		$width = (int)$width;
 		$height = (int)$height;
 		$type = (int)$type;
-		$fileID = $this->file->getID();
+		$fileID = (int)$this->file->getID();
 
 		//error_log($fileID."-".$viewId.":".$type."\r\n",3,'/tmp/erlog.log');
 
@@ -893,23 +916,21 @@ class Views extends \framework\Error {
 			if ($this->file->permissions->checkInternal($this->_uid, $fileId, 'RWRITE')) {
 				$fileVersion = (int)$this->file->getVersion();
 
-				$sql = "SELECT * FROM yg_views_generated WHERE FILEID = $fileID AND FILEVERSION = $fileVersion AND VIEWID = $viewId";
-				$result = sYDB()->Execute($sql);
+				$sql = "SELECT * FROM yg_views_generated WHERE FILEID = ? AND FILEVERSION = ? AND VIEWID = ?";
+				$result = sYDB()->Execute($sql, $fileID, $fileVersion, $viewId);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
 				$generated = $result->GetArray();
 				if (count($generated) > 0) {
-					$sql = "UPDATE yg_views_generated SET HEIGHT = $height, WIDTH = $width, TYPE = $type WHERE FILEID = $fileID AND FILEVERSION = $fileVersion AND VIEWID = $viewId";
-					$result = sYDB()->Execute($sql);
+					$sql = "UPDATE yg_views_generated SET HEIGHT = ?, WIDTH = ?, TYPE = ? WHERE FILEID = ? AND FILEVERSION = ? AND VIEWID = ?";
+					$result = sYDB()->Execute($sql, $height, $width, $type, $fileID, $fileVersion, $viewId);
 					if ($result === false) {
 						throw new Exception(sYDB()->ErrorMsg());
 					}
 				} else {
-					$sql = "INSERT INTO `yg_views_generated` (`FILEID`, `FILEVERSION`, `VIEWID`, `WIDTH`, HEIGHT, TYPE)
-					VALUES
-					( $fileID, $fileVersion, $viewId, $width, $height, $type);";
-					$result = sYDB()->Execute($sql);
+					$sql = "INSERT INTO `yg_views_generated` (`FILEID`, `FILEVERSION`, `VIEWID`, `WIDTH`, HEIGHT, TYPE) VALUES (?, ?, ?, ?, ?, ?);";
+					$result = sYDB()->Execute($sql, $fileID, $fileVersion, $viewId, $width, $height, $type);
 					if ($result === false) {
 						throw new Exception(sYDB()->ErrorMsg());
 					}
@@ -935,8 +956,8 @@ class Views extends \framework\Error {
 		$fileId = (int)$this->file->getID();
 		$fileInfo = $this->file->get();
 
-		$sql = "SELECT * FROM yg_views_generated WHERE (FILEID = $fileId AND FILEVERSION = " . $fileInfo['VIEWVERSION'] . " AND VIEWID = $viewId)";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM yg_views_generated WHERE (FILEID = ? AND FILEVERSION = ? AND VIEWID = ?)";
+		$result = sYDB()->Execute($sql, $fileId, $fileInfo['VIEWVERSION'], $viewId);
 
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());

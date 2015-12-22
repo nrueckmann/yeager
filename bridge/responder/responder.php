@@ -78,7 +78,7 @@
 
 	$koala = new Koala();
 	if ($this->code != '') {
-		sLog()->error($action);
+		sLog()->debug($action);
 
 		// Create AJAX-Responder Object
 		$koala->setResponderData($this->reponsedata);

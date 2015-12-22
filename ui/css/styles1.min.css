@@ -1351,7 +1351,7 @@ a.btcalendarpicker{cursor:default !important}.tcboxcontent .textbox,
 .treecontrol input,
 .ywindowfilter input,
 .ywindowfiltercolumn2
-input{font-family:Arial;font-size:11px;line-height:11px;width:100%;padding-left:2px;padding-top:0px;padding-bottom:0px;border-left:1px solid #a6a5a2;border-top:1px solid #a6a5a2;border-bottom:1px solid #d0cfcb;border-right:1px solid #d0cfcb}.IE8 input,
+input{font-family:Arial;font-size:11px;line-height:13px;width:100%;padding-left:2px;padding-top:0px;padding-bottom:0px;border-left:1px solid #a6a5a2;border-top:1px solid #a6a5a2;border-bottom:1px solid #d0cfcb;border-right:1px solid #d0cfcb}.IE8 input,
 .IE8 .dropdowninner input,
 .IE8 .ydialog
 input{padding-top:1px;padding-bottom:1px;height:12px}.IE8
@@ -1964,12 +1964,12 @@ span{margin-left:1px}.closed .errortext,
 .maskdisplay h4,
 .maskdisplay h5,
 .maskdisplay
-h6{font-family:Arial;font-size:18px;line-height:18px;padding-top:0px;margin-top:4px;margin-bottom:0px;padding-bottom:3px;font-weight:bold}.maskdisplay
-h2{font-size:15px;line-height:15px}.maskdisplay
-h3{font-size:13px;line-height:13px}.maskdisplay
-h4{font-size:11px;line-height:11px}.maskdisplay
-h5{font-size:10px;line-height:10px}.maskdisplay
-h6{font-size:10px;line-height:10px}.closed
+h6{font-family:Arial;font-size:18px;line-height:22px;padding-top:0px;margin-top:4px;margin-bottom:0px;padding-bottom:3px;font-weight:bold}.maskdisplay
+h2{font-size:15px;line-height:19px}.maskdisplay
+h3{font-size:13px;line-height:17px}.maskdisplay
+h4{font-size:11px;line-height:15px}.maskdisplay
+h5{font-size:10px;line-height:14px}.maskdisplay
+h6{font-size:10px;line-height:14px}.closed
 .emviewcontrol{visibility:hidden}.maskedit
 .checkbox{margin-bottom:2px}.maskdisplay
 p{margin-top:0px}.maskdisplay .elemcontent a,

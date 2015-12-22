@@ -24,7 +24,7 @@
 					if ($mailingStatus['STATUS'] == 'PAUSED') {
 						// Empty queue for this mailing and reset to UNSENT
 						// Get # of pending jobs
-						$queuedJobs = $mailingMgr->scheduler->getQueuedJobsForObject($mailingId, true, 'SCH_EMAILSEND');
+						$queuedJobs = $mailingMgr->scheduler->getQueuedJobsForObject($mailingId, true, false, 'SCH_EMAILSEND');
 
 						// Get # of receipients for this mailing
 						$mailing = $mailingMgr->getMailing($mailingId);
@@ -133,7 +133,7 @@
 						if ($mailingStatus['STATUS'] == 'PAUSED') {
 							// Empty queue for this mailing and reset to UNSENT
 							// Get # of pending jobs
-							$queuedJobs = $mailingMgr->scheduler->getQueuedJobsForObject($mailingId, true, 'SCH_EMAILSEND');
+							$queuedJobs = $mailingMgr->scheduler->getQueuedJobsForObject($mailingId, true, false, 'SCH_EMAILSEND');
 
 							// Get # of receipients for this mailing
 							$mailing = $mailingMgr->getMailing($mailingId);

@@ -85,14 +85,14 @@ class FileMgr extends \framework\Error {
 	 * @return array|bool Result of SQL query or FALSE in case of an error
 	 * @throws Exception
 	 */
-	function cacheExecuteGetArray($sql) {
-		$timestart = microtime();
-		$dbr = sYDB()->Execute($sql);
-		if ($dbr === false) {
-			throw new Exception(sYDB()->ErrorMsg() . "<br>" . $sql);
-		}
-		$blaetter = $dbr->GetArray();
-		return $blaetter;
+	function cacheExecuteGetArray() {
+        $args = func_get_args();
+        $dbr = call_user_func_array(array(sYDB(), 'Execute'), $args);
+        if ($dbr === false) {
+            throw new Exception(sYDB()->ErrorMsg() . ':: ' . $sql);
+        }
+        $blaetter = $dbr->GetArray();
+        return $blaetter;
 	}
 
 /// @endcond
@@ -143,7 +143,7 @@ class FileMgr extends \framework\Error {
 	 * @return int File Id
 	 */
 	public function getFileIdByPname($PName) {
-		$PName = mysql_real_escape_string(sanitize($PName));
+		$PName = sYDB()->escape_string(sanitize($PName));
 		$sql = "SELECT ID FROM yg_files_tree as t WHERE (t.PNAME = '$PName');";
 		$ra = $this->cacheExecuteGetArray($sql);
 		return $ra[0]['ID'];
@@ -156,7 +156,7 @@ class FileMgr extends \framework\Error {
 	 * @return int Permanent name
 	 */
 	public function getPNameByFileId($fileId) {
-		$fileId = mysql_real_escape_string(sanitize((int)$fileId));
+		$fileId = sYDB()->escape_string(sanitize((int)$fileId));
 		if ($this->permissions->checkInternal($this->_uid, $fileId, "RREAD")) {
 			$sql = "SELECT PNAME FROM yg_files_tree as t WHERE (t.ID = $fileId);";
 			$ra = $this->cacheExecuteGetArray($sql);
@@ -511,6 +511,8 @@ class FileMgr extends \framework\Error {
 	function getList($fileId = 0, $filter = array(), $sort = 'group2.LFT', $maxLevel = 0, $usergroupId = 0, $filterArray) {
 		$fileId = (int)$fileId;
 		$sort = sanitize($sort);
+		$maxLevel = (int)$maxLevel;
+		$usergroupId = (int)$usergroupId;
 		$rootGroupId = (int)sConfig()->getVar("CONFIG/SYSTEMUSERS/ROOTGROUPID");
 
 		if ($fileId == 0) {
@@ -556,7 +558,7 @@ class FileMgr extends \framework\Error {
 			$perm_sql_where = " AND (";
 			$roles = $this->permissions->getUsergroups();
 			for ($r = 0; $r < count($roles); $r++) {
-				$perm_sql_where .= "(perm.USERGROUPID = " . $roles[$r]["ID"] . ") ";
+				$perm_sql_where .= "(perm.USERGROUPID = " . (int)$roles[$r]["ID"] . ") ";
 				if ((count($roles) - $r) > 1) {
 					$perm_sql_where .= " OR ";
 				}
@@ -618,7 +620,7 @@ class FileMgr extends \framework\Error {
 	 */
 	function addFolder($parentFileId, $name = 'New Folder') {
 		$parentFileId = (int)$parentFileId;
-		$name = mysql_real_escape_string($name);
+		$name = sYDB()->escape_string($name);
 		if ($this->permissions->checkInternal($this->_uid, $parentFileId, "RSUB")) {
 			// Create node in File Tree
 			$fileId = $this->tree->add($parentFileId);
@@ -629,8 +631,8 @@ class FileMgr extends \framework\Error {
 				`yg_files_properties`
 					(`OBJECTID`, `FOLDER`, `APPROVED`, `CREATEDTS`, `CHANGEDTS`, `FILENAME`, `FILETYPE`, `VERSION`)
 				VALUES
-					('$fileId', '1', '1', '$ts', '$ts', '', '" . $type[0]['OBJECTID'] . "', 1);";
-			$result = sYDB()->Execute($sql);
+					(?, '1', '1', ?, ?, '', ?, 1);";
+			$result = sYDB()->Execute($sql, $fileId, $ts, $ts, $type[0]['OBJECTID']);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -707,8 +709,8 @@ class FileMgr extends \framework\Error {
 				$file->tags->clear();
 				$file->views->clear();
 
-				$sql = "DELETE FROM yg_files_properties WHERE OBJECTID = $fileId;";
-				sYDB()->Execute($sql);
+				$sql = "DELETE FROM yg_files_properties WHERE OBJECTID = ?;";
+				sYDB()->Execute($sql, $fileId);
 
 				$this->callExtensionHook('onRemove', $fileId, 0, $fileInfo);
 			} else {
@@ -735,7 +737,7 @@ class FileMgr extends \framework\Error {
 	function add($parentFileId, $name, $fileType) {
 		$parentFileId = (int)$parentFileId;
 		$fileType = (int)$fileType;
-		$name = mysql_real_escape_string($name);
+		$name = sYDB()->escape_string($name);
 		if ($this->permissions->checkInternal($this->_uid, $parentFileId, "RSUB")) {
 			// Create node in File Tree
 			$fileId = $this->tree->add($parentFileId);
@@ -745,16 +747,16 @@ class FileMgr extends \framework\Error {
 			$sql = "INSERT INTO `yg_files_properties`
 					(`OBJECTID`, `FOLDER`, `CREATEDTS`, `CHANGEDTS`, `FILETYPE`, `CREATEDBY`, `CHANGEDBY`, `VERSION`)
 				VALUES
-					('$fileId', '0', '$ts', '$ts', '$fileType', '" . $this->_uid . "', '" . $this->_uid . "', 1);";
-			$result = sYDB()->Execute($sql);
+					(?, '0', ?, ?, ?, ?, ?, 1);";
+			$result = sYDB()->Execute($sql, $fileId, $ts, $ts, $fileType, $this->_uid, $this->_uid);
 
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
 			$propid = sYDB()->Insert_ID();
 
-			$sql = "UPDATE yg_files_properties SET FILETS = $ts WHERE ID = " . $propid . ";";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_files_properties SET FILETS = ? WHERE ID = ?;";
+			$result = sYDB()->Execute($sql, $ts, $propid);
 
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
@@ -801,8 +803,8 @@ class FileMgr extends \framework\Error {
 	 */
 	function getFilesFromFolder($fileId, $sortby = '', $filetype = '', $filter = '') {
 		$fileId = (int)$fileId;
-		$sortby = mysql_real_escape_string(sanitize($sortby));
-		$filetype = mysql_real_escape_string(sanitize($filetype));
+		$sortby = sYDB()->escape_string(sanitize($sortby));
+		$filetype = sYDB()->escape_string(sanitize($filetype));
 		if (strlen($fileId) < 1) {
 			return;
 		}
@@ -902,12 +904,12 @@ class FileMgr extends \framework\Error {
 	 * @throws Exception
 	 */
 	public function getLocksByToken($token) {
-		$token = mysql_real_escape_string($token);
+		$token = sYDB()->escape_string($token);
 		if ($token == "") {
 			return false;
 		}
-		$sql = "SELECT OBJECTID, LOCKED, TOKEN FROM yg_files_properties WHERE TOKEN = '" . $token . "';";
-		$dbr = sYDB()->Execute($sql);
+		$sql = "SELECT OBJECTID, LOCKED, TOKEN FROM yg_files_properties WHERE TOKEN = ?;";
+		$dbr = sYDB()->Execute($sql, $token);
 		if ($dbr === false) {
 			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
 		}
@@ -950,6 +952,9 @@ function FilesSearchCB(&$list, $type, $operator, $value1 = 0, $value2 = 0) {
 			break;
 
 		case 'ORDER':
+			$colarr = explode(".", sYDB()->escape_string(sanitize($value1)));
+			$value1 = "`".implode("`.`", $colarr)."`";
+			if ($value2 != "DESC") $value2 = "ASC";
 			$list['ORDER'][] = 'ORDER BY ' . $value1 . ' ' . $value2;
 			break;
 	}

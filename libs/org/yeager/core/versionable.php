@@ -88,8 +88,8 @@ abstract class Versionable {
 				return false;
 			}
 		}
-		$sql = "SELECT MAX(VERSION) AS VERSION FROM " . $this->_table . " WHERE OBJECTID = $objectid;";
-		$dbr = sYDB()->Execute($sql);
+		$sql = "SELECT MAX(VERSION) AS VERSION FROM " . $this->_table . " WHERE OBJECTID = ?;";
+		$dbr = sYDB()->Execute($sql, $objectid);
 		if ($dbr === false) {
 			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
 		}
@@ -110,8 +110,8 @@ abstract class Versionable {
 				return false;
 			}
 		}
-		$sql = "SELECT MAX(VERSION) AS VERSION FROM " . $this->_table . " WHERE OBJECTID = $objectid AND APPROVED = 1;";
-		$dbr = sYDB()->Execute($sql);
+		$sql = "SELECT MAX(VERSION) AS VERSION FROM " . $this->_table . " WHERE OBJECTID = ? AND APPROVED = 1;";
+		$dbr = sYDB()->Execute($sql, $objectid);
 		if ($dbr === false) {
 			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
 		}
@@ -132,8 +132,8 @@ abstract class Versionable {
 				return false;
 			}
 		}
-		$sql = "SELECT MIN(VERSION) AS VERSION FROM " . $this->_table . " WHERE OBJECTID = $objectid AND APPROVED = 1;";
-		$dbr = sYDB()->Execute($sql);
+		$sql = "SELECT MIN(VERSION) AS VERSION FROM " . $this->_table . " WHERE OBJECTID = ? AND APPROVED = 1;";
+		$dbr = sYDB()->Execute($sql, $objectid);
 		if ($dbr === false) {
 			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
 		}
@@ -156,8 +156,8 @@ abstract class Versionable {
 				return false;
 			}
 		}
-		$sql = "SELECT `VERSIONPUBLISHED` FROM " . $this->_treetable . " WHERE `ID` = $objectid;";
-		$dbr = sYDB()->Execute($sql);
+		$sql = "SELECT `VERSIONPUBLISHED` FROM " . $this->_treetable . " WHERE `ID` = ?;";
+		$dbr = sYDB()->Execute($sql, $objectid);
 		if ($dbr === false) {
 			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
 		}
@@ -177,8 +177,8 @@ abstract class Versionable {
 	 */
 	public function isAutoPublished() {
 		$objectid = (int)$this->_id;
-		$sql = "SELECT `VERSIONPUBLISHED` FROM " . $this->_treetable . " WHERE `ID` = $objectid;";
-		$dbr = sYDB()->Execute($sql);
+		$sql = "SELECT `VERSIONPUBLISHED` FROM " . $this->_treetable . " WHERE `ID` = ?;";
+		$dbr = sYDB()->Execute($sql, $objectid);
 		if ($dbr === false) {
 			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
 		}
@@ -202,8 +202,8 @@ abstract class Versionable {
 				return false;
 			}
 		}
-		$sql = "SELECT VERSION, APPROVED, CREATEDBY, CHANGEDBY, CHANGEDTS FROM " . $this->_table . " WHERE OBJECTID = $objectid ORDER BY VERSION DESC;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT VERSION, APPROVED, CREATEDBY, CHANGEDBY, CHANGEDTS FROM " . $this->_table . " WHERE OBJECTID = ? ORDER BY VERSION DESC;";
+		$result = sYDB()->Execute($sql, $objectid);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -233,8 +233,8 @@ abstract class Versionable {
 			}
 		}
 
-		$sql = "UPDATE " . $this->_table . " SET APPROVED = 1 WHERE (OBJECTID = $objectid) AND (VERSION = $version);";
-		$result = sYDB()->Execute($sql);
+		$sql = "UPDATE " . $this->_table . " SET APPROVED = 1 WHERE (OBJECTID = ?) AND (VERSION = ?);";
+		$result = sYDB()->Execute($sql, $objectid, $version);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -260,8 +260,8 @@ abstract class Versionable {
 		}
 
 		// Check if version to be published is already approved
-		$sql = "SELECT `APPROVED` FROM " . $this->_table . " WHERE `OBJECTID` = $objectid AND `VERSION` = " . $version . ";";
-		$dbr = sYDB()->Execute($sql);
+		$sql = "SELECT `APPROVED` FROM " . $this->_table . " WHERE `OBJECTID` = ? AND `VERSION` = ?;";
+		$dbr = sYDB()->Execute($sql, $objectid, $version);
 		if ($dbr === false) {
 			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
 		}
@@ -270,8 +270,8 @@ abstract class Versionable {
 			return false;
 		}
 
-		$sql = "UPDATE " . $this->_treetable . " SET VERSIONPUBLISHED = '$version' WHERE (ID = $objectid);";
-		$result = sYDB()->Execute($sql);
+		$sql = "UPDATE " . $this->_treetable . " SET VERSIONPUBLISHED = ? WHERE (ID = ?);";
+		$result = sYDB()->Execute($sql, $version, $objectid);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -287,7 +287,7 @@ abstract class Versionable {
 	 * @throws Exception
 	 */
 	public function newVersion() {
-		$sourceVersion = $this->getVersion();
+		$sourceVersion = (int)$this->getVersion();
 		$objectid = (int)$this->_id;
 
 		if ($this->permissions) {
@@ -299,8 +299,8 @@ abstract class Versionable {
 		$changedts = time();
 		$newVersion = $this->getLatestVersion() + 1;
 
-		$sql = "SELECT * FROM (" . $this->_table . ") WHERE (OBJECTID = $objectid AND VERSION = $sourceVersion);";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM (" . $this->_table . ") WHERE (OBJECTID = ? AND VERSION = ?);";
+		$result = sYDB()->Execute($sql, $objectid, $sourceVersion);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -321,24 +321,26 @@ abstract class Versionable {
 		$sql = "INSERT INTO " . $this->_table . " (";
 		for ($p = 0; $p < count($props); $p++) {
 			if (is_string($props[$p])) { // workaround php long <-> string comparison bug
-				$sql .= $props[$p] . ",";
+				$prop = sYDB()->escape_string(sanitize($props[$p]));
+				$sql .= "`". $prop . "` ,";
 			}
 		}
 		$sql .= ") VALUES (";
+		$sqlargs = array();
 		for ($p = 0; $p < count($props); $p++) {
-			if (is_string($props[$p])) { // workaround php long <-> string comparison bug
-				$sql .= "'" . $ra[$props[$p]] . "',";
+			if (is_string($props[$p])) {
+				$sql .= "?,";
+				array_push($sqlargs, $ra[$props[$p]]);
 			}
 		}
 		$sql .= ")";
-
-		// HACK
 		$sql = str_replace(",)", ")", $sql);
+		array_unshift($sqlargs, $sql);
+		$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
 
-		$result = sYDB()->Execute($sql);
-		if ($result === false) {
-			throw new Exception(sYDB()->ErrorMsg());
-		}
+		if ($dbr === false) {
+            throw new Exception(sYDB()->ErrorMsg() . ':: ' . $sql);
+        }
 
 		$sourceVersionID = $this->getPropertyId();
 		$this->_property_id = 0;
@@ -369,16 +371,8 @@ abstract class Versionable {
 			}
 		}
 
-		$sql = "UPDATE
-					" . $this->_table . "
-				SET
-					CHANGEDTS = $ts,
-					CHANGEDBY = " . $this->_uid . ",
-					HASCHANGED = 1
-				WHERE
-					(OBJECTID = '$objectid') AND
-					(VERSION = $version);";
-		$result = sYDB()->Execute($sql);
+		$sql = "UPDATE " . $this->_table . " SET CHANGEDTS = ?, CHANGEDBY = ?, HASCHANGED = 1 WHERE (OBJECTID = ?) AND (VERSION = ?);";
+		$result = sYDB()->Execute($sql, $ts, $this->_uid, $objectid, $version);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -403,8 +397,8 @@ abstract class Versionable {
 		}
 
 		if ($this->_property_id == 0) {
-			$sql = "SELECT prop.ID AS ID FROM " . $this->_table . " as prop WHERE (prop.OBJECTID = $objectid) AND (prop.VERSION = $version);";
-			$ra = $this->cacheExecuteGetArray($sql);
+			$sql = "SELECT prop.ID AS ID FROM " . $this->_table . " as prop WHERE (prop.OBJECTID = ?) AND (prop.VERSION = ?);";
+			$ra = $this->cacheExecuteGetArray($sql, $objectid, $version);
 			$this->_property_id = $ra[0]['ID'];
 		}
 		return $this->_property_id;
@@ -502,9 +496,8 @@ abstract class Versionable {
 							FROM
 								" . $sourcePropertiesTable . "
 							WHERE
-								OBJECTID = " . $sourceObject->getID() . " AND
-								VERSION = " . $sourceObject->getVersion() . ";";
-					$dbr = sYDB()->Execute($sql);
+								OBJECTID = ? AND VERSION = ?;";
+					$dbr = sYDB()->Execute($sql, $sourceObject->getID(), $sourceObject->getVersion());
 					if ($dbr === false) {
 						throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
 					}
@@ -520,27 +513,23 @@ abstract class Versionable {
 
 					if (count($ra) > 0) {
 						$fields = array();
+						$sqlargs = array();
 						foreach ($ra as $raItem) {
 							if ((strtoupper($raItem['Field']) != 'ID') &&
 								(strtoupper($raItem['Field']) != 'OBJECTID') &&
 								(strtoupper($raItem['Field']) != 'VERSION')
 							) {
-								if (strstr($raItem['Type'], 'int')) {
-									$fields[] = $raItem['Field'] . " = " . $objectPropertyData[$raItem['Field']];
-								} else {
-									$fields[] = $raItem['Field'] . " = '" . $objectPropertyData[$raItem['Field']] . "'";
-								}
+								array_push($sqlargs, $objectPropertyData[$raItem['Field']]);
+								$fields[] = "`". sYDB()->escape_string(sanitize($raItem['Field'])) . "` = ?";
 							}
 						}
 						$fields = implode(', ', $fields);
 					}
-
-					$sql = "UPDATE $currrentPropertiesTable
-							SET $fields
-							WHERE
-								OBJECTID = " . $this->getID() . " AND
-								VERSION = " . $this->getVersion() . ";";
-					$dbr = sYDB()->Execute($sql);
+					array_push($sqlargs, $this->getID());
+					array_push($sqlargs, $this->getVersion());
+					$sql = "UPDATE $currrentPropertiesTable SET $fields WHERE OBJECTID = ? AND VERSION = ?;";
+					array_unshift($sqlargs, $sql);
+					$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
 					if ($dbr === false) {
 						throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
 					}
@@ -576,7 +565,7 @@ abstract class Versionable {
 		}
 
 		$objectid = (int)$this->_id;
-		$token = mysql_real_escape_string($token);
+		$token = sYDB()->escape_string($token);
 		$lockInfo = $this->getLock();
 
 		if ($lockInfo["LOCKED"] > 0 && ($lockInfo["TOKEN"] != $token)) {
@@ -584,8 +573,8 @@ abstract class Versionable {
 		} else {
 			if (($lockInfo["LOCKED"] > 0 && ($lockInfo["TOKEN"] == $token)) || ($lockInfo["LOCKED"] == 0) || (time() - $lockInfo["LOCKED"] > (int)sConfig()->getVar("/CONFIG/OBJECTLOCK_TIMEOUT"))) {
 				$ts = time() + (int)sConfig()->getVar("/CONFIG/OBJECTLOCK_TIMEOUT");
-				$sql = "UPDATE " . $this->_table . " SET LOCKED = $ts, TOKEN = '" . $token . "', LOCKUID = '" . $this->_uid . "' WHERE (OBJECTID = $objectid);";
-				$result = sYDB()->Execute($sql);
+				$sql = "UPDATE " . $this->_table . " SET LOCKED = ?, TOKEN = ?, LOCKUID = ? WHERE (OBJECTID = ?);";
+				$result = sYDB()->Execute($sql, $ts, $token, $this->_uid, $objectid);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -603,14 +592,14 @@ abstract class Versionable {
 	 */
 	public function releaseLock($token) {
 		$objectid = (int)$this->_id;
-		$token = mysql_real_escape_string($token);
+		$token = sYDB()->escape_string($token);
 		$lockInfo = $this->getLock();
 		if ($lockInfo["LOCKED"] > 0 && ($lockInfo["TOKEN"] != $token)) {
 			return false;
 		} else {
 			if (($lockInfo["LOCKED"] > 0 && ($lockInfo["TOKEN"] == $token)) || ($lockInfo["LOCKED"] == 0)) {
-				$sql = "UPDATE " . $this->_table . " SET LOCKED = 0, TOKEN = '' WHERE (OBJECTID = $objectid);";
-				$result = sYDB()->Execute($sql);
+				$sql = "UPDATE " . $this->_table . " SET LOCKED = 0, TOKEN = '' WHERE (OBJECTID = ?);";
+				$result = sYDB()->Execute($sql, $objectid);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -627,7 +616,7 @@ abstract class Versionable {
 	 */
 	public function checkToken($token) {
 		$objectid = (int)$this->_id;
-		$token = mysql_real_escape_string($token);
+		$token = sYDB()->escape_string($token);
 		$lockInfo = $this->getLock();
 		$lockts = time() - (int)sConfig()->getVar("/CONFIG/OBJECTLOCK_TIMEOUT");
 		if ($lockInfo["LOCKED"] >= $lockts && ($lockInfo["TOKEN"] != $token)) {
@@ -644,8 +633,8 @@ abstract class Versionable {
 	public function getLock() {
 		$objectid = (int)$this->_id;
 		$lockts = time() - (int)sConfig()->getVar("/CONFIG/OBJECTLOCK_TIMEOUT");
-		$sql = "SELECT LOCKED, TOKEN, LOCKUID FROM " . $this->_table . " WHERE OBJECTID = $objectid AND LOCKED >= $lockts;";
-		$dbr = sYDB()->Execute($sql);
+		$sql = "SELECT LOCKED, TOKEN, LOCKUID FROM " . $this->_table . " WHERE OBJECTID = ? AND LOCKED >= ?;";
+		$dbr = sYDB()->Execute($sql, $objectid, $lockts);
 		if ($dbr === false) {
 			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
 			return false;

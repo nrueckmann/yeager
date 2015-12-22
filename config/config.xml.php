@@ -31,9 +31,9 @@
 		file name than these will resolve to the corresponding date info.
 		-->
 		<BUCKETS>
-			<BUCKET TYPE="FILE" URI="[SYSTMP]/nas-[YEAR][MONTH][DAY].log" LEVEL="1" />
+			<BUCKET TYPE="FILE" URI="[SYSTMP]/nas-[YEAR][MONTH][DAY].log" LEVEL="0" />
 			<BUCKET TYPE="PLUGIN" URI="Echo" LEVEL="0" />
-			<BUCKET TYPE="PLUGIN" URI="FireBug" LEVEL="1" />
+			<BUCKET TYPE="PLUGIN" URI="FireBug" LEVEL="0" />
 		</BUCKETS>
 	</LOGGING>
 	<SESSION>

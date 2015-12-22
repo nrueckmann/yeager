@@ -36,19 +36,11 @@ class Privileges {
 	 * @param string $name Privilege name
 	 * @param string $extcode Extension code (optional)
 	 */
-	public function addPrivilege($code, $name, $extcode = NULL) {
-		$code = mysql_real_escape_string(sanitize($code));
-		$name = mysql_real_escape_string(sanitize($name));
-		if ($extcode) {
-			$extcode = "'" . mysql_real_escape_string(sanitize($extcode)) . "'";
-		} else {
-			$extcode = 'NULL';
-		}
-		$sql = "INSERT INTO `" . $this->_table . "`
-					(`PRIVILEGE`, `NAME`, `EXTCODE`)
-				VALUES
-					('" . $code . "', '" . $name . "', $extcode);";
-		$result = sYDB()->Execute($sql);
+	public function addPrivilege($code, $name, $extcode = 'NULL') {
+		$code = sYDB()->escape_string(sanitize($code));
+		$name = sYDB()->escape_string(sanitize($name));
+		$sql = "INSERT INTO `" . $this->_table . "` (`PRIVILEGE`, `NAME`, `EXTCODE`) VALUES (?, ?, ?);";
+		sYDB()->Execute($sql, $code, $name, $extcode);
 	}
 
 	/**
@@ -58,24 +50,27 @@ class Privileges {
 	 * @param string $extcode Extension code (optional)
 	 */
 	public function removePrivilege($code, $extcode = NULL) {
-		$code = mysql_real_escape_string(sanitize($code));
-		$extcode = mysql_real_escape_string(sanitize($extcode));
+		$code = sYDB()->escape_string(sanitize($code));
+		$extcode = sYDB()->escape_string(sanitize($extcode));
 
+		$sql = "SELECT ID FROM " . $this->_table . " WHERE PRIVILEGE = ?";
 		if ($extcode) {
-			$extSQL = " AND `EXTCODE` = '$extcode' ";
+			$sql .= " AND `EXTCODE` = ?;";
+			$result = sYDB()->Execute($sql, $code, $extcode);
+		} else {
+			$sql .= ";";
+			$result = sYDB()->Execute($sql, $code);
 		}
 
-		$sql = "SELECT ID FROM " . $this->_table . " WHERE PRIVILEGE = '" . $code . "' $extSQL;";
-		$result = sYDB()->Execute($sql);
 		$resultarray = @$result->GetArray();
-		$privilegeId = $resultarray[0]['ID'];
+		$privilegeId = (int)$resultarray[0]['ID'];
 
 		if ($privilegeId) {
-			$sql = "DELETE FROM `" . $this->_table_values . "` WHERE PRIVILEGEID = " . $privilegeId . ";";
-			$result = sYDB()->Execute($sql);
+			$sql = "DELETE FROM `" . $this->_table_values . "` WHERE PRIVILEGEID = ?;";
+			sYDB()->Execute($sql, $privilegeId);
 
-			$sql = "DELETE FROM `" . $this->_table . "` WHERE ID = " . $privilegeId . ";";
-			$result = sYDB()->Execute($sql);
+			$sql = "DELETE FROM `" . $this->_table . "` WHERE ID =  ?;";
+			sYDB()->Execute($sql, $privilegeId);
 		}
 	}
 
@@ -88,12 +83,14 @@ class Privileges {
 	 * @return array Array of Privileges
 	 */
 	public function getList($extcode = NULL) {
+		$sql = "SELECT * FROM " . $this->_table;
 		if ($extcode) {
-			$extcode = mysql_real_escape_string(sanitize($extcode));
-			$extSQL = " AND EXTCODE = '" . $extcode . "' ";
+			$sql .= " WHERE EXTCODE = ?;";
+			$result = sYDB()->Execute($sql, $extcode);
+		} else {
+			$sql .= ";";
+			$result = sYDB()->Execute($sql);
 		}
-		$sql = "SELECT * FROM " . $this->_table . " WHERE 1 $extSQL;";
-		$result = sYDB()->Execute($sql);
 		$resultarray = @$result->GetArray();
 		return $resultarray;
 	}
@@ -107,18 +104,17 @@ class Privileges {
 	 */
 	public function getByUsergroup($usergroupId, $extcode = NULL) {
 		$usergroupId = (int)$usergroupId;
-		if ($extcode) {
-			$extcode = mysql_real_escape_string(sanitize($extcode));
-			$extSQL = " EXTCODE = '" . $extcode . "' ";
-		} else {
-			$extSQL = " 1 ";
-		}
 
 		if ($usergroupId > 0) {
-			$sql = "SELECT * FROM `" . $this->_table . "` WHERE $extSQL;";
-			$result = sYDB()->Execute($sql);
+			$sql = "SELECT * FROM `" . $this->_table . "`";
+			if ($extcode) {
+				$sql .= " WHERE EXTCODE = ?;";
+				$result = sYDB()->Execute($sql, $extcode);
+			} else {
+				$sql .= ";";
+				$result = sYDB()->Execute($sql);
+			}
 			$allPrivileges = $result->GetArray();
-
 			$privilegeCodes = array();
 			foreach ($allPrivileges as $allPrivilege) {
 				$privilegeCodes[] = $allPrivilege['PRIVILEGE'];
@@ -126,8 +122,8 @@ class Privileges {
 
 			$returnArray = array();
 			foreach ($allPrivileges as $allPrivilege) {
-				$sql = "SELECT VALUE FROM `yg_privileges_values` WHERE PRIVILEGEID = '" . $allPrivilege['ID'] . "' AND USERGROUPID = " . $usergroupId . ";";
-				$result = sYDB()->Execute($sql);
+                $sql = "SELECT VALUE FROM `yg_privileges_values` WHERE PRIVILEGEID = ? AND USERGROUPID = ?;";
+				$result = sYDB()->Execute($sql, $allPrivilege['ID'], $usergroupId);
 				$value = $result->GetArray();
 				$value = $value[0]['VALUE'];
 				$returnArray[$allPrivilege['PRIVILEGE']] = $value;
@@ -153,8 +149,8 @@ class Privileges {
 	 */
 	public function setByUsergroup($usergroupId, $privilege, $value) {
 		$usergroupId = (int)$usergroupId;
-		$privilege = mysql_real_escape_string(sanitize($privilege));
-		$value = mysql_real_escape_string(sanitize($value));
+		$privilege = sYDB()->escape_string(sanitize($privilege));
+		$value = sYDB()->escape_string(sanitize($value));
 		if ($value < 1) {
 			$value = 0;
 		}
@@ -164,10 +160,10 @@ class Privileges {
 			return false;
 		}
 
-		$sql = "SELECT ID FROM " . $this->_table . " WHERE PRIVILEGE = '" . $privilege . "';";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT ID FROM " . $this->_table . " WHERE PRIVILEGE = ?;";
+		$result = sYDB()->Execute($sql, $privilege);
 		$resultarray = @$result->GetArray();
-		$privilegeId = $resultarray[0]['ID'];
+		$privilegeId = (int)$resultarray[0]['ID'];
 
 		if ($privilegeId) {
 			$pinfo = $this->getByUsergroup($usergroupId);
@@ -176,12 +172,14 @@ class Privileges {
 				$sql = "INSERT INTO " . $this->_table_values . "
 							(`USERGROUPID`, `PRIVILEGEID`, `VALUE`)
 						VALUES
-							($usergroupId, $privilegeId, $value);";
+							(?, ?, ?);";
+				$result = sYDB()->Execute($sql, $usergroupId, $privilegeId, $value);
 			} else {
 				// Update
-				$sql = "UPDATE " . $this->_table_values . " SET VALUE = $value WHERE USERGROUPID = $usergroupId AND PRIVILEGEID = $privilegeId;";
+				$sql = "UPDATE " . $this->_table_values . " SET VALUE = ? WHERE USERGROUPID = ? AND PRIVILEGEID = ?;";
+				$result = sYDB()->Execute($sql, $value, $usergroupId, $privilegeId);
 			}
-			$result = sYDB()->Execute($sql);
+
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -204,7 +202,7 @@ class Privileges {
 	 */
 	public function check($userId, $permission) {
 		$userId = (int)$userId;
-		$permission = mysql_real_escape_string(sanitize($permission));
+		$permission = sYDB()->escape_string(sanitize($permission));
 
 		$user = new User($userId);
 		$userroles = $user->getUsergroups($userId);
@@ -226,10 +224,10 @@ class Privileges {
 	 * @param string $extcode Extension-Code
 	 */
 	public function removeAllExtensionPrivileges($extcode) {
-		$extcode = mysql_real_escape_string(sanitize($extcode));
+		$extcode = sYDB()->escape_string(sanitize($extcode));
 
-		$sql = "SELECT * FROM " . $this->_table . " WHERE EXTCODE = '" . $extcode . "';";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM " . $this->_table . " WHERE EXTCODE = ?;";
+		$result = sYDB()->Execute($sql, $extcode);
 		$resultarray = @$result->GetArray();
 
 		foreach ($resultarray as $resultarrayItem) {

@@ -285,13 +285,14 @@ class Page extends Versionable {
 	 * @return array|false Result of SQL query or FALSE in case of an error
 	 * @throws Exception
 	 */
-	function cacheExecuteGetArray($sql) {
-		$dbr = sYDB()->Execute($sql);
-		if ($dbr === false) {
-			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
-		}
-		$blaetter = $dbr->GetArray();
-		return $blaetter;
+	function cacheExecuteGetArray() {
+        $args = func_get_args();
+        $dbr = call_user_func_array(array(sYDB(), 'Execute'), $args);
+        if ($dbr === false) {
+            throw new Exception(sYDB()->ErrorMsg() . ':: ' . $sql);
+        }
+        $blaetter = $dbr->GetArray();
+        return $blaetter;
 	}
 
 /// @endcond
@@ -494,7 +495,7 @@ class Page extends Versionable {
 	 * @return array|false Array of versions or FALSE in case of an error
 	 */
 	function getVersionsByCblockId($cbId) {
-		$pageID = $this->_id;
+		$pageID = (int)$this->_id;
 		$cbId = (int)$cbId;
 		if ($this->permissions->checkInternal($this->_uid, $pageID, "RREAD")) {
 			$sql = "SELECT prop.VERSION AS VERSION FROM `yg_site_" . $this->_site . "_properties` as prop, `yg_site_" . $this->_site . "_lnk_cb` as lnk WHERE (prop.OBJECTID = $pageID) AND (lnk.PID = $pageID) AND (lnk.CBID = $cbId) AND (lnk.PVERSION = prop.VERSION) ORDER BY VERSION DESC";
@@ -555,59 +556,50 @@ class Page extends Versionable {
 	 * Copies the Cblock Page links from one version to another
 	 *
 	 * @param int $sourceVersion Source version
-	 * @param int $targetversion Target version
+	 * @param int $targetVersion Target version
 	 * @return bool TRUE on success or FALSE in case of an error
 	 * @throws Exception
 	 */
-	private function copyCblockLinks($sourceVersion, $targetversion) {
-		$pageID = $this->_id;
+	private function copyCblockLinks($sourceVersion, $targetVersion) {
+		$sourceVersion = (int)$sourceVersion;
+		$targetVersion = (int)$targetVersion;
+		$pageID = (int)$this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $pageID, "RWRITE")) {
-			// co links rueberziehen
-			/*
-			$sql = "INSERT INTO `yg_site_".$this->_site."_lnk_cb`
-			(PVERSION, PID, CBVERSION, CBID, ORDERPROD, TEMPLATECONTENTAREA)
-			SELECT $targetversion, PID, CBVERSION, CBID, ORDERPROD, TEMPLATECONTENTAREA
-			FROM `yg_site_".$this->_site."_lnk_cb` WHERE (PID = '$pageID') AND (PVERSION = '$sourceVersion');";
-			*/
-
 			$sql = "INSERT INTO `yg_site_" . $this->_site . "_lnk_cb`
 						(PVERSION, PID, CBVERSION, CBID, ORDERPROD, TEMPLATECONTENTAREA)
 					SELECT
-						$targetversion, lnk.PID AS PID, lnk.CBVERSION AS CBVERSION, lnk.CBID AS CBID,
+						$targetVersion, lnk.PID AS PID, lnk.CBVERSION AS CBVERSION, lnk.CBID AS CBID,
 						lnk.ORDERPROD AS ORDERPROD, lnk.TEMPLATECONTENTAREA AS TEMPLATECONTENTAREA
 					FROM
 						`yg_site_" . $this->_site . "_lnk_cb` AS lnk
 					JOIN
 						`yg_contentblocks_properties` AS cprop ON (lnk.CBID = cprop.OBJECTID)
 					WHERE
-						(lnk.PID = '$pageID') AND (lnk.PVERSION = '$sourceVersion') AND (cprop.EMBEDDED = 0)
+						(lnk.PID = ?) AND (lnk.PVERSION = ?) AND (cprop.EMBEDDED = 0)
 					GROUP BY
 						lnk.CBID, lnk.TEMPLATECONTENTAREA;";
-			$result = sYDB()->Execute($sql);
+			$result = sYDB()->Execute($sql, $pageID, $sourceVersion);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
 
 			// co links rueberziehen (neue version fuer blinde cos erzeugen, diese dann zu neuer pageversion zuweisen)
 			$sql = "SELECT
-						$targetversion, lnk.PID AS PID, lnk.CBVERSION AS CBVERSION, lnk.CBID AS CBID,
+						$targetVersion, lnk.PID AS PID, lnk.CBVERSION AS CBVERSION, lnk.CBID AS CBID,
 						lnk.ORDERPROD AS ORDERPROD, lnk.TEMPLATECONTENTAREA AS TEMPLATECONTENTAREA
 					FROM
 						`yg_site_" . $this->_site . "_lnk_cb` AS lnk
 					JOIN
 						`yg_contentblocks_properties` AS cprop ON (lnk.CBID = cprop.OBJECTID) AND (lnk.CBVERSION = cprop.VERSION)
 					WHERE
-						(lnk.PID = '$pageID') AND (lnk.PVERSION = '$sourceVersion') AND (cprop.EMBEDDED = 1);";
-			$blindCOs = $this->cacheExecuteGetArray($sql);
+						(lnk.PID = ?) AND (lnk.PVERSION = ?) AND (cprop.EMBEDDED = 1);";
+			$blindCOs = $this->cacheExecuteGetArray($sql, $pageID, $sourceVersion);
 
 			foreach ($blindCOs as $blindCO) {
-				$currCO = sCblockMgr()->getCblock($blindCO['CBID'], $blindCO['CBVERSION']);
-
 				$sql = "INSERT INTO `yg_site_" . $this->_site . "_lnk_cb`
 							( `CBID`, `CBVERSION`, `PID`, `PVERSION`, `TEMPLATECONTENTAREA`, `ORDERPROD` )
-						VALUES
-							( '" . $blindCO['CBID'] . "', '" . $blindCO['CBVERSION'] . "', '$pageID', '$targetversion', '" . $blindCO['TEMPLATECONTENTAREA'] . "', '" . $blindCO['ORDERPROD'] . "' );";
-				$result = sYDB()->Execute($sql);
+						VALUES (?, ?, ?, ?, ?, ?);";
+				$result = sYDB()->Execute($sql, $blindCO['CBID'], $blindCO['CBVERSION'], $pageID, $targetVersion, $blindCO['TEMPLATECONTENTAREA'], $blindCO['ORDERPROD']);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -632,10 +624,9 @@ class Page extends Versionable {
 			$sourceSite = $sourcePage->getSite();
 			$sourceVersion = $sourcePage->getVersion();
 			$targetID = (int)$this->_id;
-			$targetSite = $this->getSite();
-			$targetVersion = $this->getVersion();
-			$sourceVersionID = $sourcePage->getPropertyId();
-			$targetVersionID = $this->getPropertyId();
+			$targetVersion = (int)$this->getVersion();
+			$sourceVersionID = (int)$sourcePage->getPropertyId();
+			$targetVersionID = (int)$this->getPropertyId();
 			$sourceInfo = $sourcePage->get();
 			$this->copyExtensionsFrom($sourcePage);
 
@@ -823,7 +814,7 @@ class Page extends Versionable {
 	 * @return array Array with all elements which were successfully deleted
 	 */
 	function delete() {
-		$pageID = $this->_id;
+		$pageID = (int)$this->_id;
 		$pageMgr = new PageMgr($this->getSite());
 		$rootNode = $pageMgr->tree->getRoot();
 		if ($pageID == $rootNode) {
@@ -853,8 +844,8 @@ class Page extends Versionable {
 			$pageMgr->tree->moveTo($pageID, $rootNode);
 
 			// Set to "DELETED"
-			$sql = "UPDATE yg_site_" . $this->_site . "_properties SET DELETED = 1 WHERE OBJECTID = $pageID;";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_site_" . $this->_site . "_properties SET DELETED = 1 WHERE OBJECTID = ?;";
+			sYDB()->Execute($sql, $pageID);
 
 			$successNodes[] = $pageID;
 			$pageMgr->callExtensionHook("onDelete", $this->getSite(), $this->_id, $version);
@@ -873,11 +864,11 @@ class Page extends Versionable {
 	 * @return bool TRUE on success or FALSE in case of an error
 	 */
 	function undelete() {
-		$pageID = $this->_id;
+		$pageID = (int)$this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $pageID, "RDELETE")) {
 			// restore from trashcan
-			$sql = "UPDATE yg_site_" . $this->_site . "_properties SET DELETED = 0 WHERE OBJECTID = $pageID;";
-			sYDB()->Execute($sql);
+			$sql = "UPDATE yg_site_" . $this->_site . "_properties SET DELETED = 0 WHERE OBJECTID = ?;";
+			sYDB()->Execute($sql, $pageID);
 			if (Singleton::cache_config()->getVar("CONFIG/INVALIDATEON/TAG_RENAME") == "true") {
 				Singleton::FC()->emptyBucket();
 			}
@@ -1085,8 +1076,8 @@ class Page extends Versionable {
 			if ($pageID < 1) {
 				return false;
 			}
-			$sql = "SELECT ID FROM `yg_site_" . $this->_site . "_lnk_cb` WHERE PID = $pageID AND PVERSION = $version;";
-			$ra = $this->cacheExecuteGetArray($sql);
+			$sql = "SELECT ID FROM `yg_site_" . $this->_site . "_lnk_cb` WHERE PID = ? AND PVERSION = ?;";
+			$ra = $this->cacheExecuteGetArray($sql, $pageID, $version);
 			return $ra[0]['ID'];
 		} else {
 			return false;
@@ -1102,22 +1093,22 @@ class Page extends Versionable {
 	 * @throws Exception
 	 */
 	function addCblockLink($cbId, $contentarea) {
-		$pageID = $this->_id;
+		$pageID = (int)$this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $pageID, "RWRITE")) {
 			$cbId = (int)$cbId;
-			$contentarea = mysql_real_escape_string(sanitize($contentarea));
+			$contentarea = sYDB()->escape_string(sanitize($contentarea));
 
 			// Check if contentblock is blind or not
 			$sql = "SELECT
 			*, pv.*
 			FROM (yg_contentblocks_properties, yg_contentblocks_tree)
 			LEFT JOIN yg_contentblocks_propsv AS pv ON pv.OID = yg_contentblocks_properties.ID
-			WHERE OBJECTID = $cbId AND yg_contentblocks_properties.OBJECTID = yg_contentblocks_tree.ID";
-			$ra = $this->cacheExecuteGetArray($sql);
+			WHERE OBJECTID = ? AND yg_contentblocks_properties.OBJECTID = yg_contentblocks_tree.ID";
+			$ra = $this->cacheExecuteGetArray($sql, $cbId);
 			if ((count($ra) > 0) && ($ra[0]['EMBEDDED'] == 1)) {
 				// Blind contentblock
 				$tmpCblock = sCblockMgr()->getCblock($cbId);
-				$cbVersion = $tmpCblock->getVersion();
+				$cbVersion = (int)$tmpCblock->getVersion();
 			} else {
 				// Normal contentblock
 				$cbVersion = ALWAYS_LATEST_APPROVED_VERSION;
@@ -1128,8 +1119,8 @@ class Page extends Versionable {
 			$sql = "INSERT INTO `yg_site_" . $this->_site . "_lnk_cb`
 			(`CBID`, `CBVERSION`, `PID`, `PVERSION`, `TEMPLATECONTENTAREA`)
 			VALUES
-			('$cbId', '$cbVersion', '$pageID', '$version', '$contentarea' );";
-			$result = sYDB()->Execute($sql);
+			(?, ?, ?, ?, ?);";
+			$result = sYDB()->Execute($sql, $cbId, $cbVersion, $pageID, $version, $contentarea);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1152,22 +1143,22 @@ class Page extends Versionable {
 	 * @throws Exception
 	 */
 	function addCblockVersion($cbId, $contentarea, $version) {
-		$pageID = $this->_id;
+		$pageID = (int)$this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $pageID, "RWRITE")) {
 			$cbId = (int)$cbId;
 			$version = (int)$version;
-			$contentarea = mysql_real_escape_string(sanitize($contentarea));
+			$contentarea = sYDB()->escape_string(sanitize($contentarea));
 			$pageVersion = (int)$this->getVersion();
 			$sql = "UPDATE
 						`yg_site_" . $this->_site . "_lnk_cb`
 					SET
-						CBVERSION = $version
+						CBVERSION = ?
 					WHERE
-						PID = $pageID AND
-						PVERSION = $pageVersion AND
-						CBID = $cbId AND
-						TEMPLATECONTENTAREA = '$contentarea';";
-			$result = sYDB()->Execute($sql);
+						PID = ? AND
+						PVERSION = ? AND
+						CBID = ? AND
+						TEMPLATECONTENTAREA = ?;";
+			$result = sYDB()->Execute($sql, $version, $pageID, $pageVersion, $cbId, $contentarea);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1188,11 +1179,8 @@ class Page extends Versionable {
 		$pageID = $this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $pageID, "RWRITE")) {
 			$linkId = (int)$linkId;
-			$version = (int)$this->getVersion();
-
-			$sql = "DELETE FROM `yg_site_" . $this->_site . "_lnk_cb` WHERE (ID = '$linkId');";
-
-			$result = sYDB()->Execute($sql);
+			$sql = "DELETE FROM `yg_site_" . $this->_site . "_lnk_cb` WHERE (ID = ?);";
+			$result = sYDB()->Execute($sql, $linkId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1212,15 +1200,13 @@ class Page extends Versionable {
 	 * @throws Exception
 	 */
 	function removeCblock($cbId, $contentarea) {
-		$pageID = $this->_id;
+		$pageID = (int)$this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $pageID, "RWRITE")) {
 			$cbId = (int)$cbId;
-			$contentarea = mysql_real_escape_string(sanitize($contentarea));
+			$contentarea = sYDB()->escape_string(sanitize($contentarea));
 			$version = (int)$this->getVersion();
-
-			$sql = "DELETE FROM `yg_site_" . $this->_site . "_lnk_cb` WHERE (PID = $pageID) AND (PVERSION = $version) AND (CBID = $cbId) AND (TEMPLATECONTENTAREA = '$contentarea');";
-
-			$result = sYDB()->Execute($sql);
+			$sql = "DELETE FROM `yg_site_" . $this->_site . "_lnk_cb` WHERE (PID = ?) AND (PVERSION = ?) AND (CBID = ) AND (TEMPLATECONTENTAREA = ?);";
+			$result = sYDB()->Execute($sql, $pageID, $version, $cbId, $contentarea);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1238,14 +1224,12 @@ class Page extends Versionable {
 	 * @throws Exception
 	 */
 	function setCblockLinkOrder($cbListOrder = array()) {
-		$pageID = $this->_id;
+		$pageID = (int)$this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $pageID, "RWRITE")) {
-			$contentarea = mysql_real_escape_string(sanitize($contentarea));
-			$version = (int)$this->getVersion();
 			for ($i = 0; $i < count($cbListOrder); $i++) {
 				$sql = "UPDATE `yg_site_" . $this->_site . "_lnk_cb`
-						SET ORDERPROD = $i WHERE (ID = " . $cbListOrder[$i] . ");";
-				$result = sYDB()->Execute($sql);
+						SET ORDERPROD = ? WHERE (ID = ?);";
+				$result = sYDB()->Execute($sql, $i, $cbListOrder[$i]);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -1265,14 +1249,14 @@ class Page extends Versionable {
 	 * @throws Exception
 	 */
 	function setCblockOrder($cbListOrder = array(), $contentarea) {
-		$pageID = $this->_id;
+		$pageID = (int)$this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $pageID, "RWRITE")) {
-			$contentarea = mysql_real_escape_string(sanitize($contentarea));
+			$contentarea = sYDB()->escape_string(sanitize($contentarea));
 			$version = (int)$this->getVersion();
 			for ($i = 0; $i < count($cbListOrder); $i++) {
 				$sql = "UPDATE `yg_site_" . $this->_site . "_lnk_cb`
-				SET ORDERPROD = $i WHERE (PID = $pageID) AND (CBID = " . $cbListOrder[$i] . ") AND (PVERSION = $version) AND (TEMPLATECONTENTAREA = '$contentarea')";
-				$result = sYDB()->Execute($sql);
+				SET ORDERPROD = ? WHERE (PID = ?) AND (CBID = ?) AND (PVERSION = ?) AND (TEMPLATECONTENTAREA = ?)";
+				$result = sYDB()->Execute($sql, $i, $pageID, $cbListOrder[$i], $version, $contentarea);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -1304,8 +1288,8 @@ class Page extends Versionable {
 				FROM
 					yg_site_" . $this->_site . "_lnk_cb
 				WHERE
-					ID = $id;";
-		$ra = $this->cacheExecuteGetArray($sql);
+					ID = ?;";
+		$ra = $this->cacheExecuteGetArray($sql, $id);
 		return $ra;
 	}
 
@@ -1319,19 +1303,27 @@ class Page extends Versionable {
 	function getCblockLinkVersion($version, $contentarea = "") {
 		$pageID = $this->_id;
 		$version = (int)$version;
-		$contentarea = mysql_real_escape_string(sanitize($contentarea));
+		$contentarea = sYDB()->escape_string(sanitize($contentarea));
+		$sqlargs = array();
+		array_push($sqlargs, $pageID);
 		if (strlen($contentarea) > 0) {
-			$filter_contentarea = " AND TEMPLATECONTENTAREA = '$contentarea' ";
+			$filter_contentarea = " AND TEMPLATECONTENTAREA = ? ";
+			array_push($sqlargs, $contentarea);
 		}
 		$sql = "SELECT
 					CBVERSION
 				FROM
 					yg_site_" . $this->_site . "_lnk_cb
 				WHERE
-					PID = $pageID
+					PID = ?
 					$filter_contentarea AND
-					PVERSION = $version;";
-		$ra = $this->cacheExecuteGetArray($sql);
+					PVERSION = ?;";
+
+		array_push($sqlargs, $version);
+		array_unshift($sqlargs, $sql);
+		$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+		$ra = $dbr->GetArray();
+
 		$v = $ra[0]["CBVERSION"];
 		if (strlen($v) == 0) {
 			$v = 0;
@@ -1361,11 +1353,11 @@ class Page extends Versionable {
 						(co.VERSION = (SELECT MAX( rgt.VERSION ) FROM yg_contentblocks_properties AS rgt WHERE (co.OBJECTID = rgt.OBJECTID) AND (rgt.APPROVED = 1)))
 					)
 				) AND
-				(lnk.PID = $pageID) AND
+				(lnk.PID = ?) AND
 				(co.DELETED = 0) AND co.EMBEDDED = 1
 			) ";
 			$sql .= " GROUP BY co.OBJECTID ORDER BY ORDERPROD ASC";
-			$ra = $this->cacheExecuteGetArray($sql);
+			$ra = $this->cacheExecuteGetArray($sql, $pageID);
 			return $ra;
 		} else {
 			return false;
@@ -1381,14 +1373,10 @@ class Page extends Versionable {
 	 * @return array Array of Cblocks
 	 */
 	function getCblockList($contentarea = "", $workingCopy = false, $embedded = false) {
-		$pageID = $this->_id;
+		$pageID = (int)$this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $pageID, "RREAD")) {
-			$version = $this->getVersion();
-
-			if ($contentarea != "") {
-				$contentarea = mysql_real_escape_string(sanitize($contentarea));
-				$contentarea_sql = " AND (lnk.TEMPLATECONTENTAREA = '$contentarea')";
-			}
+			$version = (int)$this->getVersion();
+			$sqlargs = array();
 
 			if ($embedded) {
 				$embedded_sql = " AND co.EMBEDDED = 1";
@@ -1403,12 +1391,19 @@ class Page extends Versionable {
 			$perm_sql_where = "  (coperm.OID = co.OBJECTID) AND (coperm.RREAD > 0) AND (";
 			$roles = $this->permissions->getUsergroups();
 			for ($r = 0; $r < count($roles); $r++) {
-				$perm_sql_where .= "(coperm.USERGROUPID = " . $roles[$r]["ID"] . ") ";
+				$perm_sql_where .= "(coperm.USERGROUPID = ?) ";
+				array_push($sqlargs, $roles[$r]["ID"]);
 				if ((count($roles) - $r) > 1) {
 					$perm_sql_where .= " OR ";
 				}
 			}
 			$perm_sql_where .= ") ";
+
+			if ($contentarea != "") {
+				$contentarea = sYDB()->escape_string(sanitize($contentarea));
+				$contentarea_sql = " AND (lnk.TEMPLATECONTENTAREA = ?)";
+				array_push($sqlargs, $contentarea);
+			}
 
 			if ($maxcoversion == true) {
 				$sql = "SELECT
@@ -1454,8 +1449,13 @@ class Page extends Versionable {
 				) ";
 			}
 			$sql .= " GROUP BY co.OBJECTID ORDER BY ORDERPROD ASC";
-			$ra = $this->cacheExecuteGetArray($sql);
-			return $ra;
+
+			array_unshift($sqlargs, $sql);
+			$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+			if ($dbr === false) {
+				throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
+			}
+			return $dbr->GetArray();;
 		} else {
 			return false;
 		}
@@ -1481,12 +1481,11 @@ class Page extends Versionable {
 	 * @throws Exception
 	 */
 	function setTemplate($templateId) {
-		$pageID = $this->_id;
+		$pageID = (int)$this->_id;
 		$templateId = (int)$templateId;
 		if ($this->permissions->checkInternal($this->_uid, $pageID, "RWRITE")) {
 
 			// Get old navigation
-			$pageMgr = new PageMgr($siteID);
 			$templateMgr = new Templates();
 			$pageInfo = $this->get();
 			$oldTemplateId = $pageInfo['TEMPLATEID'];
@@ -1508,17 +1507,8 @@ class Page extends Versionable {
 			}
 
 			$version = (int)$this->getVersion();
-			//get current state
-			$sql = "SELECT TEMPLATEID AS STATE FROM yg_site_" . $this->_site . "_properties WHERE (OBJECTID = $pageID) AND VERSION = $version;";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
-				throw new Exception(sYDB()->ErrorMsg());
-			}
-			$ra = $result->GetArray();
-			$state = $ra[0]["STATE"];
-
-			$sql = "UPDATE yg_site_" . $this->_site . "_properties SET TEMPLATEID = '$templateId' WHERE (OBJECTID = $pageID) AND VERSION = $version;";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_site_" . $this->_site . "_properties SET TEMPLATEID = ? WHERE (OBJECTID = ?) AND VERSION = ?;";
+			$result = sYDB()->Execute($sql, $templateId, $pageID, $version);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1543,7 +1533,6 @@ class Page extends Versionable {
 					$this->setNavigation(0);
 				}
 			}
-
 			$this->markAsChanged();
 			return true;
 		} else {
@@ -1559,21 +1548,12 @@ class Page extends Versionable {
 	 * @throws Exception
 	 */
 	function setNavigation($navigation) {
-		$pageID = $this->_id;
-		$navigation = mysql_real_escape_string(sanitize($navigation));
+		$pageID = (int)$this->_id;
+		$navigation = sYDB()->escape_string(sanitize($navigation));
 		if ($this->permissions->checkInternal($this->_uid, $pageID, "RWRITE")) {
 			$version = (int)$this->getVersion();
-			//get current state
-			$sql = "SELECT NAVIGATION AS STATE FROM yg_site_" . $this->_site . "_properties WHERE (OBJECTID = $pageID) AND VERSION = $version;";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
-				throw new Exception(sYDB()->ErrorMsg());
-			}
-			$ra = $result->GetArray();
-			$state = $ra[0]["STATE"];
-
-			$sql = "UPDATE yg_site_" . $this->_site . "_properties SET NAVIGATION = '$navigation' WHERE (OBJECTID = $pageID) AND VERSION = $version;";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_site_" . $this->_site . "_properties SET NAVIGATION = ? WHERE (OBJECTID = ?) AND VERSION = ?;";
+			$result = sYDB()->Execute($sql, $navigation, $pageID, $version);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1599,21 +1579,12 @@ class Page extends Versionable {
 	 * @throws Exception
 	 */
 	function setActive($value) {
-		$pageID = $this->_id;
+		$pageID = (int)$this->_id;
 		$value = (int)$value;
 		if ($this->permissions->checkInternal($this->_uid, $pageID, "RWRITE")) {
 			$version = (int)$this->getVersion();
-			//get current state
-			$sql = "SELECT ACTIVE AS STATE FROM yg_site_" . $this->_site . "_properties WHERE (OBJECTID = $pageID) AND VERSION = $version;";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
-				throw new Exception(sYDB()->ErrorMsg());
-			}
-			$ra = $result->GetArray();
-			$state = $ra[0]["STATE"];
-
-			$sql = "UPDATE yg_site_" . $this->_site . "_properties SET ACTIVE = '$value' WHERE (OBJECTID = $pageID) AND VERSION = $version;";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_site_" . $this->_site . "_properties SET ACTIVE = ? WHERE (OBJECTID = ?) AND VERSION = ?;";
+			$result = sYDB()->Execute($sql, $value, $pageID, $version);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1632,21 +1603,12 @@ class Page extends Versionable {
 	 * @throws Exception
 	 */
 	function setHidden($value) {
-		$pageID = $this->_id;
+		$pageID = (int)$this->_id;
 		$value = (int)$value;
 		if ($this->permissions->checkInternal($this->_uid, $pageID, "RWRITE")) {
 			$version = (int)$this->getVersion();
-			//get current state
-			$sql = "SELECT HIDDEN AS STATE FROM yg_site_" . $this->_site . "_properties WHERE (OBJECTID = $pageID) AND VERSION = $version;";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
-				throw new Exception(sYDB()->ErrorMsg());
-			}
-			$ra = $result->GetArray();
-			$state = $ra[0]["STATE"];
-
-			$sql = "UPDATE yg_site_" . $this->_site . "_properties SET HIDDEN = '$value' WHERE (OBJECTID = $pageID) AND VERSION = $version;";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_site_" . $this->_site . "_properties SET HIDDEN = ? WHERE (OBJECTID = ?) AND VERSION = ?;";
+			$result = sYDB()->Execute($sql, $value, $pageID, $version);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1708,7 +1670,7 @@ class Page extends Versionable {
 	 * @throws Exception
 	 */
 	public function setPName($pname) {
-		$pageID = $this->_id;
+		$pageID = (int)$this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $pageID, "RWRITE")) {
 			$pname = $this->filterPName($pname);
 
@@ -1721,18 +1683,9 @@ class Page extends Versionable {
 			if (($checkpinfo["ID"] != $pageID) && ($checkpinfo["ID"] > 0)) {
 				$pname = $pname . $page;
 			}
-			$version = (int)$this->getVersion();
-
-			$sql = "SELECT PNAME AS STATE FROM yg_site_" . $this->_site . "_tree WHERE (ID = $pageID);";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
-				throw new Exception(sYDB()->ErrorMsg());
-			}
-			$ra = $result->GetArray();
-			$state = $ra[0]["STATE"];
-
-			$sql = "UPDATE yg_site_" . $this->_site . "_tree SET PNAME = '$pname' WHERE (ID = $pageID);";
-			$result = sYDB()->Execute($sql);
+			$pname = sYDB()->escape_string($pname);
+			$sql = "UPDATE yg_site_" . $this->_site . "_tree SET PNAME = ? WHERE (ID = ?);";
+			$result = sYDB()->Execute($sql, $pname, $pageID);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}

@@ -45,8 +45,12 @@ class Reftracker extends \framework\Error {
 	 * @throws Exception
 	 */
 	private function emptyRef($srcType, $srcObjectId, $srcVersion) {
-		$sql = "DELETE FROM yg_references WHERE SRCTYPE = $srcType AND SRCOID = $srcObjectId AND SRCVER = $srcVersion;";
-		$result = sYDB()->Execute($sql);
+		$srcType = (int)$srcType;
+		$srcObjectId = (int)$srcObjectId;
+		$srcVersion = (int)$srcVersion;
+
+		$sql = "DELETE FROM yg_references WHERE SRCTYPE = ? AND SRCOID = ? AND SRCVER = ?;";
+		$result = sYDB()->Execute($sql, $srcType, $srcObjectId, $srcVersion);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -68,11 +72,11 @@ class Reftracker extends \framework\Error {
 		$srcObjectId = (int)$srcObjectId;
 		$srcVersion = (int)$srcVersion;
 		$trgtType = (int)$trgtType;
-		$trgtObjectId = mysql_real_escape_string($trgtObjectId);
-		$trgtAdditionalId = mysql_real_escape_string($trgtAdditionalId);
+		$trgtObjectId = sYDB()->escape_string($trgtObjectId);
+		$trgtAdditionalId = sYDB()->escape_string($trgtAdditionalId);
 		if ($trgtType > 0) {
-			$sql = "INSERT INTO yg_references (SRCTYPE, SRCOID, SRCVER, TGTTYPE, TGTOID, TGTAID) VALUES ($srcType, $srcObjectId, $srcVersion, $trgtType, '" . $trgtObjectId . "', '" . $trgtAdditionalId . "');";
-			$result = sYDB()->Execute($sql);
+			$sql = "INSERT INTO yg_references (SRCTYPE, SRCOID, SRCVER, TGTTYPE, TGTOID, TGTAID) VALUES (?, ?, ?, ?, ?, ?);";
+			$result = sYDB()->Execute($sql, $srcType, $srcObjectId, $srcVersion, $trgtType, $trgtObjectId , $trgtAdditionalId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -406,8 +410,8 @@ class Reftracker extends \framework\Error {
 		$pageId = (int)$pageId;
 		$version = (int)$version;
 		$sql = "SELECT * FROM `yg_site_" . $siteId . "_lnk_cb` AS pco
-				WHERE (pco.PID = $pageId AND pco.PVERSION = $version);";
-		$result = sYDB()->Execute($sql);
+				WHERE (pco.PID = ? AND pco.PVERSION = ?);";
+		$result = sYDB()->Execute($sql, $pageId, $version);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -428,13 +432,13 @@ class Reftracker extends \framework\Error {
 							`yg_contentblocks_lnk_entrymasks_c` AS wic,
 							`yg_references` AS ref
 						WHERE
-							(cowi.CBID = " . $ra[$i]["CBID"] . " AND
-							cowi.CBVERSION = " . $ra[$i]["CBVERSION"] . ") AND
+							(cowi.CBID = ? AND
+							cowi.CBVERSION = ?) AND
 							(cowi.ID = wic.LNK) AND
-							(ref.SRCVER = " . $ra[$i]["CBVERSION"] . ") AND
+							(ref.SRCVER = ?) AND
 							(ref.SRCOID = wic.ID) AND
-							(ref.SRCTYPE = " . REFTYPE_FORMFIELD . ");";
-				$result = sYDB()->Execute($sql);
+							(ref.SRCTYPE = ?);";
+				$result = sYDB()->Execute($sql, $ra[$i]["CBID"], $ra[$i]["CBVERSION"], $ra[$i]["CBVERSION"], REFTYPE_FORMFIELD);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -459,8 +463,8 @@ class Reftracker extends \framework\Error {
 		$mailingId = (int)$mailingId;
 		$version = (int)$version;
 		$sql = "SELECT * FROM `yg_mailing_lnk_cb` AS nco
-				WHERE (nco.PID = $mailingId AND nco.PVERSION = $version);";
-		$result = sYDB()->Execute($sql);
+				WHERE (nco.PID = ? AND nco.PVERSION = ?);";
+		$result = sYDB()->Execute($sql, $mailingId, $version);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -479,13 +483,13 @@ class Reftracker extends \framework\Error {
 							`yg_contentblocks_lnk_entrymasks_c` AS wic,
 							`yg_references` AS ref
 						WHERE
-							(cowi.CBID = " . $ra[$i]["CBID"] . " AND
-							cowi.CBVERSION = " . $ra[$i]["CBVERSION"] . ") AND
+							(cowi.CBID = ? AND
+							cowi.CBVERSION = ?) AND
 							(cowi.ID = wic.LNK) AND
 							-- (ref.SRCVER = " . $version . ") AND
 							(ref.SRCOID = wic.ID) AND
-							(ref.SRCTYPE = " . REFTYPE_FORMFIELD . ");";
-				$result = sYDB()->Execute($sql);
+							(ref.SRCTYPE = ?);";
+				$result = sYDB()->Execute($sql, $ra[$i]["CBID"], $ra[$i]["CBVERSION"], REFTYPE_FORMFIELD);
 
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
@@ -517,10 +521,10 @@ class Reftracker extends \framework\Error {
 				`yg_contentblocks_lnk_entrymasks_c` AS wic,
 				`yg_references` AS ref
 			WHERE
-				(cowi.CBID = " . $cblockId . " AND cowi.CBVERSION = " . $version . ") AND
+				(cowi.CBID = ? AND cowi.CBVERSION = ?) AND
 				(cowi.ID = wic.LNK) AND
-				(ref.SRCVER = " . $version . ") AND (ref.SRCOID = wic.ID) AND (ref.SRCTYPE = " . REFTYPE_FORMFIELD . ")";
-			$result = sYDB()->Execute($sql);
+				(ref.SRCVER = ?) AND (ref.SRCOID = wic.ID) AND (ref.SRCTYPE = ?)";
+			$result = sYDB()->Execute($sql, $cblockId, $version, $version, REFTYPE_FORMFIELD);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -546,8 +550,8 @@ class Reftracker extends \framework\Error {
 		$version = (int)$version;
 		$sql = "SELECT ref.* FROM `yg_references` AS ref
 			WHERE
-			  (ref.TGTTYPE = " . REFTYPE_PAGE . ") AND (ref.TGTOID = " . $pageId . ") AND (ref.TGTAID = " . $siteId . ");";
-		$result = sYDB()->Execute($sql);
+			  (ref.TGTTYPE = ?) AND (ref.TGTOID = ?) AND (ref.TGTAID = ?);";
+		$result = sYDB()->Execute($sql, REFTYPE_PAGE, $pageId, $siteId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -566,11 +570,11 @@ class Reftracker extends \framework\Error {
 		$fileId = (int)$fileId;
 
 		$sql = "SELECT ref.* FROM `yg_references` AS ref WHERE
-				( (ref.TGTTYPE = " . REFTYPE_IMAGE . ") OR
-				  (ref.TGTTYPE = " . REFTYPE_FILE . ") )
-				AND (ref.TGTOID = " . $fileId . ");";
+				( (ref.TGTTYPE = ?) OR
+				  (ref.TGTTYPE = ?) )
+				AND (ref.TGTOID = ?);";
 
-		$result = sYDB()->Execute($sql);
+		$result = sYDB()->Execute($sql, REFTYPE_IMAGE, REFTYPE_FILE, $fileId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}

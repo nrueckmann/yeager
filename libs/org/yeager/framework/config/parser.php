@@ -75,7 +75,8 @@
 				$this->_xml = $this->_xml_hash[$filename];
 				return true;
 			}
-			if (!$this->_xml = @implode(file($filename))) {
+            $contents = file($filename);
+			if (is_array($contents) && (!$this->_xml = @implode($contents))) {
 				return false;
 			} else {
 				$this->_xml_hash[$filename] = $this->_xml;

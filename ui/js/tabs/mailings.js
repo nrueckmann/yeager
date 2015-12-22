@@ -97,7 +97,7 @@ $K.yg_initMailings = function(win) {
 				mailingIds: mailingIds
 			} } );
 			$K.yg_AjaxCallback( data, 'updateMailingStatus' );
-		}, 3);
+		}, 5);
 	}
 }
 
@@ -331,23 +331,31 @@ $K.yg_updateMailingStatus = function(data) {
 					data.each(function(dataItem){
 						if (dataItem.MAILING_ID == parseInt(item.readAttribute('yg_id').split('-')[0], 10)) {
 							// Update
-							if ( (dataItem.STATUS == 'UNSENT') || (dataItem.STATUS == 'SENT') ) {
+							if (dataItem.STATUS == 'UNSENT') {
 								item.down('span.status_num').update('0 / ' + dataItem.RECEIPIENTS);
 								var progressPercent = 0;
+							} else if (dataItem.STATUS == 'SENT') {
+								item.down('span.status_num').update(dataItem.RECEIPIENTS + ' / ' + dataItem.RECEIPIENTS);
+								var progressPercent = 100;
 							} else {
-								item.down('span.status_num').update((dataItem.RECEIPIENTS - dataItem.JOBCOUNT) + ' / ' + dataItem.RECEIPIENTS);
-								var progressPercent = ((dataItem.RECEIPIENTS - dataItem.JOBCOUNT) / dataItem.RECEIPIENTS) * 100;
+								var tmpitem = item.down('span.status_num'),
+									tmpnum = tmpitem.innerHTML;
+								curcount = parseInt(tmpnum.split(' / ')[0]);
+								if (dataItem.JOBCOUNT != dataItem.RECEIPIENTS) {
+									tmpitem.update((dataItem.RECEIPIENTS - dataItem.JOBCOUNT) + ' / ' + dataItem.RECEIPIENTS);
+									var progressPercent = ((dataItem.RECEIPIENTS - dataItem.JOBCOUNT) / dataItem.RECEIPIENTS) * 100;
+								}
 							}
 							item.down('td.receipientstd').update(dataItem.RECEIPIENTS);
 							item.down('div.progress').setStyle({width: progressPercent + '%'});
 
 							// Check if the job was just started
 							//if (item.down('.status_info').hasClassName('justchanged') && (dataItem.JOBCOUNT == 0)) {
-							if (item.down('.status_info').hasClassName('justchanged')) {
-								item.down('.status_info').removeClassName('justchanged');
-							} else {
+							//if (item.down('.status_info').hasClassName('justchanged')) {
+							//	item.down('.status_info').removeClassName('justchanged');
+							//} else {
 								item.down('.status_info').className = 'status_info ' + dataItem.STATUS.toLowerCase();
-							}
+							//}
 
 						}
 					});

@@ -26,7 +26,7 @@ class Koala {
 	/**
 	 * Class constructor
 	 */
-	function Koala ( $db ) {
+	function Koala ( $db = NULL) {
 		// Fetch and store database handler
 		$this->db = $db;
 	}
@@ -41,8 +41,8 @@ class Koala {
 		$counter = $result->fields['counter'];
 
 		// Set new value
-		$sql = "UPDATE yg_koala_sequencer SET counter = ($counter+1000);";
-		$this->db->Execute($sql);
+		$sql = "UPDATE yg_koala_sequencer SET counter = ?;";
+		$this->db->Execute($sql, ($counter+1000));
 
 		$this->sequence = $counter;
 
