@@ -31,13 +31,13 @@ class Languages {
 	 * @return int Language Id of new Language
 	 */
 	function add($name) {
-		$name = mysql_real_escape_string(sanitize($name));
+		$name = sYDB()->escape_string(sanitize($name));
 		$sql = "INSERT INTO
 					`yg_languages`
 				( `NAME`  )
 					VALUES
-				('" . $name . "');";
-		$result = sYDB()->Execute($sql);
+				(?);";
+		$result = sYDB()->Execute($sql, $name);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -53,11 +53,9 @@ class Languages {
 	 */
 	function setName($languageId, $name) {
 		$languageId = (int)$languageId;
-		$name = mysql_real_escape_string(sanitize($name));
-		$sql = "UPDATE
-					`yg_languages`
-				 SET NAME = '" . $name . "' WHERE ID = $languageId;";
-		$result = sYDB()->Execute($sql);
+		$name = sYDB()->escape_string(sanitize($name));
+		$sql = "UPDATE `yg_languages` SET NAME = ? WHERE ID = ?;";
+		$result = sYDB()->Execute($sql, $name, $languageId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -73,11 +71,9 @@ class Languages {
 	 */
 	function setCode($languageId, $code) {
 		$languageId = (int)$languageId;
-		$code = mysql_real_escape_string(sanitize($code));
-		$sql = "UPDATE
-					`yg_languages`
-				 SET CODE = '" . $code . "' WHERE ID = $languageId;";
-		$result = sYDB()->Execute($sql);
+		$code = sYDB()->escape_string(sanitize($code));
+		$sql = "UPDATE `yg_languages` SET CODE = ? WHERE ID = ?;";
+		$result = sYDB()->Execute($sql, $code, $languageId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -92,8 +88,8 @@ class Languages {
 	 */
 	function get($languageId) {
 		$languageId = (int)$languageId;
-		$sql = "SELECT * FROM yg_languages WHERE ID = $languageId;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM yg_languages WHERE ID = ?;";
+		$result = sYDB()->Execute($sql, $languageId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -124,8 +120,8 @@ class Languages {
 	 */
 	function remove($languageId) {
 		$languageId = (int)$languageId;
-		$sql = "DELETE FROM yg_languages WHERE ID = $languageId;";
-		$result = sYDB()->Execute($sql);
+		$sql = "DELETE FROM yg_languages WHERE ID = ?;";
+		$result = sYDB()->Execute($sql, $languageId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		} else {

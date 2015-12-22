@@ -160,14 +160,14 @@ class PageMgr extends \framework\Error {
 	 */
 
 	
-	function cacheExecuteGetArray($sql) {
-		$dbr = sYDB()->Execute($sql);
-
-		if ($dbr === false) {
-			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
-		}
-		$blaetter = $dbr->GetArray();
-		return $blaetter;
+	function cacheExecuteGetArray() {
+        $args = func_get_args();
+        $dbr = call_user_func_array(array(sYDB(), 'Execute'), $args);
+        if ($dbr === false) {
+            throw new Exception(sYDB()->ErrorMsg() . ':: ' . $sql);
+        }
+        $blaetter = $dbr->GetArray();
+        return $blaetter;
 	}
 
 /// @endcond
@@ -303,15 +303,11 @@ class PageMgr extends \framework\Error {
 	 */
 	function add($parentPageId, $templateId = 0, $name = 'New Page') {
 		$parentPageId = (int)$parentPageId;
-		$name = mysql_real_escape_string($name);
+		$name = sYDB()->escape_string($name);
 		$templateId = (int)$templateId;
 		if ($this->permissions->checkInternal($this->_uid, $parentPageId, "RSUB")) {
-
-			$parentPage = $this->getPage($parentPageId);
-			$pinfo = $parentPage->get();
-
 			// Create node in Pages tree
-			$pageId = $this->tree->add($parentPageId);
+			$pageId = (int)$this->tree->add($parentPageId);
 
 			// Create new version
 			$ts = time();
@@ -319,8 +315,8 @@ class PageMgr extends \framework\Error {
 						`yg_site_" . $this->_site . "_properties`
 					(`OBJECTID`, `VERSION`, `TEMPLATEID`, `NAVIGATION`, `ACTIVE`, `HIDDEN`, `LOCKED`, `CREATEDTS`, `CHANGEDTS`, `CREATEDBY`, `CHANGEDBY`)
 						VALUES
-					('$pageId', '1', '$templateId', '0', '1', '0', '0', '$ts', '$ts', '" . $this->_uid . "', '" . $this->_uid . "');";
-			$result = sYDB()->Execute($sql);
+					(?, ?, ?, '0', '1', '0', '0', ?, ?, ?, ?);";
+			$result = sYDB()->Execute($sql, $pageId, 1, $templateId, $ts, $ts, $this->_uid, $this->_uid);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -370,7 +366,7 @@ class PageMgr extends \framework\Error {
 		$hadError = false;
 		$allNodes = $this->tree->get($pageId, 1000);
 		foreach($allNodes as $allNodesItem) {
-			$pageId = $allNodesItem['ID'];
+			$pageId = (int)$allNodesItem['ID'];
 
 			// Check if object is really in trash
 			$page = new Page($this->_site, $pageId);
@@ -378,8 +374,8 @@ class PageMgr extends \framework\Error {
 
 			if ($page->permissions->checkInternal($this->_uid, $pageId, "RDELETE") && $pageInfo['DELETED']) {
 				// Collect and remove all linked blind contentblocks
-				$sql = "SELECT * FROM `yg_site_" . $this->_site . "_lnk_cb` WHERE PID = $pageId";
-				$linked_cos = $this->cacheExecuteGetArray($sql);
+				$sql = "SELECT * FROM `yg_site_" . $this->_site . "_lnk_cb` WHERE PID = ?";
+				$linked_cos = $this->cacheExecuteGetArray($sql, $pageId);
 
 				foreach ($linked_cos as $linked_co) {
 					$cb = sCblockMgr()->getCblock($linked_co['CBID']);
@@ -394,12 +390,12 @@ class PageMgr extends \framework\Error {
 				}
 
 				// Remove page
-				$sql = "DELETE FROM `yg_site_" . $this->_site . "_properties` WHERE OBJECTID = $pageId";
-				$result = sYDB()->Execute($sql);
+				$sql = "DELETE FROM `yg_site_" . $this->_site . "_properties` WHERE OBJECTID = ?";
+				sYDB()->Execute($sql, $pageId);
 
 				// Remove content object links
-				$sql = "DELETE FROM `yg_site_" . $this->_site . "_lnk_cb` WHERE PID = $pageId";
-				$result = sYDB()->Execute($sql);
+				$sql = "DELETE FROM `yg_site_" . $this->_site . "_lnk_cb` WHERE PID = ?";
+				sYDB()->Execute($sql, $pageId);
 
 				$page->tags->clear();
 				$page->history->clear();
@@ -427,6 +423,7 @@ class PageMgr extends \framework\Error {
 	 * @return array Array of Page nodes
 	 */
 	function getTree($pageId = NULL, $maxLevels = 2, $resolveCblocks = false, $noTrash = true) {
+		$pageId = (int)$pageId;
 		$maxLevels = (int)$maxLevels;
 		$resolveCblocks = (bool)$resolveCblocks;
 
@@ -459,7 +456,7 @@ class PageMgr extends \framework\Error {
 		$perm_SQL_WHERE = " AND (";
 		$roles = $this->permissions->getUsergroups();
 		for ($r = 0; $r < count($roles); $r++) {
-			$perm_SQL_WHERE .= "(perm.USERGROUPID = " . $roles[$r]["ID"] . ") ";
+			$perm_SQL_WHERE .= "(perm.USERGROUPID = " .  (int)$roles[$r]["ID"] . ") ";
 			if ((count($roles) - $r) > 1) {
 				$perm_SQL_WHERE .= " OR ";
 			}
@@ -515,14 +512,11 @@ class PageMgr extends \framework\Error {
 	 */
 	function getList($pageId = 0, $filter = array(), $maxLevel = 0, $permissionsForRoleId = 0, $filterArray = array()) {
 		$pageId = (int)$pageId;
-		$resolveCblocks = (bool)$resolveCblocks;
+		$maxLevel = (int)$maxLevel;
+		$permissionsForRoleId = (int)$permissionsForRoleId;
 		$rootGroupId = (int)sConfig()->getVar("CONFIG/SYSTEMUSERS/ROOTGROUPID");
 
-		if (($this->_uid > 0) || ($permissionsForRoleId > 0)) {
-			$privileges_from = ", yg_site_" . $this->_site . "_permissions as priv";
-		}
 		if ($pageId == 0) {
-			$selectdefault = true;
 			$pageId = $this->tree->getRoot();
 		}
 		if ($maxLevel > 0) {
@@ -574,7 +568,7 @@ class PageMgr extends \framework\Error {
 			$perm_sql_where = " AND (";
 			$roles = $this->permissions->getUsergroups();
 			for ($r = 0; $r < count($roles); $r++) {
-				$perm_sql_where .= "(perm.USERGROUPID = " . $roles[$r]["ID"] . ") ";
+				$perm_sql_where .= "(perm.USERGROUPID = " . (int)$roles[$r]["ID"] . ") ";
 				if ((count($roles) - $r) > 1) {
 					$perm_sql_where .= " OR ";
 				}
@@ -848,6 +842,7 @@ class PageMgr extends \framework\Error {
 	 * @return array Array of parent Pages
 	 */
 	function getParents($pageId) {
+		$pageId = (int)$pageId;
 		if ($this->permissions->checkInternal($this->_uid, $pageId, "RREAD")) {
 			$parentnodes = $this->tree->getParents($pageId, $this->tree->getRoot());
 			$parentnodeidsql = implode(',', $parentnodes);
@@ -906,8 +901,8 @@ class PageMgr extends \framework\Error {
 				FROM
 					yg_site_" . $this->_site . "_lnk_cb
 				WHERE
-					ID = $linkId;";
-		$ra = $this->cacheExecuteGetArray($sql);
+					ID = ?;";
+		$ra = $this->cacheExecuteGetArray($sql, $linkId);
 		return $ra;
 	}
 
@@ -918,10 +913,10 @@ class PageMgr extends \framework\Error {
 	 * @return int Page Id
 	 */
 	function getPageIdByPname($PName) {
-		$PName = mysql_real_escape_string(sanitize($PName));
-		$sql = "SELECT ID FROM yg_site_" . $this->_site . "_tree as t WHERE (t.PNAME = '$PName');";
+		$PName = sYDB()->escape_string(sanitize($PName));
+		$sql = "SELECT ID FROM yg_site_" . $this->_site . "_tree as t WHERE (t.PNAME = ?);";
 		try {
-			$ra = $this->cacheExecuteGetArray($sql);
+			$ra = $this->cacheExecuteGetArray($sql, $PName);
 			return $ra[0]['ID'];
 		} catch (Exception $e) {
 			return false;
@@ -935,10 +930,10 @@ class PageMgr extends \framework\Error {
 	 * @return string Permanent name
 	 */
 	function getPNameByPageId($pageId) {
-		$pageId = mysql_real_escape_string(sanitize((int)$pageId));
+		$pageId = sYDB()->escape_string(sanitize((int)$pageId));
 		if ($this->permissions->checkInternal($this->_uid, $pageId, "RREAD")) {
-			$sql = "SELECT PNAME FROM yg_site_" . $this->_site . "_tree as t WHERE (t.ID = $pageId);";
-			$ra = $this->cacheExecuteGetArray($sql);
+			$sql = "SELECT PNAME FROM yg_site_" . $this->_site . "_tree as t WHERE (t.ID = ?);";
+			$ra = $this->cacheExecuteGetArray($sql, $pageId);
 			return $ra[0]['PNAME'];
 		}
 		return false;
@@ -952,19 +947,6 @@ class PageMgr extends \framework\Error {
 	 */
 	function getPagesByTemplate($templateId) {
 		$templateId = (int)$templateId;
-		$filter = mysql_real_escape_string(sanitize($filter));
-		if ($this->_uid > 0) {
-			$privileges_from = ", yg_site_" . $this->_site . "_permissions as priv";
-		}
-		/*
-		$filtersql_where .= " AND (
-									(group2.VERSIONPUBLISHED = prop.VERSION) OR
-									(
-										(group2.VERSIONPUBLISHED = ".ALWAYS_LATEST_APPROVED_VERSION.") AND
-										(prop.VERSION = (SELECT MAX( rgt.VERSION ) FROM yg_site_".$this->_site."_properties AS rgt WHERE (prop.OBJECTID = rgt.OBJECTID) AND (rgt.APPROVED = 1)))
-									)
-			   ) ";
-		*/
 		$filtersql_where = '';
 		$perm_sql_select = ", MAX(perm.RREAD) AS RREAD,  MAX(perm.RWRITE) AS RWRITE,  MAX(perm.RDELETE) AS RDELETE,  MAX(perm.RSTAGE) AS RSTAGE,  MAX(perm.RMODERATE) AS RMODERATE,  MAX(perm.RCOMMENT) AS RCOMMENT";
 		$perm_sql_from = " LEFT JOIN yg_site_" . $this->_site . "_permissions AS perm ON perm.OID = group2.ID";
@@ -1029,12 +1011,12 @@ class PageMgr extends \framework\Error {
 	 * @throws Exception
 	 */
 	public function getLocksByToken($token) {
-		$token = mysql_real_escape_string($token);
+		$token = sYDB()->escape_string($token);
 		if ($token == '') {
 			return false;
 		}
-		$sql = "SELECT OBJECTID, LOCKED, TOKEN FROM yg_site_" . $this->_site . "_properties WHERE TOKEN = '" . $token . "';";
-		$dbr = sYDB()->Execute($sql);
+		$sql = "SELECT OBJECTID, LOCKED, TOKEN FROM yg_site_" . $this->_site . "_properties WHERE TOKEN = ?;";
+		$dbr = sYDB()->Execute($sql, $token);
 		if ($dbr === false) {
 			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
 		}
@@ -1102,6 +1084,9 @@ function PagesSearchCB(&$list, $type, $operator, $value1 = 0, $value2 = 0) {
 			break;
 
 		case 'ORDER':
+			$colarr = explode(".", sYDB()->escape_string(sanitize($value1)));
+			$value1 = "`".implode("`.`", $colarr)."`";
+			if ($value2 != "DESC") $value2 = "ASC";
 			$list['ORDER'][] = 'ORDER BY ' . $value1 . ' ' . $value2;
 			break;
 	}

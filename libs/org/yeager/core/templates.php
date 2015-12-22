@@ -101,8 +101,8 @@ class Templates extends \framework\Error {
 	 */
 	function getFullPath($templateId) {
 		$templateId = (int)$templateId;
-		$sql = "SELECT PATH, FILENAME FROM yg_templates_properties WHERE OBJECTID = $templateId;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT PATH, FILENAME FROM yg_templates_properties WHERE OBJECTID = ?;";
+		$result = sYDB()->Execute($sql, $templateId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -120,9 +120,9 @@ class Templates extends \framework\Error {
 	function setName($templateId, $value) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RTEMPLATES')) {
 			$templateId = (int)$templateId;
-			$value = mysql_real_escape_string(sanitize($value));
-			$sql = "UPDATE yg_templates_properties SET NAME = '$value' WHERE (OBJECTID = $templateId);";
-			$result = sYDB()->Execute($sql);
+			$value = sYDB()->escape_string(sanitize($value));
+			$sql = "UPDATE yg_templates_properties SET NAME = ? WHERE (OBJECTID = ?);";
+			$result = sYDB()->Execute($sql, $value, $templateId);
 			return true;
 		} else {
 			return false;
@@ -197,7 +197,7 @@ class Templates extends \framework\Error {
 	function setIdentifier($templateId, $identifier) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RTEMPLATES')) {
 			$templateId = (int)$templateId;
-			$identifier = mysql_real_escape_string(sanitize($identifier));
+			$identifier = sYDB()->escape_string(sanitize($identifier));
 			$identifier = $this->filterIdentifier($identifier);
 
 			$checkidentifier = $this->getByIdentifier($identifier);
@@ -205,8 +205,8 @@ class Templates extends \framework\Error {
 				$identifier = $this->calcIdentifier($templateId);
 			}
 
-			$sql = "UPDATE yg_templates_properties SET IDENTIFIER = '$identifier' WHERE (OBJECTID = $templateId);";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_templates_properties SET IDENTIFIER = ? WHERE (OBJECTID = ?);";
+			$result = sYDB()->Execute($sql, $identifier, $templateId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -223,9 +223,9 @@ class Templates extends \framework\Error {
 	 * @return array Template information
 	 */
 	function getByIdentifier($value) {
-		$value = mysql_real_escape_string(sanitize($value));
-		$sql = "SELECT * FROM yg_templates_properties WHERE IDENTIFIER = '$value';";
-		$result = sYDB()->Execute($sql);
+		$value = sYDB()->escape_string(sanitize($value));
+		$sql = "SELECT * FROM yg_templates_properties WHERE IDENTIFIER = ?;";
+		$result = sYDB()->Execute($sql, $value);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -243,9 +243,9 @@ class Templates extends \framework\Error {
 	function setDescription($templateId, $value) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RTEMPLATES')) {
 			$templateId = (int)$templateId;
-			$value = mysql_real_escape_string(sanitize($value));
-			$sql = "UPDATE yg_templates_properties SET DESCRIPTION = '$value' WHERE (OBJECTID = $templateId);";
-			$result = sYDB()->Execute($sql);
+			$value = sYDB()->escape_string(sanitize($value));
+			$sql = "UPDATE yg_templates_properties SET DESCRIPTION = ? WHERE (OBJECTID = ?);";
+			sYDB()->Execute($sql, $value, $templateId);
 			return true;
 		} else {
 			return false;
@@ -262,9 +262,9 @@ class Templates extends \framework\Error {
 	function setPath($templateId, $value) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RTEMPLATES')) {
 			$templateId = (int)$templateId;
-			$value = mysql_real_escape_string(sanitize($value));
-			$sql = "UPDATE yg_templates_properties SET PATH = '$value' WHERE (OBJECTID = $templateId);";
-			$result = sYDB()->Execute($sql);
+			$value = sYDB()->escape_string(sanitize($value));
+			$sql = "UPDATE yg_templates_properties SET PATH = ? WHERE (OBJECTID = ?);";
+			sYDB()->Execute($sql, $value, $templateId);
 			return true;
 		} else {
 			return false;
@@ -281,9 +281,9 @@ class Templates extends \framework\Error {
 	function setFilename($templateId, $value) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RTEMPLATES')) {
 			$templateId = (int)$templateId;
-			$value = mysql_real_escape_string(sanitize($value));
-			$sql = "UPDATE yg_templates_properties SET FILENAME = '$value' WHERE (OBJECTID = $templateId);";
-			$result = sYDB()->Execute($sql);
+			$value = sYDB()->escape_string(sanitize($value));
+			$sql = "UPDATE yg_templates_properties SET FILENAME = ? WHERE (OBJECTID = ?);";
+			sYDB()->Execute($sql, $value, $templateId);
 			return true;
 		} else {
 			return false;
@@ -300,9 +300,9 @@ class Templates extends \framework\Error {
 	function setPreview($templateId, $value) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RTEMPLATES')) {
 			$templateId = (int)$templateId;
-			$value = mysql_real_escape_string(sanitize($value));
-			$sql = "UPDATE yg_templates_properties SET FILE = '$value' WHERE (OBJECTID = $templateId);";
-			$result = sYDB()->Execute($sql);
+			$value = sYDB()->escape_string(sanitize($value));
+			$sql = "UPDATE yg_templates_properties SET FILE = ? WHERE (OBJECTID = ?);";
+			sYDB()->Execute($sql, $value, $templateId);
 			return true;
 		} else {
 			return false;
@@ -325,12 +325,9 @@ class Templates extends \framework\Error {
 			// Knoten im Pagestree erzeugen
 			$templateId = $this->tree->add($parentTemplateId);
 			$itext = Singleton::itext();
-			$sql = "INSERT INTO
-						`yg_templates_properties`
-					(`OBJECTID`, `FOLDER`, `NAME`)
-						VALUES
-					('$templateId', '$folder', '" . $itext['TXT_NEW_OBJECT'] . "');";
-			$result = sYDB()->Execute($sql);
+			$text = sYDB()->escape_string($itext['TXT_NEW_OBJECT']);
+			$sql = "INSERT INTO `yg_templates_properties` (`OBJECTID`, `FOLDER`, `NAME`) VALUES (?, ?, ?);";
+			$result = sYDB()->Execute($sql, $templateId, $folder, $text);
 
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
@@ -435,10 +432,10 @@ class Templates extends \framework\Error {
 				FROM
 					($this->table AS group2, yg_templates_properties AS prop)
 				WHERE
-					(group2.ID = prop.OBJECTID) AND (group2.ID = $parentId)
+					(group2.ID = prop.OBJECTID) AND (group2.ID = ?)
 				GROUP BY
 					group2.LFT, group2.RGT, group2.ID ORDER BY group2.LFT;";
-			$dbr = sYDB()->Execute($sql);
+			$dbr = sYDB()->Execute($sql, $parentId);
 			$parents[$i] = $dbr->GetArray();
 			$templateId = $parents[$i][0]['ID'];
 			$parentId = $this->tree->getParent($templateId);
@@ -471,8 +468,8 @@ class Templates extends \framework\Error {
 	 */
 	function getTemplate($templateId) {
 		$templateId = (int)$templateId;
-		$sql = "SELECT * FROM yg_templates_properties WHERE OBJECTID = $templateId;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM yg_templates_properties WHERE OBJECTID = ?;";
+		$result = sYDB()->Execute($sql, $templateId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -517,41 +514,41 @@ class Templates extends \framework\Error {
 		$successNodes = array();
 		$allNodes = $this->tree->get($templateId, 1000);
 		foreach($allNodes as $allNodesItem) {
-			$templateId = $allNodesItem['ID'];
+			$templateId = (int)$allNodesItem['ID'];
 
 			if (sUsergroups()->permissions->check($this->_uid, 'RTEMPLATES') && $this->permissions->checkInternal($this->_uid, $templateId, "RDELETE")) {
 				// Remove template
 				$templateFile = $this->getFullPath($templateId);
 
-				$sql = "UPDATE `yg_mailing_properties` SET TEMPLATEID = 0 WHERE TEMPLATEID = $templateId;";
-				$result = sYDB()->Execute($sql);
+				$sql = "UPDATE `yg_mailing_properties` SET TEMPLATEID = 0 WHERE TEMPLATEID = ?;";
+				sYDB()->Execute($sql, $templateId);
 
 				$sites = sSites()->getList();
 				foreach ($sites as $curr_site) {
-					$sql = "UPDATE `yg_site_" . $curr_site['ID'] . "_properties` SET TEMPLATEID = 0 WHERE TEMPLATEID = $templateId;";
-					$result = sYDB()->Execute($sql);
+					$sql = "UPDATE `yg_site_" . (int)$curr_site['ID'] . "_properties` SET TEMPLATEID = 0 WHERE TEMPLATEID = ?;";
+					sYDB()->Execute($sql, $templateId);
 				}
 
-				$sql = "UPDATE `yg_site` SET TEMPLATEROOT = 0 WHERE TEMPLATEROOT = $templateId;";
-				$result = sYDB()->Execute($sql);
+				$sql = "UPDATE `yg_site` SET TEMPLATEROOT = 0 WHERE TEMPLATEROOT = ?;";
+				sYDB()->Execute($sql, $templateId);
 
-				$sql = "UPDATE `yg_site` SET DEFAULTTEMPLATE = 0 WHERE DEFAULTTEMPLATE = $templateId;";
-				$result = sYDB()->Execute($sql);
+				$sql = "UPDATE `yg_site` SET DEFAULTTEMPLATE = 0 WHERE DEFAULTTEMPLATE = ?;";
+				sYDB()->Execute($sql, $templateId);
 
-				$sql = "UPDATE `yg_mailing_settings` SET TEMPLATEROOT = 0 WHERE TEMPLATEROOT = $templateId;";
-				$result = sYDB()->Execute($sql);
+				$sql = "UPDATE `yg_mailing_settings` SET TEMPLATEROOT = 0 WHERE TEMPLATEROOT = ?;";
+				sYDB()->Execute($sql, $templateId);
 
-				$sql = "UPDATE `yg_mailing_settings` SET DEFAULTTEMPLATE = 0 WHERE DEFAULTTEMPLATE = $templateId;";
-				$result = sYDB()->Execute($sql);
+				$sql = "UPDATE `yg_mailing_settings` SET DEFAULTTEMPLATE = 0 WHERE DEFAULTTEMPLATE = ?;";
+				sYDB()->Execute($sql, $templateId);
 
-				$sql = "DELETE FROM `yg_templates_properties` WHERE OBJECTID = $templateId;";
-				$result = sYDB()->Execute($sql);
+				$sql = "DELETE FROM `yg_templates_properties` WHERE OBJECTID = ?;";
+				sYDB()->Execute($sql, $templateId);
 
-				$sql = "DELETE FROM `yg_templates_contentareas` WHERE TEMPLATE = $templateId;";
-				$result = sYDB()->Execute($sql);
+				$sql = "DELETE FROM `yg_templates_contentareas` WHERE TEMPLATE = ?;";
+				sYDB()->Execute($sql, $templateId);
 
-				$sql = "DELETE FROM `yg_templates_navis` WHERE TEMPLATE = $templateId;";
-				$result = sYDB()->Execute($sql);
+				$sql = "DELETE FROM `yg_templates_navis` WHERE TEMPLATE = ?;";
+				sYDB()->Execute($sql, $templateId);
 
 				$this->permissions->clear($templateId);
 
@@ -574,8 +571,8 @@ class Templates extends \framework\Error {
 	 */
 	function getContentareas($templateId) {
 		$templateId = (int)$templateId;
-		$sql = "SELECT * FROM yg_templates_contentareas WHERE TEMPLATE = $templateId ORDER BY `ORDER`;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM yg_templates_contentareas WHERE TEMPLATE = ? ORDER BY `ORDER`;";
+		$result = sYDB()->Execute($sql, $templateId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -591,8 +588,8 @@ class Templates extends \framework\Error {
 	 */
 	function getContentareaById($contentareaId) {
 		$contentareaId = (int)$contentareaId;
-		$sql = "SELECT * FROM yg_templates_contentareas WHERE ID = $contentareaId;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM yg_templates_contentareas WHERE ID = ?;";
+		$result = sYDB()->Execute($sql, $contentareaId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -645,8 +642,8 @@ class Templates extends \framework\Error {
 	 */
 	function resolveContentareaEntrymaskMapping($templateId) {
 		$templateId = (int)$templateId;
-		$sql = "SELECT PATH, FILENAME FROM yg_templates_properties WHERE OBJECTID = $templateId;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT PATH, FILENAME FROM yg_templates_properties WHERE OBJECTID = ?;";
+		$result = sYDB()->Execute($sql, $templateId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -676,8 +673,8 @@ class Templates extends \framework\Error {
 	 */
 	function getContentareasFromFile($templateId) {
 		$templateId = (int)$templateId;
-		$sql = "SELECT PATH, FILENAME FROM yg_templates_properties WHERE OBJECTID = $templateId;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT PATH, FILENAME FROM yg_templates_properties WHERE OBJECTID = ?;";
+		$result = sYDB()->Execute($sql, $templateId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -729,9 +726,9 @@ class Templates extends \framework\Error {
 	function addContentarea($templateId, $code) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RTEMPLATES')) {
 			$templateId = (int)$templateId;
-			$code = sanitize(mysql_real_escape_string($code));
-			$sql = "INSERT INTO `yg_templates_contentareas` (`TEMPLATE` , `CODE`) VALUES ($templateId, '$code');";
-			$result = sYDB()->Execute($sql);
+			$code = sYDB()->escape_string(sanitize($code));
+			$sql = "INSERT INTO `yg_templates_contentareas` (`TEMPLATE` , `CODE`) VALUES (?, ?);";
+			$result = sYDB()->Execute($sql, $templateId, $code);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -751,9 +748,9 @@ class Templates extends \framework\Error {
 	function removeContentarea($templateId, $code) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RTEMPLATES')) {
 			$templateId = (int)$templateId;
-			$code = sanitize(mysql_real_escape_string($code));
-			$sql = "DELETE FROM `yg_templates_contentareas` WHERE TEMPLATE = $templateId AND CODE = '$code';";
-			$result = sYDB()->Execute($sql);
+			$code = sYDB()->escape_string(sanitize($code));
+			$sql = "DELETE FROM `yg_templates_contentareas` WHERE TEMPLATE = ? AND CODE = ?;";
+			$result = sYDB()->Execute($sql, $templateId, $code);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -775,8 +772,9 @@ class Templates extends \framework\Error {
 			$templateId = (int)$templateId;
 			$orderId = 1;
 			foreach ($orderList as $orderListItem) {
-				$sql = "UPDATE `yg_templates_contentareas` SET `ORDER` = " . $orderId . " WHERE TEMPLATE = $templateId AND ID = '$orderListItem';";
-				$result = sYDB()->Execute($sql);
+				$orderList = (int)$orderList;
+				$sql = "UPDATE `yg_templates_contentareas` SET `ORDER` = ? WHERE TEMPLATE = ? AND ID = ?;";
+				$result = sYDB()->Execute($sql, $orderId, $templateId, $orderListItem);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -800,10 +798,10 @@ class Templates extends \framework\Error {
 	function setContentareaName($templateId, $code, $value) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RTEMPLATES')) {
 			$templateId = (int)$templateId;
-			$code = mysql_real_escape_string(sanitize($code));
-			$value = mysql_real_escape_string(sanitize($value));
-			$sql = "UPDATE yg_templates_contentareas SET NAME = '$value' WHERE (TEMPLATE = $templateId) AND (CODE = '$code');";
-			$result = sYDB()->Execute($sql);
+			$code = sYDB()->escape_string(sanitize($code));
+			$value = sYDB()->escape_string(sanitize($value));
+			$sql = "UPDATE yg_templates_contentareas SET NAME = ? WHERE (TEMPLATE = ?) AND (CODE = ?);";
+			sYDB()->Execute($sql, $value, $templateId, $code);
 			return true;
 		} else {
 			return false;
@@ -818,8 +816,8 @@ class Templates extends \framework\Error {
 	 */
 	function getNavis($templateId) {
 		$templateId = (int)$templateId;
-		$sql = "SELECT * FROM yg_templates_navis WHERE TEMPLATE = $templateId;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM yg_templates_navis WHERE TEMPLATE = ?;";
+		$result = sYDB()->Execute($sql, $templateId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -835,8 +833,8 @@ class Templates extends \framework\Error {
 	 */
 	function getNavisFromFile($templateId) {
 		$templateId = (int)$templateId;
-		$sql = "SELECT PATH, FILENAME FROM yg_templates_properties WHERE OBJECTID = $templateId;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT PATH, FILENAME FROM yg_templates_properties WHERE OBJECTID = ?;";
+		$result = sYDB()->Execute($sql, $templateId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -888,9 +886,9 @@ class Templates extends \framework\Error {
 	function addNavi($templateId, $code) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RTEMPLATES')) {
 			$templateId = (int)$templateId;
-			$code = sanitize(mysql_real_escape_string($code));
-			$sql = "INSERT INTO `yg_templates_navis` (`TEMPLATE`, `CODE`) VALUES ($templateId, '$code');";
-			$result = sYDB()->Execute($sql);
+			$code = sanitize(sYDB()->escape_string($code));
+			$sql = "INSERT INTO `yg_templates_navis` (`TEMPLATE`, `CODE`) VALUES (?, ?);";
+			$result = sYDB()->Execute($sql, $templateId, $code);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -910,9 +908,9 @@ class Templates extends \framework\Error {
 	function removeNavi($templateId, $code) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RTEMPLATES')) {
 			$templateId = (int)$templateId;
-			$code = sanitize(mysql_real_escape_string($code));
-			$sql = "DELETE FROM `yg_templates_navis` WHERE TEMPLATE = $templateId AND CODE = '$code';";
-			$result = sYDB()->Execute($sql);
+			$code = sYDB()->escape_string(sanitize($code));
+			$sql = "DELETE FROM `yg_templates_navis` WHERE TEMPLATE = ? AND CODE = ?;";
+			$result = sYDB()->Execute($sql, $templateId, $code);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -933,10 +931,10 @@ class Templates extends \framework\Error {
 	function setNaviName($templateId, $code, $value) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RTEMPLATES')) {
 			$templateId = (int)$templateId;
-			$code = mysql_real_escape_string(sanitize($code));
-			$value = mysql_real_escape_string(sanitize($value));
-			$sql = "UPDATE yg_templates_navis SET NAME = '$value' WHERE (TEMPLATE = $templateId) AND (CODE = '$code');";
-			$result = sYDB()->Execute($sql);
+			$code = sYDB()->escape_string(sanitize($code));
+			$value = sYDB()->escape_string(sanitize($value));
+			$sql = "UPDATE yg_templates_navis SET NAME = ? WHERE (TEMPLATE = ?) AND (CODE = ?);";
+			sYDB()->Execute($sql, $value, $templateId, $code);
 			return true;
 		} else {
 			return false;
@@ -953,11 +951,11 @@ class Templates extends \framework\Error {
 	function setDefaultNavi($templateId, $code) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RTEMPLATES')) {
 			$templateId = (int)$templateId;
-			$code = mysql_real_escape_string(sanitize($code));
-			$sql = "UPDATE yg_templates_navis SET `DEFAULT` = 0 WHERE (TEMPLATE = $templateId) AND (CODE <> '$code');";
-			$result = sYDB()->Execute($sql);
-			$sql = "UPDATE yg_templates_navis SET `DEFAULT` = 1 WHERE (TEMPLATE = $templateId) AND (CODE = '$code');";
-			$result = sYDB()->Execute($sql);
+			$code = sYDB()->escape_string(sanitize($code));
+			$sql = "UPDATE yg_templates_navis SET `DEFAULT` = 0 WHERE (TEMPLATE = ?) AND (CODE <> ?);";
+			sYDB()->Execute($sql, $templateId, $code);
+			$sql = "UPDATE yg_templates_navis SET `DEFAULT` = 1 WHERE (TEMPLATE = ?) AND (CODE = ?);";
+			sYDB()->Execute($sql, $templateId, $code);
 			return true;
 		} else {
 			return false;

@@ -186,13 +186,14 @@ class MailingMgr extends \framework\Error {
 	 * @return array|bool Result of SQL query or FALSE in case of an error
 	 * @throws Exception
 	 */
-	function cacheExecuteGetArray($sql) {
-		$dbr = sYDB()->Execute($sql);
-		if ($dbr === false) {
-			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
-		}
-		$blaetter = $dbr->GetArray();
-		return $blaetter;
+	function cacheExecuteGetArray() {
+        $args = func_get_args();
+        $dbr = call_user_func_array(array(sYDB(), 'Execute'), $args);
+        if ($dbr === false) {
+            throw new Exception(sYDB()->ErrorMsg() . ':: ' . $sql);
+        }
+        $blaetter = $dbr->GetArray();
+        return $blaetter;
 	}
 
 /// @endcond
@@ -233,6 +234,7 @@ class MailingMgr extends \framework\Error {
 				}
 			}
 		}
+		$origargs = $args;
 		$ext_result = false;
 		foreach ($extarr as $extension) {
             $ext_result = $extension->callExtensionHook($method, $args);
@@ -240,7 +242,11 @@ class MailingMgr extends \framework\Error {
                 $args = $ext_result;
             }
         }
-        return $ext_result;
+		if ($ext_result === false) {
+			return $origargs;
+		} else {
+	        return $ext_result;
+		}
 	}
 
 /// @endcond
@@ -256,10 +262,9 @@ class MailingMgr extends \framework\Error {
 	 */
 	function add($parentMailingId, $templateId = 0, $name = "New Mailing") {
 		$parentMailingId = (int)$parentMailingId;
-		$name = mysql_real_escape_string($name);
+		$name = sYDB()->escape_string($name);
 		$templateId = (int)$templateId;
 		if ($this->permissions->checkInternal($this->_uid, $parentMailingId, "RSUB")) {
-			$parentMailing = $this->getMailing($parentMailingId);
 			$mailingId = $this->tree->add($parentMailingId);
 
 			// Version anlegen
@@ -268,8 +273,8 @@ class MailingMgr extends \framework\Error {
 						`yg_mailing_properties`
 					(`OBJECTID`, `VERSION`, `TEMPLATEID`, `NAVIGATION`, `ACTIVE`, `HIDDEN`, `LOCKED`, `CREATEDTS`, `CHANGEDTS`, `CREATEDBY`, `CHANGEDBY`)
 						VALUES
-					('$mailingId', '1', '$templateId', '0', '0', '0', '0', '$ts', '$ts', '" . $this->_uid . "', '" . $this->_uid . "');";
-			$result = sYDB()->Execute($sql);
+					(?, '1', ?, '0', '0', '0', '0', ?, ?, ?, ?);";
+			$result = sYDB()->Execute($sql, $mailingId, $templateId, $ts, $ts, $this->_uid, $this->_uid);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -315,7 +320,7 @@ class MailingMgr extends \framework\Error {
 		$successNodes = array();
 		$allNodes = $this->tree->get($mailingId, 1000);
 		foreach($allNodes as $allNodesItem) {
-			$mailingId = $allNodesItem['ID'];
+			$mailingId = (int)$allNodesItem['ID'];
 
 			if ($this->permissions->checkInternal($this->_uid, $mailingId, "RDELETE")) {
 				// Collect and remove all linked blind contentblocks
@@ -341,16 +346,16 @@ class MailingMgr extends \framework\Error {
 				$tmpMailing->history->clear();
 
 				// Remove mailing
-				$sql = "DELETE FROM `yg_mailing_properties` WHERE OBJECTID = $mailingId;";
-				$result = sYDB()->Execute($sql);
+				$sql = "DELETE FROM `yg_mailing_properties` WHERE OBJECTID = ?;";
+				sYDB()->Execute($sql, $mailingId);
 
 				// Remove content object links
-				$sql = "DELETE FROM `yg_mailing_lnk_cb` WHERE PID = $mailingId;";
-				$result = sYDB()->Execute($sql);
+				$sql = "DELETE FROM `yg_mailing_lnk_cb` WHERE PID = ?;";
+				sYDB()->Execute($sql, $mailingId);
 
 				// Remove statusinfo
-				$sql = "DELETE FROM `yg_mailing_status` WHERE OID = $mailingId;";
-				$result = sYDB()->Execute($sql);
+				$sql = "DELETE FROM `yg_mailing_status` WHERE OID = ?;";
+				sYDB()->Execute($sql, $mailingId);
 
 				$this->callExtensionHook('onRemove', $mailingId, 0, $mailingInfo);
 
@@ -441,8 +446,8 @@ class MailingMgr extends \framework\Error {
 	public function setDefaultTemplate($templateId) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RMAILINGCONFIG')) {
 			$templateId = (int)$templateId;
-			$sql = "UPDATE yg_mailing_settings SET DEFAULTTEMPLATE = $templateId WHERE ID = 1;";
-			$result = $this->_db->execute($sql);
+			$sql = "UPDATE yg_mailing_settings SET DEFAULTTEMPLATE = ? WHERE ID = 1;";
+			$result = $this->_db->execute($sql, $templateId);
 			if ($result === false) {
 				return false;
 			}
@@ -471,8 +476,8 @@ class MailingMgr extends \framework\Error {
 	public function setTemplateRoot($templateId) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RMAILINGCONFIG')) {
 			$templateId = (int)$templateId;
-			$sql = "UPDATE yg_mailing_settings SET TEMPLATEROOT = $templateId WHERE ID = 1;";
-			$result = $this->_db->execute($sql);
+			$sql = "UPDATE yg_mailing_settings SET TEMPLATEROOT = ? WHERE ID = 1;";
+			$result = $this->_db->execute($sql, $templateId);
 			if ($result === false) {
 				return false;
 			}
@@ -507,6 +512,8 @@ class MailingMgr extends \framework\Error {
 	 */
 	function getList($mailingId = 0, $filter = array(), $maxLevel = 0, $permissionsForRoleId = 0, $filterArray) {
 		$mailingId = (int)$mailingId;
+		$maxLevel = (int)$maxLevel;
+		$permissionsForRoleId = (int)$permissionsForRoleId;
 		$rootGroupId = (int)sConfig()->getVar("CONFIG/SYSTEMUSERS/ROOTGROUPID");
 
 		if ($mailingId == 0) {
@@ -608,6 +615,8 @@ class MailingMgr extends \framework\Error {
 				GROUP BY
 					group2.LFT, group2.RGT, group2.VERSIONPUBLISHED, group2.ID
 				$filterOrder $filterLimit;";
+
+
 		$blaetter = $this->cacheExecuteGetArray($sql);
 
 		return ($blaetter);
@@ -738,8 +747,8 @@ class MailingMgr extends \framework\Error {
 	 */
 	public function removeUsergroupFromMailings($usergroupId) {
 		$usergroupId = (int)$usergroupId;
-		$sql = "DELETE FROM `yg_mailing_lnk_usergroups` WHERE RID = $usergroupId;";
-		$result = sYDB()->Execute($sql);
+		$sql = "DELETE FROM `yg_mailing_lnk_usergroups` WHERE RID = ?;";
+		$result = sYDB()->Execute($sql, $usergroupId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg() . "<br>" . $sql);
 		}
@@ -817,7 +826,7 @@ class MailingMgr extends \framework\Error {
 	 * @return int Page Id
 	 */
 	function getMailingIdByPName($pname) {
-		$pname = mysql_real_escape_string(sanitize($pname));
+		$pname = sYDB()->escape_string(sanitize($pname));
 		$sql = "SELECT ID FROM yg_mailing_tree as t WHERE (t.PNAME = '$pname')";
 		$ra = $this->cacheExecuteGetArray($sql);
 		return $ra[0]["ID"];
@@ -909,19 +918,18 @@ class MailingMgr extends \framework\Error {
 	 * @throws Exception
 	 */
 	public function getLocksByToken($token) {
-		$token = mysql_real_escape_string($token);
+		$token = sYDB()->escape_string($token);
 		if ($token == "") {
 			return false;
 		}
-		$sql = "SELECT OBJECTID, LOCKED, TOKEN FROM yg_mailing_properties WHERE TOKEN = '" . $token . "';";
-		$dbr = sYDB()->Execute($sql);
+		$sql = "SELECT OBJECTID, LOCKED, TOKEN FROM yg_mailing_properties WHERE TOKEN = ?;";
+		$dbr = sYDB()->Execute($sql, $token);
 		if ($dbr === false) {
 			throw new Exception(sYDB()->ErrorMsg() . "<br>" . $sql);
 		}
 		$ra = $dbr->GetArray();
 		return $ra;
 	}
-
 }
 
 settype($template, "string");
@@ -942,15 +950,8 @@ function MailingsSearchCB(&$list, $type, $operator, $value1 = 0, $value2 = 0) {
 	switch ($type) {
 		case "STATUS":
 			if ($value1 != 'ALL') {
-				/*
-				ALL
-				INPROGRESS
-				UNSENT
-				SENT
-				PAUSED
-				CANCELLED
-				*/
-				$list["WHERE"][] = "stat.STATUS = '" . mysql_real_escape_string($value1) . "'";
+				if (!in_array($value1, array('INPROGRESS', 'UNSENT', 'SENT', 'PAUSED', 'CANCELLED'))) break;
+				$list["WHERE"][] = "stat.STATUS = '" . sYDB()->escape_string($value1) . "'";
 			}
 			break;
 
@@ -972,8 +973,11 @@ function MailingsSearchCB(&$list, $type, $operator, $value1 = 0, $value2 = 0) {
 			}
 			break;
 
-		case "ORDER":
-			$list["ORDER"][] = "ORDER BY " . $value1 . " " . $value2;
+		case 'ORDER':
+			$colarr = explode(".", sYDB()->escape_string(sanitize($value1)));
+			$value1 = "`".implode("`.`", $colarr)."`";
+			if ($value2 != "DESC") $value2 = "ASC";
+			$list['ORDER'][] = 'ORDER BY ' . $value1 . ' ' . $value2;
 			break;
 	}
 }

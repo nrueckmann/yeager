@@ -56,13 +56,14 @@ class User extends \framework\Error {
 	 * @return array|false Result of SQL query or FALSE in case of an error
 	 * @throws Exception
 	 */
-	function cacheExecuteGetArray($sql) {
-		$dbr = sYDB()->Execute($sql);
-		if ($dbr === false) {
-			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
-		}
-		$blaetter = $dbr->GetArray();
-		return $blaetter;
+	function cacheExecuteGetArray() {
+        $args = func_get_args();
+        $dbr = call_user_func_array(array(sYDB(), 'Execute'), $args);
+        if ($dbr === false) {
+            throw new Exception(sYDB()->ErrorMsg() . ':: ' . $sql);
+        }
+        $blaetter = $dbr->GetArray();
+        return $blaetter;
 	}
 
 /// @endcond
@@ -89,14 +90,11 @@ class User extends \framework\Error {
 	 */
 	function generateToken($expireTS) {
 		$uid = (int)$this->id;
-
+		$expireTS = (int)$expireTS;
 		$token = md5(GetRandomString(11));
 
-		$sql = "INSERT INTO `yg_user_tokens`
-			(`ID`, `UID`, `TOKEN`, `TS` )
-			VALUES
-			(NULL, '" . $uid . "', '" . $token . "', '" . $expireTS . "');";
-		$result = sYDB()->Execute($sql);
+		$sql = "INSERT INTO `yg_user_tokens` (`ID`, `UID`, `TOKEN`, `TS` ) VALUES (NULL, ?, ?, ?);";
+		$result = sYDB()->Execute($sql, $uid, $token, $expireTS);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -110,8 +108,8 @@ class User extends \framework\Error {
 	 */
 	function removeToken() {
 		$uid = (int)$this->id;
-		$sql = "DELETE FROM `yg_user_tokens` WHERE UID = " . $uid . ";";
-		$result = sYDB()->Execute($sql);
+		$sql = "DELETE FROM `yg_user_tokens` WHERE UID = ?;";
+		$result = sYDB()->Execute($sql, $uid);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -186,8 +184,8 @@ class User extends \framework\Error {
 				FROM
 					yg_user as u
 				WHERE
-					(u.ID = $uid);";
-			$result = sYDB()->Execute($sql);
+					(u.ID = ?);";
+			$result = sYDB()->Execute($sql, $uid);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -207,8 +205,8 @@ class User extends \framework\Error {
 			($uid == $this->_uid)
 		) {
 			$language = (int)$language;
-			$sql = "UPDATE `yg_user` SET LANG = $language WHERE (ID = $uid);";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE `yg_user` SET LANG = ? WHERE (ID = ?);";
+			$result = sYDB()->Execute($sql, $language, $uid);
 			return true;
 		} else {
 			return false;
@@ -233,8 +231,8 @@ class User extends \framework\Error {
 				LEFT JOIN
 					yg_user_propsv ON u.ID = yg_user_propsv.OID
 				WHERE
-					(u.ID = $uid);";
-			$result = sYDB()->Execute($sql);
+					(u.ID = ?);";
+			$result = sYDB()->Execute($sql, $uid);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -249,15 +247,15 @@ class User extends \framework\Error {
 	 * @param string $password Password
 	 */
 	function setPassword($password) {
-		$uid = $this->id;
+		$uid = (int)$this->id;
 		if (sUsergroups()->permissions->check($this->_uid, 'RUSERS') || ($uid == $this->_uid)) {
 			$passwordHash = new PasswordHash(8, false);
 
-			$password = mysql_real_escape_string(sanitize($password));
+			$password = sYDB()->escape_string(sanitize($password));
 			$hash = $passwordHash->HashPassword($password);
 
-			$sql = "UPDATE `yg_user` SET PASSWORD = '$hash' WHERE (ID = $uid);";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE `yg_user` SET PASSWORD = ? WHERE (ID = ?);";
+			sYDB()->Execute($sql, $hash, $uid);
 			return true;
 		} else {
 			return false;
@@ -274,9 +272,9 @@ class User extends \framework\Error {
 		if (sUsergroups()->permissions->check($this->_uid, 'RUSERS') ||
 			($uid == $this->_uid)
 		) {
-			$login = mysql_real_escape_string(sanitize($login));
-			$sql = "UPDATE `yg_user` SET LOGIN = '$login' WHERE (ID = $uid);";
-			sYDB()->Execute($sql);
+			$login = sYDB()->escape_string(sanitize($login));
+			$sql = "UPDATE `yg_user` SET LOGIN = ? WHERE (ID = ?);";
+			sYDB()->Execute($sql, $login, $uid);
 			$this->properties->setValue('EMAIL', $login);
 			return true;
 		} else {
@@ -304,7 +302,7 @@ class User extends \framework\Error {
 				FROM
 					yg_user_lnk_usergroups as lnk, yg_usergroups as r
 				WHERE
-					(lnk.UID = ".$this->_uid.") AND (lnk.USERGROUPID = r.ID)
+					(lnk.UID = ".(int)$this->_uid.") AND (lnk.USERGROUPID = r.ID)
 				ORDER BY r.NAME;";
 		$result = sYDB()->Execute($sql);
 		if ($result === false) {
@@ -322,7 +320,7 @@ class User extends \framework\Error {
 		$perm_SQL_FROM = " LEFT JOIN yg_usergroups_permissions AS perm ON perm.OID = r.ID";
 		$perm_SQL_WHERE = " AND (";
 		for ($r = 0; $r < count($allRoles); $r++) {
-			$perm_SQL_WHERE .= "(perm.USERGROUPID = " . $allRoles[$r]["ID"] . ") ";
+			$perm_SQL_WHERE .= "(perm.USERGROUPID = " . (int)$allRoles[$r]["ID"] . ") ";
 			if ((count($allRoles) - $r) > 1) {
 				$perm_SQL_WHERE .= " OR ";
 			}
@@ -336,14 +334,14 @@ class User extends \framework\Error {
 					(yg_user_lnk_usergroups as lnk, yg_usergroups as r)
 				$perm_SQL_FROM
 				WHERE
-					(lnk.UID = $uid) AND (lnk.USERGROUPID = r.ID)
+					(lnk.UID = ?) AND (lnk.USERGROUPID = r.ID)
 					$perm_SQL_WHERE
 				GROUP BY
 					r.ID
 				HAVING
 					(r.ID IS NOT NULL)
 				ORDER BY r.NAME;";
-		$result = sYDB()->Execute($sql);
+		$result = sYDB()->Execute($sql, $uid);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -369,9 +367,9 @@ class User extends \framework\Error {
 				FROM
 					yg_user_lnk_usergroups as lnk, yg_usergroups as r
 				WHERE
-					(lnk.UID = $uid) AND (lnk.USERGROUPID = r.ID)
+					(lnk.UID = ?) AND (lnk.USERGROUPID = r.ID)
 				ORDER BY r.NAME;";
-		$result = sYDB()->Execute($sql);
+		$result = sYDB()->Execute($sql, $uid);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -428,11 +426,8 @@ class User extends \framework\Error {
 		) {
 			$usergroupId = (int)$usergroupId;
 			if ($usergroupId > 0) {
-				$sql = "INSERT INTO `yg_user_lnk_usergroups`
-				(`UID`, `USERGROUPID`)
-				VALUES
-				('$uid', '$usergroupId');";
-				sYDB()->Execute($sql);
+				$sql = "INSERT INTO `yg_user_lnk_usergroups` (`UID`, `USERGROUPID`) VALUES (?, ?);";
+				sYDB()->Execute($sql, $uid, $usergroupId);
 			}
 
 			if (Singleton::cache_config()->getVar("CONFIG/INVALIDATEON/PERMISSION_CHANGE") == "true") {
@@ -464,8 +459,8 @@ class User extends \framework\Error {
 				$sql = "DELETE FROM
 				`yg_user_lnk_usergroups`
 				WHERE
-				UID = $uid AND USERGROUPID = $usergroupId;";
-				sYDB()->Execute($sql);
+				UID = ? AND USERGROUPID = ?;";
+				sYDB()->Execute($sql, $uid, $usergroupId);
 			}
 			return true;
 		} else {
@@ -480,16 +475,13 @@ class User extends \framework\Error {
 	 */
 	function saveUsergroups($usergroupIds) {
 		$uid = (int)$this->id;
-		$sql = "DELETE FROM `yg_user_lnk_usergroups` WHERE UID = $uid;";
-		$result = sYDB()->Execute($sql);
+		$sql = "DELETE FROM `yg_user_lnk_usergroups` WHERE UID = ?;";
+		$result = sYDB()->Execute($sql, $uid);
 
 		for ($i = 0; $i < count($usergroupIds); $i++) {
 			$usergroupId = $usergroupIds[$i];
-			$sql = "INSERT INTO	`yg_user_lnk_usergroups`
-						(`UID`, `USERGROUPID`)
-					VALUES
-						('$uid', '$usergroupId');";
-			$result = sYDB()->Execute($sql);
+			$sql = "INSERT INTO	`yg_user_lnk_usergroups` (`UID`, `USERGROUPID`) VALUES (?, ?);";
+			sYDB()->Execute($sql, $uid, $usergroupId);
 		}
 	}
 

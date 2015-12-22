@@ -244,14 +244,14 @@ class Mailing extends Versionable {
 	 * @return array|false Result of SQL query or FALSE in case of an error
 	 * @throws Exception
 	 */
-	function cacheExecuteGetArray($sql) {
-		$timestart = microtime();
-		$dbr = sYDB()->Execute($sql);
-		if ($dbr === false) {
-			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
-		}
-		$blaetter = $dbr->GetArray();
-		return $blaetter;
+	function cacheExecuteGetArray() {
+        $args = func_get_args();
+        $dbr = call_user_func_array(array(sYDB(), 'Execute'), $args);
+        if ($dbr === false) {
+            throw new Exception(sYDB()->ErrorMsg() . ':: ' . $sql);
+        }
+        $blaetter = $dbr->GetArray();
+        return $blaetter;
 	}
 
 /// @endcond
@@ -454,15 +454,17 @@ class Mailing extends Versionable {
 	 * @throws Exception
 	 */
 	private function copyCblockLinks($sourceVersion, $targetVersion) {
-		$mailingID = $this->_id;
+		$mailingID = (int)$this->_id;
+		$sourceVersion = (int)$sourceVersion;
+		$targetVersion = (int)$targetVersion;
 		if ($this->permissions->checkInternal($this->_uid, $mailingID, "RWRITE")) {
 			// co links rueberziehen
 			$sql = "INSERT INTO `yg_mailing_lnk_cb`
 			(PVERSION, PID, CBVERSION, CBID, ORDERPROD,TEMPLATECONTENTAREA)
 			SELECT $targetVersion,PID, CBVERSION, CBID, ORDERPROD,TEMPLATECONTENTAREA
-			FROM `yg_mailing_lnk_cb` WHERE (PID = '$mailingID') AND (PVERSION = '$sourceVersion');
+			FROM `yg_mailing_lnk_cb` WHERE (PID = ?) AND (PVERSION = ?);
 			";
-			$result = sYDB()->Execute($sql);
+			$result = sYDB()->Execute($sql, $mailingID, $sourceVersion);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -481,14 +483,16 @@ class Mailing extends Versionable {
 	 * @throws Exception
 	 */
 	private function copyUsergroupLinks($sourceVersion, $targetVersion) {
-		$mailingID = $this->_id;
+		$mailingID = (int)$this->_id;
+		$sourceVersion = (int)$sourceVersion;
+		$targetVersion = (int)$targetVersion;
 		if ($this->permissions->checkInternal($this->_uid, $mailingID, "RWRITE")) {
 			// group links rueberziehen
 			$sql = "INSERT INTO `yg_mailing_lnk_usergroups`
 				(NVERSION, NID , RID)
 				SELECT $targetVersion, NID, RID
-				FROM `yg_mailing_lnk_usergroups` WHERE (NID = '$mailingID') AND (NVERSION = '$sourceVersion');";
-			$result = sYDB()->Execute($sql);
+				FROM `yg_mailing_lnk_usergroups` WHERE (NID = ?) AND (NVERSION = ?);";
+			$result = sYDB()->Execute($sql, $mailingID, $sourceVersion);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -912,12 +916,11 @@ class Mailing extends Versionable {
 	 * @throws Exception
 	 */
 	function addCblockLink($cbId, $contentarea) {
-		$mailingID = $this->_id;
+		$mailingID = (int)$this->_id;
 
 		if ($this->permissions->checkInternal($this->_uid, $mailingID, "RWRITE")) {
 			$cbId = (int)$cbId;
-			$contentarea = mysql_real_escape_string(sanitize($contentarea));
-			$mailingMgr = new MailingMgr();
+			$contentarea = sYDB()->escape_string(sanitize($contentarea));
 
 			// Check if contentblock is blind or not
 			$sql = "SELECT
@@ -940,8 +943,8 @@ class Mailing extends Versionable {
 			$sql = "INSERT INTO `yg_mailing_lnk_cb`
 			(`CBID`, `CBVERSION`, `PID`, `PVERSION`, `TEMPLATECONTENTAREA`)
 			VALUES
-			('$cbId', '$cbVersion', '$mailingID', '$version', '$contentarea');";
-			$result = sYDB()->Execute($sql);
+			(?, ?, ?, ?, ?);";
+			$result = sYDB()->Execute($sql, $cbId, $cbVersion, $mailingID, $version, $contentarea);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -964,22 +967,22 @@ class Mailing extends Versionable {
 	 * @throws Exception
 	 */
 	function addCblockVersion($cbId, $contentarea, $version) {
-		$mailingID = $this->_id;
+		$mailingID = (int)$this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $mailingID, "RWRITE")) {
 			$cbId = (int)$cbId;
 			$version = (int)$version;
-			$contentarea = mysql_real_escape_string(sanitize($contentarea));
+			$contentarea = sYDB()->escape_string(sanitize($contentarea));
 			$mailingVersion = (int)$this->getVersion();
 			$sql = "UPDATE
 						`yg_mailing_lnk_cb`
 					SET
-						CBVERSION = $version
+						CBVERSION = ?
 					WHERE
-						PID = $mailingID AND
-						PVERSION = $mailingVersion AND
-						CBID = $cbId AND
-						TEMPLATECONTENTAREA = '$contentarea';";
-			$result = sYDB()->Execute($sql);
+						PID = ? AND
+						PVERSION = ? AND
+						CBID = ? AND
+						TEMPLATECONTENTAREA = ?;";
+			$result = sYDB()->Execute($sql, $version, $mailingID, $mailingVersion, $cbId, $contentarea);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1001,9 +1004,9 @@ class Mailing extends Versionable {
 		if ($this->permissions->checkInternal($this->_uid, $mailingID, "RWRITE")) {
 			$linkId = (int)$linkId;
 
-			$sql = "DELETE FROM `yg_mailing_lnk_cb` WHERE (ID = '$linkId');";
+			$sql = "DELETE FROM `yg_mailing_lnk_cb` WHERE (ID = ?);";
 
-			$result = sYDB()->Execute($sql);
+			$result = sYDB()->Execute($sql, $linkId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1023,15 +1026,15 @@ class Mailing extends Versionable {
 	 * @throws Exception
 	 */
 	function removeCblock($cbId, $contentarea) {
-		$mailingID = $this->_id;
+		$mailingID = (int)$this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $mailingID, "RWRITE")) {
 			$cbId = (int)$cbId;
-			$contentarea = mysql_real_escape_string(sanitize($contentarea));
+			$contentarea = sYDB()->escape_string(sanitize($contentarea));
 			$version = (int)$this->getVersion();
 
-			$sql = "DELETE FROM `yg_mailing_lnk_cb` WHERE (PID = $mailingID) AND (PVERSION = $version) AND (CBID = $cbId) AND (TEMPLATECONTENTAREA = '$contentarea')";
+			$sql = "DELETE FROM `yg_mailing_lnk_cb` WHERE (PID = ?) AND (PVERSION = ?) AND (CBID = ?) AND (TEMPLATECONTENTAREA = ?)";
 
-			$result = sYDB()->Execute($sql);
+			$result = sYDB()->Execute($sql, $mailingID, $version, $cbId, $contentarea);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1049,12 +1052,10 @@ class Mailing extends Versionable {
 	 * @throws Exception
 	 */
 	function setCblockLinkOrder($cbListOrder = array()) {
-		$contentarea = mysql_real_escape_string(sanitize($contentarea));
-		$version = (int)$this->getVersion();
 		for ($i = 0; $i < count($cbListOrder); $i++) {
 			$sql = "UPDATE `yg_mailing_lnk_cb`
-			SET ORDERPROD = $i WHERE (ID = " . $cbListOrder[$i] . ")";
-			$result = sYDB()->Execute($sql);
+			SET ORDERPROD = ? WHERE (ID = ?)";
+			$result = sYDB()->Execute($sql, $i, $cbListOrder[$i]);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1071,14 +1072,14 @@ class Mailing extends Versionable {
 	 * @throws Exception
 	 */
 	function setCblockOrder($cbListOrder = array(), $contentarea) {
-		$mailingID = $this->_id;
+		$mailingID = (int)$this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $mailingID, "RWRITE")) {
-			$contentarea = mysql_real_escape_string(sanitize($contentarea));
+			$contentarea = sYDB()->escape_string(sanitize($contentarea));
 			$version = (int)$this->getVersion();
 			for ($i = 0; $i < count($cbListOrder); $i++) {
 				$sql = "UPDATE `yg_mailing_lnk_cb`
-				SET ORDERPROD = $i WHERE (PID = $mailingID) AND (CBID = " . $cbListOrder[$i] . ") AND (PVERSION = $version) AND (TEMPLATECONTENTAREA = '$contentarea')";
-				$result = sYDB()->Execute($sql);
+				SET ORDERPROD = ? WHERE (PID = ?) AND (CBID = ?) AND (PVERSION = ?) AND (TEMPLATECONTENTAREA = ?)";
+				$result = sYDB()->Execute($sql, $i, $mailingID, $cbListOrder[$i], $version, $contentarea);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -1131,7 +1132,7 @@ class Mailing extends Versionable {
 		$mailingID = $this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $mailingID, "RREAD")) {
 			$version = (int)$version;
-			$contentarea = mysql_real_escape_string(sanitize($contentarea));
+			$contentarea = sYDB()->escape_string(sanitize($contentarea));
 			if (strlen($contentarea) > 0) {
 				$filter_contentarea = " AND TEMPLATECONTENTAREA = '$contentarea' ";
 			}
@@ -1163,13 +1164,13 @@ class Mailing extends Versionable {
 	 * @throws Exception
 	 */
 	function addUsergroup($usergroupId, $version) {
-		$mailingID = $this->_id;
+		$mailingID = (int)$this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $mailingID, "RWRITE")) {
 			$usergroupId = (int)$usergroupId;
 			$version = (int)$version;
 			if (($mailingID != 0) && ($usergroupId != 0) && ($version != 0)) {
-				$sql = "INSERT INTO `yg_mailing_lnk_usergroups` (`ID`, `NID`, `NVERSION`, `RID`)	VALUES (NULL, $mailingID, $version, $usergroupId);";
-				$result = sYDB()->Execute($sql);
+				$sql = "INSERT INTO `yg_mailing_lnk_usergroups` (`ID`, `NID`, `NVERSION`, `RID`)	VALUES (NULL, ?, ?, ?);";
+				$result = sYDB()->Execute($sql, $mailingID, $version, $usergroupId);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -1191,13 +1192,13 @@ class Mailing extends Versionable {
 	 * @throws Exception
 	 */
 	function removeUsergroup($usergroupId) {
-		$mailingID = $this->_id;
+		$mailingID = (int)$this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $mailingID, "RWRITE")) {
 			$usergroupId = (int)$usergroupId;
-			$version = $this->getVersion();
+			$version = (int)$this->getVersion();
 
-			$sql = "DELETE FROM `yg_mailing_lnk_usergroups` WHERE (`NID` = $mailingID) AND (`NVERSION` = $version) AND (`RID` = $usergroupId);";
-			$result = sYDB()->Execute($sql);
+			$sql = "DELETE FROM `yg_mailing_lnk_usergroups` WHERE (`NID` = ?) AND (`NVERSION` = ?) AND (`RID` = ?);";
+			$result = sYDB()->Execute($sql, $mailingID, $version, $usergroupId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1221,7 +1222,7 @@ class Mailing extends Versionable {
 			$version = $this->getVersion();
 
 			if ($contentarea != "") {
-				$contentarea = mysql_real_escape_string(sanitize($contentarea));
+				$contentarea = sYDB()->escape_string(sanitize($contentarea));
 				$contentarea_sql = " AND (lnk.TEMPLATECONTENTAREA = '$contentarea')";
 			}
 
@@ -1296,22 +1297,24 @@ class Mailing extends Versionable {
 	 * @throws Exception
 	 */
 	function setStatus($status) {
-		$mailingID = $this->_id;
+		$mailingID = (int)$this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $mailingID, "RWRITE")) {
-			$status = mysql_real_escape_string(sanitize($status));
+			$status = sYDB()->escape_string(sanitize($status));
 
-			$sql = "SELECT * FROM yg_mailing_status WHERE OID = $mailingID;";
-			$result = sYDB()->Execute($sql);
+			$sql = "SELECT * FROM yg_mailing_status WHERE OID = ?;";
+			$result = sYDB()->Execute($sql, $mailingID);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
 			$ra = $result->GetArray();
 			if (count($ra) > 0) {
-				$sql = "UPDATE yg_mailing_status SET STATUS = '" . $status . "', UID = '" . $this->_uid . "' WHERE OID = $mailingID;";
+				$sql = "UPDATE yg_mailing_status SET STATUS = ?, UID = ? WHERE OID = ?;";
+				$result = sYDB()->Execute($sql, $status, $this->_uid, $mailingID);
 			} else {
-				$sql = "INSERT INTO yg_mailing_status (OID, STATUS, UID) VALUES ($mailingID, '" . $status . "', '" . $this->_uid . "');";
+				$sql = "INSERT INTO yg_mailing_status (OID, STATUS, UID) VALUES (?, ?, ?);";
+				$result = sYDB()->Execute($sql, $mailingID, $status, $this->_uid);
 			}
-			$result = sYDB()->Execute($sql);
+
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1330,10 +1333,8 @@ class Mailing extends Versionable {
 	function getStatus() {
 		$mailingID = $this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $mailingID, "RREAD")) {
-			$status = mysql_real_escape_string(sanitize($status));
-
-			$sql = "SELECT * FROM yg_mailing_status WHERE OID = $mailingID;";
-			$result = sYDB()->Execute($sql);
+			$sql = "SELECT * FROM yg_mailing_status WHERE OID = ?;";
+			$result = sYDB()->Execute($sql, $mailingID);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1368,21 +1369,12 @@ class Mailing extends Versionable {
 	 * @throws Exception
 	 */
 	function setTemplate($templateId) {
-		$mailingID = $this->_id;
+		$mailingID = (int)$this->_id;
 		$templateId = (int)$templateId;
 		if ($this->permissions->checkInternal($this->_uid, $mailingID, "RWRITE")) {
 			$version = (int)$this->getVersion();
-			//get current state
-			$sql = "SELECT TEMPLATEID AS STATE FROM yg_mailing_properties WHERE (OBJECTID = $mailingID) AND VERSION = $version;";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
-				throw new Exception(sYDB()->ErrorMsg());
-			}
-			$ra = $result->GetArray();
-			$state = $ra[0]["STATE"];
-
-			$sql = "UPDATE yg_mailing_properties SET TEMPLATEID = '$templateId' WHERE (OBJECTID = $mailingID) AND VERSION = $version;";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_mailing_properties SET TEMPLATEID = ? WHERE (OBJECTID = ?) AND VERSION = ?;";
+			$result = sYDB()->Execute($sql, $templateId, $mailingID, $version);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1456,18 +1448,8 @@ class Mailing extends Versionable {
 			if (($checkpinfo["ID"] != $mailingID) && ($checkpinfo["ID"] > 0)) {
 				$pname = $pname . $mailing;
 			}
-			$version = (int)$this->getVersion();
-
-			$sql = "SELECT PNAME AS STATE FROM yg_mailing_tree WHERE (ID = $mailingID);";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
-				throw new Exception(sYDB()->ErrorMsg());
-			}
-			$ra = $result->GetArray();
-			$state = $ra[0]["STATE"];
-
-			$sql = "UPDATE yg_mailing_tree SET PNAME = '$pname' WHERE (ID = $mailingID);";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_mailing_tree SET PNAME = ? WHERE (ID = ?);";
+			$result = sYDB()->Execute($sql, $pname, $mailingID);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}

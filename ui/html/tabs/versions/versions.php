@@ -371,7 +371,7 @@ switch($objecttype) {
 		*/
 
 		$historyMgr = new History();
-		$history_new = $historyMgr->getLastChanges( $entries );
+		$history_new = $historyMgr->getLastChanges($entries);
 		$history = sumchanges_new($history_new);
 
 		// Sort everything by timestamp

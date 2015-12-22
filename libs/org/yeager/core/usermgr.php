@@ -143,11 +143,11 @@ class UserMgr extends \framework\Error {
 		if (strlen($password) < 1) {
 			return false;
 		}
-		$username = mysql_real_escape_string(sanitize($username));
-		$password = mysql_real_escape_string(sanitize($password));
+		$username = sYDB()->escape_string(sanitize($username));
+		$password = sYDB()->escape_string(sanitize($password));
 
-		$sql = "SELECT ID, PASSWORD FROM yg_user WHERE LOGIN = '$username';";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT ID, PASSWORD FROM yg_user WHERE LOGIN = ?;";
+		$result = sYDB()->Execute($sql, $username);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -220,10 +220,11 @@ class UserMgr extends \framework\Error {
 	 */
 	function getUserIdByToken($token) {
 		$uid = (int)$this->id;
+		$token = sYDB()->escape_string(sanitize($token));
 
 		$ts = time();
-		$sql = "SELECT * FROM `yg_user_tokens` WHERE `TOKEN` = '" . $token . "' AND TS >= " . $ts . ";";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM `yg_user_tokens` WHERE `TOKEN` = ? AND TS >= ?;";
+		$result = sYDB()->Execute($sql, $token, $ts);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -248,32 +249,11 @@ class UserMgr extends \framework\Error {
 		if (sUsergroups()->permissions->check($this->_uid, 'RUSERS')) {
 			$rootGroupId = (int)sConfig()->getVar("CONFIG/SYSTEMUSERS/ROOTGROUPID");
 
-			$orderby = mysql_real_escape_string(sanitize($orderby));
-			$sort = mysql_real_escape_string(sanitize($sort));
-			$limit = mysql_real_escape_string(sanitize($limit));
-			$searchSQL = '';
-			if (strlen($searchText)) {
-				$searchText = mysql_real_escape_string(sanitize($searchText));
-				$searchSQL = "AND (
-								(yg_user_propsv.LASTNAME LIKE '%".$searchText."%') OR
-								(yg_user_propsv.FIRSTNAME LIKE '%".$searchText."%') OR
-								(yg_user_propsv.EMAIL LIKE '%".$searchText."%') OR
-								(yg_user_propsv.COMPANY LIKE '%".$searchText."%') OR
-								(yg_user_propsv.DEPARTMENT LIKE '%".$searchText."%') OR
-								(yg_user_propsv.FAX LIKE '%".$searchText."%') OR
-								(yg_user_propsv.PHONE LIKE '%".$searchText."%')
-							)";
-			}
-			if (strlen($orderby) < 1) {
-				$orderby = "LASTNAME";
-			}
-			if (strlen($sort) < 1) {
-				$sort = "ASC";
-			}
-			if ($limit) {
-				$limit = "LIMIT " . $limit;
-			}
-
+			$orderby = sYDB()->escape_string(sanitize($orderby));
+			$sort = sYDB()->escape_string(sanitize($sort));
+			$limit = sYDB()->escape_string(sanitize($limit));
+			$limitsql = "";
+			$sqlargs = array();
 			$currUser = new User(sUserMgr()->getCurrentUserID());
 			$perm_sql_select = ", MAX(perm.RREAD) AS RREAD,  MAX(perm.RWRITE) AS RWRITE, MAX(perm.RDELETE) AS RDELETE, MAX(perm.RSUB) AS RSUB, MAX(perm.RSTAGE) AS RSTAGE, MAX(perm.RSEND) AS RSEND";
 			$perm_sql_from = " LEFT JOIN yg_usergroups_permissions AS perm ON perm.OID = ug.USERGROUPID";
@@ -281,13 +261,42 @@ class UserMgr extends \framework\Error {
 			$perm_sql_where = " AND (";
 			$roles = $currUser->getUsergroups();
 			for ($r = 0; $r < count($roles); $r++) {
-				$perm_sql_where .= "(perm.USERGROUPID = " . $roles[$r]["ID"] . ") ";
+				$perm_sql_where .= "(perm.USERGROUPID = ?)";
+				array_push($sqlargs, $roles[$r]["ID"]);
 				if ((count($roles) - $r) > 1) {
 					$perm_sql_where .= " OR ";
 				}
 			}
 			$perm_sql_where .= ") ";
-			$perm_sql_where .= " AND ((RREAD >= 1) OR (perm.USERGROUPID = $rootGroupId)) ";
+			$perm_sql_where .= " AND ((RREAD >= 1) OR (perm.USERGROUPID = ?)) ";
+			array_push($sqlargs, $rootGroupId);
+
+			$searchSQL = '';
+			if (strlen($searchText)) {
+				$searchText = "%".sYDB()->escape_string(sanitize($searchText))."%";
+				$searchSQL = "AND (
+								(yg_user_propsv.LASTNAME LIKE ?) OR
+								(yg_user_propsv.FIRSTNAME LIKE ?) OR
+								(yg_user_propsv.EMAIL LIKE ?) OR
+								(yg_user_propsv.COMPANY LIKE ?) OR
+								(yg_user_propsv.DEPARTMENT LIKE ?) OR
+								(yg_user_propsv.FAX LIKE ?) OR
+								(yg_user_propsv.PHONE LIKE ?)
+							)";
+				array_push($sqlargs, $searchText, $searchText, $searchText, $searchText, $searchText, $searchText, $searchText);
+			}
+			if (strlen($orderby) < 1) {
+				$orderby = "LASTNAME";
+			}
+			if (strlen($sort) < 1) {
+				$sort = "ASC";
+			} else if ($sort != "ASC") {
+				$sort = "DESC";
+			}
+			if ($limit) {
+				$limitarr = explode(",", $limit);
+				$limitsql = "LIMIT " . (int)$limitarr[0]. "," . (int)$limitarr[1];
+			}
 
 			$sql = "SELECT
 						u.LOGIN AS LOGIN,
@@ -310,13 +319,14 @@ class UserMgr extends \framework\Error {
 						$searchSQL
 					GROUP BY
 						u.ID
-					ORDER BY $orderby $sort
-					$limit;";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
+					ORDER BY `$orderby` $sort $limitsql;";
+
+			array_unshift($sqlargs, $sql);
+			$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+			if ($dbr === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
-			$resultarray = $result->GetArray();
+			$resultarray = $dbr->GetArray();
 
 			return $resultarray;
 		} else {
@@ -333,35 +343,38 @@ class UserMgr extends \framework\Error {
 	function getListCount($searchText = NULL) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RUSERS')) {
 			$rootGroupId = (int)sConfig()->getVar("CONFIG/SYSTEMUSERS/ROOTGROUPID");
-
-			$searchSQL = '';
-			if (strlen($searchText)) {
-				$searchText = mysql_real_escape_string(sanitize($searchText));
-				$searchSQL = "AND (
-								(yg_user_propsv.LASTNAME LIKE '%".$searchText."%') OR
-								(yg_user_propsv.FIRSTNAME LIKE '%".$searchText."%') OR
-								(yg_user_propsv.EMAIL LIKE '%".$searchText."%') OR
-								(yg_user_propsv.COMPANY LIKE '%".$searchText."%') OR
-								(yg_user_propsv.DEPARTMENT LIKE '%".$searchText."%') OR
-								(yg_user_propsv.FAX LIKE '%".$searchText."%') OR
-								(yg_user_propsv.PHONE LIKE '%".$searchText."%')
-							)";
-			}
-
-			$currUser = new User(sUserMgr()->getCurrentUserID());
+			$sqlargs = array();
 			$perm_sql_select = ", MAX(perm.RREAD) AS RREAD,  MAX(perm.RWRITE) AS RWRITE, MAX(perm.RDELETE) AS RDELETE, MAX(perm.RSUB) AS RSUB, MAX(perm.RSTAGE) AS RSTAGE, MAX(perm.RSEND) AS RSEND";
 			$perm_sql_from = " LEFT JOIN yg_usergroups_permissions AS perm ON perm.OID = ug.USERGROUPID";
 
+			$currUser = new User(sUserMgr()->getCurrentUserID());
 			$perm_sql_where = " AND (";
 			$roles = $currUser->getUsergroups();
 			for ($r = 0; $r < count($roles); $r++) {
-				$perm_sql_where .= "(perm.USERGROUPID = " . $roles[$r]["ID"] . ") ";
+				$perm_sql_where .= "(perm.USERGROUPID = ?) ";
+				array_push($sqlargs, $roles[$r]["ID"]);
 				if ((count($roles) - $r) > 1) {
 					$perm_sql_where .= " OR ";
 				}
 			}
 			$perm_sql_where .= ") ";
-			$perm_sql_where .= " AND ((RREAD >= 1) OR (perm.USERGROUPID = $rootGroupId)) ";
+			$perm_sql_where .= " AND ((RREAD >= 1) OR (perm.USERGROUPID = ?)) ";
+			array_push($sqlargs, $rootGroupId);
+
+			$searchSQL = '';
+			if (strlen($searchText)) {
+				$searchText = "%".sYDB()->escape_string(sanitize($searchText))."%";
+				$searchSQL = "AND (
+								(yg_user_propsv.LASTNAME LIKE ?) OR
+								(yg_user_propsv.FIRSTNAME LIKE ?) OR
+								(yg_user_propsv.EMAIL LIKE ?) OR
+								(yg_user_propsv.COMPANY LIKE ?) OR
+								(yg_user_propsv.DEPARTMENT LIKE ?) OR
+								(yg_user_propsv.FAX LIKE ?) OR
+								(yg_user_propsv.PHONE LIKE ?)
+							)";
+				array_push($sqlargs, $searchText, $searchText, $searchText, $searchText, $searchText, $searchText, $searchText);
+			}
 
 			$sql = "SELECT
 						u.LOGIN AS LOGIN,
@@ -373,7 +386,6 @@ class UserMgr extends \framework\Error {
 						$perm_sql_select
 					FROM
 						yg_user as u
-
 					LEFT JOIN
 						yg_user_lnk_usergroups AS ug ON u.ID = ug.UID
 					LEFT JOIN
@@ -385,11 +397,13 @@ class UserMgr extends \framework\Error {
 						$searchSQL
 					GROUP BY
 						u.ID;";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
+
+			array_unshift($sqlargs, $sql);
+			$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+			if ($dbr === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
-			$resultarray = $result->GetArray();
+			$resultarray = $dbr->GetArray();
 
 			return count($resultarray);
 		} else {
@@ -405,9 +419,9 @@ class UserMgr extends \framework\Error {
 	 */
 	function add($name = 'n/a') {
 		if (sUsergroups()->permissions->check($this->_uid, 'RUSERS')) {
-			$name = mysql_real_escape_string(sanitize($name));
-			$sql = "INSERT INTO yg_user (LOGIN, PASSWORD) VALUES ('$name', '');";
-			sYDB()->Execute($sql);
+			$name = sYDB()->escape_string(sanitize($name));
+			$sql = "INSERT INTO yg_user (LOGIN, PASSWORD) VALUES (?, '');";
+			sYDB()->Execute($sql, $name);
 			$uid = sYDB()->Insert_ID();
 
 			if ($uid < 1) {
@@ -469,7 +483,7 @@ class UserMgr extends \framework\Error {
 	 */
 	function getByLogin($login) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RUSERS')) {
-			$login = mysql_real_escape_string(sanitize($login));
+			$login = sYDB()->escape_string(sanitize($login));
 			if (strlen($login) > 0) {
 				$sql = "SELECT
 				u.LOGIN AS LOGIN,
@@ -480,9 +494,9 @@ class UserMgr extends \framework\Error {
 				yg_user as u
 				LEFT JOIN yg_user_propsv ON u.ID = yg_user_propsv.OID
 				WHERE
-				(LOWER(u.LOGIN) = LOWER('$login'));";
+				(LOWER(u.LOGIN) = LOWER(?));";
 
-				$result = sYDB()->Execute($sql);
+				$result = sYDB()->Execute($sql, $login);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -503,8 +517,8 @@ class UserMgr extends \framework\Error {
 	 */
 	function getByHash($hash, $salt) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RUSERS')) {
-			$salt = mysql_real_escape_string(sanitize($salt));
-			$hash = mysql_real_escape_string(sanitize($hash));
+			$salt = sYDB()->escape_string(sanitize($salt));
+			$hash = sYDB()->escape_string(sanitize($hash));
 			if (strlen($hash) > 0) {
 				$sql = "SELECT
 				u.LOGIN AS LOGIN,
@@ -515,8 +529,8 @@ class UserMgr extends \framework\Error {
 				yg_user as u
 				LEFT JOIN yg_user_propsv ON u.ID = yg_user_propsv.OID
 				WHERE
-				MD5(CONCAT(LOWER(u.LOGIN), '$salt')) = '$hash';";
-				$result = sYDB()->Execute($sql);
+				MD5(CONCAT(LOWER(u.LOGIN), ?)) = ?;";
+				$result = sYDB()->Execute($sql, $salt, $hash);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -538,8 +552,7 @@ class UserMgr extends \framework\Error {
 	 */
 	function getByProperty($property, $value, $casesensitive = true) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RUSERS')) {
-			$property = mysql_real_escape_string(sanitize($property));
-			$value = mysql_real_escape_string(sanitize($value));
+			$property = sYDB()->escape_string(sanitize($property));
 			if (strlen($property) > 0) {
 				$sql = "SELECT
 							u.LOGIN AS LOGIN,
@@ -552,11 +565,11 @@ class UserMgr extends \framework\Error {
 							yg_user_propsv ON u.ID = yg_user_propsv.OID
 						WHERE ";
 				if ($casesensitive) {
-					$sql .= "yg_user_propsv.$property = '$value';";
+					$sql .= "yg_user_propsv.`$property` = ?;";
 				} else {
-					$sql .= "LOWER(yg_user_propsv.$property) = LOWER('$value');";
+					$sql .= "LOWER(yg_user_propsv.`$property`) = LOWER(?);";
 				}
-				$result = sYDB()->Execute($sql);
+				$result = sYDB()->Execute($sql, $value);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -579,33 +592,21 @@ class UserMgr extends \framework\Error {
 		if (sUsergroups()->permissions->check($this->_uid, 'RUSERS')) {
 			$usergroupId = (int)$usergroupId;
 			$searchSQL = '';
+			$sqlargs = array();
+			array_push($sqlargs, $usergroupId);
 			if (strlen($searchText)) {
-				$searchText = mysql_real_escape_string(sanitize($searchText));
+				$searchText = "%".sYDB()->escape_string(sanitize($searchText))."%";
 				$searchSQL = "AND (
-								(yg_user_propsv.LASTNAME LIKE '%".$searchText."%') OR
-								(yg_user_propsv.FIRSTNAME LIKE '%".$searchText."%') OR
-								(yg_user_propsv.EMAIL LIKE '%".$searchText."%') OR
-								(yg_user_propsv.COMPANY LIKE '%".$searchText."%') OR
-								(yg_user_propsv.DEPARTMENT LIKE '%".$searchText."%') OR
-								(yg_user_propsv.FAX LIKE '%".$searchText."%') OR
-								(yg_user_propsv.PHONE LIKE '%".$searchText."%')
+								(yg_user_propsv.LASTNAME LIKE ?) OR
+								(yg_user_propsv.FIRSTNAME LIKE ?) OR
+								(yg_user_propsv.EMAIL LIKE ?) OR
+								(yg_user_propsv.COMPANY LIKE ?) OR
+								(yg_user_propsv.DEPARTMENT LIKE ?) OR
+								(yg_user_propsv.FAX LIKE ?) OR
+								(yg_user_propsv.PHONE LIKE ?)
 							)";
+				array_push($sqlargs, $searchText, $searchText, $searchText, $searchText, $searchText, $searchText, $searchText);
 			}
-
-			$currUser = new User(sUserMgr()->getCurrentUserID());
-			$perm_sql_select = ", MAX(perm.RREAD) AS RREAD,  MAX(perm.RWRITE) AS RWRITE, MAX(perm.RDELETE) AS RDELETE, MAX(perm.RSUB) AS RSUB, MAX(perm.RSTAGE) AS RSTAGE, MAX(perm.RSEND) AS RSEND";
-			$perm_sql_from = " LEFT JOIN yg_usergroups_permissions AS perm ON perm.OID = lnk.USERGROUPID";
-
-			$perm_sql_where = " AND (";
-			$roles = $currUser->getUsergroups();
-			for ($r = 0; $r < count($roles); $r++) {
-				$perm_sql_where .= "(perm.USERGROUPID = " . $roles[$r]["ID"] . ") ";
-				if ((count($roles) - $r) > 1) {
-					$perm_sql_where .= " OR ";
-				}
-			}
-			$perm_sql_where .= ") ";
-
 			$sql = "SELECT
 						COUNT(*) AS CNT
 					FROM
@@ -615,12 +616,14 @@ class UserMgr extends \framework\Error {
 					LEFT JOIN
 						yg_user_propsv ON u.ID = yg_user_propsv.OID
 					WHERE
-						(lnk.USERGROUPID = $usergroupId) $searchSQL;";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
+						(lnk.USERGROUPID = ?) $searchSQL;";
+
+			array_unshift($sqlargs, $sql);
+			$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+			if ($dbr === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
-			$resultarray = $result->GetArray();
+			$resultarray = $dbr->GetArray();
 			return $resultarray[0]['CNT'];
 		} else {
 			return false;
@@ -639,17 +642,20 @@ class UserMgr extends \framework\Error {
 		if (sUsergroups()->permissions->check($this->_uid, 'RUSERS')) {
 			$anonGroupId = (int)sConfig()->getVar("CONFIG/SYSTEMUSERS/ANONGROUPID");
 			$searchSQL = '';
+			$sqlargs = array();
+			array_push($sqlargs, $anonGroupId);
 			if (strlen($searchText)) {
-				$searchText = mysql_real_escape_string(sanitize($searchText));
+				$searchText = "%".sYDB()->escape_string(sanitize($searchText))."%";
 				$searchSQL = "AND (
-								(yg_user_propsv.LASTNAME LIKE '%".$searchText."%') OR
-								(yg_user_propsv.FIRSTNAME LIKE '%".$searchText."%') OR
-								(yg_user_propsv.EMAIL LIKE '%".$searchText."%') OR
-								(yg_user_propsv.COMPANY LIKE '%".$searchText."%') OR
-								(yg_user_propsv.DEPARTMENT LIKE '%".$searchText."%') OR
-								(yg_user_propsv.FAX LIKE '%".$searchText."%') OR
-								(yg_user_propsv.PHONE LIKE '%".$searchText."%')
+								(yg_user_propsv.LASTNAME LIKE ?) OR
+								(yg_user_propsv.FIRSTNAME LIKE ?) OR
+								(yg_user_propsv.EMAIL LIKE ?) OR
+								(yg_user_propsv.COMPANY LIKE ?) OR
+								(yg_user_propsv.DEPARTMENT LIKE ?) OR
+								(yg_user_propsv.FAX LIKE ?) OR
+								(yg_user_propsv.PHONE LIKE ?)
 							)";
+				array_push($sqlargs, $searchText, $searchText, $searchText, $searchText, $searchText, $searchText, $searchText);
 			}
 
 			$sql = "SELECT
@@ -671,7 +677,7 @@ class UserMgr extends \framework\Error {
 					LEFT JOIN
 						yg_user_lnk_usergroups as lnk ON u.ID = lnk.UID
 					LEFT JOIN
-						yg_user_lnk_usergroups as lnk2 ON (u.ID = lnk2.UID) AND ((lnk2.USERGROUPID = $anonGroupId) OR (lnk2.USERGROUPID = NULL))
+						yg_user_lnk_usergroups as lnk2 ON (u.ID = lnk2.UID) AND ((lnk2.USERGROUPID = ?) OR (lnk2.USERGROUPID = NULL))
 					LEFT JOIN
 						yg_user_propsv ON u.ID = yg_user_propsv.OID
 					WHERE
@@ -679,13 +685,15 @@ class UserMgr extends \framework\Error {
 					GROUP BY
 						u.ID
 					HAVING
-						(GROUPCOUNT = 1 AND lnk2.USERGROUPID = $anonGroupId) OR
+						(GROUPCOUNT = 1 AND lnk2.USERGROUPID = ?) OR
 						(GROUPCOUNT = 0);";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
+			array_push($sqlargs, $anonGroupId);
+			array_unshift($sqlargs, $sql);
+			$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+			if ($dbr === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
-			$resultarray = $result->GetArray();
+			$resultarray = $dbr->GetArray();
 
 			return count($resultarray);
 		} else {
@@ -709,10 +717,10 @@ class UserMgr extends \framework\Error {
 			if ($uid == (int)sConfig()->getVar('CONFIG/SYSTEMUSERS/ANONUSERID')) {
 				return false;
 			} // do not allow anon user to be deleted
-			$sql = "DELETE FROM yg_user WHERE ID = $uid";
-			$result = sYDB()->Execute($sql);
-			$sql = "DELETE FROM yg_user_lnk_usergroups WHERE UID = $uid";
-			$result = sYDB()->Execute($sql);
+			$sql = "DELETE FROM yg_user WHERE ID = ?";
+			sYDB()->Execute($sql, $uid);
+			$sql = "DELETE FROM yg_user_lnk_usergroups WHERE UID = ?";
+			sYDB()->Execute($sql, $uid);
 			return true;
 		} else {
 			return false;
@@ -749,24 +757,15 @@ class UserMgr extends \framework\Error {
 	 * @param string $searchText (optional) Searchtext
 	 * @return array|bool Array of Users or FALSE in case of an error
 	 */
-	function getByUsergroup($usergroupId, $order = '', $sort = '', $limit = '', $searchText = NULL) {
+	function getByUsergroup($usergroupId, $order = '', $sort = 'ASC', $limit = '', $searchText = NULL) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RUSERS')) {
+			$sqlargs = array();
 			$usergroupId = (int)$usergroupId;
-			$order = mysql_real_escape_string(sanitize($order));
-			$sort = mysql_real_escape_string(sanitize($sort));
-			$limit = mysql_real_escape_string(sanitize($limit));
+			$order = sYDB()->escape_string(sanitize($order));
+			$sort = (int)sYDB()->escape_string(sanitize($sort));
+			$limit = sYDB()->escape_string(sanitize($limit));
+			$limitsql = "";
 			$currUser = new User(sUserMgr()->getCurrentUserID());
-			$searchSQL = '';
-			if (strlen($searchText)) {
-				$searchText = mysql_real_escape_string(sanitize($searchText));
-				$properties = $currUser->properties->getList();
-				$searchSQL = "AND (";
-				for ($i = 0; $i < count($properties); $i++) {
-					if ($i != 0) $searchSQL .= " OR ";
-					$searchSQL .= "(yg_user_propsv.".$properties[$i]["IDENTIFIER"]." LIKE '%".$searchText."%')";
-				}
-				$searchSQL .= ")";
-			}
 
 			if (strlen($order) < 1) {
 				$ordersql = "LASTNAME";
@@ -777,29 +776,43 @@ class UserMgr extends \framework\Error {
 			if ($order == "FIRSTNAME") {
 				$ordersql = "NAME ASC, EMAIL ASC";
 			}
-			if (strlen($sort) < 1) {
+			if ($sort == "ASC") {
 				$sortsql = "ASC";
-			}
-			if (strlen($sort) > 0) {
-				$sortsql = $sort;
+			} else {
+				$sortsql = "DESC";
 			}
 			if ($limit) {
-				$limitsql = "LIMIT " . $limit;
+				$limitarr = explode(",", $limit);
+				$limitsql = "LIMIT " . (int)$limitarr[0]. "," . (int)$limitarr[1];
 			}
-
-
 			$perm_sql_select = ", MAX(perm.RREAD) AS RREAD,  MAX(perm.RWRITE) AS RWRITE, MAX(perm.RDELETE) AS RDELETE, MAX(perm.RSUB) AS RSUB, MAX(perm.RSTAGE) AS RSTAGE, MAX(perm.RSEND) AS RSEND";
 			$perm_sql_from = " LEFT JOIN yg_usergroups_permissions AS perm ON perm.OID = lnk.USERGROUPID";
+
+			array_push($sqlargs, $usergroupId);
 
 			$perm_sql_where = " AND (";
 			$roles = $currUser->getUsergroups();
 			for ($r = 0; $r < count($roles); $r++) {
-				$perm_sql_where .= "(perm.USERGROUPID = " . $roles[$r]["ID"] . ") ";
+				array_push($sqlargs, $roles[$r]["ID"]);
+				$perm_sql_where .= "(perm.USERGROUPID = ?) ";
 				if ((count($roles) - $r) > 1) {
 					$perm_sql_where .= " OR ";
 				}
 			}
 			$perm_sql_where .= ") ";
+
+			$searchSQL = '';
+			if (strlen($searchText)) {
+				$searchText = "%".sYDB()->escape_string(sanitize($searchText))."%";
+				$properties = $currUser->properties->getList();
+				$searchSQL = "AND (";
+				for ($i = 0; $i < count($properties); $i++) {
+					if ($i != 0) $searchSQL .= " OR ";
+					$searchSQL .= "(yg_user_propsv.".sYDB()->escape_string(sanitize($properties[$i]["IDENTIFIER"]))." LIKE ?)";
+					array_push($sqlargs, $searchText);
+				}
+				$searchSQL .= ")";
+			}
 
 			$sql = "SELECT
 						u.LOGIN AS LOGIN,
@@ -818,20 +831,21 @@ class UserMgr extends \framework\Error {
 						yg_user_propsv ON u.ID = yg_user_propsv.OID
 					$perm_sql_from
 					WHERE
-						(lnk.USERGROUPID = $usergroupId)
+						(lnk.USERGROUPID = ?)
 						$perm_sql_where
 						$searchSQL
 					GROUP BY
 						u.ID
 					HAVING
 						(RREAD >= 1)
-					ORDER BY $ordersql $sortsql $limitsql;";
+					ORDER BY `$ordersql` $sortsql $limitsql;";
 
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
+			array_unshift($sqlargs, $sql);
+			$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+			if ($dbr === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
-			$resultarray = $result->GetArray();
+			$resultarray = $dbr->GetArray();
 			return $resultarray;
 		} else {
 			return false;
@@ -847,23 +861,27 @@ class UserMgr extends \framework\Error {
 	 * @param string $searchText (optional) Searchtext
 	 * @return array|bool Array of Users or FALSE in case of an error
 	 */
-	function getWithoutUsergroup($order = '', $sort = '', $limit = '', $searchText = NULL) {
+	function getWithoutUsergroup($order = '', $sort = 'ASC', $limit = '', $searchText = NULL) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RUSERS')) {
-			$order = mysql_real_escape_string(sanitize($order));
-			$sort = mysql_real_escape_string(sanitize($sort));
-			$limit = mysql_real_escape_string(sanitize($limit));
+			$anonGroupId = (int)sConfig()->getVar("CONFIG/SYSTEMUSERS/ANONGROUPID");
+			$order = sYDB()->escape_string(sanitize($order));
+			$sort = sYDB()->escape_string(sanitize($sort));
+			$limit = sYDB()->escape_string(sanitize($limit));
+			$sqlargs = array();
+			array_push($sqlargs, $anonGroupId);
 			$searchSQL = '';
 			if (strlen($searchText)) {
-				$searchText = mysql_real_escape_string(sanitize($searchText));
+				$searchText = "%".sYDB()->escape_string(sanitize($searchText))."%";
 				$searchSQL = "AND (
-								(yg_user_propsv.LASTNAME LIKE '%".$searchText."%') OR
-								(yg_user_propsv.FIRSTNAME LIKE '%".$searchText."%') OR
-								(yg_user_propsv.EMAIL LIKE '%".$searchText."%') OR
-								(yg_user_propsv.COMPANY LIKE '%".$searchText."%') OR
-								(yg_user_propsv.DEPARTMENT LIKE '%".$searchText."%') OR
-								(yg_user_propsv.FAX LIKE '%".$searchText."%') OR
-								(yg_user_propsv.PHONE LIKE '%".$searchText."%')
+								(yg_user_propsv.LASTNAME LIKE ?) OR
+								(yg_user_propsv.FIRSTNAME LIKE ?) OR
+								(yg_user_propsv.EMAIL LIKE ?) OR
+								(yg_user_propsv.COMPANY LIKE ?) OR
+								(yg_user_propsv.DEPARTMENT LIKE ?) OR
+								(yg_user_propsv.FAX LIKE ?) OR
+								(yg_user_propsv.PHONE LIKE ?)
 							)";
+				array_push($sqlargs, $searchText, $searchText, $searchText, $searchText, $searchText, $searchText, $searchText);
 			}
 			if (strlen($order) < 1) {
 				$ordersql = "LASTNAME";
@@ -874,14 +892,16 @@ class UserMgr extends \framework\Error {
 			if ($order == "FIRSTNAME") {
 				$ordersql = "NAME ASC, EMAIL ASC";
 			}
-			if (strlen($sort) < 1) {
+			if ($sort == "ASC") {
 				$sortsql = "ASC";
+			} else {
+				$sortsql = "DESC";
 			}
 			if ($limit) {
-				$limitsql = "LIMIT " . $limit;
+				$limitarr = explode(",", $limit);
+				$limitsql = "LIMIT " . (int)$limitarr[0]. "," . (int)$limitarr[1];
 			}
 
-			$anonGroupId = (int)sConfig()->getVar("CONFIG/SYSTEMUSERS/ANONGROUPID");
 			$sql = "SELECT
 						u.LOGIN AS LOGIN,
 						u.PASSWORD AS PASSWORD,
@@ -901,7 +921,7 @@ class UserMgr extends \framework\Error {
 					LEFT JOIN
 						yg_user_lnk_usergroups as lnk ON u.ID = lnk.UID
 					LEFT JOIN
-						yg_user_lnk_usergroups as lnk2 ON (u.ID = lnk2.UID) AND ((lnk2.USERGROUPID = $anonGroupId) OR  (lnk2.USERGROUPID = NULL))
+						yg_user_lnk_usergroups as lnk2 ON (u.ID = lnk2.UID) AND ((lnk2.USERGROUPID = ?) OR  (lnk2.USERGROUPID = NULL))
 					LEFT JOIN
 						yg_user_propsv ON u.ID = yg_user_propsv.OID
 					WHERE
@@ -909,14 +929,17 @@ class UserMgr extends \framework\Error {
 					GROUP BY
 						u.ID
 					HAVING
-						(GROUPCOUNT = 1 AND lnk2.USERGROUPID = $anonGroupId) OR
+						(GROUPCOUNT = 1 AND lnk2.USERGROUPID = ?) OR
 						(GROUPCOUNT = 0)
-					ORDER BY $ordersql $sortsql $limitsql;";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
+					ORDER BY `$ordersql` $sortsql $limitsql;";
+
+			array_push($sqlargs, $anonGroupId);
+			array_unshift($sqlargs, $sql);
+			$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+			if ($dbr === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
-			$resultarray = $result->GetArray();
+			$resultarray = $dbr->GetArray();
 			return $resultarray;
 		} else {
 			return false;
@@ -931,8 +954,9 @@ class UserMgr extends \framework\Error {
 	 */
 	function getAllByEmail($email) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RUSERS')) {
-			$email = mysql_real_escape_string(sanitize($email));
+			$email = sYDB()->escape_string(sanitize($email));
 			if (strlen($email) > 0) {
+				$email = "%".$email."%";
 				$sql = "SELECT
 							u.LOGIN AS LOGIN,
 							u.PASSWORD AS PASSWORD,
@@ -949,8 +973,8 @@ class UserMgr extends \framework\Error {
 						LEFT JOIN
 							yg_user_propsv ON u.ID = yg_user_propsv.OID
 						WHERE
-							(yg_user_propsv.EMAIL like \"%" . $email . "%\");";
-				$result = sYDB()->Execute($sql);
+							(yg_user_propsv.EMAIL like ?);";
+				$result = sYDB()->Execute($sql, $email);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -969,11 +993,9 @@ class UserMgr extends \framework\Error {
 	 */
 	function getByEmail($email, $exact = false) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RUSERS')) {
-			$email = mysql_real_escape_string(sanitize($email));
-			if ($exact === true) {
-				$equation = "like \"" . $email . "\"";
-			} else {
-				$equation = "like \"%" . $email . "%\"";
+			$email = sYDB()->escape_string(sanitize($email));
+			if ($exact !== true) {
+				$email = "%".$email."%";
 			}
 			if (strlen($email) > 0) {
 				$sql = "SELECT u.LOGIN AS LOGIN,
@@ -983,8 +1005,8 @@ class UserMgr extends \framework\Error {
 				yg_user as u
 				LEFT JOIN yg_user_propsv ON u.ID = yg_user_propsv.OID
 				WHERE
-				(yg_user_propsv.EMAIL " . $equation . ");";
-				$result = sYDB()->Execute($sql);
+				(yg_user_propsv.EMAIL LIKE ?);";
+				$result = sYDB()->Execute($sql, $email);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}

@@ -86,7 +86,7 @@ class Usergroups {
 	 * @param bool $skipPermissions TRUE when the permissions shouldn't be respected
 	 * @return array Usergroup List
 	 */
-	function getList($skipPermissions) {
+	function getList($skipPermissions = false) {
 		if (!$skipPermissions) {
 			$rootGroupId = (int)sConfig()->getVar("CONFIG/SYSTEMUSERS/ROOTGROUPID");
 
@@ -99,7 +99,7 @@ class Usergroups {
 			$tmpUser = new User(sUserMgr()->getCurrentUserID());
 			$roles = $tmpUser->getUsergroups();
 			for ($r = 0; $r < count($roles); $r++) {
-				$perm_SQL_WHERE .= "(perm.USERGROUPID = " . $roles[$r]["ID"] . ") ";
+				$perm_SQL_WHERE .= "(perm.USERGROUPID = " . (int)$roles[$r]["ID"] . ") ";
 				if ((count($roles) - $r) > 1) {
 					$perm_SQL_WHERE .= " OR ";
 				}
@@ -107,7 +107,7 @@ class Usergroups {
 			$perm_SQL_WHERE .= ")";
 			$perm_SQL_WHERE2 = " WHERE ((RREAD >= 1) OR (group2.ID IN (";
 			for ($r = 0; $r < count($roles); $r++) {
-				$perm_SQL_WHERE2 .= $roles[$r]["ID"];
+				$perm_SQL_WHERE2 .= (int)$roles[$r]["ID"];
 				if ($r < count($roles)-1) {
 					$perm_SQL_WHERE2 .= ', ';
 				}
@@ -143,9 +143,9 @@ class Usergroups {
 	 */
 	function add($name = "new Usergroup") {
 		if ($this->permissions->check($this->_uid, 'RUSERGROUPS')) {
-			$name = mysql_real_escape_string(sanitize($name));
-			$sql = "INSERT INTO " . $this->_table . " VALUES (0, '$name');";
-			$result = sYDB()->Execute($sql);
+			$name = sYDB()->escape_string(sanitize($name));
+			$sql = "INSERT INTO " . $this->_table . " VALUES (0, ?);";
+			sYDB()->Execute($sql, $name);
 			$newId = sYDB()->Insert_ID();
 
 			if ($newId > 0) {
@@ -158,15 +158,15 @@ class Usergroups {
 						$pinfo = $this->usergroupPermissions->getByUsergroup($userRoles_item['ID'], $newId);
 						if (count($pinfo) > 0) {
 							// Update
-							$sql = "UPDATE yg_usergroups_permissions SET RREAD = 1, RWRITE = 1, RDELETE = 1 WHERE OID = $newId AND USERGROUPID = " . $userRoles_item['ID'] . ";";
-							$result = sYDB()->Execute($sql);
+							$sql = "UPDATE yg_usergroups_permissions SET RREAD = 1, RWRITE = 1, RDELETE = 1 WHERE OID = ? AND USERGROUPID = ?;";
+							$result = sYDB()->Execute($sql, $newId, $userRoles_item['ID']);
 							if ($result === false) {
 								throw new Exception(sYDB()->ErrorMsg());
 							}
 						} else {
 							// Insert
-							$sql = "INSERT INTO yg_usergroups_permissions SET USERGROUPID = " . $userRoles_item['ID'] . ", RREAD = 1, RWRITE = 1, RDELETE = 1, OID = $newId;";
-							$result = sYDB()->Execute($sql);
+							$sql = "INSERT INTO yg_usergroups_permissions SET USERGROUPID = ?, RREAD = 1, RWRITE = 1, RDELETE = 1, OID = ?;";
+							$result = sYDB()->Execute($sql, $userRoles_item['ID'], $newId);
 							if ($result === false) {
 								throw new Exception(sYDB()->ErrorMsg());
 							}
@@ -179,15 +179,15 @@ class Usergroups {
 				$pinfo = $this->usergroupPermissions->getByUsergroup($rootgroupId, $newId);
 				if (count($pinfo) > 0) {
 					// Update
-					$sql = "UPDATE yg_usergroups_permissions SET RREAD = 1, RWRITE = 1, RDELETE = 1 WHERE OID = $newId AND USERGROUPID = " . $rootgroupId . ";";
-					$result = sYDB()->Execute($sql);
+					$sql = "UPDATE yg_usergroups_permissions SET RREAD = 1, RWRITE = 1, RDELETE = 1 WHERE OID = ? AND USERGROUPID = ?;";
+					$result = sYDB()->Execute($sql, $newId, $rootgroupId);
 					if ($result === false) {
 						throw new Exception(sYDB()->ErrorMsg());
 					}
 				} else {
 					// Insert
-					$sql = "INSERT INTO yg_usergroups_permissions SET USERGROUPID = " . $rootgroupId . ", RREAD = 1, RWRITE = 1, RDELETE = 1, OID = $newId;";
-					$result = sYDB()->Execute($sql);
+					$sql = "INSERT INTO yg_usergroups_permissions SET USERGROUPID = ?, RREAD = 1, RWRITE = 1, RDELETE = 1, OID = ?;";
+					$result = sYDB()->Execute($sql, $rootgroupId, $newId);
 					if ($result === false) {
 						throw new Exception(sYDB()->ErrorMsg());
 					}
@@ -293,34 +293,34 @@ class Usergroups {
 			if ($usergroupId == (int)sConfig()->getVar('CONFIG/SYSTEMUSERS/ROOTGROUPID')) {
 				return false;
 			} // do not allow root Usergroup to be deleted
-			$sql = "DELETE FROM " . $this->_table . " WHERE ID = $usergroupId;";
-			sYDB()->Execute($sql);
-			$sql = "DELETE FROM yg_user_lnk_usergroups WHERE USERGROUPID = $usergroupId;";
-			sYDB()->Execute($sql);
-			$sql = "DELETE FROM yg_contentblocks_permissions WHERE USERGROUPID = $usergroupId;";
-			sYDB()->Execute($sql);
-			$sql = "DELETE FROM yg_entrymasks_permissions WHERE USERGROUPID = $usergroupId;";
-			sYDB()->Execute($sql);
-			$sql = "DELETE FROM yg_files_permissions WHERE USERGROUPID = $usergroupId;";
-			sYDB()->Execute($sql);
-			$sql = "DELETE FROM yg_filetypes_permissions WHERE USERGROUPID = $usergroupId;";
-			sYDB()->Execute($sql);
-			$sql = "DELETE FROM yg_mailing_permissions WHERE USERGROUPID = $usergroupId;";
-			sYDB()->Execute($sql);
-			$sql = "DELETE FROM yg_tags_permissions WHERE USERGROUPID = $usergroupId;";
-			sYDB()->Execute($sql);
-			$sql = "DELETE FROM yg_templates_permissions WHERE USERGROUPID = $usergroupId;";
-			sYDB()->Execute($sql);
-			$sql = "DELETE FROM yg_usergroups_permissions WHERE USERGROUPID = $usergroupId;";
-			sYDB()->Execute($sql);
-			$sql = "DELETE FROM yg_views_permissions WHERE USERGROUPID = $usergroupId;";
-			sYDB()->Execute($sql);
-			$sql = "DELETE FROM yg_mailing_lnk_usergroups WHERE RID = $usergroupId;";
-			sYDB()->Execute($sql);
+			$sql = "DELETE FROM " . $this->_table . " WHERE ID = ?;";
+			sYDB()->Execute($sql, $usergroupId);
+			$sql = "DELETE FROM yg_user_lnk_usergroups WHERE USERGROUPID = ?;";
+			sYDB()->Execute($sql, $usergroupId);
+			$sql = "DELETE FROM yg_contentblocks_permissions WHERE USERGROUPID = ?;";
+			sYDB()->Execute($sql, $usergroupId);
+			$sql = "DELETE FROM yg_entrymasks_permissions WHERE USERGROUPID = ?;";
+			sYDB()->Execute($sql, $usergroupId);
+			$sql = "DELETE FROM yg_files_permissions WHERE USERGROUPID = ?;";
+			sYDB()->Execute($sql, $usergroupId);
+			$sql = "DELETE FROM yg_filetypes_permissions WHERE USERGROUPID = ?;";
+			sYDB()->Execute($sql, $usergroupId);
+			$sql = "DELETE FROM yg_mailing_permissions WHERE USERGROUPID = ?;";
+			sYDB()->Execute($sql, $usergroupId);
+			$sql = "DELETE FROM yg_tags_permissions WHERE USERGROUPID = ?;";
+			sYDB()->Execute($sql, $usergroupId);
+			$sql = "DELETE FROM yg_templates_permissions WHERE USERGROUPID = ?;";
+			sYDB()->Execute($sql, $usergroupId);
+			$sql = "DELETE FROM yg_usergroups_permissions WHERE USERGROUPID = ?;";
+			sYDB()->Execute($sql, $usergroupId);
+			$sql = "DELETE FROM yg_views_permissions WHERE USERGROUPID = ?;";
+			sYDB()->Execute($sql, $usergroupId);
+			$sql = "DELETE FROM yg_mailing_lnk_usergroups WHERE RID = ?;";
+			sYDB()->Execute($sql, $usergroupId);
 			$allSites = sSites()->getList();
 			foreach($allSites as $allSitesItem) {
-				$sql = "DELETE FROM yg_site_".$allSitesItem['ID']."_permissions WHERE USERGROUPID = $usergroupId;";
-				sYDB()->Execute($sql);
+				$sql = "DELETE FROM yg_site_".$allSitesItem['ID']."_permissions WHERE USERGROUPID = ?;";
+				sYDB()->Execute($sql, $usergroupId);
 			}
 
 			return true;
@@ -337,8 +337,8 @@ class Usergroups {
 	 */
 	function get($usergroupId) {
 		$usergroupId = (int)$usergroupId;
-		$sql = "SELECT * FROM " . $this->_table . " WHERE ID = '$usergroupId';";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM " . $this->_table . " WHERE ID = ?;";
+		$result = sYDB()->Execute($sql, $usergroupId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -355,9 +355,9 @@ class Usergroups {
 	function setName($usergroupId, $name) {
 		if ($this->permissions->check($this->_uid, 'RUSERGROUPS')) {
 			$usergroupId = (int)$usergroupId;
-			$name = mysql_real_escape_string(sanitize($name));
-			$sql = "UPDATE " . $this->_table . " SET NAME = '$name' WHERE (ID = $usergroupId);";
-			$result = sYDB()->Execute($sql);
+			$name = sYDB()->escape_string(sanitize($name));
+			$sql = "UPDATE " . $this->_table . " SET NAME = ? WHERE (ID = ?);";
+			$result = sYDB()->Execute($sql, $name, $usergroupId);
 			return true;
 		} else {
 			return false;

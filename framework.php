@@ -4,7 +4,8 @@
 
 	@ini_set('session.use_trans_sid', 0);
 	@ini_set('session.auto_start', 0);
-	@ini_set('display_errors', 1);
+	/* hotfix related to http://jira.nt.vc/browse/IT-427 */
+	//@ini_set('display_errors', 1);
 
 	define ("VERSION", "2.6.0");
 

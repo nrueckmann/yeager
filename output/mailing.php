@@ -1,6 +1,6 @@
 <?php
 
-	include "error.php";
+	include_once "error.php";
 
 	$mailingMgr = new MailingMgr();
 	$previewMode = false;

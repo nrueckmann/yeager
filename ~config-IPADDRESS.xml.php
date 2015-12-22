@@ -2,7 +2,7 @@
 <!-- <?php die(); ?> -->
 <CONFIG>
 	<DB>
-		<DSN id="yeager" driver="mysql" host="[__DATABASE_SERVER__]:[__DATABASE_PORT__]" user="[__DATABASE_USER__]" password="[__DATABASE_PASSWORD__]" db="[__DATABASE_NAME__]" />
+		<DSN id="yeager" driver="mysqli" host="[__DATABASE_SERVER__]:[__DATABASE_PORT__]" user="[__DATABASE_USER__]" password="[__DATABASE_PASSWORD__]" db="[__DATABASE_NAME__]" />
 	</DB>
 	<LOGGING>
 		<!--

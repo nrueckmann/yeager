@@ -82,9 +82,9 @@ class Filetypes extends \framework\Error {
 	function setCode($filetypeId, $value) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RFILETYPES')) {
 			$filetypeId = (int)$filetypeId;
-			$value = mysql_real_escape_string(sanitize($value));
-			$sql = "UPDATE `yg_filetypes_properties` SET CODE = '$value' WHERE OBJECTID = $filetypeId;";
-			$result = sYDB()->Execute($sql);
+			$value = sYDB()->escape_string(sanitize($value));
+			$sql = "UPDATE `yg_filetypes_properties` SET CODE = ? WHERE OBJECTID = ?;";
+			$result = sYDB()->Execute($sql, $value, $filetypeId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -104,9 +104,9 @@ class Filetypes extends \framework\Error {
 	function setName($filetypeId, $value) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RFILETYPES')) {
 			$filetypeId = (int)$filetypeId;
-			$value = mysql_real_escape_string(sanitize($value));
-			$sql = "UPDATE `yg_filetypes_properties` SET NAME = '$value' WHERE OBJECTID = $filetypeId;";
-			$result = sYDB()->Execute($sql);
+			$value = sYDB()->escape_string(sanitize($value));
+			$sql = "UPDATE `yg_filetypes_properties` SET NAME = ? WHERE OBJECTID = ?;";
+			$result = sYDB()->Execute($sql, $value, $filetypeId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -127,8 +127,8 @@ class Filetypes extends \framework\Error {
 		if (sUsergroups()->permissions->check($this->_uid, 'RFILETYPES')) {
 			$filetypeId = (int)$filetypeId;
 			$value = (int)$value;
-			$sql = "UPDATE `yg_filetypes_properties` SET READONLY = '$value' WHERE OBJECTID = $filetypeId;";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE `yg_filetypes_properties` SET READONLY = ? WHERE OBJECTID = ?;";
+			$result = sYDB()->Execute($sql, $value, $filetypeId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -148,9 +148,9 @@ class Filetypes extends \framework\Error {
 	function setIdentifier($filetypeId, $value) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RFILETYPES')) {
 			$filetypeId = (int)$filetypeId;
-			$value = mysql_real_escape_string(sanitize($value));
-			$sql = "UPDATE `yg_filetypes_properties` SET IDENTIFIER = '$value' WHERE OBJECTID = $filetypeId;";
-			$result = sYDB()->Execute($sql);
+			$value = sYDB()->escape_string(sanitize($value));
+			$sql = "UPDATE `yg_filetypes_properties` SET IDENTIFIER = ? WHERE OBJECTID = ?;";
+			$result = sYDB()->Execute($sql, $value, $filetypeId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -170,9 +170,9 @@ class Filetypes extends \framework\Error {
 	function setColor($filetypeId, $value) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RFILETYPES')) {
 			$filetypeId = (int)$filetypeId;
-			$value = mysql_real_escape_string(sanitize($value));
-			$sql = "UPDATE `yg_filetypes_properties` SET COLOR = '$value' WHERE OBJECTID = $filetypeId;";
-			$result = sYDB()->Execute($sql);
+			$value = sYDB()->escape_string(sanitize($value));
+			$sql = "UPDATE `yg_filetypes_properties` SET COLOR = ? WHERE OBJECTID = ?;";
+			$result = sYDB()->Execute($sql, $value, $filetypeId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -192,9 +192,9 @@ class Filetypes extends \framework\Error {
 	function setProcessor($filetypeId, $value) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RFILETYPES')) {
 			$filetypeId = (int)$filetypeId;
-			$value = mysql_real_escape_string(sanitize($value));
-			$sql = "UPDATE `yg_filetypes_properties` SET PROCESSOR = '" . $value . "' WHERE OBJECTID = $filetypeId;";
-			$result = sYDB()->Execute($sql);
+			$value = sYDB()->escape_string(sanitize($value));
+			$sql = "UPDATE `yg_filetypes_properties` SET PROCESSOR = ? WHERE OBJECTID = ?;";
+			$result = sYDB()->Execute($sql, $value, $filetypeId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -215,9 +215,9 @@ class Filetypes extends \framework\Error {
 	function setExtensions($filetypeId, $value) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RFILETYPES')) {
 			$filetypeId = (int)$filetypeId;
-			$value = mysql_real_escape_string(sanitize($value));
-			$sql = "UPDATE `yg_filetypes_properties` SET EXTENSIONS = '$value' WHERE OBJECTID = $filetypeId;";
-			$result = sYDB()->Execute($sql);
+			$value = sYDB()->escape_string(sanitize($value));
+			$sql = "UPDATE `yg_filetypes_properties` SET EXTENSIONS = ? WHERE OBJECTID = ?;";
+			$result = sYDB()->Execute($sql, $value, $filetypeId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -243,8 +243,8 @@ class Filetypes extends \framework\Error {
 			// Version anlegen
 			$sql = "INSERT INTO `yg_filetypes_properties` (`OBJECTID`, `FOLDER`, `NAME`, `EXTENSIONS`)
 						VALUES
-					('$filetypeId', 0, 'New Type', '');";
-			$result = sYDB()->Execute($sql);
+					(?, 0, 'New Type', '');";
+			$result = sYDB()->Execute($sql, $filetypeId);
 
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
@@ -270,13 +270,13 @@ class Filetypes extends \framework\Error {
 		$hadError = false;
 		$allNodes = $this->tree->get($filetypeId, 1000);
 		foreach($allNodes as $allNodesItem) {
-			$filetypeId = $allNodesItem['ID'];
+			$filetypeId = (int)$allNodesItem['ID'];
 
 			if (sUsergroups()->permissions->check($this->_uid, 'RFILETYPES') && ($filetypeId != $rootNode)) {
 				$filetypeId = (int)$filetypeId;
 
-				$sql = "DELETE FROM yg_filetypes_properties WHERE OBJECTID = $filetypeId;";
-				$result = sYDB()->Execute($sql);
+				$sql = "DELETE FROM yg_filetypes_properties WHERE OBJECTID = ?;";
+				sYDB()->Execute($sql, $filetypeId);
 			} else {
 				$hadError = true;
 			}
@@ -298,8 +298,8 @@ class Filetypes extends \framework\Error {
 	function get($filetypeId) {
 		$filetypeId = (int)$filetypeId;
 		if (strlen($filetypeId) > 0) {
-			$sql = "SELECT * FROM yg_filetypes_properties WHERE (OBJECTID = $filetypeId);";
-			$result = sYDB()->Execute($sql);
+			$sql = "SELECT * FROM yg_filetypes_properties WHERE (OBJECTID = ?);";
+			$result = sYDB()->Execute($sql, $filetypeId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -318,8 +318,8 @@ class Filetypes extends \framework\Error {
 	function getProcessor($filetypeId) {
 		$filetypeId = (int)$filetypeId;
 		if (strlen($filetypeId) > 0) {
-			$sql = "SELECT PROCESSOR FROM yg_filetypes_properties WHERE (OBJECTID = $filetypeId);";
-			$result = sYDB()->execute($sql);
+			$sql = "SELECT PROCESSOR FROM yg_filetypes_properties WHERE (OBJECTID = ?);";
+			$result = sYDB()->Execute($sql, $filetypeId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -336,9 +336,9 @@ class Filetypes extends \framework\Error {
 	 * @throws Exception
 	 */
 	function getByCode($code) {
-		$code = mysql_real_escape_string(sanitize($code));
-		$sql = "SELECT * FROM `yg_filetypes_properties` WHERE CODE = '" . $code . "';";
-		$result = sYDB()->Execute($sql);
+		$code = sYDB()->escape_string(sanitize($code));
+		$sql = "SELECT * FROM `yg_filetypes_properties` WHERE CODE = ?;";
+		$result = sYDB()->Execute($sql, $code);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -354,9 +354,9 @@ class Filetypes extends \framework\Error {
 	 */
 	function getByIdentifier($identifier) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RFILETYPES')) {
-			$identifier = mysql_real_escape_string(sanitize($identifier));
-			$sql = "SELECT * FROM `yg_filetypes_properties` WHERE IDENTIFIER = '" . $identifier . "';";
-			$result = sYDB()->Execute($sql);
+			$identifier = sYDB()->escape_string(sanitize($identifier));
+			$sql = "SELECT * FROM `yg_filetypes_properties` WHERE IDENTIFIER = ?;";
+			$result = sYDB()->Execute($sql, $identifier);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -378,13 +378,13 @@ class Filetypes extends \framework\Error {
 		$perm_sql_where = " AND (";
 		$roles = $this->permissions->getUsergroups();
 		for ($r = 0; $r < count($roles); $r++) {
-			$perm_sql_where .= "(perm.USERGROUPID = " . $roles[$r]["ID"] . ") ";
+			$perm_sql_where .= "(perm.USERGROUPID = " . (int)$roles[$r]["ID"] . ") ";
 			if ((count($roles) - $r) > 1) {
 				$perm_sql_where .= " OR ";
 			}
 		}
 		$perm_sql_where .= ") ";
-		$perm_sql_where .= " AND ((RREAD >= 1) OR (perm.USERGROUPID = $rootGroupId)) ";
+		$perm_sql_where .= " AND ((RREAD >= 1) OR (perm.USERGROUPID = " . (int)$rootGroupId . ")) ";
 
 		$sql = "SELECT
 					group2.LFT,

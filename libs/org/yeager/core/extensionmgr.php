@@ -61,19 +61,19 @@ class ExtensionMgr extends \framework\Error {
 	 * @throws Exception
 	 */
 	function add($code, $path, $name, $developerName, $version, $description, $url, $type) {
-		$code = mysql_real_escape_string(sanitize($code));
-		$path = mysql_real_escape_string($path);
-		$name = mysql_real_escape_string(sanitize($name));
-		$developerName = mysql_real_escape_string(sanitize($developerName));
-		$version = mysql_real_escape_string($version);
-		$description = mysql_real_escape_string(sanitize($description));
-		$url = mysql_real_escape_string(sanitize($url));
+		$code = sYDB()->escape_string(sanitize($code));
+		$path = sYDB()->escape_string($path);
+		$name = sYDB()->escape_string(sanitize($name));
+		$developerName = sYDB()->escape_string(sanitize($developerName));
+		$version = sYDB()->escape_string($version);
+		$description = sYDB()->escape_string(sanitize($description));
+		$url = sYDB()->escape_string(sanitize($url));
 		$type = (int)$type;
 
 		$sql = "INSERT INTO `yg_extensions` (`CODE`, `PATH`, `NAME`, `DEVELOPERNAME`, `VERSION`, `DESCRIPTION`, `URL`, `TYPE`, `INSTALLED`)
 		VALUES
-		('" . $code . "', '" . $path . "', '" . $name . "', '" . $developerName . "', '" . $version . "', '" . $description . "', '" . $url . "', '" . $type . "', '0');";
-		$result = sYDB()->execute($sql);
+		(?, ?, ?, ?, ?, ?, ?, ?, '0');";
+		$result = sYDB()->Execute($sql, $code, $path, $name, $developerName, $version, $description, $url, $type);
 
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
@@ -89,9 +89,9 @@ class ExtensionMgr extends \framework\Error {
 	 * @throws Exception
 	 */
 	function remove($code) {
-		$code = mysql_real_escape_string(sanitize($code));
-		$sql = "DELETE FROM `yg_extensions` WHERE `CODE` = '".$code."';";
-		$result = sYDB()->execute($sql);
+		$code = sYDB()->escape_string(sanitize($code));
+		$sql = "DELETE FROM `yg_extensions` WHERE `CODE` = ?;";
+		$result = sYDB()->Execute($sql, $code);
 
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
@@ -108,8 +108,8 @@ class ExtensionMgr extends \framework\Error {
 	function get($extId) {
 		$extId = (int)$extId;
 		if (strlen($extId) > 0) {
-			$sql = "SELECT * FROM yg_extensions WHERE (ID = $extId);";
-			$result = sYDB()->execute($sql);
+			$sql = "SELECT * FROM yg_extensions WHERE (ID = ?);";
+			$result = sYDB()->Execute($sql, $extId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -125,10 +125,10 @@ class ExtensionMgr extends \framework\Error {
 	 * @return int|false Extension Id or FALSE in case of an error
 	 */
 	function getIdByCode($code) {
-		$code = mysql_real_escape_string($code);
+		$code = sYDB()->escape_string($code);
 		if (strlen($code) > 0) {
-			$sql = "SELECT ID FROM yg_extensions WHERE (CODE = '" . $code . "');";
-			$result = sYDB()->execute($sql);
+			$sql = "SELECT ID FROM yg_extensions WHERE (CODE = ?);";
+			$result = sYDB()->Execute($sql, $code);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -144,10 +144,10 @@ class ExtensionMgr extends \framework\Error {
 	 * @return int|false Extension Id or FALSE in case of an error
 	 */
 	function getIdByPath($path) {
-		$path = mysql_real_escape_string($path);
+		$path = sYDB()->escape_string($path);
 		if (strlen($path) > 0) {
-			$sql = "SELECT ID FROM yg_extensions WHERE (PATH = '" . $path . "')";
-			$result = sYDB()->execute($sql);
+			$sql = "SELECT ID FROM yg_extensions WHERE (PATH = ?)";
+			$result = sYDB()->Execute($sql, $path);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -166,7 +166,6 @@ class ExtensionMgr extends \framework\Error {
 	 */
 	function getList($type = 0, $onlyInstalled = false, $hideInternal = false) {
 		$type = (int)$type;
-		$addsql = '';
 		$installFilter = " INSTALLED != 2";
 		if ($onlyInstalled === true) {
 			$installFilter = " INSTALLED = 1";
@@ -180,7 +179,7 @@ class ExtensionMgr extends \framework\Error {
 			$typeFilter = " 1 ";
 		}
 		$sql = "SELECT * FROM `yg_extensions` WHERE $typeFilter AND " . $installFilter . " ORDER BY NAME ASC";
-		$result = sYDB()->execute($sql);
+		$result = sYDB()->Execute($sql);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}

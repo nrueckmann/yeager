@@ -68,19 +68,19 @@ class History extends \framework\Error {
 	 * @throws Exception
 	 */
 	function add($targetType, $oldValue, $newValue, $text, $targetId = 0, $from = 0) {
-		$objectId = $this->_object->getID();
+		$objectId = (int)$this->_object->getID();
 		$targetType = (int)$targetType;
 		$targetId = (int)$targetId;
 		$from = (int)$from;
-		$oldValue = mysql_real_escape_string(sanitize($oldValue));
-		$newValue = mysql_real_escape_string(sanitize($newValue));
-		$text = mysql_real_escape_string(sanitize($text));
+		$oldValue = sYDB()->escape_string(sanitize($oldValue));
+		$newValue = sYDB()->escape_string(sanitize($newValue));
+		$text = sYDB()->escape_string(sanitize($text));
 		$time = time();
 		$sql = "INSERT INTO " . $this->_table . "
 					(SOURCEID, `OID` , `DATETIME`, `TEXT` , `UID`, `TYPE`, `OLDVALUE`, `NEWVALUE`, `TARGETID`, `SITEID`, `FROM`)
 				VALUES
-					('" . $this->_sourceid . "', '$objectId', '$time', '" . $text . "', '" . $this->_uid . "', $targetType, '" . $oldValue . "', '" . $newValue . "', $targetId, '" . $this->_siteID . "', $from);";
-		$result = sYDB()->Execute($sql);
+					(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$result = sYDB()->Execute($sql, $this->_sourceid, $objectId, $time, $text, $this->_uid, $targetType, $oldValue, $newValue, $targetId, $this->_siteID, $from);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -96,9 +96,9 @@ class History extends \framework\Error {
 	 */
 	function getQueue($queueId = 0) {
 		$queueId = (int)$queueId;
-		$sourcesql = "AND SOURCEID = '" . $this->_sourceid . "'";
-		$sql = "SELECT * FROM " . $this->_table . " WHERE ID > " . $queueId . " $sourcesql ORDER BY DATETIME ASC, ID ASC";
-		$result = sYDB()->Execute($sql);
+		$sourcesql = "AND SOURCEID = '" . (int)$this->_sourceid . "'";
+		$sql = "SELECT * FROM " . $this->_table . " WHERE ID > ? ". $sourcesql . "ORDER BY DATETIME ASC, ID ASC";
+		$result = sYDB()->Execute($sql, $queueId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -134,18 +134,20 @@ class History extends \framework\Error {
 	 */
 	function getList($objectId, $text = '') {
 		$objectId = (int)$objectId;
+		$sqlargs = array();
+		array_push($sqlargs, $objectId);
 		if ($this->_sourceid != "") {
-			$sourcesql = "AND SOURCEID = '" . $this->_sourceid . "' AND ";
+			$sourcesql = "AND SOURCEID = ? AND ";
+			array_push($sqlargs, $this->_sourceid);
 		}
-
 		if (!is_array($text) && strlen($text) > 1) {
-			$text = mysql_real_escape_string($text);
-			$sourcesql .= "TEXT = '$text'";
+			$sourcesql .= "TEXT = ?";
+			array_push($sqlargs, $text);
 		} else {
 			if (is_array($text) && count($text) > 0) {
 				for ($t = 0; $t < count($text); $t++) {
-					$textitem = mysql_real_escape_string($text[$t]);
-					$sourcesql .= "TEXT = '" . $textitem . "' ";
+					$sourcesql .= "TEXT = ? ";
+					array_push($sqlargs, $text[$t]);
 					if ($t < count($text) - 1) {
 						$sourcesql .= " OR ";
 					}
@@ -155,12 +157,13 @@ class History extends \framework\Error {
 			}
 		}
 
-		$sql = "SELECT * FROM " . $this->_table . " WHERE OID = $objectId $sourcesql ORDER BY DATETIME DESC, ID DESC";
-		$result = sYDB()->Execute($sql);
-		if ($result === false) {
-			throw new Exception(sYDB()->ErrorMsg());
-		}
-		$resultarray = $result->GetArray();
+		$sql = "SELECT * FROM " . $this->_table . " WHERE OID = ? ". $sourcesql ." ORDER BY DATETIME DESC, ID DESC";
+		array_unshift($sqlargs, $sql);
+		$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+		if ($dbr === false) {
+            throw new Exception(sYDB()->ErrorMsg() . ':: ' . $sql);
+        }
+		$resultarray = $dbr->GetArray();
 		return $resultarray;
 	}
 
@@ -176,10 +179,10 @@ class History extends \framework\Error {
 		$objectId = (int)$objectId;
 		$max = (int)$max;
 		if ($this->_sourceid != "") {
-			$sourcesql = "AND SOURCEID = '" . $this->_sourceid . "'";
+			$sourcesql = "AND SOURCEID = '" . (int)$this->_sourceid . "'";
 		}
-		$sql = "SELECT ID, OID, MIN(DATETIME) AS DATETIME, TEXT, UID FROM " . $this->_table . " WHERE OID = $objectId $sourcesql GROUP BY OID ORDER BY DATETIME ASC LIMIT 0, $max";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT ID, OID, MIN(DATETIME) AS DATETIME, TEXT, UID FROM " . $this->_table . " WHERE OID = ? ". $sourcesql ." GROUP BY OID ORDER BY DATETIME ASC LIMIT 0, $max";
+		$result = sYDB()->Execute($sql, $objectId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -220,10 +223,10 @@ class History extends \framework\Error {
 		$objectId = $this->_object->getID();
 		$max = (int)$max;
 		if ($this->_sourceid != "") {
-			$sourcesql = "AND SOURCEID = '" . $this->_sourceid . "'";
+			$sourcesql = "AND SOURCEID = '" . (int)$this->_sourceid . "'";
 		}
-		$sql = "SELECT ID, OID, DATETIME AS DATETIME, TEXT, UID FROM " . $this->_table . " WHERE OID = $objectId $sourcesql ORDER BY DATETIME DESC LIMIT 0, $max";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT ID, OID, DATETIME AS DATETIME, TEXT, UID FROM " . $this->_table . " WHERE OID = ? ". $sourcesql ." ORDER BY DATETIME DESC LIMIT 0, $max";
+		$result = sYDB()->Execute($sql, $objectId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -260,10 +263,10 @@ class History extends \framework\Error {
 	function clear() {
 		$objectId = $this->_object->getID();
 		if ($this->_sourceid != '') {
-			$sourcesql = "AND SOURCEID = '" . $this->_sourceid . "'";
+			$sourcesql = "AND SOURCEID = ". (int)$this->_sourceid;
 		}
-		$sql = "DELETE FROM " . $this->_table . " WHERE OID = $objectId $sourcesql ";
-		$result = sYDB()->Execute($sql);
+		$sql = "DELETE FROM " . $this->_table . " WHERE OID = ? $sourcesql;";
+		sYDB()->Execute($sql, $objectId);
 	}
 
 	/**
@@ -281,10 +284,10 @@ class History extends \framework\Error {
 		}
 		$sql = "SELECT *
 			FROM `".$this->_table."`
-			WHERE TYPE = $type $siteSQL
+			WHERE TYPE = ? $siteSQL
 			ORDER BY `DATETIME` DESC
 			LIMIT 1;";
-		$result = sYDB()->Execute($sql);
+		$result = sYDB()->Execute($sql, $type);
 
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
@@ -336,14 +339,15 @@ class History extends \framework\Error {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
 
+		$sqlargs = array();
 		if (!is_array($text) && strlen($text) > 1) {
-			$text = mysql_real_escape_string($text);
-			$wheresql .= "TEXT='$text'";
+			$wheresql .= "TEXT=?";
+			array_push($sqlargs, $text);
 		} else {
 			if (is_array($text) && count($text) > 0) {
 				for ($t = 0; $t < count($text); $t++) {
-					$textitem = mysql_real_escape_string($text[$t]);
-					$wheresql .= "TEXT = '" . $textitem . "' ";
+					$wheresql .= "TEXT = ? ";
+					array_push($sqlargs, $text[$t]);
 					if ($t < count($text) - 1) {
 						$wheresql .= " OR ";
 					}
@@ -353,7 +357,8 @@ class History extends \framework\Error {
 			}
 		}
 		if ($this->_sourceid != "") {
-			$sourcesql = "AND SOURCEID = '" . $this->_sourceid . "'";
+			$sourcesql = "AND SOURCEID = ?";
+			array_push($sqlargs, $this->_sourceid);
 		}
 
 		$sql = "INSERT INTO `$tmpTableName`
@@ -364,9 +369,11 @@ class History extends \framework\Error {
 				WHERE $wheresql $sourcesql
 				ORDER BY `DATETIME` DESC
 				LIMIT 0, 2000;";
-		$result = sYDB()->Execute($sql);
 
-		if ($result === false) {
+		array_unshift($sqlargs, $sql);
+		$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+
+		if ($dbr === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
 

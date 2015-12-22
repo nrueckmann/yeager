@@ -43,29 +43,6 @@ class Updater extends \framework\Error {
 		// Check for actual version
 		$sql = "SELECT VERSION FROM `yg_version`;";
 		$result = sYDB()->Execute($sql);
-
-		if ($result === false) {
-			// Check if table okt_version exists
-			$sql = "SELECT VERSION FROM `okt_version`;";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
-				// No versioning yet, hence Oktopus v2.0.0.0.0 and we should create table
-				$sql = "CREATE TABLE `yg_version` (
-										`VERSION` INT NOT NULL
-										) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_unicode_ci;";
-				$result = sYDB()->Execute($sql);
-				// And insert current version (2.0.0.0.0)
-				$sql = "INSERT INTO `yg_version` ( `VERSION` ) VALUES ( 20000 );";
-				$result = sYDB()->Execute($sql);
-				// Now retry retrieving actual version (should work for sure now)
-				$sql = "SELECT VERSION FROM `yg_version`;";
-				$result = sYDB()->Execute($sql);
-			} else {
-				// Now retry retrieving actual version
-				$sql = "SELECT VERSION FROM `okt_version`;";
-				$result = sYDB()->Execute($sql);
-			}
-		}
 		$resultarray = $result->GetArray();
 		if ($resultarray) {
 			$this->current_version = $resultarray[0]['VERSION'];
@@ -87,21 +64,8 @@ class Updater extends \framework\Error {
 	function setVersion($version) {
 		$version = str_pad($version, 5, '0', STR_PAD_RIGHT);
 		// Set current version
-		$sql = "SELECT VERSION FROM `yg_version`;";
-		$result = sYDB()->Execute($sql);
-		if ($result === false) {
-			$sql = "SELECT VERSION FROM `okt_version`;";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
-				return false;
-			} else {
-				$sql = "UPDATE `okt_version` SET VERSION = " . (int)$version . ";";
-				$result = sYDB()->Execute($sql);
-			}
-		} else {
-			$sql = "UPDATE `yg_version` SET VERSION = " . (int)$version . ";";
-			$result = sYDB()->Execute($sql);
-		}
+		$sql = "UPDATE `yg_version` SET VERSION = ?;";
+		$result = sYDB()->Execute($sql, $version);
 		if ($result) {
 			// Set property 'current_version'
 			$this->current_version = $version;

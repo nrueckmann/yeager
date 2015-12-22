@@ -103,8 +103,9 @@ $K.yg_selectNode = function(node, e, init) {
 		if(boundwin)
 			$K.windows[$K.windows['wid_' + wid].boundWindow].tabs.init();
 
-		if (selNodeCount == 0) {
-			tmparr = $('wid_'+wid+'_buttons').descendants();
+		wndbt = $('wid_'+wid+'_buttons');
+		if ((selNodeCount == 0) && (wndbt != null)) {
+			tmparr = wndbt.descendants();
 			tmparr.each(function(item) {
 				btn = item.down('.tree_btn');
 				if (btn && (btn.hasClassName('globalfunc') == false)) btn.addClassName('disabled');

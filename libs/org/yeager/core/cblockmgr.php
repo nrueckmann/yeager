@@ -59,14 +59,15 @@ class CblockMgr extends \framework\Error {
 	 * @return array|bool Result of SQL query or FALSE in case of an error
 	 * @throws Exception
 	 */
-	function cacheExecuteGetArray($sql) {
-		$dbr = sYDB()->Execute($sql);
-		if ($dbr === false) {
-			throw new Exception(sYDB()->ErrorMsg() . ':: ' . $sql);
-		}
-		$blaetter = $dbr->GetArray();
-		return $blaetter;
-	}
+    function cacheExecuteGetArray() {
+        $args = func_get_args();
+        $dbr = call_user_func_array(array(sYDB(), 'Execute'), $args);
+        if ($dbr === false) {
+            throw new Exception(sYDB()->ErrorMsg() . ':: ' . $sql);
+        }
+        $blaetter = $dbr->GetArray();
+        return $blaetter;
+    }
 
 /// @endcond
 
@@ -371,6 +372,8 @@ class CblockMgr extends \framework\Error {
 	 */
 	function getList($cbId = 0, $filter = array(), $maxlevel = 0, $permissionsForRoleId = 0, $filterArray) {
 		$cbId = (int)$cbId;
+		$maxlevel = (int)$maxlevel;
+		$permissionsForRoleId = (int)$permissionsForRoleId;
 		$rootGroupId = (int)sConfig()->getVar("CONFIG/SYSTEMUSERS/ROOTGROUPID");
 
 		if ($cbId == 0) {
@@ -436,8 +439,7 @@ class CblockMgr extends \framework\Error {
 			$perm_SQL_WHERE = " AND (";
 			$roles = $this->permissions->getUsergroups();
 			for ($r = 0; $r < count($roles); $r++) {
-				$perm_SQL_WHERE .= "(perm.USERGROUPID = " . $roles[$r]["ID"] . ") ";
-				$roles = $this->permissions->getUsergroups();
+				$perm_SQL_WHERE .= "(perm.USERGROUPID = " . (int)$roles[$r]["ID"] . ") ";
 				if ((count($roles) - $r) > 1) {
 					$perm_SQL_WHERE .= " OR ";
 				}
@@ -503,9 +505,9 @@ class CblockMgr extends \framework\Error {
 	 * @return array|false Array of Cblocks or FALSE in case of an error
 	 */
 	function getCblocksByText($searchText, $filter = "") {
-		$searchText = mysql_real_escape_string(sanitize($searchText));
+		$searchText = sYDB()->escape_string(sanitize($searchText));
 		$sql = "DROP FUNCTION HTMLEncode;";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 
 		$sql = "CREATE FUNCTION
 					HTMLEncode(x text CHARACTER SET utf8) returns text CHARACTER SET utf8 DETERMINISTIC
@@ -582,7 +584,7 @@ class CblockMgr extends \framework\Error {
 	function add($parentCbId, $folder = 0, $name = "New object") {
 		$parentCbId = (int)$parentCbId;
 		$folder = (int)$folder;
-		$name = mysql_real_escape_string($name);
+		$name = sYDB()->escape_string($name);
 		$rread = $this->permissions->checkInternal($this->_uid, $parentCbId, "RSUB");
 		if ($rread) {
 			// Create new node in Cblock Tree
@@ -593,8 +595,8 @@ class CblockMgr extends \framework\Error {
 			$sql = "INSERT INTO `yg_contentblocks_properties`
 						(`OBJECTID`, `FOLDER`, `APPROVED`, `TEXT`, `VERSION`, `LOCKED`, `CREATEDTS`, `CHANGEDTS`, `CREATEDBY`, `CHANGEDBY`)
 					VALUES
-						('$cbId', '$folder', '$folder', '', '1', '0', '$ts', '$ts', '" . $this->_uid . "', '" . $this->_uid . "');";
-			$result = sYDB()->Execute($sql);
+						(?, ?, ?, '', '1', '0', ?, ?, ?, ?);";
+			$result = sYDB()->Execute($sql, $cbId, $folder, $folder, $ts, $ts, $this->_uid, $this->_uid);
 
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
@@ -688,8 +690,8 @@ class CblockMgr extends \framework\Error {
 				 $cblockInfo['DELETED'] ) {
 				$lc = $cb->getEntrymasks();
 
-				$sql = "DELETE FROM yg_contentblocks_properties WHERE OBJECTID = $cbId;";
-				$result = sYDB()->Execute($sql);
+				$sql = "DELETE FROM yg_contentblocks_properties WHERE OBJECTID = ?;";
+				$result = sYDB()->Execute($sql, $cbId);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -702,13 +704,13 @@ class CblockMgr extends \framework\Error {
 
 				for ($i = 0; $i < count($lc); $i++) {
 					$lnkid = $lc[$i]["LINKID"];
-					$sql = "DELETE FROM yg_contentblocks_lnk_entrymasks WHERE ID = $lnkid;";
-					$result = sYDB()->Execute($sql);
+					$sql = "DELETE FROM yg_contentblocks_lnk_entrymasks WHERE ID = ?;";
+					$result = sYDB()->Execute($sql, $lnkid);
 					if ($result === false) {
 						throw new Exception(sYDB()->ErrorMsg());
 					}
-					$sql = "DELETE FROM yg_contentblocks_lnk_entrymasks_c WHERE LNK = $lnkid;";
-					$result = sYDB()->Execute($sql);
+					$sql = "DELETE FROM yg_contentblocks_lnk_entrymasks_c WHERE LNK = ?;";
+					$result = sYDB()->Execute($sql, $lnkid);
 					if ($result === false) {
 						throw new Exception(sYDB()->ErrorMsg());
 					}
@@ -793,8 +795,8 @@ class CblockMgr extends \framework\Error {
 	function removeAllPageLinks($cbId, $siteId) {
 		$cbId = (int)$cbId;
 		$siteId = (int)$siteId;
-		$sql = "DELETE FROM `yg_site_" . $siteId . "_lnk_cb` where CBID = '$cbId';";
-		sYDB()->Execute($sql);
+		$sql = "DELETE FROM `yg_site_" . $siteId . "_lnk_cb` where CBID = ?;";
+		sYDB()->Execute($sql, $cbId);
 	}
 
 	/**
@@ -877,21 +879,22 @@ class CblockMgr extends \framework\Error {
 		$perm_SQL_WHERE = " AND (";
 		$roles = $this->permissions->getUsergroups();
 		for ($r = 0; $r < count($roles); $r++) {
-			$perm_SQL_WHERE .= "(perm.USERGROUPID = " . $roles[$r]["ID"] . ") ";
+			$perm_SQL_WHERE .= "(perm.USERGROUPID = " . (int)$roles[$r]["ID"] . ") ";
 			if ((count($roles) - $r) > 1) {
 				$perm_SQL_WHERE .= " OR ";
 			}
 		}
 		$perm_SQL_WHERE .= ") ";
 
+		$sqlargs = array();
+
 		foreach ($filterArray as $filterEntry) {
-			$sql_em_where = array();
-			$sql_formfields_where = array();
 			$fe = 0;
 			$filterEntries = array();
 			while (list($filterEntryKey, $filterEntryValue) = each($filterEntry)) {
 				if ($filterEntryKey == "ENTRYMASKIDENTIFIER") {
-					$filterEntries[$fe]["SQL"] = "(p.CODE = '" . $filterEntryValue . "')";
+					$filterEntries[$fe]["SQL"] = "(p.CODE = ?)";
+					array_push($sqlargs, $filterEntryValue);
 				} else {
 					if ($filterEntryKey == "COMB") {
 						if ($filterEntryValue == "OR") {
@@ -905,21 +908,21 @@ class CblockMgr extends \framework\Error {
 								foreach ($formfieldValueFilter as $filterFormfieldKey => $filterFormfieldValue) {
 									if (preg_match("/^ALIAS/", $filterFormfieldKey) || preg_match("/^IDENTIFIER/", $filterFormfieldKey)) {
 										$v++;
-										$formfieldsql = "(_w_.$filterFormfieldKey = '" . $filterFormfieldValue . "')";
+										$formfieldsql = "(_w_.$filterFormfieldKey = ?)";
+										array_push($sqlargs, $filterFormfieldValue);
 										$filterEntries[$fe]["FILTER"]["FORMFIELD"][$v]["SQL"] = $formfieldsql;
 									}
 									if ($filterFormfieldKey == "FILTER") {
 										for ($wf = 0; $wf < count($filterFormfieldValue); $wf++) {
 											$wFilter = $filterFormfieldValue[$wf];
-											$param = $wFilter["PARAM"];
+											$param = sYDB()->escape_string(sanitize($wFilter["PARAM"]));
+											// check operator
 											$op = $wFilter["OP"];
+											if (!in_array($op, array("IS", "=", ">", "<", "AND", "OR", "&", "<=>", ">=", "IS NOT", "IS NOT NULL", "IS NULL", "LIKE", "NOT LIKE")))
+												$op = "IS";
 											$value = $wFilter["VALUE"];
-											if (is_numeric($value)) {
-												$valuesql = $value;
-											} else {
-												$valuesql = "'" . $value . "'";
-											}
-											$valuesql = "_wc_.$param $op $valuesql";
+											array_push($sqlargs, $value);
+											$valuesql = "_wc_.`$param` $op ?";
 											$filterEntries[$fe]["FILTER"]["FORMFIELD"][$v]["VALUES"][] = $valuesql;
 										}
 									}
@@ -930,23 +933,18 @@ class CblockMgr extends \framework\Error {
 					}
 				}
 			}
-			$comb = "";
 			$w = 0;
 			foreach ($filterEntries as $fe) {
 				$w++;
 				$comb_select .= ", w" . $w . ".ENTRYMASK AS W$w ";
 				$emjoin .= " LEFT JOIN yg_entrymasks_lnk_formfields as w$w ON (" . $fe["SQL"] . " AND w$w.ENTRYMASK = p.OBJECTID) \n";
-				$cop = "AND";
 				$comb_where .= " AND (w" . $w . ".ENTRYMASK > 1) ";
-				$comb_have .= " ((W$w > 1)  ";
 				$c = 0;
 				if (count($fe["FILTER"]["FORMFIELD"]) > 0) {
 					foreach ($fe["FILTER"]["FORMFIELD"] as $wes) {
 						$c++;
 						$sqlsnippet = str_replace("_w_", "w" . $w, $wes["SQL"]);
 						$emjoin .= " LEFT JOIN yg_contentblocks_lnk_entrymasks_c as w" . $w . "c" . $c . " ON (w" . $w . "c" . $c . ".LNK = l.ID AND " . $sqlsnippet . " AND w" . $w . "c" . $c . ".ENTRYMASKFORMFIELD = w$w.ID  ";
-						//$comb_select .= ", SUM(w".$w."c".$c.".LNK) AS W".$w."C".$c." ";
-						$comb_have .= " AND W" . $w . "C" . $c . " > 1 ";
 						$comb_where .= " AND (w" . $w . "c" . $c . ".LNK > 1)";
 						if (count($wes["VALUES"])) {
 							foreach ($wes["VALUES"] as $sqlsnippet) {
@@ -960,7 +958,6 @@ class CblockMgr extends \framework\Error {
 						}
 					}
 				}
-				$comb_have .= " ) ";
 			}
 
 			/* query each filter entry */
@@ -980,7 +977,13 @@ class CblockMgr extends \framework\Error {
 
 			$emjoin = "";
 			$comb_where = "";
-			$ra = $this->cacheExecuteGetArray($sql);
+
+			array_unshift($sqlargs, $sql);
+			$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+			if ($dbr === false) {
+				throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
+			}
+			$ra = $dbr->GetArray();
 			if (count($ra) > 0) {
 				$matches[] = $ra;
 			} else {
@@ -994,16 +997,15 @@ class CblockMgr extends \framework\Error {
 			$coids_sql = " AND ";
 			for ($r = 0; $r < count($matches); $r++) {
 				$linkset = $matches[$r];
-				$linkcohash = array();
 				$linkIds_sql .= "lnk.ID IN (";
 				$coids_sql .= "(";
 				for ($l = 0; $l < count($linkset); $l++) {
-					$linkIds[$linkset[$l]["CBID"]][] = $linkset[$l]["LINKID"];
-					$linkIds_sql .= $linkset[$l]["LINKID"];
+					$linkIds[$linkset[$l]["CBID"]][] = (int)$linkset[$l]["LINKID"];
+					$linkIds_sql .= (int)$linkset[$l]["LINKID"];
 					if ($linkset[$l]["CBID"] < 1) {
 						$coids_sql .= "(lnk.CBID = -1 AND lnk.CBVERSION = -1) ";
 					} else {
-						$coids_sql .= "(lnk.CBID = " . $linkset[$l]["CBID"] . " AND lnk.CBVERSION = " . $linkset[$l]["CBVERSION"] . ") ";
+						$coids_sql .= "(lnk.CBID = " . (int)$linkset[$l]["CBID"] . " AND lnk.CBVERSION = " . (int)$linkset[$l]["CBVERSION"] . ") ";
 					}
 					if ($l != count($linkset) - 1) {
 						$linkIds_sql .= ",";
@@ -1047,17 +1049,12 @@ class CblockMgr extends \framework\Error {
 		$perm_SQL_WHERE = " AND (";
 		$roles = $this->permissions->getUsergroups();
 		for ($r = 0; $r < count($roles); $r++) {
-			$perm_SQL_WHERE .= "(perm.USERGROUPID = " . $roles[$r]["ID"] . ") ";
-			$roles = $this->permissions->getUsergroups();
+			$perm_SQL_WHERE .= "(perm.USERGROUPID = " . (int)$roles[$r]["ID"] . ") ";
 			if ((count($roles) - $r) > 1) {
 				$perm_SQL_WHERE .= " OR ";
 			}
 		}
 		$perm_SQL_WHERE .= ") ";
-
-		if (count($filterArray) == 0) {
-			$comb_have = "l.CBID > 1";
-		}
 
 		$sql = "SELECT
 		props.OBJECTID AS CBID, props.VERSION AS CBVERSION, lnk.ID AS LINKID, lnk.ENTRYMASK AS ENTRYMASKID, props.CREATEDBY, props.FOLDER, props.CHANGEDBY, props.HASCHANGED, props.CREATEDTS, props.CHANGEDTS, propsv.* $perm_SQL_SELECT
@@ -1155,7 +1152,7 @@ class CblockMgr extends \framework\Error {
 	 * @return int|false Cblock Id or FALSE in case of an error
 	 */
 	function getCblockIdByPName($pname) {
-		$pname = mysql_real_escape_string(sanitize($pname));
+		$pname = sYDB()->escape_string(sanitize($pname));
 		$sql = "SELECT t.ID AS ID FROM yg_contentblocks_tree as t JOIN yg_contentblocks_properties AS p ON (t.ID = p.OBJECTID) WHERE (t.PNAME = '$pname') AND (p.DELETED = 0);";
 		$ra = $this->cacheExecuteGetArray($sql);
 		return $ra[0]['ID'];
@@ -1168,7 +1165,7 @@ class CblockMgr extends \framework\Error {
 	 * @return string Permanent name
 	 */
 	function getPNameByCblockId($cbId) {
-		$cbId = mysql_real_escape_string(sanitize((int)$cbId));
+		$cbId = (int)$cbId;
 		if ($this->permissions->checkInternal($this->_uid, $cbId, "RREAD")) {
 			$sql = "SELECT PNAME FROM yg_contentblocks_tree as t WHERE (t.ID = $cbId);";
 			$ra = $this->cacheExecuteGetArray($sql);
@@ -1185,12 +1182,11 @@ class CblockMgr extends \framework\Error {
 	 * @throws Exception
 	 */
 	public function getLocksByToken($token) {
-		$token = mysql_real_escape_string($token);
 		if ($token == "") {
 			return false;
 		}
-		$sql = "SELECT OBJECTID, LOCKED, TOKEN FROM yg_contentblocks_properties WHERE TOKEN = '" . $token . "';";
-		$dbr = sYDB()->Execute($sql);
+		$sql = "SELECT OBJECTID, LOCKED, TOKEN FROM yg_contentblocks_properties WHERE TOKEN = ?;";
+		$dbr = sYDB()->Execute($sql, $token);
 		if ($dbr === false) {
 			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
 		}
@@ -1232,8 +1228,11 @@ function CBlocksSearchCB(&$list, $type, $operator, $value1 = 0, $value2 = 0) {
 			}
 			break;
 
-		case "ORDER":
-			$list["ORDER"][] = "ORDER BY " . $value1 . " " . $value2;
+		case 'ORDER':
+			$colarr = explode(".", sYDB()->escape_string(sanitize($value1)));
+			$value1 = "`".implode("`.`", $colarr)."`";
+			if ($value2 != "DESC") $value2 = "ASC";
+			$list['ORDER'][] = 'ORDER BY ' . $value1 . ' ' . $value2;
 			break;
 	}
 }

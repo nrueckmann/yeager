@@ -45,9 +45,9 @@ class Permissions {
 	 * @param string $code Privilege code
 	 */
 	public function addPrivilege($code) {
-		$code = mysql_real_escape_string(sanitize($code));
+		$code = sYDB()->escape_string(sanitize($code));
 		$sql = "ALTER TABLE " . $this->_table . " ADD `" . $code . "` SMALLINT NOT NULL DEFAULT '0';";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 	}
 
 	/**
@@ -56,9 +56,9 @@ class Permissions {
 	 * @param string $code Privilege code
 	 */
 	public function removePrivilege($code) {
-		$code = mysql_real_escape_string(sanitize($code));
+		$code = sYDB()->escape_string(sanitize($code));
 		$sql = "ALTER TABLE " . $this->_table . " DROP `" . $code . "`;";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 	}
 
 /// @endcond
@@ -74,8 +74,8 @@ class Permissions {
 			$objectId = $this->_object->getID();
 		}
 		if (($objectId > 0)) {
-			$sql = "SELECT * FROM " . $this->_table . " WHERE OID = $objectId;";
-			$result = sYDB()->Execute($sql);
+			$sql = "SELECT * FROM " . $this->_table . " WHERE OID = ?;";
+			$result = sYDB()->Execute($sql, $objectId);
 			$resultarray = @$result->GetArray();
 			return $resultarray;
 		}
@@ -89,12 +89,13 @@ class Permissions {
 	 */
 	public function getPermissionsBulk($permission, $objectIds = array()) {
 		if ($permission && (count($objectIds) > 0)) {
-			$sql = "SELECT ID, OID, ".$permission." FROM " . $this->_table . " WHERE (";
+			$permission = sYDB()->escape_string($permission);
+			$sql = "SELECT ID, OID, `".$permission."` FROM " . $this->_table . " WHERE (";
 			for ($i = 0; $i < count($objectIds); $i++) {
 				if ($i != 0) {
 					$sql .= " OR ";
 				}
-				$sql .= "(OID = ".$objectIds[$i].")";
+				$sql .= "(OID = ".(int)$objectIds[$i].")";
 			}
 			$sql .= ") AND (";
 
@@ -104,7 +105,7 @@ class Permissions {
 				if ($r != 0) {
 					$sql .= " OR ";
 				}
-				$sql .= "(USERGROUPID = ".$usergroups[$r]["ID"].")";
+				$sql .= "(USERGROUPID = ".(int)$usergroups[$r]["ID"].")";
 			}
 			$sql .= ");";
 			$result = sYDB()->Execute($sql);
@@ -132,17 +133,17 @@ class Permissions {
 	 */
 	public function setPermissions($permissions, $objectId = NULL) {
 		$origObjectId = $objectId;
-		$p = 0;
+
 		foreach ($permissions as $perm) {
 			$roleid = (int)$perm["USERGROUPID"];
 			$robjectId = (int)$perm["OID"];
 			if ($origObjectId < 1) {
 				if ($robjectId < 1) {
 					if ($objectId < 1) {
-						$objectId = $this->_object->getID();
+						$objectId = (int)$this->_object->getID();
 					}
 				} else {
-					$objectId = $robjectId;
+					$objectId = (int)$robjectId;
 				}
 			}
 			// Check if current user has permissions to change usergroup-permissions
@@ -192,15 +193,16 @@ class Permissions {
 
 					// Update
 					$sql = "UPDATE " . $this->_table . " SET
-								RREAD = $value_read,
-								RWRITE = $value_write,
-								RDELETE = $value_delete,
-								RSUB = $value_sub,
-								RSTAGE = $value_stage,
-								RMODERATE = $value_moderate,
-								RCOMMENT = $value_comment,
-								RSEND = $value_send
-							WHERE OID = $objectId AND USERGROUPID = $roleid;";
+								RREAD = ?,
+								RWRITE = ?,
+								RDELETE = ?,
+								RSUB = ?,
+								RSTAGE = ?,
+								RMODERATE = ?,
+								RCOMMENT = ?,
+								RSEND = ?
+							WHERE OID = ? AND USERGROUPID = ?;";
+					$result = sYDB()->Execute($sql, $value_read, $value_write, $value_delete, $value_sub, $value_stage, $value_moderate, $value_comment, $value_send, $objectId, $roleid);
 				} else {
 					$value_read = (int)$perm["RREAD"];
 					$value_write = (int)$perm["RWRITE"];
@@ -213,17 +215,18 @@ class Permissions {
 
 					// Insert
 					$sql = "INSERT INTO " . $this->_table . " SET USERGROUPID = $roleid,
-								RREAD = $value_read,
-								RWRITE = $value_write,
-								RDELETE = $value_delete,
-								RSUB = $value_sub,
-								RSTAGE = $value_stage,
-								RMODERATE = $value_moderate,
-								RCOMMENT = $value_comment,
-								RSEND = $value_send,
-								OID = $objectId;";
+								RREAD = ?,
+								RWRITE = ?,
+								RDELETE = ?,
+								RSUB = ?,
+								RSTAGE = ?,
+								RMODERATE = ?,
+								RCOMMENT = ?,
+								RSEND = ?,
+								OID = ?;";
+					$result = sYDB()->Execute($sql, $value_read, $value_write, $value_delete, $value_sub, $value_stage, $value_moderate, $value_comment, $value_send, $objectId);
 				}
-				$result = sYDB()->Execute($sql);
+
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -249,14 +252,6 @@ class Permissions {
 					$permA["RSEND"] = $value_send;
 					$permA["RREAD"] = $value_read;
 					$this->_object->onPermissionsChange($roleid, $permA, $objectId);
-					/*$this->_object->onPermissionChange($roleid, 'RREAD', $value_read, $objectId);
-										   $this->_object->onPermissionChange($roleid, 'RWRITE', $value_write, $objectId);
-										   $this->_object->onPermissionChange($roleid, 'RDELETE', $value_delete, $objectId);
-										   $this->_object->onPermissionChange($roleid, 'RSUB', $value_sub, $objectId);
-										   $this->_object->onPermissionChange($roleid, 'RSTAGE', $value_stage, $objectId);
-										   $this->_object->onPermissionChange($roleid, 'RMODERATE', $value_moderate, $objectId);
-										   $this->_object->onPermissionChange($roleid, 'RCOMMENT', $value_comment, $objectId);
-										   $this->_object->onPermissionChange($roleid, 'RSEND', $value_send, $objectId);*/
 				}
 			}
 		}
@@ -276,8 +271,8 @@ class Permissions {
 			return sUsergroups()->getByUsergroupHash($this->_table, $usergroupId, $objectId);
 		}
 		if (($objectId > 0) && ($usergroupId > 0)) {
-			$sql = "SELECT * FROM " . $this->_table . " WHERE OID = $objectId;";
-			$result = sYDB()->Execute($sql);
+			$sql = "SELECT * FROM " . $this->_table . " WHERE OID = ?;";
+			$result = sYDB()->Execute($sql, $objectId);
 			$resultarray = @$result->GetArray();
 			foreach ($resultarray as $row) {
 				sUsergroups()->setByUsergroupHash($this->_table, $row["USERGROUPID"], $row["OID"], $row);
@@ -299,8 +294,8 @@ class Permissions {
 	public function setByUsergroup($usergroupId, $permission, $objectId, $value) {
 		$usergroupId = (int)$usergroupId;
 		$objectId = (int)$objectId;
-		$permission = mysql_real_escape_string(sanitize($permission));
-		$value = mysql_real_escape_string(sanitize($value));
+		$permission = sYDB()->escape_string(sanitize($permission));
+		$value = sYDB()->escape_string(sanitize($value));
 		if ($value < 1) {
 			$value = 0;
 		}
@@ -313,12 +308,14 @@ class Permissions {
 		$pinfo = $this->getByUsergroup($usergroupId, $objectId);
 		if (count($pinfo) > 0) {
 			// Update
-			$sql = "UPDATE " . $this->_table . " SET $permission = $value WHERE OID = $objectId AND USERGROUPID = $usergroupId;";
+			$sql = "UPDATE " . $this->_table . " SET `$permission` = ? WHERE OID = ? AND USERGROUPID = ?;";
+			$result = sYDB()->Execute($sql, $value, $objectId, $usergroupId);
 		} else {
 			// Insert
-			$sql = "INSERT INTO " . $this->_table . " SET USERGROUPID = $usergroupId, $permission = $value, OID = $objectId;";
+			$sql = "INSERT INTO " . $this->_table . " SET USERGROUPID = ?, `$permission` = ?, OID = ?;";
+			$result = sYDB()->Execute($sql, $usergroupId, $value, $objectId);
 		}
-		$result = sYDB()->Execute($sql);
+
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -352,14 +349,14 @@ class Permissions {
 			return true;
 		}
 
-		$sql = "DELETE FROM " . $this->_table . " WHERE OID = $newObjectId;";
-		sYDB()->Execute($sql);
+		$sql = "DELETE FROM " . $this->_table . " WHERE OID = ?;";
+		sYDB()->Execute($sql, $newObjectId);
 
 		$sql = "INSERT INTO " . $this->_table . "
 					(OID, USERGROUPID, RREAD, RWRITE, RDELETE, RSUB, RSTAGE, RMODERATE, RCOMMENT, RSEND)
 				SELECT $newObjectId, USERGROUPID, RREAD, RWRITE, RDELETE, RSUB, RSTAGE, RMODERATE, RCOMMENT, RSEND
-				FROM " . $this->_table . " WHERE OID = $oldObjectId;";
-		$result = sYDB()->Execute($sql);
+				FROM " . $this->_table . " WHERE OID = ?;";
+		$result = sYDB()->Execute($sql, $oldObjectId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		} else {
@@ -378,8 +375,8 @@ class Permissions {
 		if ($objectId == NULL) {
 			$objectId = $this->_object->getID();
 		} // oid is optional
-		$sql = "DELETE FROM " . $this->_table . " WHERE OID = $objectId;";
-		$result = sYDB()->Execute($sql);
+		$sql = "DELETE FROM " . $this->_table . " WHERE OID = ?;";
+		$result = sYDB()->Execute($sql, $objectId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -399,7 +396,7 @@ class Permissions {
 	public function checkInternal($userId, $objectId, $permission) {
 		$userId = (int)$userId;
 		$objectId = (int)$objectId;
-		$permission = mysql_real_escape_string(sanitize($permission));
+		$permission = sYDB()->escape_string(sanitize($permission));
 		if (($userId == 0) && ($permission == "RREAD")) {
 			return true;
 		}
@@ -412,6 +409,9 @@ class Permissions {
 		for ($r = 0; $r < count($userroles); $r++) {
 			$permissions = $this->getByUsergroup($userroles[$r]["ID"], $objectId);
 			$privinfo = $privinfo + $permissions[$permission];
+            if ($privinfo > 0) { // early exit
+                return true;
+            }
 		}
 		if ($privinfo > 0) {
 			return true;

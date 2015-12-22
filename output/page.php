@@ -1,9 +1,7 @@
 <?php
 
 	// Includes
-	include "inc/page_parsereq.inc.php";
-	include "inc/page_render.inc.php";
-	include "error.php";
+	include_once "error.php";
 
 	// Set frontend timezone
 	date_default_timezone_set($this->frontendTimezone);
@@ -14,7 +12,7 @@
 	$request_path = getRequestPathArray($request_path_string);
 	$psite = $request_path[1];
 	$ppage = (int)$request_path[2]; 
-	$action = mysql_real_escape_string($this->request->parameters['action']);
+	$action = sYDB()->escape_string($this->request->parameters['action']);
 
 	// Default
 	if (strlen($psite) < 1) {

@@ -39,9 +39,9 @@ class Sites {
 	 */
 	public function add($name) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RSITES')) {
-			$name = mysql_real_escape_string($name);
-			$sql = "INSERT INTO `yg_site` (`ID`, `NAME`) VALUES (NULL, '" . $name . "');";
-			$result = sYDB()->Execute($sql);
+			$name = sYDB()->escape_string($name);
+			$sql = "INSERT INTO `yg_site` (`ID`, `NAME`) VALUES (NULL, ?);";
+			$result = sYDB()->Execute($sql, $name);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -72,8 +72,8 @@ class Sites {
 	public function remove($id) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RSITES')) {
 			$id = (int)$id;
-			$sql = "DELETE FROM `yg_site` WHERE ID = $id;";
-			$result = sYDB()->Execute($sql);
+			$sql = "DELETE FROM `yg_site` WHERE ID = ?;";
+			$result = sYDB()->Execute($sql, $id);
 			$this->removeSiteTables($id);
 			return true;
 		} else {
@@ -89,8 +89,8 @@ class Sites {
 	 */
 	public function siteExists($id) {
 		$id = (int)$id;
-		$sql = "SELECT * FROM `yg_site` WHERE ID = $id";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM `yg_site` WHERE ID = ?";
+		$result = sYDB()->Execute($sql, $id);
 		$resultarray = $result->GetArray();
 		return (count($resultarray) > 0);
 	}
@@ -106,29 +106,29 @@ class Sites {
 	private function removeSiteTables($id) {
 		$id = (int)$id;
 		$sql = "DROP TABLE IF EXISTS `yg_site_" . $id . "_cron`;";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 		$sql = "DROP TABLE IF EXISTS `yg_site_" . $id . "_lnk_cb`;";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 		$sql = "DROP TABLE IF EXISTS `yg_comments_lnk_pages_" . $id . "`;";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 		$sql = "DROP TABLE IF EXISTS `yg_site_" . $id . "_permissions`;";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 		$sql = "DROP TABLE IF EXISTS `yg_site_" . $id . "_properties`;";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 		$sql = "DROP TABLE IF EXISTS `yg_site_" . $id . "_props`;";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 		$sql = "DROP TABLE IF EXISTS `yg_site_" . $id . "_propslv`;";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 		$sql = "DROP TABLE IF EXISTS `yg_site_" . $id . "_propsv`;";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 		$sql = "DROP TABLE IF EXISTS `yg_site_" . $id . "_tree`;";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 		$sql = "DROP TABLE IF EXISTS `yg_site_" . $id . "_tree_history`;";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 
 		// Cleanup History Table
-		$sql = "DELETE FROM `yg_history` WHERE SITEID=" . $id . ";";
-		$result = sYDB()->Execute($sql);
+		$sql = "DELETE FROM `yg_history` WHERE SITEID = ?;";
+		sYDB()->Execute($sql, $id);
 		return true;
 	}
 
@@ -141,11 +141,11 @@ class Sites {
 	 *
 	 * @param int $id Site Id
 	 * @param string $name Site name
-	 * @param int $sourceSite (optional) Site Id of source Site (for copying properties)
 	 * @return bool TRUE on success or FALSE in case of an error
 	 */
-	private function createSiteTables($id, $name, $sourcesite = false) {
+	private function createSiteTables($id, $name) {
 		$id = (int)$id;
+		$name = sYDB()->escape_string($name);
 
 		$sql = "CREATE TABLE `yg_site_" . $id . "_lnk_cb` (
 		  `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -160,7 +160,7 @@ class Sites {
 		  KEY `CBID` (`CBID`,`CBVERSION`),
 		  KEY `CBID_2` (`CBID`,`PID`,`PVERSION`)
 		) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 
 		$sql = "CREATE TABLE `yg_comments_lnk_pages_" . $id . "` (
 		  `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -170,7 +170,7 @@ class Sites {
 		  PRIMARY KEY (`ID`),
 		  UNIQUE KEY `OID` (`OID`,`COMMENTID`) USING BTREE
 		) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 
 		$sql = "CREATE TABLE `yg_site_" . $id . "_permissions` (
 		  `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -187,7 +187,7 @@ class Sites {
 		  PRIMARY KEY (`ID`),
 		  KEY `OID` (`OID`,`USERGROUPID`)
 		) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 
 		$user = new User(sUserMgr()->getCurrentUserID());
 		$anonGroupId = (int)sConfig()->getVar("CONFIG/SYSTEMUSERS/ANONGROUPID");
@@ -200,8 +200,8 @@ class Sites {
 					$sql = "INSERT INTO	`yg_site_" . $id . "_permissions`
 								(`OID`, `USERGROUPID`, `RREAD`, `RWRITE`, `RDELETE`, `RSUB`, `RSTAGE`, `RMODERATE`, `RCOMMENT`, `RSEND`)
 							VALUES
-								(1, " . $rolesList[$r]["ID"] . ", 1, 1, 1, 1, 1, 1, 1, 1);";
-					$result = sYDB()->Execute($sql);
+								(1, ?, 1, 1, 1, 1, 1, 1, 1, 1);";
+					sYDB()->Execute($sql, $rolesList[$r]["ID"]);
 				}
 			}
 		}
@@ -209,8 +209,8 @@ class Sites {
 		$sql = "INSERT INTO	`yg_site_" . $id . "_permissions`
 					(`OID`, `USERGROUPID`, `RREAD`, `RWRITE`, `RDELETE`, `RSUB`, `RSTAGE`, `RMODERATE`, `RCOMMENT`, `RSEND`)
 				VALUES
-					(1, " . $anonGroupId . ", 1, 0, 0, 0, 0, 0, 0, 0);";
-		$result = sYDB()->Execute($sql);
+					(1, ?, 1, 0, 0, 0, 0, 0, 0, 0);";
+		sYDB()->Execute($sql, $anonGroupId);
 
 		$sql = "CREATE TABLE `yg_site_" . $id . "_properties` (
 		  `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -237,23 +237,23 @@ class Sites {
 		  KEY `VERSION` (`VERSION`)
 		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ;
 		";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 
 		$sql = "INSERT INTO `yg_site_" . $id . "_properties` (`OBJECTID`, `VERSION`, `APPROVED`, `CREATEDBY`, `CHANGEDBY`, `HASCHANGED`, `TEMPLATEID`, `NAVIGATION`, `ACTIVE`, `HIDDEN`, `LOCKED`, `DELETED`, `CREATEDTS`, `CHANGEDTS`) VALUES
-				(1, 0, 1, 1, 0, " . sUserMgr()->getCurrentUserID() . ", " . sUserMgr()->getCurrentUserID() . ", 0, 1, 0, 0, 0, 0, 0);";
-		$result = sYDB()->Execute($sql);
+				(1, 0, 1, 1, 0, ?, ?, 0, 1, 0, 0, 0, 0, 0);";
+		sYDB()->Execute($sql, sUserMgr()->getCurrentUserID(), sUserMgr()->getCurrentUserID());
 
 		// hotfix for #2260 (in principle we want custom properties per site)
 		$siteList = $this->getList();
-		$sourceSiteId = $siteList[0]["ID"];
+		$sourceSiteId = (int)$siteList[0]["ID"];
 
 		if (count($siteList) > 0) {
 			$sql = "CREATE TABLE `yg_site_" . $id . "_props` AS (SELECT * FROM `yg_site_" . $sourceSiteId . "_props`);";
-			$result = sYDB()->Execute($sql);
+			sYDB()->Execute($sql);
 			$sql = "CREATE TABLE `yg_site_" . $id . "_propslv` AS (SELECT * FROM `yg_site_" . $sourceSiteId . "_propslv`);";
-			$result = sYDB()->Execute($sql);
+			sYDB()->Execute($sql);
 			$sql = "CREATE TABLE `yg_site_" . $id . "_propsv` AS (SELECT * FROM `yg_site_" . $sourceSiteId . "_propsv` WHERE OID < 0);";
-			$result = sYDB()->Execute($sql);
+			sYDB()->Execute($sql);
 		} else {
 			// first site
 			$sql = "CREATE TABLE `yg_site_" . $id . "_props` (
@@ -267,13 +267,13 @@ class Sites {
 			  PRIMARY KEY (`ID`)
 			) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 			";
-			$result = sYDB()->Execute($sql);
+			sYDB()->Execute($sql);
 
 			$sql = "INSERT INTO `yg_site_" . $id . "_props` (`ID`, `NAME`, `IDENTIFIER`, `VISIBLE`, `READONLY`, `TYPE`, `LISTORDER`) VALUES
 						(1, 'Name', 'NAME', 1, 1, 'TEXT', 1),
 						(2, 'Title', 'TITLE', 1, 1, 'TEXT', 2),
 						(3, 'Description', 'DESCRIPTION', 1, 1, 'TEXTAREA', 3);";
-			$result = sYDB()->Execute($sql);
+			sYDB()->Execute($sql);
 
 			$sql = "CREATE TABLE IF NOT EXISTS `yg_site_" . $id . "_propslv` (
 						`ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -283,7 +283,7 @@ class Sites {
 	                    PRIMARY KEY (`ID`),
 	                    KEY `LISTORDER` (`LISTORDER`,`PID`)
 					) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
-			$result = sYDB()->Execute($sql);
+			sYDB()->Execute($sql);
 
 			$sql = "CREATE TABLE IF NOT EXISTS `yg_site_" . $id . "_propsv` (
 						`OID` int(11) NOT NULL DEFAULT '0',
@@ -292,12 +292,12 @@ class Sites {
 						`DESCRIPTION` text,
 						PRIMARY KEY (`OID`)
 					) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
-			$result = sYDB()->Execute($sql);
+			sYDB()->Execute($sql);
 		}
 
 		$sql = "INSERT INTO `yg_site_" . $id . "_propsv` (`OID`, `NAME`, `TITLE`, `DESCRIPTION`) VALUES
-					(1, '" . $name . "', NULL, NULL);";
-		$result = sYDB()->Execute($sql);
+					(1, ?, NULL, NULL);";
+		sYDB()->Execute($sql, $name);
 
 		$sql = "CREATE TABLE IF NOT EXISTS `yg_site_" . $id . "_tree` (
 		  `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -314,11 +314,11 @@ class Sites {
 		  KEY `LFT` (`LFT`,`RGT`)
 		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ;
 		";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 
 		$sql = "INSERT INTO `yg_site_" . $id . "_tree` (`ID`, `LFT`, `RGT`, `VERSIONPUBLISHED`, `MOVED`, `TITLE`, `LEVEL`, `PARENT`, `PNAME`) VALUES
-		(1, 1, 2, 0, 0, '', 1, 0, '" . $name . "');";
-		$result = sYDB()->Execute($sql);
+		(1, 1, 2, 0, 0, '', 1, 0, ?);";
+		sYDB()->Execute($sql, $name);
 
 		$sql = "CREATE TABLE IF NOT EXISTS `yg_site_" . $id . "_tree_history` (
 		  `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -333,7 +333,7 @@ class Sites {
 		  PRIMARY KEY (`ID`),
 		  KEY `OID` (`OID`)
 		) ENGINE=MyISAM  DEFAULT CHARSET=utf8  ;";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 
 		$sql = "CREATE TABLE IF NOT EXISTS `yg_site_" . $id . "_cron` (
 		  `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -347,7 +347,7 @@ class Sites {
 		  `STATUS` int(11) NOT NULL,
 		  PRIMARY KEY (`ID`)
 		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
-		$result = sYDB()->Execute($sql);
+		sYDB()->Execute($sql);
 		return true;
 	}
 
@@ -362,8 +362,8 @@ class Sites {
 	 */
 	function get($site) {
 		$site = (int)$site;
-		$sql = "SELECT * FROM yg_site WHERE ID = $site;";
-		$result = sYDB()->execute($sql);
+		$sql = "SELECT * FROM yg_site WHERE ID = ?;";
+		$result = sYDB()->Execute($sql, $site);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -380,8 +380,8 @@ class Sites {
 	 */
 	function getName($site) {
 		$site = (int)$site;
-		$sql = "SELECT NAME FROM yg_site WHERE ID = $site;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT NAME FROM yg_site WHERE ID = ?;";
+		$result = sYDB()->Execute($sql, $site);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -398,8 +398,8 @@ class Sites {
 	 */
 	function getPName($site) {
 		$site = (int)$site;
-		$sql = "SELECT PNAME FROM yg_site WHERE ID = $site";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT PNAME FROM yg_site WHERE ID = ?";
+		$result = sYDB()->Execute($sql, $site);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -418,9 +418,9 @@ class Sites {
 		if (strlen(trim($name)) == 0) {
 			return false;
 		}
-		$name = mysql_real_escape_string(sanitize($name));
-		$sql = "SELECT * FROM yg_site WHERE (PNAME = '$name');";
-		$result = sYDB()->Execute($sql);
+		$name = sYDB()->escape_string(sanitize($name));
+		$sql = "SELECT * FROM yg_site WHERE (PNAME = ?);";
+		$result = sYDB()->Execute($sql, $name);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -476,8 +476,8 @@ class Sites {
 		if (sUsergroups()->permissions->check($this->_uid, 'RSITES')) {
 			$siteId = (int)$siteId;
 			$templateId = (int)$templateId;
-			$sql = "UPDATE yg_site SET DEFAULTTEMPLATE = $templateId WHERE ID = $siteId;";
-			$result = $this->_db->execute($sql);
+			$sql = "UPDATE yg_site SET DEFAULTTEMPLATE = ? WHERE ID = ?;";
+			$result = $this->_db->execute($sql, $templateId, $siteId);
 			if ($result === false) {
 				return false;
 			}
@@ -498,8 +498,8 @@ class Sites {
 		if (sUsergroups()->permissions->check($this->_uid, 'RSITES')) {
 			$siteId = (int)$siteId;
 			$templateId = (int)$templateId;
-			$sql = "UPDATE yg_site SET TEMPLATEROOT = $templateId WHERE ID = $siteId;";
-			$result = $this->_db->execute($sql);
+			$sql = "UPDATE yg_site SET TEMPLATEROOT = ? WHERE ID = ?;";
+			$result = $this->_db->execute($sql, $templateId, $siteId);
 			if ($result === false) {
 				return false;
 			}
@@ -519,20 +519,20 @@ class Sites {
 	public function setPName($siteId, $PName) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RSITES')) {
 			$siteId = (int)$siteId;
-			$PName = mysql_real_escape_string(sanitize($PName));
+			$PName = sYDB()->escape_string(sanitize($PName));
 
 			if (is_numeric($PName)) {
 				return false;
 			}
 
-			$sql = "UPDATE yg_site SET PNAME = '$PName' WHERE ID = $siteId;";
-			$result = $this->_db->execute($sql);
+			$sql = "UPDATE yg_site SET PNAME = ? WHERE ID = ?;";
+			$result = $this->_db->execute($sql, $PName, $siteId);
 			if ($result === false) {
 				return false;
 			}
 
-			$sql = "UPDATE `yg_site_" . $siteId . "_tree` SET PNAME = '$PName' WHERE ID = 1;";
-			$result = $this->_db->execute($sql);
+			$sql = "UPDATE `yg_site_" . $siteId . "_tree` SET PNAME = ? WHERE ID = 1;";
+			$result = $this->_db->execute($sql, $PName);
 			if ($result === false) {
 				return false;
 			}
@@ -624,10 +624,10 @@ class Sites {
 	public function setName($siteId, $name) {
 		if (sUsergroups()->permissions->check($this->_uid, 'RSITES')) {
 			$siteId = (int)$siteId;
-			$name = mysql_real_escape_string(sanitize($name));
+			$name = sYDB()->escape_string(sanitize($name));
 
-			$sql = "UPDATE yg_site SET NAME = '$name' WHERE ID = $siteId;";
-			$result = $this->_db->execute($sql);
+			$sql = "UPDATE yg_site SET NAME = ? WHERE ID = ?;";
+			$result = $this->_db->execute($sql, $name, $siteId);
 			if ($result === false) {
 				return false;
 			}
@@ -648,8 +648,8 @@ class Sites {
 		if (sUsergroups()->permissions->check($this->_uid, 'RSITES')) {
 			$siteId = (int)$siteId;
 			$fileId = (int)$fileId;
-			$sql = "UPDATE yg_site SET FAVICON = $fileId WHERE ID = $siteId;";
-			$result = $this->_db->execute($sql);
+			$sql = "UPDATE yg_site SET FAVICON = ? WHERE ID = ?;";
+			$result = $this->_db->execute($sql, $fileId, $siteId);
 			if ($result === false) {
 				return false;
 			}

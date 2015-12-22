@@ -31,13 +31,14 @@ class PropertySettings extends \framework\Error {
 	 * @return array|bool Result of SQL query or FALSE in case of an error
 	 * @throws Exception
 	 */
-	function cacheExecuteGetArray($sql) {
-		$dbr = sYDB()->Execute($sql);
-		if ($dbr === false) {
-			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
-		}
-		$blaetter = $dbr->GetArray();
-		return $blaetter;
+	function cacheExecuteGetArray() {
+        $args = func_get_args();
+        $dbr = call_user_func_array(array(sYDB(), 'Execute'), $args);
+        if ($dbr === false) {
+            throw new Exception(sYDB()->ErrorMsg() . ':: ' . $sql);
+        }
+        $blaetter = $dbr->GetArray();
+        return $blaetter;
 	}
 
 /// @endcond
@@ -54,14 +55,14 @@ class PropertySettings extends \framework\Error {
 	 * @throws Exception
 	 */
 	function add($name, $identifier, $type = 'TEXT', $visible = 1, $listorder = 9999) {
-		$name = sanitize($name);
-		$identifier = mysql_real_escape_string(sanitize($identifier));
+		$name = sYDB()->escape_string(sanitize($name));
+		$identifier = sYDB()->escape_string(sanitize($identifier));
 		$visible = (int)$visible;
-		$type = mysql_real_escape_string(sanitize($type));
+		$type = sYDB()->escape_string(sanitize($type));
 		$listorder = (int)$listorder;
 
-		$sql = "SELECT IDENTIFIER FROM " . $this->_table . " WHERE IDENTIFIER = '$identifier';";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT IDENTIFIER FROM " . $this->_table . " WHERE IDENTIFIER = ?;";
+		$result = sYDB()->Execute($sql, $identifier);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 			return false;
@@ -71,8 +72,8 @@ class PropertySettings extends \framework\Error {
 			return false;
 		}
 
-		$sql = "INSERT INTO " . $this->_table . " (NAME, IDENTIFIER, VISIBLE, TYPE, LISTORDER) VALUES ('$name','$identifier',$visible,'$type',$listorder)";
-		$result = sYDB()->Execute($sql);
+		$sql = "INSERT INTO " . $this->_table . " (NAME, IDENTIFIER, VISIBLE, TYPE, LISTORDER) VALUES (?, ?, ?, ?, ?)";
+		$result = sYDB()->Execute($sql, $name, $identifier, $visible, $type, $listorder);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -98,16 +99,16 @@ class PropertySettings extends \framework\Error {
 	 * @throws Exception
 	 */
 	function remove($identifier) {
-		$identifier = mysql_real_escape_string(sanitize($identifier));
+		$identifier = sYDB()->escape_string(sanitize($identifier));
 
-		$sql = "DELETE FROM `" . $this->_table . "` WHERE IDENTIFIER = '$identifier';";
-		$result = sYDB()->execute($sql);
+		$sql = "DELETE FROM `" . $this->_table . "` WHERE IDENTIFIER = ?;";
+		$result = sYDB()->Execute($sql, $identifier);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
 
 		$sql = "ALTER TABLE `" . $this->_table . "v` DROP `$identifier`;";
-		$result = sYDB()->execute($sql);
+		$result = sYDB()->Execute($sql);
 		if ($result === false) {
 			return false;
 		}
@@ -122,10 +123,10 @@ class PropertySettings extends \framework\Error {
 	 * @throws Exception
 	 */
 	function setName($identifier, $value) {
-		$identifier = mysql_real_escape_string(sanitize($identifier));
-		$value = mysql_real_escape_string($value);
-		$sql = "UPDATE `" . $this->_table . "` SET `NAME` = '" . $value . "' WHERE IDENTIFIER = '" . $identifier . "';";
-		$result = sYDB()->Execute($sql);
+		$identifier = sYDB()->escape_string(sanitize($identifier));
+		$value = sYDB()->escape_string($value);
+		$sql = "UPDATE `" . $this->_table . "` SET `NAME` = ? WHERE IDENTIFIER = ?;";
+		$result = sYDB()->Execute($sql, $value, $identifier);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -139,16 +140,16 @@ class PropertySettings extends \framework\Error {
 	 * @throws Exception
 	 */
 	function setIdentifier($identifier, $newIdentifier) {
-		$identifier = mysql_real_escape_string(sanitize($identifier));
-		$newIdentifier = mysql_real_escape_string(sanitize($newIdentifier));
-		$sql = "UPDATE `" . $this->_table . "` SET `IDENTIFIER` = '" . $newIdentifier . "' WHERE IDENTIFIER = '" . $identifier . "'";
-		$result = sYDB()->execute($sql);
+		$identifier = sYDB()->escape_string(sanitize($identifier));
+		$newIdentifier = sYDB()->escape_string(sanitize($newIdentifier));
+		$sql = "UPDATE `" . $this->_table . "` SET `IDENTIFIER` = ? WHERE IDENTIFIER = ?";
+		$result = sYDB()->Execute($sql, $newIdentifier, $identifier);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
 
 		$sql = "ALTER TABLE `" . $this->_table . "v` CHANGE `$identifier` `$newIdentifier` text;";
-		$result = sYDB()->execute($sql);
+		$result = sYDB()->Execute($sql);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -163,10 +164,10 @@ class PropertySettings extends \framework\Error {
 	 * @throws Exception
 	 */
 	function setOrder($identifier, $listorder) {
-		$identifier = mysql_real_escape_string(sanitize($identifier));
+		$identifier = sYDB()->escape_string(sanitize($identifier));
 		$listorder = (int)$listorder;
-		$sql = "UPDATE `" . $this->_table . "` SET `LISTORDER` = '" . $listorder . "' WHERE IDENTIFIER = '" . $identifier . "';";
-		$result = sYDB()->execute($sql);
+		$sql = "UPDATE `" . $this->_table . "` SET `LISTORDER` = ? WHERE IDENTIFIER = ?;";
+		$result = sYDB()->Execute($sql, $listorder, $identifier);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -181,12 +182,12 @@ class PropertySettings extends \framework\Error {
 	 * @return bool TRUE on success or FALSE in case of an error
 	 */
 	function addListValue($identifier, $value, $listorder = 0) {
-		$identifier = mysql_real_escape_string(sanitize($identifier));
-		$value = mysql_real_escape_string($value);
+		$identifier = sYDB()->escape_string(sanitize($identifier));
+		$value = sYDB()->escape_string($value);
 		$listorder = (int)$listorder;
 		$prop_info = $this->getProperty($identifier);
-		$sql = "INSERT INTO " . $this->_table . "lv (PID, VALUE, LISTORDER) VALUES ('" . $prop_info[0]['ID'] . "', '" . $value . "', " . $listorder . ");";
-		$result = sYDB()->Execute($sql);
+		$sql = "INSERT INTO " . $this->_table . "lv (PID, VALUE, LISTORDER) VALUES (?, ?, ?);";
+		$result = sYDB()->Execute($sql, $prop_info[0]['ID'], $value, $listorder);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 			return false;
@@ -201,13 +202,12 @@ class PropertySettings extends \framework\Error {
 	 * @return bool TRUE on success or FALSE in case of an error
 	 */
 	function clearListValues($identifier) {
-		$identifier = mysql_real_escape_string(sanitize($identifier));
+		$identifier = sYDB()->escape_string(sanitize($identifier));
 		$prop_info = $this->getProperty($identifier);
 
 		if (count($prop_info) > 0) {
-			$value = mysql_real_escape_string($value);
-			$sql = "DELETE FROM " . $this->_table . "lv WHERE PID = " . $prop_info[0]['ID'] . ";";
-			$result = sYDB()->Execute($sql);
+			$sql = "DELETE FROM " . $this->_table . "lv WHERE PID = ?;";
+			$result = sYDB()->Execute($sql, $prop_info[0]['ID']);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 				return false;
@@ -223,10 +223,10 @@ class PropertySettings extends \framework\Error {
 	 * @return array|false Array of list values or FALSE in case of an error
 	 */
 	function getListValues($identifier) {
-		$identifier = mysql_real_escape_string(sanitize($identifier));
+		$identifier = sYDB()->escape_string(sanitize($identifier));
 		$prop_info = $this->getProperty($identifier);
-		$sql = "SELECT VALUE FROM `" . $this->_table . "lv` WHERE PID = " . $prop_info[0]['ID'] . " ORDER BY LISTORDER ASC";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT VALUE FROM `" . $this->_table . "lv` WHERE PID = ? ORDER BY LISTORDER ASC";
+		$result = sYDB()->Execute($sql, $prop_info[0]['ID']);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 			return false;
@@ -242,9 +242,9 @@ class PropertySettings extends \framework\Error {
 	 * @return array Array containing information about the Property
 	 */
 	function getProperty($identifier) {
-		$identifier = mysql_real_escape_string($identifier);
-		$sql = "SELECT NAME, ID, IDENTIFIER, VISIBLE, READONLY, TYPE FROM " . $this->_table . " WHERE IDENTIFIER = '" . $identifier . "';";
-		$resultarray = $this->cacheExecuteGetArray($sql);
+		$identifier = sYDB()->escape_string($identifier);
+		$sql = "SELECT NAME, ID, IDENTIFIER, VISIBLE, READONLY, TYPE FROM " . $this->_table . " WHERE IDENTIFIER = ?;";
+		$resultarray = $this->cacheExecuteGetArray($sql, $identifier);
 		return $resultarray;
 	}
 
@@ -256,14 +256,20 @@ class PropertySettings extends \framework\Error {
 	 * @return array Array Properties
 	 */
 	function getList($order = 'NAME', $identifier) {
-		$identifier = mysql_real_escape_string($identifier);
+		$identifier = sYDB()->escape_string($identifier);
+		$order = sYDB()->escape_string(sanitize($order));
 		if (strlen($identifier) > 0) {
-			$prefix_sql = " (IDENTIFIER like '%" . $identifier . "')  ";
+			$identifier = "%".$identifier."%";
+			$prefix_sql = " (IDENTIFIER like ?)  ";
 		} else {
 			$prefix_sql = "1";
 		}
-		$sql = "SELECT NAME, READONLY, ID, IDENTIFIER, VISIBLE, TYPE FROM " . $this->_table . " WHERE 1 AND $prefix_sql ORDER BY $order;";
-		$resultarray = $this->cacheExecuteGetArray($sql);
+		$sql = "SELECT NAME, READONLY, ID, IDENTIFIER, VISIBLE, TYPE FROM " . $this->_table . " WHERE 1 AND $prefix_sql ORDER BY `$order`;";
+		if (strlen($identifier) > 0) {
+			$resultarray = $this->cacheExecuteGetArray($sql, "%".$identifier."%");
+		} else {
+			$resultarray = $this->cacheExecuteGetArray($sql);
+		}
 		return $resultarray;
 	}
 

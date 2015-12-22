@@ -66,8 +66,8 @@ class Scheduler extends \framework\Error {
 		$objectId = (int)$objectId;
 		$timestamp = (int)$timestamp;
 		$timeout = (int)$timeout;
-		$actioncode = mysql_real_escape_string(sanitize($actioncode));
-		$parameters = mysql_real_escape_string(serialize($parameters));
+		$actioncode = sYDB()->escape_string(sanitize($actioncode));
+		$parameters = serialize($parameters);
 
 		if ($objectId < 1) {
 			return false;
@@ -77,13 +77,13 @@ class Scheduler extends \framework\Error {
 		}
 
 		$sql = "SELECT * FROM " . $this->_table . " WHERE
-			(OBJECTTYPE = " . $this->_objecttype . ") AND
-			(OBJECTID = $objectId) AND
-			(ACTIONCODE = '$actioncode') AND
-			(PARAMETERS = '$parameters') AND
-			(USERID = " . $this->_uid . ") AND
-			(STATUS = " . SCHEDULER_STATE_PENDING . ");";
-		$result = sYDB()->Execute($sql);
+			(OBJECTTYPE = ?) AND
+			(OBJECTID = ?) AND
+			(ACTIONCODE = ?) AND
+			(PARAMETERS = ?) AND
+			(USERID = ?) AND
+			(STATUS = ?);";
+		$result = sYDB()->Execute($sql, $this->_objecttype, $objectId, $actioncode, $parameters, $this->_uid, SCHEDULER_STATE_PENDING);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -92,8 +92,8 @@ class Scheduler extends \framework\Error {
 		if (count($resultarray) === 0) {
 			$sql = "INSERT INTO " . $this->_table . " (ID, OBJECTTYPE, OBJECTID, ACTIONCODE, `TIMESTAMP`, `EXPIRES`, PARAMETERS, USERID, STATUS)
 						VALUES
-					(NULL, " . $this->_objecttype . ", $objectId, '$actioncode', $timestamp, " . ($timestamp + $timeout) . ", '$parameters', " . $this->_uid . ", " . SCHEDULER_STATE_PENDING . ")";
-			$result = sYDB()->Execute($sql);
+					(NULL, ?, ?, ?, ?, ?, ?, ?, ?)";
+			$result = sYDB()->Execute($sql, $this->_objecttype, $objectId, $actioncode, $timestamp, ($timestamp + $timeout), $parameters, $this->_uid , SCHEDULER_STATE_PENDING);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -116,7 +116,7 @@ class Scheduler extends \framework\Error {
 	function getSchedule($objectId, $actioncodeFilter = '', $timestamp = 0) {
 		$objectId = (int)$objectId;
 		$timestamp = (int)$timestamp;
-		$actioncodeFilter = mysql_real_escape_string(sanitize($actioncodeFilter));
+		$actioncodeFilter = sYDB()->escape_string(sanitize($actioncodeFilter));
 		if ($objectId < 1) {
 			return false;
 		}
@@ -126,8 +126,8 @@ class Scheduler extends \framework\Error {
 		if ($timestamp > 0) {
 			$filter_sql .= " AND (TIMESTAMP <= $timestamp)";
 		}
-		$sql = "SELECT * FROM " . $this->_table . " WHERE (OBJECTTYPE = " . $this->_objecttype . ") AND (OBJECTID = $objectId) $filter_sql ORDER BY `TIMESTAMP` DESC;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM " . $this->_table . " WHERE (OBJECTTYPE = ?) AND (OBJECTID = ?) $filter_sql ORDER BY `TIMESTAMP` DESC;";
+		$result = sYDB()->Execute($sql, $this->_objecttype, $objectId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -147,8 +147,8 @@ class Scheduler extends \framework\Error {
 	 */
 	function get($jobId) {
 		$jobId = (int)$jobId;
-		$sql = "SELECT * FROM " . $this->_table . " WHERE ID = $jobId;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM " . $this->_table . " WHERE ID = ?;";
+		$result = sYDB()->Execute($sql, $jobId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -172,8 +172,8 @@ class Scheduler extends \framework\Error {
 		if ($status > 0) {
 			$statsql = " AND STATUS = '" . $status . "'";
 		}
-		$sql = "SELECT * FROM " . $this->_table . " WHERE (OBJECTTYPE = " . $this->_objecttype . ") AND (TIMESTAMP <= $currentTS) $statsql ORDER BY `TIMESTAMP` DESC;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM " . $this->_table . " WHERE (OBJECTTYPE = ?) AND (TIMESTAMP <= ?) $statsql ORDER BY `TIMESTAMP` DESC;";
+		$result = sYDB()->Execute($sql,  $this->_objecttype, $currentTS);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -196,8 +196,8 @@ class Scheduler extends \framework\Error {
 		if ($includePausedJobs) {
 			$sqlPausedJobs = "OR (STATUS = " . SCHEDULER_STATE_PAUSED . ")";
 		}
-		$sql = "SELECT * FROM " . $this->_table . " WHERE (OBJECTTYPE = " . $this->_objecttype . ") AND (TIMESTAMP <= $currentTS) AND ( (STATUS = " . SCHEDULER_STATE_PENDING . ") $sqlPausedJobs ) ORDER BY `TIMESTAMP` DESC;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM " . $this->_table . " WHERE (OBJECTTYPE = ?) AND (TIMESTAMP <= ?) AND ( (STATUS = ?) $sqlPausedJobs ) ORDER BY `TIMESTAMP` DESC;";
+		$result = sYDB()->Execute($sql, $this->_objecttype, $currentTS, SCHEDULER_STATE_PENDING);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -259,7 +259,7 @@ class Scheduler extends \framework\Error {
 
 		$currentTS = time();
 		if ($includePausedJobs) {
-			$sqlPausedJobs = "OR (STATUS = " . SCHEDULER_STATE_PAUSED . ")";
+			$sqlPausedJobs = "OR (STATUS = ". SCHEDULER_STATE_PAUSED .")";
 		}
 
 		$sql = "SET autocommit=0;";
@@ -274,14 +274,14 @@ class Scheduler extends \framework\Error {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
 
-		$sql = "UPDATE " . $this->_table . " SET EXPIRES = " . ($timeout + $currentTS) . " WHERE (OBJECTTYPE = " . $this->_objecttype . ") AND (EXPIRES <= $currentTS) AND ( (STATUS = " . SCHEDULER_STATE_QUEUED . ") $sqlPausedJobs );";
-		$result = sYDB()->Execute($sql);
+		$sql = "UPDATE " . $this->_table . " SET EXPIRES = ? WHERE (OBJECTTYPE = ?) AND (EXPIRES <= ?) AND ( (STATUS =  ?) $sqlPausedJobs );";
+		$result = sYDB()->Execute($sql, ($timeout + $currentTS), $this->_objecttype, $currentTS, SCHEDULER_STATE_QUEUED);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
 
-		$sql = "UPDATE " . $this->_table . " SET STATUS = " . SCHEDULER_STATE_QUEUED . " WHERE (OBJECTTYPE = " . $this->_objecttype . ") AND (TIMESTAMP <= $currentTS) AND ( (STATUS = " . SCHEDULER_STATE_PENDING . ") $sqlPausedJobs );";
-		$result = sYDB()->Execute($sql);
+		$sql = "UPDATE " . $this->_table . " SET STATUS =  ? WHERE (OBJECTTYPE = ?) AND (TIMESTAMP <= ?) AND ( (STATUS = ?) $sqlPausedJobs );";
+		$result = sYDB()->Execute($sql, SCHEDULER_STATE_QUEUED, $this->_objecttype, $currentTS, SCHEDULER_STATE_PENDING);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -292,8 +292,8 @@ class Scheduler extends \framework\Error {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
 
-		$sql = "SELECT * FROM " . $this->_table . " WHERE (OBJECTTYPE = " . $this->_objecttype . ") AND (TIMESTAMP <= $currentTS) AND ( (STATUS = " . SCHEDULER_STATE_QUEUED . ") $sqlPausedJobs ) ORDER BY `TIMESTAMP` DESC;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM " . $this->_table . " WHERE (OBJECTTYPE = ?) AND (TIMESTAMP <= ?) AND ( (STATUS = ?) $sqlPausedJobs ) ORDER BY `TIMESTAMP` DESC;";
+		$result = sYDB()->Execute($sql, $this->_objecttype, $currentTS, SCHEDULER_STATE_QUEUED);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -320,8 +320,8 @@ class Scheduler extends \framework\Error {
 		if ($includePausedJobs) {
 			$sqlPausedJobs = "OR (STATUS = " . SCHEDULER_STATE_PAUSED . ")";
 		}
-		$sql = "SELECT * FROM " . $this->_table . " WHERE (OBJECTTYPE = " . $this->_objecttype . ") AND (OBJECTID = $objectId) AND (TIMESTAMP <= $currentTS) AND ( (STATUS = " . SCHEDULER_STATE_PENDING . ") $sqlPausedJobs ) ORDER BY `TIMESTAMP` DESC;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM " . $this->_table . " WHERE (OBJECTTYPE = ?) AND (OBJECTID = ?) AND (TIMESTAMP <= ?) AND ( (STATUS = ?) $sqlPausedJobs ) ORDER BY `TIMESTAMP` DESC;";
+		$result = sYDB()->Execute($sql, $this->_objecttype, $objectId, $currentTS, SCHEDULER_STATE_PENDING);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -341,22 +341,25 @@ class Scheduler extends \framework\Error {
 	 * @return array List of Scheduler jobs
 	 * @throws Exception
 	 */
-	function getQueuedJobsForObject($objectId, $includePausedJobs = false, $filterJobType = '') {
+	function getQueuedJobsForObject($objectId, $includePausedJobs = false, $includeRunningJobs = false, $filterJobType = '') {
 		$objectId = (int)$objectId;
 		$currentTS = time();
-		$filterJobType = mysql_real_escape_string(sanitize($filterJobType));
+		$sqlJobs = "";
+		$filterJobType = sYDB()->escape_string(sanitize($filterJobType));
 		if ($includePausedJobs) {
-			$sqlPausedJobs = "OR (STATUS = " . SCHEDULER_STATE_PAUSED . ")";
+			$sqlJobs .= "OR (STATUS = " . SCHEDULER_STATE_PAUSED . ")";
+		}
+		if ($includeRunningJobs) {
+			$sqlJobs .= "OR (STATUS = " . SCHEDULER_STATE_RUNNING . ")";
 		}
 		if ($filterJobType != '') {
 			$sqlFilterJobType = "AND (ACTIONCODE = '" . $filterJobType . "')";
 		}
-		$sql = "SELECT * FROM " . $this->_table . " WHERE (OBJECTTYPE = " . $this->_objecttype . ") AND (OBJECTID = $objectId) AND (TIMESTAMP <= $currentTS) AND ( (STATUS = " . SCHEDULER_STATE_QUEUED . ") $sqlPausedJobs ) $sqlFilterJobType ORDER BY `TIMESTAMP` DESC;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM " . $this->_table . " WHERE (OBJECTTYPE = ?) AND (OBJECTID = ?) AND (TIMESTAMP <= ?) AND ( (STATUS = ?) $sqlJobs ) $sqlFilterJobType ORDER BY `TIMESTAMP` DESC;";
+		$result = sYDB()->Execute($sql, $this->_objecttype, $objectId, $currentTS, SCHEDULER_STATE_QUEUED);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
-
 		$resultarray = $result->GetArray();
 		for ($i = 0; $i < count($resultarray); $i++) {
 			$resultarray[$i]["PARAMETERS"] = unserialize($resultarray[$i]["PARAMETERS"]);
@@ -374,8 +377,8 @@ class Scheduler extends \framework\Error {
 	function pauseAllQueuedJobsForObject($objectId) {
 		$objectId = (int)$objectId;
 		$currentTS = time();
-		$sql = "UPDATE " . $this->_table . " SET STATUS = " . SCHEDULER_STATE_PAUSED . " WHERE (OBJECTTYPE = " . $this->_objecttype . ") AND (OBJECTID = $objectId) AND (STATUS = " . SCHEDULER_STATE_QUEUED . ") AND (TIMESTAMP <= $currentTS);";
-		$result = sYDB()->Execute($sql);
+		$sql = "UPDATE " . $this->_table . " SET STATUS = ? WHERE (OBJECTTYPE = ?) AND (OBJECTID = ?) AND (STATUS = ?) AND (TIMESTAMP <= ?);";
+		$result = sYDB()->Execute($sql, SCHEDULER_STATE_PAUSED, $this->_objecttype, $objectId, SCHEDULER_STATE_QUEUED, $currentTS);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -392,8 +395,8 @@ class Scheduler extends \framework\Error {
 	function resumeAllQueuedJobsForObject($objectId) {
 		$objectId = (int)$objectId;
 		$currentTS = time();
-		$sql = "UPDATE " . $this->_table . " SET STATUS = " . SCHEDULER_STATE_PENDING . " WHERE (OBJECTTYPE = " . $this->_objecttype . ") AND (OBJECTID = $objectId) AND (STATUS = " . SCHEDULER_STATE_PAUSED . ") AND (TIMESTAMP <= $currentTS);";
-		$result = sYDB()->Execute($sql);
+		$sql = "UPDATE " . $this->_table . " SET STATUS = ? WHERE (OBJECTTYPE = ?) AND (OBJECTID = ?) AND (STATUS = ?) AND (TIMESTAMP <= ?);";
+		$result = sYDB()->Execute($sql, SCHEDULER_STATE_PENDING, $this->_objecttype, $objectId, SCHEDULER_STATE_PAUSED, $currentTS);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -410,8 +413,8 @@ class Scheduler extends \framework\Error {
 	function cancelAllQueuedJobsForObject($objectId) {
 		$objectId = (int)$objectId;
 		$currentTS = time();
-		$sql = "DELETE FROM " . $this->_table . " WHERE (OBJECTTYPE = " . $this->_objecttype . ") AND (OBJECTID = $objectId) AND (TIMESTAMP <= $currentTS);";
-		$result = sYDB()->Execute($sql);
+		$sql = "DELETE FROM " . $this->_table . " WHERE (OBJECTTYPE = ?) AND (OBJECTID = ?) AND (TIMESTAMP <= ?);";
+		$result = sYDB()->Execute($sql, $this->_objecttype, $objectId, $currentTS);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -431,8 +434,8 @@ class Scheduler extends \framework\Error {
 			return false;
 		}
 
-		$sql = "SELECT STATUS FROM " . $this->_table . " WHERE ID = $jobId;";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT STATUS FROM " . $this->_table . " WHERE ID = ?;";
+		$result = sYDB()->Execute($sql, $jobId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -449,16 +452,15 @@ class Scheduler extends \framework\Error {
 	 * @throws Exception
 	 */
 	function setJobState($jobId, $state) {
+
 		$jobId = (int)$jobId;
 		$state = (int)$state;
 		if ($jobId < 1) {
 			return false;
 		}
 
-		$sql = "UPDATE " . $this->_table . " SET
-					STATUS = $state WHERE
-					ID = $jobId;";
-		$result = sYDB()->Execute($sql);
+		$sql = "UPDATE " . $this->_table . " SET STATUS = ? WHERE ID = ?;";
+		$result = sYDB()->Execute($sql, $state, $jobId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -476,23 +478,23 @@ class Scheduler extends \framework\Error {
 	 * @throws Exception
 	 */
 	function updateAction($jobId, $actioncode, $timestamp, $parameters) {
+
 		$jobId = (int)$jobId;
 		$timestamp = (int)$timestamp;
-		$actioncode = mysql_real_escape_string(sanitize($actioncode));
-		$parameters = mysql_real_escape_string(serialize($parameters));
+		$actioncode = sYDB()->escape_string(sanitize($actioncode));
+		$parameters = serialize($parameters);
 
 		if (strlen($actioncode) < 2) {
 			return false;
 		}
 
-		$sql = "UPDATE " . $this->_table . " SET
-					ACTIONCODE = '$actioncode',
-					`TIMESTAMP` = $timestamp,
-					PARAMETERS = '$parameters',
-					USERID = $this->_uid
+		$sql = "UPDATE " . $this->_table . " SET ACTIONCODE = ?,
+					`TIMESTAMP` = ?,
+					PARAMETERS = ?,
+					USERID = ?
 				WHERE
-					ID = $jobId;";
-		$result = sYDB()->Execute($sql);
+					ID = ?;";
+		$result = sYDB()->Execute($sql, $actioncode, $timestamp, $parameters, $this->_uid, $jobId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -511,8 +513,8 @@ class Scheduler extends \framework\Error {
 		if ($jobId < 1) {
 			return false;
 		}
-		$sql = "DELETE FROM `" . $this->_table . "` WHERE ID = $jobId;";
-		$result = sYDB()->Execute($sql);
+		$sql = "DELETE FROM `" . $this->_table . "` WHERE ID = ?;";
+		$result = sYDB()->Execute($sql, $jobId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}

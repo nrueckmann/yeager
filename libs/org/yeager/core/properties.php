@@ -22,7 +22,7 @@ class Properties extends \framework\Error {
 	 * @param string $table Name of the table into which the Properties will be saved
 	 * @param int $propertyId Property Id (versioned Object Id)
 	 */
-	function __construct($table = '', $propertyId = NULL, &$object) {
+	function __construct($table = '', $propertyId = NULL, &$object = NULL) {
 		$this->_table = $table;
 		$this->_uid = &sUserMgr()->getCurrentUserID();
 		if ($propertyId == NULL) {
@@ -43,13 +43,14 @@ class Properties extends \framework\Error {
 	 * @return array|bool Result of SQL query or FALSE in case of an error
 	 * @throws Exception
 	 */
-	function cacheExecuteGetArray($sql) {
-		$dbr = sYDB()->Execute($sql);
-		if ($dbr === false) {
-			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
-		}
-		$blaetter = $dbr->GetArray();
-		return $blaetter;
+	function cacheExecuteGetArray() {
+        $args = func_get_args();
+        $dbr = call_user_func_array(array(sYDB(), 'Execute'), $args);
+        if ($dbr === false) {
+            throw new Exception(sYDB()->ErrorMsg() . ':: ' . $sql);
+        }
+        $blaetter = $dbr->GetArray();
+        return $blaetter;
 	}
 
 /// @endcond
@@ -63,21 +64,20 @@ class Properties extends \framework\Error {
 	 * @throws Exception
 	 */
 	function setValue($identifier, $value) {
-		if (($this->_object == NULL) ||
-			($this->_object->permissions->checkInternal($this->_uid, $this->_object->getID(), 'RWRITE'))
-		) {
+		if (($this->_object == NULL) || ($this->_object->permissions->checkInternal($this->_uid, $this->_object->getID(), 'RWRITE'))) {
 			$oid = (int)$this->_property_id;
-			$identifier = mysql_real_escape_string(sanitize($identifier));
-			$sql = "SELECT OID FROM `" . $this->_table . "v` WHERE OID = $oid;";
-			$result = sYDB()->Execute($sql);
+
+			$identifier = sYDB()->escape_string(sanitize($identifier));
+			$sql = "SELECT OID FROM `" . $this->_table . "v` WHERE OID = ?;";
+			$result = sYDB()->Execute($sql, $oid);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 				return false;
 			}
 			$resultarray = $result->GetArray();
 
-			$sql = "SELECT TYPE FROM `" . $this->_table . "` WHERE IDENTIFIER = '" . $identifier . "';";
-			$result = sYDB()->Execute($sql);
+			$sql = "SELECT TYPE FROM `" . $this->_table . "` WHERE IDENTIFIER = ?;";
+			$result = sYDB()->Execute($sql, $identifier);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 				return false;
@@ -89,27 +89,25 @@ class Properties extends \framework\Error {
 				}
 			}
 
-			$value = mysql_real_escape_string($value);
-
 			if (Singleton::cache_config()->getVar("CONFIG/INVALIDATEON/PROPERTY_CHANGE") == "true") {
 				Singleton::FC()->emptyBucket();
 			}
 
 			if ($this->_object) {
-				// Mark object as changed
 				$this->_object->markAsChanged();
 			}
 
 			if (count($resultarray) > 0) {
-				$sql = "UPDATE `" . $this->_table . "v` SET `$identifier` = '$value' WHERE OID = $oid;";
-				$result = sYDB()->Execute($sql);
+
+				$sql = "UPDATE `" . $this->_table . "v` SET `$identifier` = ? WHERE OID = ?;";
+				$result = sYDB()->Execute($sql, $value, $oid);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
 				return true;
 			} else {
-				$sql = "INSERT INTO `" . $this->_table . "v` ( `OID` , `$identifier` ) VALUES ($oid, '$value');";
-				$result = sYDB()->Execute($sql);
+				$sql = "INSERT INTO `" . $this->_table . "v` ( `OID` ,  `$identifier`) VALUES (?, ?);";
+				$result = sYDB()->Execute($sql, $oid, $value);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -133,19 +131,17 @@ class Properties extends \framework\Error {
 			($this->_object->permissions->checkInternal($this->_uid, $this->_object->getID(), 'RREAD'))
 		) {
 			$oid = (int)$this->_property_id;
-			$identifier = mysql_real_escape_string($identifier);
+			$identifier = sYDB()->escape_string($identifier);
 			if ($identifier === false) {
 				return false;
 			}
-			$sql = "SELECT `$identifier` AS VALUE FROM `" . $this->_table . "v` WHERE OID = $oid;";
-
-			$result = sYDB()->Execute($sql);
-			$resultarray = $this->cacheExecuteGetArray($sql);
+			$sql = "SELECT `$identifier` AS VALUE FROM `" . $this->_table . "v` WHERE OID = ?;";
+			$resultarray = $this->cacheExecuteGetArray($sql, $oid);
 
 			$value = $resultarray[0]["VALUE"];
 
-			$sql = "SELECT TYPE FROM `" . $this->_table . "` WHERE IDENTIFIER = '" . $identifier . "';";
-			$result = sYDB()->Execute($sql);
+			$sql = "SELECT TYPE FROM `" . $this->_table . "` WHERE IDENTIFIER = ?;";
+			$result = sYDB()->Execute($sql, $identifier);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 				return false;
@@ -172,9 +168,9 @@ class Properties extends \framework\Error {
 		if (($this->_object == NULL) ||
 			($this->_object->permissions->checkInternal($this->_uid, $this->_object->getID(), 'RREAD'))
 		) {
-			$identifier = mysql_real_escape_string($identifier);
-			$sql = "SELECT NAME, ID, IDENTIFIER, VISIBLE, READONLY, TYPE FROM " . $this->_table . " WHERE IDENTIFIER = '" . $identifier . "'";
-			$resultarray = $this->cacheExecuteGetArray($sql);
+			$identifier = sYDB()->escape_string($identifier);
+			$sql = "SELECT NAME, ID, IDENTIFIER, VISIBLE, READONLY, TYPE FROM " . $this->_table . " WHERE IDENTIFIER = ?";
+			$resultarray = $this->cacheExecuteGetArray($sql, $identifier);
 			return $resultarray;
 		} else {
 			return false;
@@ -188,11 +184,9 @@ class Properties extends \framework\Error {
 	 * @return array Array Properties
 	 */
 	function getList($order = 'NAME') {
-		if (($this->_object == NULL) ||
-			($this->_object->permissions->checkInternal($this->_uid, $this->_object->getID(), 'RREAD'))
-		) {
-			$prefix_sql = "1";
-			$sql = "SELECT NAME, READONLY, ID, IDENTIFIER, VISIBLE, TYPE FROM " . $this->_table . " ORDER BY $order;";
+		if (($this->_object == NULL) || ($this->_object->permissions->checkInternal($this->_uid, $this->_object->getID(), 'RREAD'))) {
+			$order = sYDB()->escape_string(sanitize($order));
+			$sql = "SELECT NAME, READONLY, ID, IDENTIFIER, VISIBLE, TYPE FROM " . $this->_table . " ORDER BY `$order`;";
 			$resultarray = $this->cacheExecuteGetArray($sql);
 			return $resultarray;
 		} else {
@@ -208,16 +202,15 @@ class Properties extends \framework\Error {
 	 * @throws Exception
 	 */
 	function clear($propertyId = 0) {
-		if (($this->_object == NULL) ||
-			($this->_object->permissions->checkInternal($this->_uid, $this->_object->getID(), 'RWRITE'))
-		) {
+		$propertyId = (int)$propertyId;
+		if (($this->_object == NULL) || ($this->_object->permissions->checkInternal($this->_uid, $this->_object->getID(), 'RWRITE'))) {
 			if ($propertyId == 0) {
-				$propertyId = $this->_property_id;
+				$propertyId = (int)$this->_property_id;
 			}
 			$proplist = $this->getList();
 			for ($i = 0; $i < count($proplist); $i++) {
-				$sql = "DELETE FROM `" . $this->_table . "v` WHERE OID = $propertyId;";
-				$result = sYDB()->Execute($sql);
+				$sql = "DELETE FROM `" . $this->_table . "v` WHERE OID = ?;";
+				$result = sYDB()->Execute($sql, $propertyId);
 				if ($result === false) {
 					throw new Exception(sYDB()->ErrorMsg());
 				}
@@ -238,8 +231,8 @@ class Properties extends \framework\Error {
 			($this->_object->permissions->checkInternal($this->_uid, $this->_object->getID(), 'RREAD'))
 		) {
 			$oid = (int)$this->_property_id;
-			$sql = "SELECT o.OID AS ID, o.* FROM `" . $this->_table . "v` AS o WHERE o.OID = $oid;";
-			$resultarray = $this->cacheExecuteGetArray($sql);
+			$sql = "SELECT o.OID AS ID, o.* FROM `" . $this->_table . "v` AS o WHERE o.OID = ?;";
+			$resultarray = $this->cacheExecuteGetArray($sql, $oid);
 			return $resultarray[0];
 		} else {
 			return false;
@@ -256,19 +249,17 @@ class Properties extends \framework\Error {
 	function getValue($identifier) {
 		if (($this->_object == NULL) || ($this->_object->permissions->checkInternal($this->_uid, $this->_object->getID(), 'RREAD'))) {
 			$oid = (int)$this->_property_id;
-			$identifier = mysql_real_escape_string($identifier);
+			$identifier = sYDB()->escape_string($identifier);
 			if ($identifier === false) {
 				return false;
 			}
-			$sql = "SELECT `$identifier` AS VALUE FROM `" . $this->_table . "v` WHERE OID = $oid;";
-
-			sYDB()->Execute($sql);
-			$resultarray = $this->cacheExecuteGetArray($sql);
+			$sql = "SELECT `$identifier` AS VALUE FROM `" . $this->_table . "v` WHERE OID = ?;";
+			$resultarray = $this->cacheExecuteGetArray($sql, $oid);
 
 			$value = $resultarray[0]["VALUE"];
 
-			$sql = "SELECT NAME, ID, IDENTIFIER, VISIBLE, READONLY, TYPE FROM `" . $this->_table . "` WHERE IDENTIFIER = '" . $identifier . "';";
-			$result = sYDB()->Execute($sql);
+			$sql = "SELECT NAME, ID, IDENTIFIER, VISIBLE, READONLY, TYPE FROM `" . $this->_table . "` WHERE IDENTIFIER = ?;";
+			$result = sYDB()->Execute($sql, $identifier);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 				return false;
@@ -372,8 +363,8 @@ class Properties extends \framework\Error {
 	function get() {
 		if (($this->_object == NULL) || ($this->_object->permissions->checkInternal($this->_uid, $this->_object->getID(), 'RREAD'))) {
 			$oid = (int)$this->_property_id;
-			$sql = "SELECT o.OID AS ID, o.* FROM `" . $this->_table . "v` AS o WHERE o.OID = $oid;";
-			$resultArray = $this->cacheExecuteGetArray($sql);
+			$sql = "SELECT o.OID AS ID, o.* FROM `" . $this->_table . "v` AS o WHERE o.OID = ?;";
+			$resultArray = $this->cacheExecuteGetArray($sql, $oid);
 
 			$sql = "SELECT NAME, ID, IDENTIFIER, VISIBLE, READONLY, TYPE FROM " . $this->_table . ";";
 			$propertiesResultArray = $this->cacheExecuteGetArray($sql);
@@ -419,9 +410,9 @@ class Properties extends \framework\Error {
 		$sql = "INSERT INTO `" . $this->_table . "v`
 					(OID, $tsql)
 				SELECT $targetPropertyId, $tsql
-				FROM `" . $this->_table . "v` WHERE (OID = '$sourcePropertyId');";
+				FROM `" . $this->_table . "v` WHERE (OID = ?);";
 
-		$result = sYDB()->Execute($sql);
+		$result = sYDB()->Execute($sql, $sourcePropertyId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}

@@ -50,13 +50,14 @@ class Tags extends \framework\Error {
 	 * @return array|false Result of SQL query or FALSE in case of an error
 	 * @throws Exception
 	 */
-	function cacheExecuteGetArray($sql) {
-		$dbr = sYDB()->Execute($sql);
-		if ($dbr === false) {
-			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
-		}
-		$blaetter = $dbr->GetArray();
-		return $blaetter;
+	function cacheExecuteGetArray() {
+        $args = func_get_args();
+        $dbr = call_user_func_array(array(sYDB(), 'Execute'), $args);
+        if ($dbr === false) {
+            throw new Exception(sYDB()->ErrorMsg() . ':: ' . $sql);
+        }
+        $blaetter = $dbr->GetArray();
+        return $blaetter;
 	}
 
 /// @endcond
@@ -174,10 +175,10 @@ class Tags extends \framework\Error {
 					FROM
 					($this->table AS group2, yg_tags_properties AS prop)
 					WHERE
-					(group2.ID = prop.OBJECTID) AND (group2.ID = $parentId)
+					(group2.ID = prop.OBJECTID) AND (group2.ID = ?)
 					GROUP BY
 					group2.LFT, group2.RGT, group2.VERSIONPUBLISHED, group2.ID order by group2.LFT;";
-				$dbr = sYDB()->Execute($sql);
+				$dbr = sYDB()->Execute($sql, $parentId);
 				$parents[$i] = $dbr->GetArray();
 				$coid = $parents[$i][0]["ID"];
 				$parentId = $this->tree->getParent($coid);
@@ -207,8 +208,8 @@ class Tags extends \framework\Error {
 						OBJECTID,
 						NAME
 					FROM
-						yg_tags_properties WHERE OBJECTID = $tagId;";
-			$ra = $this->cacheExecuteGetArray($sql);
+						yg_tags_properties WHERE OBJECTID = ?;";
+			$ra = $this->cacheExecuteGetArray($sql, $tagId);
 			return $ra[0];
 		} else {
 			return false;
@@ -222,7 +223,7 @@ class Tags extends \framework\Error {
 	 * @return array Array with information about the Tags or FALSE in case of an error
 	 */
 	function getByName ($name) {
-		$name = mysql_real_escape_string(sanitize($name));
+		$name = sYDB()->escape_string(sanitize($name));
 		$sql = "SELECT
 					prop.*,
 					tree.PARENT AS PARENT
@@ -230,9 +231,9 @@ class Tags extends \framework\Error {
 					yg_tags_properties AS prop,
 					yg_tags_tree AS tree
 				WHERE
-					(prop.NAME = '$name') AND
+					(prop.NAME = ?) AND
 					(prop.OBJECTID = tree.ID);";
-		$ra = $this->cacheExecuteGetArray($sql);
+		$ra = $this->cacheExecuteGetArray($sql, $name);
 		if (count($ra)) {
 			return $ra;
 		}
@@ -247,25 +248,34 @@ class Tags extends \framework\Error {
 	 */
 	function isAssigned($tagId) {
 		$tagId = (int)$tagId;
-		$oid = $this->_object->getID();
-		$version = $this->_object->getVersion();
+		$oid = (int)$this->_object->getID();
+		$version = (int)$this->_object->getVersion();
 		$varlist = $this->getIdentifierValueArray($oid, $version);
 		$ids = $this->getIdentifierNameArray("OID", "OVERSION");
+		$sqlargs = array();
+		array_push($sqlargs, $oid, $tagId);
 		$sql = "SELECT
 			object.*, object.OBJECTID AS ID, cat.OBJECTID AS TAGID, objecttree.LFT AS OBJECTORDER
 			FROM
 			" . $this->_objectpropertytable . " AS object, `yg_tags_lnk_" . $this->_objectprefix . "` AS lnk, yg_tags_properties AS cat, " . $this->_objecttreetable . " AS objecttree
 			WHERE
-			(object.OBJECTID = lnk.OID) AND (object.OBJECTID = $oid) AND (lnk.TAGID = cat.OBJECTID) AND
-			(cat.OBJECTID = $tagId) AND ";
+			(object.OBJECTID = lnk.OID) AND (object.OBJECTID = ?) AND (lnk.TAGID = cat.OBJECTID) AND
+			(cat.OBJECTID = ?) AND ";
+
 		for ($i = 0; $i < count($ids); $i++) {
 			$sql .= "( ";
-			$sql .= "lnk." . $ids[$i] . " = " . $varlist[$i];
+			$sql .= "lnk." . $ids[$i] . " = ?";
 			$sql .= ") AND ";
+			array_push($sqlargs, $varlist[$i]);
 		}
 		$sql .= "1 GROUP BY OBJECTID;";
 
-		$ra = $this->cacheExecuteGetArray($sql);
+		array_unshift($sqlargs, $sql);
+		$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+		if ($dbr === false) {
+			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
+		}
+		$ra = $dbr->GetArray();
 		if (count($ra) > 0) {
 			return true;
 		}
@@ -290,43 +300,53 @@ class Tags extends \framework\Error {
 		if ($this->_object->permissions->checkInternal($this->_uid, $oid, 'RWRITE')) {
 			$ids = $this->getIdentifierNameArray("OID", "OVERSION");
 			$varlist = $this->getIdentifierValueArray($oid, $version);
-
-			$sql = "SELECT g.OBJECTID AS ID, g.NAME AS NAME, lnk.ORDERPROD AS ORDERPROD  FROM
+			$sqlargs = array();
+			$sql = "SELECT g.OBJECTID AS ID, g.NAME AS NAME, lnk.ORDERPROD AS ORDERPROD FROM
 			`yg_tags_lnk_" . $this->_objectprefix . "` as lnk,
 			yg_tags_properties as g
 			WHERE ";
 			for ($i = 0; $i < count($ids); $i++) {
+				$id = sYDB()->escape_string($ids[$i]);
+				$value = sYDB()->escape_string($varlist[$i]);
 				$sql .= "( ";
-				$sql .= "lnk." . $ids[$i] . " = " . $varlist[$i];
+				$sql .= "lnk." . $id . " = ?";
 				$sql .= ") AND ";
+				array_push($sqlargs, $value);
 			}
 			$sql .= "(lnk.TAGID = g.OBJECTID) ORDER BY ORDERPROD;";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
+			array_unshift($sqlargs, $sql);
+			$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+			if ($dbr === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
-			$tags = $result->GetArray();
+			$tags = $dbr->GetArray();
 			for ($t = 0; $t < count($tags); $t++) {
 				$this->setOrder($tags[$t]["ID"], $t);
 			}
 
+			$sqlargs = array();
 			$sql = "INSERT INTO `yg_tags_lnk_" . $this->_objectprefix . "` (";
 			for ($i = 0; $i < count($ids); $i++) {
-				$sql .= $ids[$i];
+				$id = sYDB()->escape_string(sanitize($ids[$i]));
+				$sql .= "`". $id . "`";
 				if ($i < count($ids) - 1) {
 					$sql .= ",";
 				}
 			}
 			$sql .= ", TAGID) VALUES (";
 			for ($i = 0; $i < count($ids); $i++) {
-				$sql .= $varlist[$i];
+				$value = sYDB()->escape_string($varlist[$i]);
+				array_push($sqlargs, $value);
+				$sql .= "?";
 				if ($i < count($ids) - 1) {
 					$sql .= ",";
 				}
 			}
-			$sql .= ", $tagId);";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
+			$sql .= ", ?);";
+			array_push($sqlargs, $tagId);
+			array_unshift($sqlargs, $sql);
+			$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+			if ($dbr === false) {
 				echo $this->_errormsg . "<br>";
 				return false;
 			}
@@ -349,19 +369,26 @@ class Tags extends \framework\Error {
 		$varlist = $this->getIdentifierValueArray($oid, "-1");
 
 		if ($this->_object->permissions->checkInternal($this->_uid, $oid, 'RWRITE')) {
+			$sqlargs = array();
 			$sql = "DELETE FROM `yg_tags_lnk_" . $this->_objectprefix . "` WHERE ";
 			for ($i = 0; $i < count($ids); $i++) {
 				$sql .= "( ";
+				$value = sYDB()->escape_string($varlist[$i]);
+				$id = sYDB()->escape_string(sanitize($ids[$i]));
+
+				array_push($sqlargs, $value);
+
 				if ($ids[$i] != "OVERSION") {
-					$sql .= $ids[$i] . "=" . $varlist[$i];
+					$sql .= "`" . $id . "` = ?";
 				} else {
-					$sql .= $ids[$i] . ">" . $varlist[$i];
+					$sql .= "`" . $id . "` > ?";
 				}
 				$sql .= ") AND ";
 			}
 			$sql .= " 1;";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
+			array_unshift($sqlargs, $sql);
+			$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+			if ($dbr === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
 			return true;
@@ -385,16 +412,21 @@ class Tags extends \framework\Error {
 		if ($this->_object->permissions->checkInternal($this->_uid, $oid, 'RWRITE')) {
 			$ids = $this->getIdentifierNameArray("OID", "OVERSION");
 			$varlist = $this->getIdentifierValueArray($oid, $version);
-
+			$sqlargs = array();
 			$sql = "DELETE FROM `yg_tags_lnk_" . $this->_objectprefix . "` WHERE ";
 			for ($i = 0; $i < count($ids); $i++) {
+				$value = sYDB()->escape_string($varlist[$i]);
+				$id = sYDB()->escape_string(sanitize($ids[$i]));
 				$sql .= "( ";
-				$sql .= $ids[$i] . " = " . $varlist[$i];
+				$sql .= "`" . $id . "` = ?";
 				$sql .= ") AND ";
+				array_push($sqlargs, $value);
 			}
 			$sql .= " (TAGID = $tagId);";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
+
+			array_unshift($sqlargs, $sql);
+			$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+			if ($dbr === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
 			$this->_object->markAsChanged();
@@ -425,21 +457,26 @@ class Tags extends \framework\Error {
 		if (strlen($customidentifier) > 0) {
 			$customidentifier = "," . $customidentifier;
 		}
-		$sql = "DELETE FROM `yg_tags_lnk_" . $this->_objectprefix . "` WHERE (OID = '$targetObjectId') AND (OVERSION = $targetVersion);";
-		sYDB()->Execute($sql);
+		$sql = "DELETE FROM `yg_tags_lnk_" . $this->_objectprefix . "` WHERE (OID = ?) AND (OVERSION = ?);";
+		sYDB()->Execute($sql, $targetObjectId, $targetVersion);
 
+		$sqlargs = array();
 		$sql = "INSERT INTO `yg_tags_lnk_" . $this->_objectprefix . "`
 			(OVERSION, OID, TAGID, ORDERPROD $customidentifier)
 			SELECT $targetVersion, $targetObjectId, TAGID, ORDERPROD $customidentifier
 			FROM `yg_tags_lnk_" . $this->_objectprefix . "` WHERE ";
 		for ($i = 0; $i < count($ids); $i++) {
+			$value = sYDB()->escape_string($varlist[$i]);
+			$id = sYDB()->escape_string(sanitize($ids[$i]));
 			$sql .= "( ";
-			$sql .= $ids[$i] . " = " . $varlist[$i];
+			$sql .= "`" . $id . "` =  ?";
 			$sql .= ") AND ";
+			array_push($sqlargs, $value);
 		}
 		$sql .= " 1;";
-		$result = sYDB()->Execute($sql);
-		if ($result === false) {
+		array_unshift($sqlargs, $sql);
+		$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+		if ($dbr === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
 		return true;
@@ -449,15 +486,29 @@ class Tags extends \framework\Error {
 	 * Gets a list of Objects which got the specified Tags assigned
 	 *
 	 * @param int|array $list List of Tag Ids or single Tag Id
-	 * @param string $sort (optional) Specifies the order qualifier of the SQL query
+	 * @param string $sort (optional) Specifies the order column and direction of the SQL query (ID, OBJECTORDER, NAME) and (DESC / ASC)
 	 * @param string $concat (optional) Specifies which operator should be used in the SQL query (default is OR)
 	 * @param bool $published (optional) Specifies if only published versions should be returned
 	 * @param $filterArray Array of filters used in the SQL query
 	 * @param bool $noTrash TRUE when Objects in the trash shouldn't be returned
 	 * @return array|false
 	 */
-	function getByTag($list, $sort = "OBJECTORDER DESC", $concat = "OR", $published = false, $filterArray, $noTrash = true) {
-		$concat = mysql_real_escape_string($concat);
+	function getByTag($list, $sort, $concat = "OR", $published = false, $filterArray, $noTrash = true) {
+		if ($concat != "OR" AND $concat != "AND") {
+			$concat = "OR";
+		}
+		$sortdir = "ASC";
+		$sortcol = "OBJECTORDER";
+
+		$sortarr = explode(" ", $sort);
+		if ($sortarr[count($sortarr)-1] == "DESC") {
+			$sortdir = "DESC";
+		}
+
+		if (in_array($sortarr[0], array("ID", "OBJECTORDER", "NAME", "PNAME"))) {
+			$sortcol = $sortarr[0];
+		}
+
 		if ($noTrash) {
 			$noTrashSQL = "(object.DELETED = 0) AND ";
 		}
@@ -500,23 +551,6 @@ class Tags extends \framework\Error {
 		}
 
 		if ($published === true) {
-			/*
-			// Variant 1
-			$sql_final_w = " ((objecttree.VERSIONPUBLISHED = lnk.OVERSION) OR
-			(
-				(objecttree.VERSIONPUBLISHED = ".ALWAYS_LATEST_APPROVED_VERSION.") AND (object.APPROVED = 1) AND (lnk.OVERSION = (SELECT MAX( rgt.VERSION -1 ) FROM ".$this->_objectpropertytable." AS rgt WHERE (object.OBJECTID = rgt.OBJECTID)))
-
-			))";
-			*/
-			/*
-			// Variant 2
-			$sql_final_w = " ((objecttree.VERSIONPUBLISHED = lnk.OVERSION) OR
-			(
-				(objecttree.VERSIONPUBLISHED = ".ALWAYS_LATEST_APPROVED_VERSION.") AND (object.APPROVED = 1) AND (lnk.OVERSION = (SELECT MAX( rgt.VERSION ) FROM ".$this->_objectpropertytable." AS rgt WHERE (object.OBJECTID = rgt.OBJECTID)))
-
-			))";
-			*/
-			// Variant 1 & 2 combined
 			$sql_final_w = " ((objecttree.VERSIONPUBLISHED = lnk.OVERSION) OR
 			(
 				(objecttree.VERSIONPUBLISHED = " . ALWAYS_LATEST_APPROVED_VERSION . ") AND (object.APPROVED = 1) AND
@@ -539,12 +573,6 @@ class Tags extends \framework\Error {
 			$sqlsite = " (lnk.SITEID = " . $this->_object->_site . ") AND ";
 		}
 
-		/*
-		if (strlen($this->_dobjectpropertytable) > 3) {
-			$dynpropsql = "LEFT JOIN ".$this->_dobjectpropertytable." AS pv ON pv.OID = object.ID";
-			$dynpropw = " pv.*, ";
-		}
-		*/
 		if ($sqls == '') {
 			return;
 		}
@@ -559,7 +587,7 @@ class Tags extends \framework\Error {
 			$noTrashSQL
 			($sqls) AND $sqlsite
 			(object.OBJECTID = objecttree.ID) AND (lnk.OVERSION = object.VERSION) AND $sql_final_w
-			GROUP BY OBJECTID ORDER BY " . $sort . " " . $filterLimit;
+			GROUP BY OBJECTID ORDER BY " . $sortcol . " " . $sortdir . " " . $filterLimit;
 		$ra = $this->cacheExecuteGetArray($sql);
 		return $ra;
 	}
@@ -576,17 +604,26 @@ class Tags extends \framework\Error {
 		$ids = $this->getIdentifierNameArray("OID", "OVERSION");
 		$varlist = $this->getIdentifierValueArray($oid, $version);
 
+		$sqlargs = array();
+
 		// SQL for permissions
 		$perm_SQL_SELECT = ", MAX(perm.RREAD) AS RREAD,  MAX(perm.RWRITE) AS RWRITE,  MAX(perm.RDELETE) AS RDELETE, MAX(perm.RSUB) AS RSUB, MAX(perm.RSTAGE) AS RSTAGE, MAX(perm.RMODERATE) AS RMODERATE, MAX(perm.RCOMMENT) AS RCOMMENT";
 		$perm_SQL_FROM = " LEFT JOIN yg_tags_permissions AS perm ON perm.OID = g.OBJECTID";
-		$perm_SQL_WHERE = " AND (";
+		$perm_SQL_WHERE = " ";
+		for ($i = 0; $i < count($ids); $i++) {
+			$perm_SQL_WHERE .= "( ";
+			$perm_SQL_WHERE .= "lnk." . $ids[$i] . " = ? " ;
+			$perm_SQL_WHERE .= ") AND ";
+			array_push($sqlargs, $varlist[$i]);
+		}
+		$perm_SQL_WHERE .= "	(lnk.TAGID = g.OBJECTID) AND (";
 		$roles = $this->permissions->getUsergroups();
 		for ($r = 0; $r < count($roles); $r++) {
-			$perm_SQL_WHERE .= "(perm.USERGROUPID = " . $roles[$r]['ID'] . ") ";
-			$roles = $this->permissions->getUsergroups();
+			$perm_SQL_WHERE .= "(perm.USERGROUPID = ?) ";
 			if ((count($roles) - $r) > 1) {
 				$perm_SQL_WHERE .= " OR ";
 			}
+			array_push($sqlargs, $roles[$r]['ID']);
 		}
 		$perm_SQL_WHERE .= ") ";
 
@@ -599,18 +636,13 @@ class Tags extends \framework\Error {
 					`yg_tags_lnk_" . $this->_objectprefix . "` as lnk,
 					yg_tags_properties as g
 					$perm_SQL_FROM
-				WHERE ";
-		for ($i = 0; $i < count($ids); $i++) {
-			$sql .= "( ";
-			$sql .= "lnk." . $ids[$i] . " = " . $varlist[$i];
-			$sql .= ") AND ";
-		}
-		$sql .= "	(lnk.TAGID = g.OBJECTID)
-					$perm_SQL_WHERE
+				WHERE $perm_SQL_WHERE
 				GROUP BY ID
 				ORDER BY ORDERPROD;";
 
-		$resultarray = $this->cacheExecuteGetArray($sql);
+		array_unshift($sqlargs, $sql);
+		$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+		$resultarray = $dbr->GetArray();
 		return $resultarray;
 	}
 
@@ -632,15 +664,23 @@ class Tags extends \framework\Error {
 			$ids = $this->getIdentifierNameArray("OID", "OVERSION");
 			$varlist = $this->getIdentifierValueArray($oid, $version);
 
-			$sql = "UPDATE `yg_tags_lnk_" . $this->_objectprefix . "` SET ORDERPROD = $position WHERE ";
+			$sqlargs = array();
+			$sql = "UPDATE `yg_tags_lnk_" . $this->_objectprefix . "` SET ORDERPROD = ? WHERE ";
+			array_push($sqlargs, $position);
 			for ($i = 0; $i < count($ids); $i++) {
+				$value = sYDB()->escape_string($varlist[$i]);
+				$id = sYDB()->escape_string(sanitize($ids[$i]));
 				$sql .= "( ";
-				$sql .= $ids[$i] . " = " . $varlist[$i];
+				$sql .= "`" . $id . "` =  ?";
+				array_push($sqlargs, $value);
 				$sql .= ") AND ";
 			}
-			$sql .= "(TAGID = $tagId);";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
+			$sql .= "(TAGID = ?);";
+			array_push($sqlargs, $tagId);
+			array_unshift($sqlargs, $sql);
+			$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+
+			if ($dbr === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
 			return true;
@@ -774,6 +814,7 @@ class Tags extends \framework\Error {
 	 */
 	function getTree($tagId = NULL, $maxLevels = 2) {
 		$maxLevels = (int)$maxLevels;
+		$tagId = (int)$tagId;
 
 		if ($tagId > 0) {
 			$currentLevel = $this->tree->getLevel($tagId);
@@ -797,8 +838,7 @@ class Tags extends \framework\Error {
 		$perm_SQL_WHERE = " AND (";
 		$roles = $this->permissions->getUsergroups();
 		for ($r = 0; $r < count($roles); $r++) {
-			$perm_SQL_WHERE .= "(perm.USERGROUPID = " . $roles[$r]["ID"] . ") ";
-			$roles = $this->permissions->getUsergroups();
+			$perm_SQL_WHERE .= "(perm.USERGROUPID = " . (int)$roles[$r]["ID"] . ") ";
 			if ((count($roles) - $r) > 1) {
 				$perm_SQL_WHERE .= " OR ";
 			}
@@ -826,7 +866,6 @@ class Tags extends \framework\Error {
 				GROUP BY
 					group2.LFT, group2.RGT, group2.VERSIONPUBLISHED, group2.ID;";
 		$tree = $this->cacheExecuteGetArray($sql);
-
 		return $tree;
 	}
 
@@ -842,6 +881,8 @@ class Tags extends \framework\Error {
 	 */
 	function getList($tagId = 0, $filter = array(), $usergroups = true, $maxLevel = 0, $usergroupId = 0) {
 		$tagId = (int)$tagId;
+		$maxLevel = (int)$maxLevel;
+		$usergroupId = (int)$usergroupId;
 		$selectdefault = true;
 		$rootGroupId = (int)sConfig()->getVar("CONFIG/SYSTEMUSERS/ROOTGROUPID");
 
@@ -871,13 +912,13 @@ class Tags extends \framework\Error {
 				$perm_sql_where = " AND (";
 				$usergroups = $this->permissions->getUsergroups();
 				for ($r = 0; $r < count($usergroups); $r++) {
-					$perm_sql_where .= "(perm.USERGROUPID = " . $usergroups[$r]["ID"] . ") ";
+					$perm_sql_where .= "(perm.USERGROUPID = " . (int)$usergroups[$r]["ID"] . ") ";
 					if ((count($usergroups) - $r) > 1) {
 						$perm_sql_where .= " OR ";
 					}
 				}
 				$perm_sql_where .= ") ";
-				$perm_sql_where .= " AND ((RREAD >= 1) OR (perm.USERGROUPID = $rootGroupId)) ";
+				$perm_sql_where .= " AND ((RREAD >= 1) OR (perm.USERGROUPID = " . $rootGroupId . ")) ";
 			}
 		}
 		$sql = "SELECT
@@ -1004,9 +1045,9 @@ class Tags extends \framework\Error {
 	function setName($tagId, $name) {
 		$tagId = (int)$tagId;
 		if ($this->permissions->checkInternal($this->_uid, $tagId, 'RWRITE')) {
-			$name = mysql_real_escape_string($name);
-			$sql = "UPDATE yg_tags_properties SET NAME = '$name' WHERE (OBJECTID = $tagId);";
-			$result = sYDB()->Execute($sql);
+			$name = sYDB()->escape_string($name);
+			$sql = "UPDATE yg_tags_properties SET NAME = ? WHERE (OBJECTID = ?);";
+			$result = sYDB()->Execute($sql, $name, $tagId);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1027,17 +1068,13 @@ class Tags extends \framework\Error {
 	function add($parentTagId, $name = "New Tag") {
 		$parentTagId = (int)$parentTagId;
 		if ($this->permissions->checkInternal($this->_uid, $parentTagId, 'RSUB')) {
-			$name = mysql_real_escape_string($name);
+			$name = sYDB()->escape_string($name);
 			// create node in Tagstree
-			$tagId = $this->tree->add($parentTagId);
+			$tagId = (int)$this->tree->add($parentTagId);
 
 			// create version
-			$sql = "INSERT INTO
-			`yg_tags_properties`
-			(`OBJECTID`, `NAME`)
-			VALUES
-			('$tagId', '$name');";
-			$result = sYDB()->Execute($sql);
+			$sql = "INSERT INTO `yg_tags_properties` (`OBJECTID`, `NAME`) VALUES (?, ?);";
+			$result = sYDB()->Execute($sql, $tagId, $name);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -1066,10 +1103,10 @@ class Tags extends \framework\Error {
 		$successNodes = array();
 		$allNodes = $this->tree->get($tagId, 1000);
 		foreach($allNodes as $allNodesItem) {
-			$tagId = $allNodesItem['ID'];
+			$tagId = (int)$allNodesItem['ID'];
 			if ($this->permissions->checkInternal($this->_uid, $tagId, "RDELETE")) {
-				$sql = "DELETE FROM yg_tags_properties WHERE OBJECTID = $tagId;";
-				$result = sYDB()->Execute($sql);
+				$sql = "DELETE FROM yg_tags_properties WHERE OBJECTID = ?;";
+				sYDB()->Execute($sql, $tagId);
 
 				$successNodes[] = $tagId;
 			}

@@ -161,14 +161,12 @@ class Tree extends \framework\Error {
 	 */
 	function getParent($oid) {
 		$oid = (int)$oid;
-		//  if (($this->_object->permissions->checkInternal($this->_object->_uid, $oid, "RREAD")) || ($this->_object->getTreeTable() == "yg_templates_tree")) {
 		$sql = "SELECT `PARENT` FROM `" . $this->_object->getTreeTable() . "` WHERE `ID` = $oid";
 		$result = sYDB()->Execute($sql);
 		if ($result) {
 			$resulta = $result->GetArray();
 		}
 		return $resulta[0]["PARENT"];
-		//  }
 	}
 
 	/**
@@ -353,7 +351,7 @@ class Tree extends \framework\Error {
 	 * @param int $i Iterator
 	 * @return array nested Array
 	 */
-	function nest(&$cats, $i) {
+	function nest(&$cats, $i = 0) {
 		$new = array();
 		if (count($cats) < 1) {
 			return;

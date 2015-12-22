@@ -79,23 +79,23 @@ class JSQueue extends \framework\Error {
 		$targetType = (int)$targetType;
 		$targetId = (int)$targetId;
 		$from = (int)$from;
-		$oldValue = mysql_real_escape_string($oldValue);
-		$newValue = mysql_real_escape_string($newValue);
-		$text = mysql_real_escape_string($text);
-		$value1 = mysql_real_escape_string($value1);
-		$value2 = mysql_real_escape_string($value2);
-		$value3 = mysql_real_escape_string($value3);
-		$value4 = mysql_real_escape_string($value4);
-		$value5 = mysql_real_escape_string($value5);
-		$value6 = mysql_real_escape_string($value6);
-		$value7 = mysql_real_escape_string($value7);
-		$value8 = mysql_real_escape_string($value8);
+		$oldValue = sYDB()->escape_string($oldValue);
+		$newValue = sYDB()->escape_string($newValue);
+		$text = sYDB()->escape_string($text);
+		$value1 = sYDB()->escape_string($value1);
+		$value2 = sYDB()->escape_string($value2);
+		$value3 = sYDB()->escape_string($value3);
+		$value4 = sYDB()->escape_string($value4);
+		$value5 = sYDB()->escape_string($value5);
+		$value6 = sYDB()->escape_string($value6);
+		$value7 = sYDB()->escape_string($value7);
+		$value8 = sYDB()->escape_string($value8);
 		$time = time();
 		$sql = "INSERT INTO " . $this->_table . "
 					(SOURCEID, `OID` , `DATETIME`, `TEXT` , `UID`, `TYPE`, `OLDVALUE`, `NEWVALUE`, `TARGETID`, `SITEID`, `FROM`, `VALUE1`, `VALUE2`, `VALUE3`, `VALUE4`, `VALUE5`, `VALUE6`, `VALUE7`, `VALUE8`)
 				VALUES
-					('" . $this->_sourceid . "', '$objectId', '$time', '" . $text . "', '" . $this->_uid . "', $targetType, '" . $oldValue . "', '" . $newValue . "', $targetId, '" . $this->_siteID . "', $from, '" . $value1 . "', '" . $value2 . "', '" . $value3 . "', '" . $value4 . "', '" . $value5 . "', '" . $value6 . "', '" . $value7 . "', '" . $value8 . "');";
-		$result = sYDB()->Execute($sql);
+					(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$result = sYDB()->Execute($sql, $this->_sourceid, $objectId, $time, $text, $this->_uid, $targetType, $oldValue, $newValue, $targetId, $this->_siteID, $from, $value1, $value2, $value3, $value4, $value5, $value6, $value7, $value8);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -111,9 +111,8 @@ class JSQueue extends \framework\Error {
 	 */
 	function getQueue($queueId = 0) {
 		$queueId = (int)$queueId;
-		$sourcesql = "AND SOURCEID = '" . $this->_sourceid . "'";
-		$sql = "SELECT * FROM " . $this->_table . " WHERE ID > " . $queueId . " $sourcesql ORDER BY DATETIME ASC, ID ASC";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM " . $this->_table . " WHERE ID > ? AND SOURCEID = ? ORDER BY DATETIME ASC, ID ASC";
+		$result = sYDB()->Execute($sql, $queueId, $this->_sourceid);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -147,10 +146,10 @@ class JSQueue extends \framework\Error {
 	function getList($objectId) {
 		$objectId = (int)$objectId;
 		if ($this->_sourceid != "") {
-			$sourcesql = "AND SOURCEID = '" . $this->_sourceid . "'";
+			$sourcesql = "AND SOURCEID = '" . (int)$this->_sourceid . "'";
 		}
-		$sql = "SELECT * FROM " . $this->_table . " WHERE OID = $objectId $sourcesql ORDER BY DATETIME DESC, ID DESC";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT * FROM " . $this->_table . " WHERE OID = ? $sourcesql ORDER BY DATETIME DESC, ID DESC";
+		$result = sYDB()->Execute($sql, $objectId);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -170,10 +169,10 @@ class JSQueue extends \framework\Error {
 		$objectId = (int)$objectId;
 		$max = (int)$max;
 		if ($this->_sourceid != "") {
-			$sourcesql = "AND SOURCEID = '" . $this->_sourceid . "'";
+			$sourcesql = "AND SOURCEID = ?";
 		}
-		$sql = "SELECT ID, OID, MIN(DATETIME) AS DATETIME, TEXT, UID FROM " . $this->_table . " WHERE OID = $objectId $sourcesql GROUP BY OID ORDER BY DATETIME ASC LIMIT 0, $max";
-		$result = sYDB()->Execute($sql);
+		$sql = "SELECT ID, OID, MIN(DATETIME) AS DATETIME, TEXT, UID FROM " . $this->_table . " WHERE OID = ? $sourcesql GROUP BY OID ORDER BY DATETIME ASC LIMIT 0, $max";
+		$result = sYDB()->Execute($sql, $objectId, $this->_sourceid);
 		if ($result === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
@@ -211,10 +210,10 @@ class JSQueue extends \framework\Error {
 	function clear($objectId) {
 		$objectId = (int)$objectId;
 		if ($this->_sourceid != "") {
-			$sourcesql = "AND SOURCEID = '" . $this->_sourceid . "'";
+			$sourcesql = "AND SOURCEID = ?";
 		}
-		$sql = "DELETE FROM " . $this->_table . " WHERE OID = $objectId $sourcesql ";
-		$result = sYDB()->Execute($sql);
+		$sql = "DELETE FROM " . $this->_table . " WHERE OID = ? $sourcesql ";
+		sYDB()->Execute($sql, $objectId, $this->_sourceid);
 	}
 
 	/**
@@ -228,15 +227,15 @@ class JSQueue extends \framework\Error {
 	function getLastChanges($max = 8, $text = '') {
 		$max = (int)$max;
 		$sql = "SELECT *, (SELECT MAX(DATETIME) FROM " . $this->_table . " AS h2 WHERE h2.OID = lft.OID) AS MAXDATETIME FROM " . $this->_table . " AS lft WHERE ";
-
+		$sqlargs = array();
 		if (!is_array($text) && strlen($text) > 1) {
-			$text = mysql_real_escape_string($text);
-			$sql .= "TEXT='$text'";
+			$sql .= "TEXT=?";
+			array_push($sqlargs, $text);
 		} else {
 			if (is_array($text) && count($text) > 0) {
 				for ($t = 0; $t < count($text); $t++) {
-					$textitem = mysql_real_escape_string($text[$t]);
-					$sql .= "TEXT = '" . $textitem . "' ";
+					$sql .= "TEXT = ? ";
+					array_push($sqlargs, $text[$t]);
 					if ($t < count($text) - 1) {
 						$sql .= " OR ";
 					}
@@ -246,16 +245,17 @@ class JSQueue extends \framework\Error {
 			}
 		}
 		if ($this->_sourceid != "") {
-			$sourcesql = "AND SOURCEID = '" . $this->_sourceid . "'";
+			$sourcesql = "AND SOURCEID = ?";
+			array_push($sqlargs, $this->_sourceid);
 		}
 		$sql .= " $sourcesql GROUP BY OID ORDER BY DATETIME DESC LIMIT 0, $max";
 
-		$result = sYDB()->Execute($sql);
-
-		if ($result === false) {
+		array_unshift($sqlargs, $sql);
+		$dbr = call_user_func_array(array(sYDB(), 'Execute'), $sqlargs);
+		if ($dbr === false) {
 			throw new Exception(sYDB()->ErrorMsg());
 		}
-		$resultarray = $result->GetArray();
+		$resultarray = $dbr->GetArray();
 		for ($i = 0; $i < count($resultarray); $i++) {
 			$oid = $resultarray[$i]["OID"];
 			$rread = false;

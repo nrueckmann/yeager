@@ -204,14 +204,14 @@ class File extends Versionable {
 	 * @return array|bool Result of SQL query or FALSE in case of an error
 	 * @throws Exception
 	 */
-	function cacheExecuteGetArray($sql) {
-		$timestart = microtime();
-		$dbr = sYDB()->Execute($sql);
-		if ($dbr === false) {
-			throw new Exception(sYDB()->ErrorMsg() . ":: " . $sql);
-		}
-		$blaetter = $dbr->GetArray();
-		return $blaetter;
+	function cacheExecuteGetArray() {
+        $args = func_get_args();
+        $dbr = call_user_func_array(array(sYDB(), 'Execute'), $args);
+        if ($dbr === false) {
+            throw new Exception(sYDB()->ErrorMsg() . ':: ' . $sql);
+        }
+        $blaetter = $dbr->GetArray();
+        return $blaetter;
 	}
 
 /// @endcond
@@ -422,7 +422,7 @@ class File extends Versionable {
 	public function setPName($pname) {
 		$fileID = $this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $fileID, "RWRITE")) {
-			$pname = $this->filterPName($pname);
+			$pname = sYDB()->escape_string($this->filterPName($pname));
 
 			if (is_numeric($pname)) {
 				return false;
@@ -432,18 +432,15 @@ class File extends Versionable {
 			if (($checkpinfo["ID"] != $fileID) && ($checkpinfo["ID"] > 0)) {
 				$pname = $pname . $fileID;
 			}
-			$version = (int)$this->getVersion();
 
-			$sql = "SELECT PNAME AS STATE FROM yg_files_tree WHERE (ID = $fileID);";
-			$result = sYDB()->Execute($sql);
+			$sql = "SELECT PNAME AS STATE FROM yg_files_tree WHERE (ID = ?);";
+			$result = sYDB()->Execute($sql, $fileID);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
-			$ra = $result->GetArray();
-			$state = $ra[0]["STATE"];
 
-			$sql = "UPDATE yg_files_tree SET PNAME = '$pname' WHERE (ID = $fileID);";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_files_tree SET PNAME = ? WHERE (ID = ?);";
+			$result = sYDB()->Execute($sql, $pname, $fileID);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -503,7 +500,7 @@ class File extends Versionable {
 	 * @return array Array with all elements which were successfully deleted
 	 */
 	function delete() {
-		$fileID = $this->_id;
+		$fileID = (int)$this->_id;
 		$rootNode = sFileMgr()->tree->getRoot();
 		if ($fileID == $rootNode) {
 			return array();
@@ -532,8 +529,8 @@ class File extends Versionable {
 			// Move to root level
 			sFileMgr()->tree->moveTo($fileID, $rootNode);
 
-			$sql = "UPDATE yg_files_properties SET DELETED = 1 WHERE OBJECTID = $fileID;";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_files_properties SET DELETED = 1 WHERE OBJECTID = ?;";
+			sYDB()->Execute($sql, $fileID);
 
 			$successNodes[] = $fileID;
 			sFileMgr()->callExtensionHook('onDelete', (int)$this->_id, (int)$this->_version);
@@ -552,10 +549,10 @@ class File extends Versionable {
 	 * @return bool TRUE on success or FALSE in case of an error
 	 */
 	function undelete() {
-		$fileID = $this->_id;
+		$fileID = (int)$this->_id;
 		if ($this->permissions->checkInternal($this->_uid, $fileID, "RDELETE")) {
-			$sql = "UPDATE yg_files_properties SET DELETED = 0 WHERE OBJECTID = $fileID";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_files_properties SET DELETED = 0 WHERE OBJECTID = ?";
+			sYDB()->Execute($sql, $fileID);
 			return true;
 		} else {
 			return false;
@@ -573,8 +570,8 @@ class File extends Versionable {
 		$type = (int)$type;
 		if ($this->permissions->checkInternal($this->_uid, $mo, "RWRITE")) {
 			$version = (int)$this->getVersion();
-			$sql = "UPDATE yg_files_properties SET FILETYPE = $type WHERE (OBJECTID = $mo) AND VERSION = $version;";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_files_properties SET FILETYPE = ? WHERE (OBJECTID = ?) AND VERSION = ?;";
+			$result = sYDB()->Execute($sql, $type, $mo, $version);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -592,12 +589,12 @@ class File extends Versionable {
 	 */
 	public function setFilename($filename) {
 		$mo = (int)$this->_id;
-		$filename = mysql_real_escape_string(sanitize($filename));
+		$filename = sYDB()->escape_string(sanitize($filename));
 
 		if ($this->permissions->checkInternal($this->_uid, $mo, "RWRITE")) {
 			$version = (int)$this->getVersion();
-			$sql = "UPDATE yg_files_properties SET FILENAME = '$filename' WHERE (OBJECTID = $mo) AND VERSION = $version;";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_files_properties SET FILENAME = ? WHERE (OBJECTID = ?) AND VERSION = ?;";
+			$result = sYDB()->Execute($sql, $filename, $mo, $version);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -619,8 +616,8 @@ class File extends Versionable {
 
 		if ($this->permissions->checkInternal($this->_uid, $mo, "RWRITE")) {
 			$version = (int)$this->getVersion();
-			$sql = "UPDATE yg_files_properties SET FILESIZE = '$filesize' WHERE (OBJECTID = $mo) AND VERSION = $version;";
-			$result = sYDB()->Execute($sql);
+			$sql = "UPDATE yg_files_properties SET FILESIZE = ? WHERE (OBJECTID = ?) AND VERSION = ?;";
+			$result = sYDB()->Execute($sql, $filesize, $mo, $version);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
@@ -638,36 +635,14 @@ class File extends Versionable {
 	 */
 	public function setViewVersion($version) {
 		$mo = (int)$this->_id;
-		$version = (int)$version;
-
 		if ($this->permissions->checkInternal($this->_uid, $mo, "RWRITE")) {
-			$version = (int)$this->getVersion();
-			$sql = "UPDATE yg_files_properties SET VIEWVERSION = '$version' WHERE (OBJECTID = $mo) AND VERSION = $version;";
-			$result = sYDB()->Execute($sql);
+			$version = (int)$version;
+			if (!$version) $version = (int)$this->getVersion();
+			$sql = "UPDATE yg_files_properties SET VIEWVERSION = ? WHERE (OBJECTID = ?) AND VERSION = ?;";
+			$result = sYDB()->Execute($sql, $version, $mo, $version);
 			if ($result === false) {
 				throw new Exception(sYDB()->ErrorMsg());
 			}
-		} else {
-			return false;
-		}
-	}
-
-
-	/**
-	 * Gets the File prefix of this File
-	 *
-	 * @return string|false File prefix or FALSE in case of an error
-	 */
-	public function getFilePrefix() {
-		$file = (int)$this->_id;
-		if ($this->permissions->checkInternal($this->_uid, $file, "RREAD")) {
-			$sql = "SELECT MAX(VERSION) AS VERSION, ID AS PROPID FROM yg_files_properties WHERE OBJECTID = $mo";
-			$result = sYDB()->Execute($sql);
-			if ($result === false) {
-				throw new Exception(sYDB()->ErrorMsg());
-			}
-			$ra = $result->GetArray();
-			return $file . "-" . $ra[0]["PROPID"];
 		} else {
 			return false;
 		}

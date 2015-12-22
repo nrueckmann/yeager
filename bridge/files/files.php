@@ -361,7 +361,6 @@
 						}
 
 						// Resize
-						$file->views->scheduleUpdate();
 						$koala->callJSFunction( 'Koala.yg_setFileStatusOK', $fileID.'-'.$file->getLatestVersion() );
 
 						$fileinfo['CHANGEDTS'] = $fileinfo['CHANGEDTS'];

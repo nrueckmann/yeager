@@ -221,14 +221,11 @@ switch ($action) {
 			}
 			$mail->Send();
 			$mail->ClearAddresses();
-			if ($winID) {
-				$koala->callJSFunction('Koala.yg_userPasswordSent', $userinfo['LOGIN']);
-			}
-		} else {
-			if ($winID) {
-				$koala->callJSFunction('Koala.yg_showRecoverLoginError', $winID);
-			}
 		}
+		if ($winID) {
+			$koala->callJSFunction('Koala.yg_userPasswordSent', $userEmail);
+		}
+
 		sUserMgr()->unimpersonate();
 		break;
 
