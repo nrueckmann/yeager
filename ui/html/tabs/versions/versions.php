@@ -629,8 +629,8 @@ switch($objecttype) {
 									$iPage = $iPageMgr->getPage($special_url_info['ID']);
 									if ($iPage) {
 										$objectInfo = $iPage->get();
-										$objectInfo['RWRITE'] = $file->permissions->checkInternal(sUserMgr()->getCurrentUserID(), $special_url_info['ID'], "RWRITE");
-										$objectInfo['RDELETE'] = $file->permissions->checkInternal(sUserMgr()->getCurrentUserID(), $special_url_info['ID'], "RDELETE");
+										$objectInfo['RWRITE'] = $iPage->permissions->checkInternal(sUserMgr()->getCurrentUserID(), $special_url_info['ID'], "RWRITE");
+										$objectInfo['RDELETE'] = $iPage->permissions->checkInternal(sUserMgr()->getCurrentUserID(), $special_url_info['ID'], "RDELETE");
 										$iconData = getIconForPage($objectInfo);
 										$history[$i]['NEWVALUE'] = '<div class="icon'.$iconData['iconclass'].'"></div>'."<a onclick=\"\$K.yg_openObjectDetails('".$special_url_info['ID'].'-'.$special_url_info['SITE']."', 'page', '".$objectInfo['NAME']."', '".$iconData['iconclass']."', '".$iconData['style']."');\">".$objectInfo['NAME']."</a>";
 									}
