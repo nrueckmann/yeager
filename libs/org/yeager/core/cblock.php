@@ -1648,6 +1648,7 @@ class Cblock extends Versionable {
 		$linkId = (int)$linkId;
 
 		if ($this->permissions->checkInternal($this->_uid, $cbId, "RWRITE")) {
+<<<<<<< HEAD
 			$value01 = sYDB()->escape_string($value01);
 			$value02 = sYDB()->escape_string($value02);
 			$value03 = sYDB()->escape_string($value03);
@@ -1656,6 +1657,8 @@ class Cblock extends Versionable {
 			$value06 = sYDB()->escape_string($value06);
 			$value07 = sYDB()->escape_string($value07);
 			$value08 = sYDB()->escape_string($value08);
+=======
+>>>>>>> master
 
 			// Check if an URL needs to be generated
 			$sql = "SELECT
